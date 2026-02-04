@@ -1,0 +1,450 @@
+/**
+ * Estilos personalizados para la página de Eventos
+ * Implementa el diseño "Stacked Cards With Depth" con animaciones
+ * Color principal: #C7252B (rojo CLAUT)
+ */
+
+/* === VARIABLES CSS === */
+:root {
+    --claut-red: #C7252B;
+    --claut-red-dark: #A01E24;
+    --claut-red-light: #E63946;
+    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.2);
+    --shadow-stack: 0 8px 32px rgba(199, 37, 43, 0.15);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* === CONTENEDOR PRINCIPAL DE STACK === */
+.events-stack-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.stacked-cards-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+/* === TARJETAS DE EVENTOS APILADAS === */
+.event-card {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto 30px auto;
+    transform-origin: top center;
+    transition: var(--transition-smooth);
+    will-change: transform, box-shadow;
+    box-shadow: var(--shadow-stack);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: white;
+}
+
+/* Efecto de apilamiento visual inicial */
+.event-card:nth-child(1) {
+    z-index: 5;
+    transform: translateY(0px) scale(1);
+}
+
+.event-card:nth-child(2) {
+    z-index: 4;
+    transform: translateY(-20px) scale(0.98);
+    margin-top: -40px;
+}
+
+.event-card:nth-child(3) {
+    z-index: 3;
+    transform: translateY(-40px) scale(0.96);
+    margin-top: -60px;
+}
+
+.event-card:nth-child(4) {
+    z-index: 2;
+    transform: translateY(-60px) scale(0.94);
+    margin-top: -80px;
+}
+
+.event-card:nth-child(5) {
+    z-index: 1;
+    transform: translateY(-80px) scale(0.92);
+    margin-top: -100px;
+}
+
+/* Efectos hover */
+.event-card:hover {
+    transform: translateY(-10px) scale(1.02) !important;
+    box-shadow: 0 25px 50px rgba(199, 37, 43, 0.25);
+    z-index: 100 !important;
+    margin-top: 0 !important;
+}
+
+/* Efecto de separación al hacer scroll */
+.event-card.separated {
+    margin-top: 0 !important;
+    margin-bottom: 60px !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+/* === BADGES Y ELEMENTOS INTERNOS === */
+.status-badge {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.status-proximo {
+    background: linear-gradient(135deg, #10B981, #059669);
+}
+
+.status-en_curso {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+}
+
+.status-finalizado {
+    background: linear-gradient(135deg, #6B7280, #4B5563);
+}
+
+.status-cancelado {
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+}
+
+.price-badge {
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* === ELEMENTOS DE CONTENIDO === */
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* === BOTONES === */
+.event-card button {
+    transition: var(--transition-smooth);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.event-card button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s;
+}
+
+.event-card button:hover:before {
+    left: 100%;
+}
+
+/* Botón principal (registrarse) */
+.event-card button[style*="#C7252B"] {
+    background: linear-gradient(135deg, var(--claut-red), var(--claut-red-dark));
+    border: none;
+    box-shadow: 0 4px 15px rgba(199, 37, 43, 0.4);
+}
+
+.event-card button[style*="#C7252B"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(199, 37, 43, 0.5);
+}
+
+.event-card button[style*="#C7252B"]:active {
+    transform: translateY(0);
+}
+
+/* Botón secundario (ver más) */
+.event-card button:not([style*="#C7252B"]) {
+    border: 2px solid #E5E7EB;
+    color: #6B7280;
+    background: white;
+    position: relative;
+}
+
+.event-card button:not([style*="#C7252B"]):hover {
+    border-color: var(--claut-red);
+    color: var(--claut-red);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+/* === BARRA DE PROGRESO === */
+.progress-bar {
+    background: #F3F4F6;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, var(--claut-red), var(--claut-red-light));
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* === TOASTS/NOTIFICACIONES === */
+.toast {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toast-success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+    color: white;
+}
+
+.toast-error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
+    color: white;
+}
+
+.toast-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95));
+    color: white;
+}
+
+.toast-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
+    color: white;
+}
+
+/* === MODAL === */
+.modal-backdrop {
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+/* === ANIMACIONES === */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.slide-in-up {
+    animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+.scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+    .events-stack-container {
+        padding: 10px;
+    }
+
+    .event-card {
+        max-width: 100%;
+    }
+
+    /* Reducir efecto de apilamiento en móviles */
+    .event-card:nth-child(2) {
+        transform: translateY(-10px) scale(0.99);
+        margin-top: -20px;
+    }
+
+    .event-card:nth-child(3) {
+        transform: translateY(-20px) scale(0.98);
+        margin-top: -30px;
+    }
+
+    .event-card:nth-child(4) {
+        transform: translateY(-30px) scale(0.97);
+        margin-top: -40px;
+    }
+
+    .event-card:nth-child(5) {
+        transform: translateY(-40px) scale(0.96);
+        margin-top: -50px;
+    }
+
+    /* Ajustar padding interno */
+    .event-card .p-6 {
+        padding: 1rem;
+    }
+
+    /* Hacer botones más grandes en móvil */
+    .event-card button {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-card .flex.space-x-3 {
+        flex-direction: column;
+        space-x: 0;
+        gap: 8px;
+    }
+
+    .event-card .flex-1 {
+        flex: none;
+    }
+}
+
+/* === ESTADOS DE LOADING === */
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* === UTILIDADES === */
+.text-claut-red {
+    color: var(--claut-red);
+}
+
+.bg-claut-red {
+    background-color: var(--claut-red);
+}
+
+.border-claut-red {
+    border-color: var(--claut-red);
+}
+
+.shadow-claut {
+    box-shadow: 0 8px 32px rgba(199, 37, 43, 0.15);
+}
+
+/* === ESTADOS DE INTERACCIÓN === */
+.event-card:focus-within {
+    outline: 2px solid var(--claut-red);
+    outline-offset: 4px;
+}
+
+/* === MEJORAS DE ACCESIBILIDAD === */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .event-card {
+        transition: none;
+    }
+
+    .event-card:hover {
+        transform: none;
+    }
+}
+
+/* === MODO DARK (opcional) === */
+@media (prefers-color-scheme: dark) {
+    .event-card {
+        background: #1F2937;
+        color: white;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .event-card .text-gray-600 {
+        color: #9CA3AF;
+    }
+
+    .event-card .text-gray-500 {
+        color: #6B7280;
+    }
+
+    .toast {
+        background: rgba(31, 41, 55, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}

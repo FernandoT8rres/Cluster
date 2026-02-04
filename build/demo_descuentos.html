@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Descuentos - CRUD Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal-backdrop { backdrop-filter: blur(5px); }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Mejorar scroll del modal */
+        .modal-content {
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        /* Scroll personalizado */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Responsive modal */
+        @media (max-width: 640px) {
+            .modal-container {
+                margin: 1rem;
+                max-width: calc(100vw - 2rem);
+            }
+        }
+
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-radius-lg: 12px;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            font-family: var(--porsche-font) !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: 700 !important;
+            font-size: 1.5rem !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: var(--porsche-white) !important;
+            border-left: 3px solid #C7252B !important;
+        }
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Sidebar always retractable - All screens */
+        .porsche-sidebar {
+            transform: translateX(-100%) !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0 !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            position: fixed !important;
+            display: block !important;
+        }
+
+        .porsche-sidebar.sidenav-show {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content always without sidebar margin */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .container {
+            margin-left: 0 !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1280px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Force sidebar behavior on all screens - Override any conflicting styles */
+        .porsche-sidebar.sidebar-enhanced {
+            transform: translateX(-100%) !important;
+        }
+
+        .porsche-sidebar.sidebar-enhanced.sidenav-show {
+            transform: translateX(0) !important;
+        }
+
+        /* Override any Tailwind classes that might interfere */
+        aside.porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure hamburger button works on all screens */
+        @media (min-width: 1280px) {
+            [sidenav-trigger] {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Enhanced sidebar behavior for desktop */
+        @media (min-width: 1280px) {
+            .sidebar-enhanced {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 768px) {
+            header .flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            header .flex.items-center.space-x-4 {
+                margin-top: 1rem !important;
+                align-self: flex-end !important;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .overflow-x-auto table {
+                font-size: 0.75rem !important;
+            }
+
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.5rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .porsche-sidebar {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            header .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .flex.flex-wrap {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .flex.items-center.space-x-4 {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                space-x: 0 !important;
+                gap: 0.5rem !important;
+            }
+
+            .flex.items-center.space-x-4 > * {
+                margin: 0 !important;
+            }
+
+            .grid-cols-1 {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Ensure proper z-index hierarchy */
+        .porsche-sidebar {
+            z-index: 999 !important;
+        }
+
+        .sidenav-overlay {
+            z-index: 998 !important;
+        }
+
+        header {
+            z-index: 997 !important;
+        }
+
+        .main-content {
+            z-index: 1 !important;
+        }
+
+        /* Hamburger button styling */
+        .hamburger-btn {
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Responsive table improvements */
+        @media (max-width: 768px) {
+            .overflow-x-auto {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Porsche Sidebar -->
+    <aside id="porscheSidebar"
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-48 py-6 relative mb-4">
+            <!-- Botón de cerrar para todas las pantallas -->
+            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                    id="sidebarCloseBtn"
+                    sidenav-close
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
+              target="_blank">
+                <img src="../assets/img/apple-icon.png"
+                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                  alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+            </a>
+        </div>
+
+        <hr class="h-px mt-4 mb-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0 pt-4">
+                <!-- Dashboard -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- admin panel -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin-panel.html?login=success">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                    </a>
+                </li>
+
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_usuarios.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_evento.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar-alt text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+
+                <!-- Boletines -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_boletines.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-newspaper text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
+                    </a>
+                </li>
+
+                <!-- Documentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_documentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-file-alt text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Documentos</span>
+                    </a>
+                </li>
+
+                <!-- Banners -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin/banner-admin-mejorado.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-images text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Banners</span>
+                    </a>
+                </li>
+
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg active"
+                        href="demo_descuentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+
+                <!-- Perfil -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="profile.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-user-cog text-gray-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mx-4">
+            <button onclick="window.location.href='pages/sign-in.html'"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Header -->
+    <header class="main-content bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- Hamburger Menu Button for All Screens -->
+                    <button class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
+                            id="hamburgerBtn"
+                            sidenav-trigger
+                            aria-label="Abrir menú de navegación">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold">🏷️ Administrador de Descuentos</h1>
+                        <p class="text-red-200 mt-1">CRUD Completo - Base de Datos</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userInfo" class="text-sm"></span>
+                    <button onclick="location.href='descuentos.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver a Descuentos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Estadísticas -->
+    <div class="main-content container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Descuentos</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalDescuentos">0</p>
+                    </div>
+                    <i class="fas fa-tags text-3xl" style="color: #C7252B;"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Activos</p>
+                        <p class="text-2xl font-bold text-green-600" id="activosDescuentos">0</p>
+                    </div>
+                    <i class="fas fa-check-circle text-3xl text-green-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Expirados</p>
+                        <p class="text-2xl font-bold text-red-600" id="expiradosDescuentos">0</p>
+                    </div>
+                    <i class="fas fa-times-circle text-3xl text-red-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Empresas Participantes</p>
+                        <p class="text-2xl font-bold text-blue-600" id="empresasParticipantes">0</p>
+                    </div>
+                    <i class="fas fa-building text-3xl text-blue-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <button onclick="showCreateModal()" class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                        <i class="fas fa-plus mr-2"></i>Crear Descuento
+                    </button>
+                    <button onclick="reloadDescuentos()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="searchInput" placeholder="Buscar descuentos..."
+                           class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+
+                    <select id="filterEstado" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <option value="">Todos los estados</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                        <option value="expirado">Expirado</option>
+                    </select>
+
+                    <select id="filterEmpresa" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <option value="">Todas las empresas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Descuentos -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descuento</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vigencia</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usos</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="descuentosTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Los descuentos se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Crear/Editar Descuento -->
+    <div id="descuentoModal" class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-lg w-full slide-in modal-content modal-container">
+                <div class="px-6 py-4 border-b">
+                    <h3 id="modalTitle" class="text-lg font-semibold text-gray-900">Crear Descuento</h3>
+                </div>
+
+                <form id="descuentoForm" class="px-6 py-4 space-y-3" novalidate>
+                    <input type="hidden" id="descuentoId">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                        <input type="text" id="titulo" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                        <textarea id="descripcion" rows="3" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                    </div>
+
+                    <!-- Selector de tipo de empresa -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Empresa Oferente *</label>
+                        <div class="flex items-center space-x-6">
+                            <label class="flex items-center">
+                                <input type="radio" name="tipoEmpresa" value="existente" id="empresaExistente" checked
+                                       class="h-4 w-4 border-gray-300" style="color: #C7252B; accent-color: #C7252B;">
+                                <span class="ml-2 text-sm text-gray-700">Empresa en convenio existente</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="tipoEmpresa" value="nueva" id="empresaNueva"
+                                       class="h-4 w-4 border-gray-300" style="color: #C7252B; accent-color: #C7252B;">
+                                <span class="ml-2 text-sm text-gray-700">Escribir nombre de empresa</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Selector de empresa existente -->
+                    <div id="selectorEmpresaExistente">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Empresa en Convenio *</label>
+                        <select id="empresaOferente" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="">Cargando empresas...</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Se mostrarán solo las empresas activas con convenio vigente</p>
+                    </div>
+
+                    <!-- Input para empresa nueva -->
+                    <div id="inputEmpresaNueva" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Empresa *</label>
+                        <input type="text" id="nombreEmpresaNueva" placeholder="Escribe el nombre de la empresa"
+                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <p class="text-xs text-gray-500 mt-1">Para empresas que no están en convenio con Clúster</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Código de Descuento</label>
+                        <input type="text" id="codigoDescuento" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Porcentaje (%)</label>
+                            <input type="number" id="porcentajeDescuento" step="0.01" min="0" max="100" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Monto ($)</label>
+                            <input type="number" id="montoDescuento" step="0.01" min="0" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio *</label>
+                            <input type="date" id="fechaInicio" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin *</label>
+                            <input type="date" id="fechaFin" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Usos Máximos</label>
+                        <input type="number" id="usosMaximos" min="1" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <p class="text-xs text-gray-500 mt-1">Dejar vacío para usos ilimitados</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                        <select id="estado" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
+
+                <div class="px-6 py-4 border-t flex justify-end space-x-3">
+                    <button type="button" onclick="hideModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" form="descuentoForm" id="saveButton" class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-sm w-full">
+                <div class="px-6 py-4">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+                        <h3 class="text-lg font-semibold text-gray-900">Confirmar Eliminación</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">¿Estás seguro de que deseas eliminar este descuento?</p>
+                    <p class="text-sm text-gray-500">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="px-6 py-4 border-t flex justify-end space-x-3">
+                    <button onclick="hideDeleteModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                        Cancelar
+                    </button>
+                    <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast para notificaciones -->
+    <div id="toast" class="fixed top-4 right-4 hidden z-50">
+        <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <script>
+        let editingId = null;
+        let deleteId = null;
+        let empresas = [];
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEmpresas();
+            loadDescuentos();
+            setupEventListeners();
+            setupEmpresaToggle();
+
+            // Initialize sidebar functionality
+            setTimeout(initializeSidebar, 100); // Pequeño delay para asegurar que el DOM esté listo
+
+            // Debug: verificar selector después de 2 segundos
+            setTimeout(() => {
+                const select = document.getElementById('empresaOferente');
+                console.log('🔍 Debug selector después de carga:');
+                console.log('- Elemento encontrado:', !!select);
+                console.log('- Número de opciones:', select ? select.options.length : 'N/A');
+                console.log('- HTML del select:', select ? select.outerHTML : 'N/A');
+
+                if (select && select.options.length > 0) {
+                    console.log('- Opciones disponibles:');
+                    for (let i = 0; i < select.options.length; i++) {
+                        console.log(`  ${i}: "${select.options[i].text}" (value: ${select.options[i].value})`);
+                    }
+                }
+            }, 2000);
+        });
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            document.getElementById('descuentoForm').addEventListener('submit', saveDescuento);
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('filterEstado').addEventListener('change', handleFilter);
+            document.getElementById('filterEmpresa').addEventListener('change', handleFilter);
+
+            // Validación de fechas
+            document.getElementById('fechaInicio').addEventListener('change', validateDates);
+            document.getElementById('fechaFin').addEventListener('change', validateDates);
+
+            // Validación de descuento
+            document.getElementById('porcentajeDescuento').addEventListener('input', validateDiscount);
+            document.getElementById('montoDescuento').addEventListener('input', validateDiscount);
+        }
+
+        // Configurar el toggle entre empresa existente y nueva
+        function setupEmpresaToggle() {
+            console.log('🔧 Configurando toggle de empresas...');
+
+            const empresaExistente = document.getElementById('empresaExistente');
+            const empresaNueva = document.getElementById('empresaNueva');
+            const selectorExistente = document.getElementById('selectorEmpresaExistente');
+            const inputNueva = document.getElementById('inputEmpresaNueva');
+
+            if (!empresaExistente || !empresaNueva || !selectorExistente || !inputNueva) {
+                console.error('❌ No se encontraron todos los elementos del toggle de empresa');
+                return;
+            }
+
+            function toggleEmpresaInputs() {
+                console.log('🔄 Cambiando modo empresa:', empresaExistente.checked ? 'existente' : 'nueva');
+
+                const empresaSelect = document.getElementById('empresaOferente');
+                const empresaInput = document.getElementById('nombreEmpresaNueva');
+
+                if (empresaExistente.checked) {
+                    // Mostrar selector de empresa existente
+                    selectorExistente.classList.remove('hidden');
+                    inputNueva.classList.add('hidden');
+
+                    // Quitar validación HTML5 para evitar conflictos
+                    empresaSelect.removeAttribute('required');
+                    empresaInput.removeAttribute('required');
+
+                    // Limpiar campo de empresa nueva
+                    empresaInput.value = '';
+
+                    console.log('✅ Modo empresa existente activado');
+                } else {
+                    // Mostrar input de empresa nueva
+                    selectorExistente.classList.add('hidden');
+                    inputNueva.classList.remove('hidden');
+
+                    // Quitar validación HTML5 para evitar conflictos
+                    empresaSelect.removeAttribute('required');
+                    empresaInput.removeAttribute('required');
+
+                    // Limpiar selector de empresa existente
+                    empresaSelect.value = '';
+
+                    console.log('✅ Modo empresa nueva activado');
+                }
+            }
+
+            empresaExistente.addEventListener('change', toggleEmpresaInputs);
+            empresaNueva.addEventListener('change', toggleEmpresaInputs);
+
+            // Llamar inicialmente para establecer el estado correcto
+            toggleEmpresaInputs();
+            console.log('✅ Toggle de empresas configurado');
+        }
+
+        // Cargar empresas para el selector
+        async function loadEmpresas() {
+            console.log('🔄 Iniciando carga de empresas desde BD...');
+
+            // Actualizar UI inmediatamente
+            const selectElement = document.getElementById('empresaOferente');
+            if (selectElement) {
+                selectElement.innerHTML = '<option value="">Cargando empresas...</option>';
+            }
+
+            try {
+                // Intentar varios endpoints para encontrar el que funciona
+                const endpoints = [
+                    './api/empresas.php',
+                    './api/empresas.php?limit=100',
+                    './build/api/empresas.php',
+                    './api/empresas_convenio.php?action=listar&activo=1&con_convenio=1',
+                    './api/empresas_convenio.php?activo=1&limit=100'
+                ];
+
+                let response = null;
+                let usedEndpoint = '';
+
+                for (const endpoint of endpoints) {
+                    try {
+                        console.log(`🔍 Probando endpoint: ${endpoint}`);
+                        response = await fetch(endpoint);
+
+                        if (response.ok) {
+                            usedEndpoint = endpoint;
+                            console.log(`✅ Endpoint exitoso: ${endpoint}`);
+                            break;
+                        } else {
+                            console.log(`❌ Endpoint falló (${response.status}): ${endpoint}`);
+                        }
+                    } catch (endpointError) {
+                        console.log(`❌ Error en endpoint ${endpoint}:`, endpointError.message);
+                        continue;
+                    }
+                }
+
+                if (!response || !response.ok) {
+                    throw new Error(`Ningún endpoint funcionó. Último status: ${response?.status || 'Sin respuesta'}`);
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const responseText = await response.text();
+                console.log(`📡 Respuesta RAW del endpoint ${usedEndpoint}:`, responseText);
+
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('❌ Error al parsear JSON:', parseError);
+                    console.log('📄 Contenido de respuesta (primeros 500 chars):', responseText.substring(0, 500));
+                    throw new Error('Respuesta no es JSON válido');
+                }
+
+                console.log('📡 Respuesta parseada:', data);
+                console.log('🔍 Estructura de data:', {
+                    success: data.success,
+                    hasData: !!data.data,
+                    dataType: typeof data.data,
+                    isArray: Array.isArray(data.data),
+                    dataLength: data.data ? data.data.length : 'N/A'
+                });
+
+                // Intentar diferentes estructuras de respuesta
+                let empresasArray = null;
+
+                if (data.success && data.data && Array.isArray(data.data)) {
+                    empresasArray = data.data;
+                    console.log('✅ Usando data.data (formato success/data)');
+                } else if (Array.isArray(data.data)) {
+                    empresasArray = data.data;
+                    console.log('✅ Usando data.data (array directo)');
+                } else if (Array.isArray(data)) {
+                    empresasArray = data;
+                    console.log('✅ Usando data (array en raíz)');
+                } else if (data.empresas && Array.isArray(data.empresas)) {
+                    empresasArray = data.empresas;
+                    console.log('✅ Usando data.empresas');
+                } else if (data.results && Array.isArray(data.results)) {
+                    empresasArray = data.results;
+                    console.log('✅ Usando data.results');
+                }
+
+                if (empresasArray) {
+                    console.log(`📊 Procesando ${empresasArray.length} empresas encontradas`);
+                    console.log('👀 Muestra de primera empresa:', empresasArray[0]);
+
+                    empresas = empresasArray.map(empresa => ({
+                        id: empresa.id,
+                        nombre_empresa: empresa.nombre_empresa || empresa.nombre,
+                        descripcion: empresa.descripcion || '',
+                        categoria: empresa.categoria || '',
+                        sector: empresa.sector || '',
+                        descuento_porcentaje: empresa.descuento_porcentaje || empresa.descuento || 0,
+                        estado: empresa.estado || 'activo',
+                        fecha_convenio: empresa.fecha_convenio || empresa.fecha_inicio_convenio,
+                        fecha_fin_convenio: empresa.fecha_fin_convenio,
+                        activo: empresa.activo,
+                        contacto_nombre: empresa.contacto_nombre || '',
+                        contacto_email: empresa.contacto_email || empresa.email || '',
+                        contacto_telefono: empresa.contacto_telefono || empresa.telefono || ''
+                    }));
+
+                    console.log('✅ Empresas procesadas:', empresas.length);
+                    console.log('📊 Muestra de empresas:', empresas.slice(0, 3));
+
+                    populateEmpresaSelectors();
+                    updateEmpresaStats();
+
+                    if (empresas.length === 0) {
+                        showWarning('No hay empresas activas con convenios vigentes en la base de datos');
+                    } else {
+                        console.log(`✅ Se cargaron ${empresas.length} empresas correctamente`);
+                    }
+                } else {
+                    throw new Error(data.message || 'Respuesta inválida del servidor');
+                }
+
+            } catch (error) {
+                console.error('❌ Error al cargar empresas:', error);
+                empresas = [];
+                showError(`Error al cargar empresas: ${error.message}`);
+
+                // Mostrar selector con mensaje de error
+                if (selectElement) {
+                    selectElement.innerHTML = '<option value="">Error al cargar empresas</option>';
+                }
+            }
+        }
+
+        // Poblar selectores de empresas
+        function populateEmpresaSelectors() {
+            console.log('🔧 Poblando selectores con empresas...');
+            console.log('📊 Array de empresas:', empresas);
+            console.log('📊 Tipo de empresas:', typeof empresas);
+            console.log('📊 Es array:', Array.isArray(empresas));
+            console.log('📊 Cantidad:', empresas ? empresas.length : 'null/undefined');
+
+            const modalSelect = document.getElementById('empresaOferente');
+            const filterSelect = document.getElementById('filterEmpresa');
+
+            console.log('🎯 Elemento modalSelect encontrado:', !!modalSelect);
+            console.log('🎯 Elemento filterSelect encontrado:', !!filterSelect);
+
+            if (!modalSelect) {
+                console.error('❌ No se encontró el elemento empresaOferente');
+                return;
+            }
+
+            if (!filterSelect) {
+                console.error('❌ No se encontró el elemento filterEmpresa');
+                return;
+            }
+
+            // Limpiar selectores
+            modalSelect.innerHTML = '';
+            filterSelect.innerHTML = '';
+
+            // Agregar opción por defecto para modal
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+
+            if (!empresas || empresas.length === 0) {
+                defaultOption.textContent = 'No hay empresas disponibles - Verifica la conexión a la BD';
+                defaultOption.style.color = '#ef4444';
+            } else {
+                defaultOption.textContent = `Seleccionar empresa (${empresas.length} disponibles)...`;
+            }
+            modalSelect.appendChild(defaultOption);
+
+            // Agregar opción por defecto para filtro
+            const defaultFilterOption = document.createElement('option');
+            defaultFilterOption.value = '';
+            defaultFilterOption.textContent = 'Todas las empresas';
+            filterSelect.appendChild(defaultFilterOption);
+
+            // Agregar empresas si existen
+            if (empresas && Array.isArray(empresas) && empresas.length > 0) {
+                // Ordenar empresas por nombre para mejor experiencia de usuario
+                const empresasOrdenadas = empresas.sort((a, b) => {
+                    const nombreA = (a.nombre_empresa || a.nombre || '').toLowerCase();
+                    const nombreB = (b.nombre_empresa || b.nombre || '').toLowerCase();
+                    return nombreA.localeCompare(nombreB);
+                });
+
+                console.log('🔍 Empresas antes del forEach:', empresasOrdenadas);
+                console.log('🔍 Cantidad de empresas a procesar:', empresasOrdenadas.length);
+
+                empresasOrdenadas.forEach((empresa, index) => {
+                    console.log(`📊 Procesando empresa ${index + 1}:`, empresa);
+                    console.log(`   📊 Estado activo: ${empresa.activo}`);
+
+                    // Determinar el nombre correcto basado en los campos disponibles
+                    // Priorizar nombre sobre nombre_empresa ya que nombre_empresa puede estar vacío
+                    const nombre = empresa.nombre || empresa.nombre_empresa || empresa.company_name || empresa.razon_social;
+                    const id = empresa.id;
+                    const categoria = empresa.categoria || '';
+                    const sector = empresa.sector || '';
+                    const descuento = empresa.descuento_porcentaje || empresa.descuento || 0;
+
+                    console.log(`   📝 ID: ${id}, Nombre: "${nombre}"`);
+                    console.log(`   📝 ID tipo: ${typeof id}, ID valor: ${JSON.stringify(id)}`);
+                    console.log(`   📝 Nombre tipo: ${typeof nombre}, Nombre valor: ${JSON.stringify(nombre)}`);
+                    console.log(`   📝 Condición id && nombre: ${!!(id && nombre)}`);
+
+                    if (id && nombre) {
+                        console.log(`   ✅ Agregando empresa válida: ${nombre}`);
+                        // Crear texto descriptivo para el option
+                        let textoCompleto = nombre;
+
+                        // Agregar información adicional si está disponible
+                        const infoAdicional = [];
+                        if (categoria) infoAdicional.push(categoria);
+                        if (sector && sector !== categoria) infoAdicional.push(sector);
+                        if (descuento > 0) infoAdicional.push(`${descuento}% desc.`);
+
+                        if (infoAdicional.length > 0) {
+                            textoCompleto += ` (${infoAdicional.join(', ')})`;
+                        }
+
+                        // Para el modal - con información completa
+                        const modalOption = document.createElement('option');
+                        modalOption.value = id;
+                        modalOption.textContent = textoCompleto;
+                        modalOption.title = `${nombre} - ${empresa.descripcion || 'Sin descripción'}`;
+                        modalSelect.appendChild(modalOption);
+                        console.log(`     ✅ Option agregado al modal: "${textoCompleto}" (value: ${id})`);
+
+                        // Para el filtro - solo nombre
+                        const filterOption = document.createElement('option');
+                        filterOption.value = id;
+                        filterOption.textContent = nombre;
+                        filterSelect.appendChild(filterOption);
+                        console.log(`     ✅ Option agregado al filtro: "${nombre}" (value: ${id})`);
+                    } else {
+                        console.warn(`⚠️ Empresa ${index + 1} sin ID o nombre válido:`, empresa);
+                    }
+                });
+
+                console.log(`✅ Selectores poblados exitosamente:`);
+                console.log(`   📊 Modal select: ${modalSelect.options.length} opciones total`);
+                console.log(`   📊 Filter select: ${filterSelect.options.length} opciones total`);
+
+                // Mostrar todas las opciones del modal para verificar
+                console.log('🔍 Opciones en el selector modal:');
+                for (let i = 0; i < modalSelect.options.length; i++) {
+                    const option = modalSelect.options[i];
+                    console.log(`   ${i}: "${option.text}" (value: "${option.value}", disabled: ${option.disabled})`);
+                }
+
+                // Verificar si el elemento es visible
+                console.log('👀 Estado del select modal:', {
+                    display: window.getComputedStyle(modalSelect).display,
+                    visibility: window.getComputedStyle(modalSelect).visibility,
+                    parentDisplay: modalSelect.parentElement ? window.getComputedStyle(modalSelect.parentElement).display : 'N/A'
+                });
+            } else {
+                console.warn('⚠️ No hay empresas para mostrar en los selectores');
+
+                // No agregar empresas hardcodeadas, mejor mostrar mensaje claro
+                const noDataOption = document.createElement('option');
+                noDataOption.value = '';
+                noDataOption.textContent = 'No se encontraron empresas en convenio';
+                noDataOption.disabled = true;
+                modalSelect.appendChild(noDataOption);
+
+                console.log('✅ Agregada empresa conocida como fallback');
+            }
+        }
+
+        // Cargar descuentos
+        async function loadDescuentos() {
+            try {
+                const response = await fetch('./api/descuentos.php?estado=todos');
+                const data = await response.json();
+
+                if (data.success) {
+                    renderDescuentos(data.data);
+                    updateStats(data.stats);
+                }
+            } catch (error) {
+                console.error('Error al cargar descuentos:', error);
+                showToast('Error al cargar descuentos', 'error');
+            }
+        }
+
+        // Renderizar descuentos en la tabla
+        function renderDescuentos(descuentos) {
+            const tbody = document.getElementById('descuentosTableBody');
+
+            if (!descuentos || descuentos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="px-6 py-8 text-center text-gray-500">
+                            <i class="fas fa-tags text-4xl text-gray-300 mb-2"></i>
+                            <p>No hay descuentos registrados</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = descuentos.map(descuento => {
+                const estadoBadge = getEstadoBadge(descuento.estado_calculado || descuento.estado);
+                const descuentoTexto = descuento.porcentaje_descuento
+                    ? `${descuento.porcentaje_descuento}%`
+                    : `$${descuento.monto_descuento || 0}`;
+
+                const usosTexto = descuento.usos_maximos
+                    ? `${descuento.usos_actuales || 0}/${descuento.usos_maximos}`
+                    : `${descuento.usos_actuales || 0}/∞`;
+
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${descuento.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${descuento.titulo}</div>
+                            <div class="text-sm text-gray-500">${descuento.descripcion || 'Sin descripción'}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${descuento.empresa_nombre}</div>
+                            <div class="text-sm text-gray-500">${descuento.sector || 'General'}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-lg font-bold text-red-600">${descuentoTexto}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="font-mono text-sm">${descuento.codigo_descuento || 'N/A'}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <div>${new Date(descuento.fecha_inicio).toLocaleDateString('es-MX')}</div>
+                            <div class="text-gray-500">al ${new Date(descuento.fecha_fin).toLocaleDateString('es-MX')}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${estadoBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${usosTexto}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button onclick="editDescuento(${descuento.id})" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="showDeleteModal(${descuento.id})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Obtener badge de estado
+        function getEstadoBadge(estado) {
+            const badges = {
+                'activo': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Activo</span>',
+                'inactivo': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactivo</span>',
+                'expirado': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Expirado</span>',
+                'agotado': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Agotado</span>'
+            };
+            return badges[estado] || badges['inactivo'];
+        }
+
+        // Actualizar estadísticas
+        function updateStats(stats) {
+            if (stats) {
+                document.getElementById('totalDescuentos').textContent = stats.total || 0;
+                document.getElementById('activosDescuentos').textContent = stats.activos || 0;
+                document.getElementById('expiradosDescuentos').textContent = stats.expirados || 0;
+                document.getElementById('empresasParticipantes').textContent = stats.empresas_participantes || 0;
+            }
+        }
+
+        // Mostrar modal de crear
+        function showCreateModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Crear Descuento';
+            document.getElementById('descuentoForm').reset();
+            document.getElementById('descuentoId').value = '';
+
+            // Resetear el tipo de empresa a "existente" por defecto
+            document.getElementById('empresaExistente').checked = true;
+            document.getElementById('empresaNueva').checked = false;
+
+            // Configurar campos de empresa
+            setupEmpresaToggle();
+
+            // Establecer fecha por defecto
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaInicio').value = today;
+
+            document.getElementById('descuentoModal').classList.remove('hidden');
+        }
+
+        // Editar descuento
+        async function editDescuento(id) {
+            try {
+                const response = await fetch(`./api/descuentos.php?id=${id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const descuento = data.data;
+                    editingId = id;
+
+                    document.getElementById('modalTitle').textContent = 'Editar Descuento';
+                    document.getElementById('descuentoId').value = descuento.id;
+                    document.getElementById('titulo').value = descuento.titulo;
+                    document.getElementById('descripcion').value = descuento.descripcion || '';
+                    document.getElementById('empresaOferente').value = descuento.empresa_oferente_id;
+                    document.getElementById('codigoDescuento').value = descuento.codigo_descuento || '';
+                    document.getElementById('porcentajeDescuento').value = descuento.porcentaje_descuento || '';
+                    document.getElementById('montoDescuento').value = descuento.monto_descuento || '';
+                    document.getElementById('fechaInicio').value = descuento.fecha_inicio;
+                    document.getElementById('fechaFin').value = descuento.fecha_fin;
+                    document.getElementById('usosMaximos').value = descuento.usos_maximos || '';
+                    document.getElementById('estado').value = descuento.estado;
+
+                    document.getElementById('descuentoModal').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error al cargar descuento:', error);
+                showToast('Error al cargar descuento', 'error');
+            }
+        }
+
+        // Guardar descuento
+        async function saveDescuento(e) {
+            e.preventDefault();
+
+            // Validaciones
+            if (!validateForm()) {
+                return;
+            }
+
+            // Determinar tipo de empresa seleccionada
+            const tipoEmpresa = document.querySelector('input[name="tipoEmpresa"]:checked').value;
+            console.log('🏢 Tipo de empresa seleccionada:', tipoEmpresa);
+
+            const formData = new FormData();
+            formData.append('titulo', document.getElementById('titulo').value);
+            formData.append('descripcion', document.getElementById('descripcion').value);
+
+            // Manejar empresa según el tipo seleccionado
+            if (tipoEmpresa === 'existente') {
+                const empresaId = document.getElementById('empresaOferente').value;
+                const empresaSeleccionada = empresas.find(emp => emp.id == empresaId);
+
+                formData.append('empresa_oferente_id', empresaId);
+                formData.append('empresa_nombre', empresaSeleccionada ? empresaSeleccionada.nombre_empresa : '');
+                formData.append('tipo_empresa', 'convenio');
+            } else {
+                const nombreEmpresa = document.getElementById('nombreEmpresaNueva').value.trim();
+
+                formData.append('empresa_oferente_id', ''); // Sin ID para empresas nuevas
+                formData.append('empresa_nombre', nombreEmpresa);
+                formData.append('tipo_empresa', 'externa');
+            }
+
+            formData.append('codigo_descuento', document.getElementById('codigoDescuento').value);
+            formData.append('porcentaje_descuento', document.getElementById('porcentajeDescuento').value);
+            formData.append('monto_descuento', document.getElementById('montoDescuento').value);
+            formData.append('fecha_inicio', document.getElementById('fechaInicio').value);
+            formData.append('fecha_fin', document.getElementById('fechaFin').value);
+            formData.append('usos_maximos', document.getElementById('usosMaximos').value);
+            formData.append('estado', document.getElementById('estado').value);
+
+            if (editingId) {
+                formData.append('_method', 'PUT');
+                formData.append('id', editingId);
+            }
+
+            try {
+                const response = await fetch('./api/descuentos.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    hideModal();
+                    loadDescuentos();
+                    showToast(editingId ? 'Descuento actualizado exitosamente' : 'Descuento creado exitosamente', 'success');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error al guardar:', error);
+                showToast('Error al guardar descuento', 'error');
+            }
+        }
+
+        // Validar formulario
+        function validateForm() {
+            console.log('🔍 Iniciando validación del formulario...');
+
+            // Validar empresa según el tipo seleccionado
+            const tipoEmpresaElement = document.querySelector('input[name="tipoEmpresa"]:checked');
+            if (!tipoEmpresaElement) {
+                console.error('❌ No se encontró tipo de empresa seleccionado');
+                showToast('Error: No se detectó el tipo de empresa seleccionado', 'error');
+                return false;
+            }
+
+            const tipoEmpresa = tipoEmpresaElement.value;
+            console.log('🏢 Tipo de empresa:', tipoEmpresa);
+
+            if (tipoEmpresa === 'existente') {
+                const empresaId = document.getElementById('empresaOferente').value;
+                console.log('🔍 Empresa ID seleccionada:', empresaId);
+                if (!empresaId) {
+                    console.error('❌ No se seleccionó empresa del convenio');
+                    showToast('Debe seleccionar una empresa del convenio', 'error');
+                    return false;
+                }
+            } else {
+                const nombreEmpresa = document.getElementById('nombreEmpresaNueva').value.trim();
+                console.log('🔍 Nombre empresa nueva:', nombreEmpresa);
+                if (!nombreEmpresa) {
+                    console.error('❌ No se escribió nombre de empresa');
+                    showToast('Debe escribir el nombre de la empresa', 'error');
+                    return false;
+                }
+                if (nombreEmpresa.length < 3) {
+                    console.error('❌ Nombre de empresa muy corto');
+                    showToast('El nombre de la empresa debe tener al menos 3 caracteres', 'error');
+                    return false;
+                }
+            }
+
+            // Validar título
+            const titulo = document.getElementById('titulo').value.trim();
+            console.log('🔍 Título:', titulo);
+            if (!titulo) {
+                console.error('❌ Título vacío');
+                showToast('El título del descuento es obligatorio', 'error');
+                return false;
+            }
+
+            // Validar descuento
+            const porcentaje = document.getElementById('porcentajeDescuento').value;
+            const monto = document.getElementById('montoDescuento').value;
+            console.log('🔍 Porcentaje:', porcentaje, 'Monto:', monto);
+
+            if (!porcentaje && !monto) {
+                console.error('❌ No se especificó descuento');
+                showToast('Debe especificar porcentaje o monto de descuento', 'error');
+                return false;
+            }
+
+            if (porcentaje && monto) {
+                console.error('❌ Se especificaron ambos tipos de descuento');
+                showToast('Solo puede especificar porcentaje O monto, no ambos', 'error');
+                return false;
+            }
+
+            // Validar fechas
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+            console.log('🔍 Fecha inicio:', fechaInicio, 'Fecha fin:', fechaFin);
+
+            if (!fechaInicio || !fechaFin) {
+                console.error('❌ Fechas incompletas');
+                showToast('Las fechas de inicio y fin son obligatorias', 'error');
+                return false;
+            }
+
+            if (fechaFin < fechaInicio) {
+                console.error('❌ Fechas incorrectas');
+                showToast('La fecha de fin debe ser posterior a la fecha de inicio', 'error');
+                return false;
+            }
+
+            console.log('✅ Validación del formulario exitosa');
+            return true;
+        }
+
+        // Validar fechas
+        function validateDates() {
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+
+            if (fechaInicio && fechaFin && fechaFin < fechaInicio) {
+                document.getElementById('fechaFin').setCustomValidity('La fecha de fin debe ser posterior a la fecha de inicio');
+            } else {
+                document.getElementById('fechaFin').setCustomValidity('');
+            }
+        }
+
+        // Validar descuento
+        function validateDiscount() {
+            const porcentaje = document.getElementById('porcentajeDescuento');
+            const monto = document.getElementById('montoDescuento');
+
+            if (porcentaje.value && monto.value) {
+                if (event.target === porcentaje) {
+                    monto.value = '';
+                } else {
+                    porcentaje.value = '';
+                }
+            }
+        }
+
+        // Mostrar modal de eliminación
+        function showDeleteModal(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        // Confirmar eliminación
+        async function confirmDelete() {
+            try {
+                const response = await fetch(`./api/descuentos.php?id=${deleteId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    hideDeleteModal();
+                    loadDescuentos();
+                    showToast('Descuento eliminado exitosamente', 'success');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                showToast('Error al eliminar descuento', 'error');
+            }
+        }
+
+        // Ocultar modales
+        function hideModal() {
+            document.getElementById('descuentoModal').classList.add('hidden');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            deleteId = null;
+        }
+
+        // Recargar descuentos
+        function reloadDescuentos() {
+            loadDescuentos();
+            showToast('Descuentos actualizados', 'success');
+        }
+
+        // Manejar búsqueda y filtros
+        function handleSearch() {
+            // Implementar búsqueda en tiempo real
+        }
+
+        function handleFilter() {
+            // Implementar filtrado
+        }
+
+        // Mostrar toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.textContent = message;
+
+            // Cambiar color según tipo
+            const toastDiv = toast.querySelector('div');
+            let bgColor = 'bg-green-500'; // success por defecto
+
+            switch(type) {
+                case 'error':
+                    bgColor = 'bg-red-500';
+                    break;
+                case 'warning':
+                    bgColor = 'bg-yellow-500';
+                    break;
+                case 'info':
+                    bgColor = 'bg-blue-500';
+                    break;
+                default:
+                    bgColor = 'bg-green-500';
+            }
+
+            toastDiv.className = `px-6 py-3 rounded-lg shadow-lg ${bgColor} text-white`;
+
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Actualizar estadísticas de empresas
+        function updateEmpresaStats() {
+            try {
+                const totalEmpresas = empresas.length;
+                const empresasActivas = empresas.filter(emp => emp.activo == 1 || emp.estado === 'activo').length;
+                const empresasConDescuento = empresas.filter(emp => emp.descuento_porcentaje > 0).length;
+
+                console.log(`📊 Estadísticas: ${totalEmpresas} total, ${empresasActivas} activas, ${empresasConDescuento} con descuento`);
+
+                // Actualizar el contador en la interfaz si existe
+                const empresasElement = document.getElementById('empresasParticipantes');
+                if (empresasElement) {
+                    empresasElement.textContent = totalEmpresas;
+                }
+            } catch (error) {
+                console.error('❌ Error al actualizar estadísticas:', error);
+            }
+        }
+
+        // Mostrar notificación de advertencia
+        function showWarning(message) {
+            console.warn('⚠️', message);
+            showToast(message, 'warning');
+        }
+
+        // Función para limpiar el formulario
+        function clearForm() {
+            document.getElementById('titulo').value = '';
+            document.getElementById('descripcion').value = '';
+            document.getElementById('codigoDescuento').value = '';
+            document.getElementById('porcentajeDescuento').value = '';
+            document.getElementById('montoDescuento').value = '';
+            document.getElementById('fechaInicio').value = '';
+            document.getElementById('fechaFin').value = '';
+            document.getElementById('usosMaximos').value = '';
+            document.getElementById('estado').value = 'activo';
+
+            // Resetear a empresa existente
+            document.getElementById('empresaExistente').checked = true;
+            document.getElementById('empresaNueva').checked = false;
+            document.getElementById('empresaOferente').value = '';
+            document.getElementById('nombreEmpresaNueva').value = '';
+
+            // Actualizar visibilidad
+            const selectorExistente = document.getElementById('selectorEmpresaExistente');
+            const inputNueva = document.getElementById('inputEmpresaNueva');
+            if (selectorExistente && inputNueva) {
+                selectorExistente.classList.remove('hidden');
+                inputNueva.classList.add('hidden');
+            }
+        }
+
+        // Función de debug manual para empresas
+        function debugEmpresas() {
+            console.log('🐛 === INICIO DEBUG EMPRESAS ===');
+            console.log('🔍 Estado actual de empresas:', empresas);
+            console.log('🔍 Tipo:', typeof empresas);
+            console.log('🔍 Es array:', Array.isArray(empresas));
+            console.log('🔍 Longitud:', empresas ? empresas.length : 'null/undefined');
+
+            const modalSelect = document.getElementById('empresaOferente');
+            console.log('🔍 Selector modal encontrado:', !!modalSelect);
+            if (modalSelect) {
+                console.log('🔍 Opciones actuales en selector:', modalSelect.options.length);
+                console.log('🔍 HTML del selector:', modalSelect.outerHTML);
+            }
+
+            console.log('🔄 Forzando recarga de empresas...');
+            loadEmpresas().then(() => {
+                console.log('✅ Recarga de empresas completada');
+                console.log('🐛 === FIN DEBUG EMPRESAS ===');
+            }).catch(error => {
+                console.error('❌ Error en recarga de empresas:', error);
+                console.log('🐛 === FIN DEBUG EMPRESAS (CON ERROR) ===');
+            });
+
+            showToast('Debug ejecutado - revisa la consola para detalles', 'info');
+        }
+
+        // Mostrar mensaje de error
+        function showError(message) {
+            console.error('Error:', message);
+            showToast(message, 'error');
+        }
+
+        // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+        function initializeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+
+            console.log('Sidebar elements:', {
+                sidebar: !!sidebar,
+                overlay: !!overlay,
+                hamburgerBtn: !!hamburgerBtn,
+                closeBtn: !!closeBtn,
+                screenWidth: window.innerWidth,
+                isDesktop: window.innerWidth >= 1280
+            });
+
+            // Log computed styles for debugging
+            if (sidebar) {
+                const styles = window.getComputedStyle(sidebar);
+                console.log('Sidebar computed styles:', {
+                    display: styles.display,
+                    transform: styles.transform,
+                    left: styles.left,
+                    position: styles.position,
+                    zIndex: styles.zIndex
+                });
+            }
+
+            if (!sidebar || !overlay || !hamburgerBtn) {
+                console.error('Sidebar elements not found:', {
+                    sidebar: !!sidebar,
+                    overlay: !!overlay,
+                    hamburgerBtn: !!hamburgerBtn
+                });
+                return;
+            }
+
+            // Toggle sidebar function
+            function toggleSidebar(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                const isVisible = sidebar.classList.contains('sidenav-show');
+                console.log('Toggle sidebar - currently visible:', isVisible);
+
+                if (!isVisible) {
+                    // Open sidebar
+                    console.log('Opening sidebar');
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+
+                    // Focus management for accessibility
+                    const firstLink = sidebar.querySelector('.porsche-nav-item');
+                    if (firstLink) {
+                        setTimeout(() => firstLink.focus(), 100);
+                    }
+                } else {
+                    // Close sidebar
+                    console.log('Closing sidebar');
+                    closeSidebarInternal();
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebarInternal() {
+                console.log('Executing closeSidebarInternal');
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+
+                // Return focus to hamburger button
+                if (hamburgerBtn) {
+                    hamburgerBtn.focus();
+                }
+            }
+
+            // Event listeners
+            console.log('Adding click event to hamburger button');
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+
+            hamburgerBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar(e);
+            }, { passive: false });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebarInternal);
+                overlay.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+            });
+
+            // Handle window resize - Keep sidebar closed on all screen sizes
+            window.addEventListener('resize', function() {
+                // Optional: could add logic here if needed
+            });
+
+            // Swipe to close functionality
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            sidebar.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const diffX = touchStartX - currentX;
+                const diffY = Math.abs(touchStartY - currentY);
+
+                // Swipe left to close
+                if (diffX > 50 && diffY < 100) {
+                    closeSidebarInternal();
+                    touchStartX = 0;
+                    touchStartY = 0;
+                }
+            }, { passive: true });
+
+            // Keyboard navigation in sidebar
+            sidebar.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+
+                // Arrow navigation
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                    const currentIndex = navItems.indexOf(document.activeElement);
+
+                    if (e.key === 'ArrowDown') {
+                        const nextIndex = (currentIndex + 1) % navItems.length;
+                        navItems[nextIndex].focus();
+                    } else {
+                        const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                        navItems[prevIndex].focus();
+                    }
+                }
+            });
+
+            console.log('✅ Sidebar functionality initialized successfully');
+        }
+
+        // Legacy function compatibility
+        function closeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+
+            if (sidebar && overlay) {
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+
+    <!-- Auth Session Script -->
+    <script src="./js/auth-session.js"></script>
+</body>
+</html>

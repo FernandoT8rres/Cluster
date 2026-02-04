@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boletines Informativos - Portal Visitante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --claut-red: #C7252B;
+            --claut-dark: #1e293b;
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--porsche-font);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--claut-red) 0%, #A01E24 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(199, 37, 43, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .visitor-notice {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            color: var(--claut-red);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .boletines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .boletin-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .boletin-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-color: var(--claut-red);
+        }
+
+        .boletin-preview-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--claut-red);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        .boletin-fecha-badge {
+            background: linear-gradient(135deg, var(--claut-red), #A01E24);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .fecha-dia {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .fecha-mes {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .boletin-content {
+            padding: 1.5rem;
+        }
+
+        .boletin-titulo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--claut-dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .boletin-categoria {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 0.75rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .boletin-preview {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .boletin-detalles {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .boletin-detalle {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .boletin-detalle i {
+            width: 16px;
+            margin-right: 0.5rem;
+            color: var(--claut-red);
+        }
+
+        .boletin-restricted {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #92400e;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--claut-red);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--claut-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #A01E24;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .boletines-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-newspaper"></i> Boletines Informativos</h1>
+            <p>Comunicados y noticias públicas disponibles</p>
+            <div class="visitor-notice">
+                <i class="fas fa-info-circle"></i>
+                <strong>Acceso de visitante:</strong> Solo resúmenes disponibles.
+                Para contenido completo y descargas,
+                <a href="./pages/sign-up.html" style="color: #fef3c7; text-decoration: underline;">regístrate aquí</a>.
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="restriction-warning" style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); color: #856404; border-radius: 10px; padding: 1rem; margin: 1rem 0; text-align: center;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Vista previa limitada:</strong> Los visitantes solo pueden ver resúmenes de boletines.
+            El contenido completo y archivos requieren autenticación.
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <h3 id="totalBoletines">0</h3>
+                <p>Boletines</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="boletinesPublicos">0</h3>
+                <p>Públicos</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="boletinesRecientes">0</h3>
+                <p>Recientes</p>
+            </div>
+        </div>
+
+        <div id="boletinesContainer" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Cargando boletines desde la base de datos...</p>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="./visitante.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Volver al Portal
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let boletinesData = [];
+
+        // Cargar boletines al inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📰 Cargando boletines desde la base de datos...');
+            loadBoletines();
+        });
+
+        async function loadBoletines() {
+            const container = document.getElementById('boletinesContainer');
+
+            try {
+                // Intentar múltiples endpoints de la API
+                const endpoints = [
+                    './api/boletines.php',
+                    './api/boletines_simple.php',
+                    './api/boletines_completo.php'
+                ];
+
+                let response = null;
+                let data = null;
+
+                for (const endpoint of endpoints) {
+                    try {
+                        console.log(`🔄 Intentando endpoint: ${endpoint}`);
+                        response = await fetch(endpoint);
+
+                        if (response.ok) {
+                            const text = await response.text();
+                            console.log(`✅ Respuesta del servidor (${endpoint}):`, text.substring(0, 200));
+
+                            try {
+                                data = JSON.parse(text);
+                                console.log(`✅ Datos parseados exitosamente desde: ${endpoint}`);
+                                break;
+                            } catch (parseError) {
+                                console.log(`❌ Error al parsear JSON desde ${endpoint}:`, parseError);
+                                continue;
+                            }
+                        }
+                    } catch (fetchError) {
+                        console.log(`❌ Error de conexión con ${endpoint}:`, fetchError);
+                        continue;
+                    }
+                }
+
+                if (!data) {
+                    throw new Error('No se pudo conectar con ningún endpoint de la API');
+                }
+
+                // Procesar datos según el formato
+                let boletines = [];
+
+                if (data.success && data.data) {
+                    boletines = data.data;
+                } else if (data.success && data.boletines) {
+                    boletines = data.boletines;
+                } else if (Array.isArray(data)) {
+                    boletines = data;
+                } else if (data.boletines && Array.isArray(data.boletines)) {
+                    boletines = data.boletines;
+                } else {
+                    console.log('⚠️ Formato de datos inesperado:', data);
+                    boletines = [];
+                }
+
+                // Filtrar solo boletines públicos para visitantes
+                const boletinesPublicos = boletines.filter(boletin => {
+                    return boletin.activo === 1 || boletin.activo === '1' ||
+                           boletin.estado === 'publicado' || boletin.visible === 1;
+                });
+
+                console.log(`📊 Total de boletines: ${boletines.length}, Públicos: ${boletinesPublicos.length}`);
+
+                if (boletinesPublicos.length > 0) {
+                    boletinesData = boletinesPublicos;
+                    renderBoletines(boletinesPublicos);
+                    updateStats(boletinesPublicos);
+                } else {
+                    showNoData();
+                }
+
+            } catch (error) {
+                console.error('❌ Error al cargar boletines:', error);
+                showError(error.message);
+            }
+        }
+
+        function renderBoletines(boletines) {
+            const container = document.getElementById('boletinesContainer');
+
+            if (!boletines || boletines.length === 0) {
+                showNoData();
+                return;
+            }
+
+            const html = boletines.map(boletin => createBoletinCard(boletin)).join('');
+            container.innerHTML = `<div class="boletines-grid">${html}</div>`;
+        }
+
+        function createBoletinCard(boletin) {
+            // Adaptarse a diferentes estructuras de datos
+            const titulo = boletin.titulo || boletin.nombre || boletin.title || 'Boletín sin título';
+            const contenido = boletin.contenido || boletin.descripcion || boletin.content || '';
+            const fecha = boletin.fecha_creacion || boletin.fecha_publicacion || boletin.created_at || new Date().toISOString();
+            const categoria = boletin.categoria || boletin.tipo || boletin.type || 'General';
+            const autor = boletin.autor || boletin.created_by || 'Administrador';
+
+            // Procesar fecha
+            const fechaBoletin = new Date(fecha);
+            const dia = fechaBoletin.getDate();
+            const mes = fechaBoletin.toLocaleDateString('es-MX', { month: 'short' });
+
+            // Truncar contenido para vista previa muy limitada
+            const contenidoPreview = contenido.length > 100 ?
+                contenido.substring(0, 100) + '...' : contenido || 'Vista previa no disponible';
+
+            return `
+                <div class="boletin-card">
+                    <div class="boletin-preview-badge">Vista Previa</div>
+
+                    <div class="boletin-fecha-badge">
+                        <div class="fecha-dia">${dia}</div>
+                        <div class="fecha-mes">${mes.toUpperCase()}</div>
+                    </div>
+
+                    <div class="boletin-content">
+                        <div class="boletin-titulo">${titulo}</div>
+
+                        <div class="boletin-categoria">
+                            <i class="fas fa-${getCategoriaIcon(categoria)}"></i>
+                            ${categoria}
+                        </div>
+
+                        <div class="boletin-preview">${contenidoPreview}</div>
+
+                        <div class="boletin-detalles">
+                            <div class="boletin-detalle">
+                                <i class="fas fa-user"></i>
+                                ${autor}
+                            </div>
+                            <div class="boletin-detalle">
+                                <i class="fas fa-calendar"></i>
+                                ${fechaBoletin.toLocaleDateString('es-MX')}
+                            </div>
+                            ${boletin.archivo_adjunto ? `
+                                <div class="boletin-detalle">
+                                    <i class="fas fa-paperclip"></i>
+                                    Archivo adjunto disponible
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="boletin-restricted">
+                            <i class="fas fa-lock"></i>
+                            <strong>Contenido limitado:</strong> Versión completa y descargas solo para usuarios autenticados
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCategoriaIcon(categoria) {
+            const iconMap = {
+                'Noticias': 'newspaper',
+                'Comunicados': 'bullhorn',
+                'Avisos': 'exclamation-circle',
+                'Eventos': 'calendar-alt',
+                'Anuncios': 'megaphone',
+                'Informativo': 'info-circle',
+                'General': 'file-alt'
+            };
+
+            return iconMap[categoria] || 'newspaper';
+        }
+
+        function updateStats(boletines) {
+            const ahora = new Date();
+            const treintaDiasAtras = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+            const boletinesRecientes = boletines.filter(boletin => {
+                const fechaBoletin = new Date(boletin.fecha_creacion || boletin.fecha_publicacion || boletin.created_at);
+                return fechaBoletin >= treintaDiasAtras;
+            });
+
+            const boletinesPublicos = boletines.filter(boletin =>
+                boletin.activo === 1 || boletin.activo === '1' ||
+                boletin.estado === 'publicado' || boletin.visible === 1
+            );
+
+            document.getElementById('totalBoletines').textContent = boletines.length;
+            document.getElementById('boletinesPublicos').textContent = boletinesPublicos.length;
+            document.getElementById('boletinesRecientes').textContent = boletinesRecientes.length;
+        }
+
+        function showNoData() {
+            const container = document.getElementById('boletinesContainer');
+            container.innerHTML = `
+                <div class="error-message" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;">
+                    <i class="fas fa-newspaper" style="font-size: 3rem; margin-bottom: 1rem; color: #94a3b8;"></i>
+                    <h3>No hay boletines disponibles</h3>
+                    <p>Actualmente no hay boletines informativos publicados.</p>
+                </div>
+            `;
+            document.getElementById('totalBoletines').textContent = '0';
+            document.getElementById('boletinesPublicos').textContent = '0';
+            document.getElementById('boletinesRecientes').textContent = '0';
+        }
+
+        function showError(message) {
+            const container = document.getElementById('boletinesContainer');
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3>Error al cargar boletines</h3>
+                    <p>${message}</p>
+                    <button onclick="loadBoletines()" class="back-link" style="margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Intentar de nuevo
+                    </button>
+                </div>
+            `;
+            document.getElementById('totalBoletines').textContent = '0';
+            document.getElementById('boletinesPublicos').textContent = '0';
+            document.getElementById('boletinesRecientes').textContent = '0';
+        }
+    </script>
+</body>
+</html>

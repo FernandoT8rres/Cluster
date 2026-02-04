@@ -1,0 +1,235 @@
+/**
+ * Estilos para el módulo de Gestión de Empresas en Convenio
+ * Claut Intranet - Demo Empresas
+ */
+
+/* Badges de estado */
+.badge-activo {
+    background-color: #10b981;
+    color: white;
+}
+
+.badge-inactivo {
+    background-color: #ef4444;
+    color: white;
+}
+
+.badge-destacado {
+    background-color: #fbbf24;
+    color: #000;
+}
+
+/* Gradiente para header */
+.gradient-blue {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Animación de pulso */
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Indicador de conexión */
+.connection-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.connection-dot.connected {
+    background-color: #10b981;
+    animation: pulse 2s infinite;
+}
+
+.connection-dot.disconnected {
+    background-color: #ef4444;
+}
+
+/* Tarjetas de estadísticas */
+.stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla responsive */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+}
+
+/* Botones con iconos */
+.btn-icon {
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    transform: scale(1.1);
+}
+
+.btn-icon:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Modal overlay */
+.modal-overlay {
+    backdrop-filter: blur(4px);
+}
+
+/* Formulario */
+.form-input {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Loading skeleton */
+.skeleton {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Notificaciones */
+.notification-toast {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Hover effects para filas de tabla */
+.table-row-hover {
+    transition: background-color 0.2s ease;
+}
+
+.table-row-hover:hover {
+    background-color: #f9fafb;
+}
+
+/* Paginación */
+.pagination-btn {
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:not(:disabled):hover {
+    background-color: #f3f4f6;
+    transform: scale(1.05);
+}
+
+.pagination-btn.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Filtros */
+.filter-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+/* Animación de entrada para elementos */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para modo oscuro (opcional) */
+@media (prefers-color-scheme: dark) {
+    body.dark-mode {
+        background-color: #1f2937;
+        color: #f9fafb;
+    }
+    
+    body.dark-mode .bg-white {
+        background-color: #374151;
+    }
+    
+    body.dark-mode .text-gray-900 {
+        color: #f9fafb;
+    }
+    
+    body.dark-mode .text-gray-600 {
+        color: #d1d5db;
+    }
+    
+    body.dark-mode .border-gray-300 {
+        border-color: #4b5563;
+    }
+    
+    body.dark-mode .hover\:bg-gray-50:hover {
+        background-color: #4b5563;
+    }
+}
+
+/* Estilos para imprimir */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .gradient-blue {
+        background: none;
+        color: black;
+    }
+    
+    .shadow-lg {
+        box-shadow: none;
+    }
+    
+    button {
+        display: none;
+    }
+}

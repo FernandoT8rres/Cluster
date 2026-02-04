@@ -1,0 +1,3343 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+    <title>Clúster Intranet - Panel de Administración</title>
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- Nucleo Icons -->
+    <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Main Styling -->
+    <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+
+    <style>
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Clúster red for brand consistency */
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-font-weight-light: 300;
+            --porsche-font-weight-regular: 400;
+            --porsche-font-weight-medium: 500;
+            --porsche-font-weight-semibold: 600;
+            --porsche-font-weight-bold: 700;
+            /* Spacing */
+            --porsche-space-xs: 0.5rem;
+            --porsche-space-sm: 1rem;
+            --porsche-space-md: 1.5rem;
+            --porsche-space-lg: 2rem;
+            --porsche-space-xl: 3rem;
+            /* Shadows */
+            --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
+            /* Border Radius */
+            --porsche-radius-sm: 4px;
+            --porsche-radius-md: 8px;
+            --porsche-radius-lg: 12px;
+            --porsche-radius-xl: 16px;
+        }
+
+        /* Global Typography Enhancement */
+        * {
+            font-family: var(--porsche-font) !important;
+        }
+
+        body {
+            font-weight: var(--porsche-font-weight-regular);
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, var(--porsche-light-gray) 0%, var(--porsche-white) 100%);
+        }
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: var(--porsche-shadow-large) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: var(--porsche-font-weight-bold) !important;
+            font-size: 1.5rem !important;
+            letter-spacing: -0.02em !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            border-radius: var(--porsche-radius-md) !important;
+            margin: var(--porsche-space-xs) 0 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active-nav,
+        .porsche-nav-item.active {
+            background: var(--porsche-accent) !important;
+            color: var(--porsche-white) !important;
+        }
+
+        /* Porsche-inspired Card System */
+        .porsche-card,
+        .admin-section {
+            background: var(--porsche-white);
+            border-radius: var(--porsche-radius-lg);
+            box-shadow: var(--porsche-shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            padding: var(--porsche-space-lg);
+            margin-bottom: var(--porsche-space-lg);
+        }
+
+        .porsche-card::before,
+        .admin-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .porsche-card:hover,
+        .admin-section:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--porsche-shadow-large);
+        }
+
+        .porsche-card:hover::before,
+        .admin-section:hover::before {
+            opacity: 1;
+        }
+
+        /* Liquid Glass Statistics Cards */
+        .stat-card {
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.1),
+                    rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            padding: 0.75rem;
+            text-align: center;
+            min-height: 80px;
+            width: 100%;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card h3,
+        .stat-card .text-3xl {
+            font-size: 1.5rem;
+            font-weight: var(--porsche-font-weight-bold);
+            color: rgba(0, 0, 0, 0.9);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card p,
+        .stat-card .text-sm {
+            font-size: 0.75rem;
+            font-weight: var(--porsche-font-weight-medium);
+            color: rgba(0, 0, 0, 0.7);
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card.users::before {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+
+        .stat-card.companies::before {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+
+        .stat-card.events::before {
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+        }
+
+        .stat-card.bulletins::before {
+            background: linear-gradient(90deg, #fa709a, #fee140);
+        }
+
+        .stat-card.documents::before {
+            background: linear-gradient(90deg, #6366f1, #4f46e5);
+        }
+
+        .stat-card.discounts::before {
+            background: linear-gradient(90deg, #e53e3e, #c53030);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .table-row:hover {
+            background-color: var(--porsche-light-gray);
+            transform: translateX(2px);
+            transition: all 0.2s ease;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.admin {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge.empresa {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .badge.empleado {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge.activo {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge.inactivo {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            margin: 0 2px;
+        }
+
+        .action-btn.edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .action-btn.view {
+            background: #6b7280;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .alert.success {
+            background: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .alert.warning {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        /* Estilos para secciones */
+        .section {
+            display: block;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .section.hidden {
+            display: none !important;
+        }
+
+        /* Mejoras al layout principal */
+        .main-content {
+            margin-left: 16rem;
+            padding: 1rem;
+            width: calc(100% - 16rem);
+            overflow-x: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1rem;
+            }
+        }
+
+        /* Asegurar que el sidebar no interfiera */
+        aside {
+            z-index: 30;
+        }
+
+        /* Corregir posicionamiento en pantallas grandes */
+        @media (min-width: 1200px) {
+            aside {
+                position: fixed;
+                left: 1rem;
+                top: 1rem;
+                width: 15rem;
+                height: calc(100vh - 2rem);
+                transform: translateX(0) !important;
+            }
+        }
+
+        /* Overlay para móviles */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+        }
+
+        /* Mostrar overlay en móviles cuando sidebar está abierto */
+        @media (max-width: 1199px) {
+            aside:not(.-translate-x-full)+.sidebar-overlay {
+                display: block;
+            }
+        }
+
+        /* Asegurar que el contenido sea visible */
+        .section {
+            background: #f8fafc;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Contenedor de estadísticas */
+        .admin-section {
+            background: transparent;
+            margin-bottom: 2rem;
+        }
+
+        /* Asegurar visibilidad de los módulos */
+
+        /* Estilos mejorados para módulos */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+
+        .module-card {
+            position: relative;
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.15),
+                    rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            padding: 2rem;
+            z-index: 2;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                    rgba(99, 102, 241, 0.8),
+                    rgba(139, 92, 246, 0.8),
+                    rgba(59, 130, 246, 0.8));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .module-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.25),
+                    rgba(255, 255, 255, 0.12));
+        }
+
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .module-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .module-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            color: rgba(31, 41, 55, 0.95);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            letter-spacing: -0.02em;
+        }
+
+        .module-description {
+            font-size: 0.9rem;
+            color: rgba(107, 114, 128, 0.9);
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .module-button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Porsche-inspired Buttons */
+        .porsche-btn {
+            background: var(--porsche-black);
+            color: var(--porsche-white);
+            border: none;
+            border-radius: var(--porsche-radius-sm);
+            padding: var(--porsche-space-xs) var(--porsche-space-md);
+            font-size: 0.875rem;
+            font-weight: var(--porsche-font-weight-medium);
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .porsche-btn:hover {
+            background: var(--porsche-charcoal);
+            transform: translateY(-1px);
+        }
+
+        .porsche-btn-accent {
+            background: var(--porsche-accent);
+            color: var(--porsche-white);
+        }
+
+        .porsche-btn-accent:hover {
+            background: #b12a28;
+        }
+
+        /* Porsche-inspired Animations */
+        @keyframes porscheSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes porscheShimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .porsche-slideIn {
+            animation: porscheSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Porsche-inspired Layout System */
+        .porsche-layout {
+            background: linear-gradient(135deg, var(--porsche-light-gray) 0%, var(--porsche-white) 100%);
+            min-height: 100vh;
+        }
+
+        .porsche-main {
+            background: var(--porsche-white);
+            border-radius: var(--porsche-radius-xl);
+            box-shadow: var(--porsche-shadow-medium);
+            margin: var(--porsche-space-sm);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Enhanced Action Buttons with Porsche Style */
+        .action-btn {
+            background: var(--porsche-charcoal);
+            color: var(--porsche-white);
+            border: none;
+            border-radius: var(--porsche-radius-sm);
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: var(--porsche-font-weight-medium);
+            cursor: pointer;
+            margin: 0 2px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--porsche-shadow-medium);
+        }
+
+        .action-btn.edit {
+            background: #3b82f6;
+        }
+
+        .action-btn.delete {
+            background: var(--porsche-accent);
+        }
+
+        .action-btn.view {
+            background: var(--porsche-silver);
+        }
+
+        /* FontAwesome Icon Fixes */
+        .fas,
+        .far,
+        .fab {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro" !important;
+            font-weight: 900 !important;
+            font-style: normal !important;
+            font-variant: normal !important;
+            text-rendering: auto !important;
+            line-height: 1 !important;
+        }
+
+        .far {
+            font-weight: 400 !important;
+        }
+
+        .fab {
+            font-weight: 400 !important;
+            font-family: "Font Awesome 6 Brands" !important;
+        }
+
+        /* Icon sizes for consistency */
+        .fas.fa-times {
+            font-size: 16px !important;
+        }
+
+        .fas.fa-sign-out-alt {
+            font-size: 16px !important;
+        }
+
+        .fas.fa-plus {
+            font-size: 14px !important;
+        }
+
+        /* Sidebar icon styles */
+        .porsche-sidebar .fas {
+            font-size: 16px !important;
+        }
+
+        /* FontAwesome icon fallbacks with Unicode */
+        .fas.fa-users::before {
+            content: "\f0c0" !important;
+        }
+
+        .fas.fa-building::before {
+            content: "\f1ad" !important;
+        }
+
+        .fas.fa-user-cog::before {
+            content: "\f4fe" !important;
+        }
+
+        .fas.fa-tachometer-alt::before {
+            content: "\f3fd" !important;
+        }
+
+        .fas.fa-calendar-alt::before {
+            content: "\f073" !important;
+        }
+
+        .fas.fa-newspaper::before {
+            content: "\f1ea" !important;
+        }
+
+        .fas.fa-sign-out-alt::before {
+            content: "\f2f5" !important;
+        }
+
+        .fas.fa-times::before {
+            content: "\f00d" !important;
+        }
+
+        .fas.fa-plus::before {
+            content: "\f067" !important;
+        }
+
+        /* Force FontAwesome font loading */
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2') format('woff2');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Specific icon fixes */
+        .sidebar-icon-users::before {
+            content: "\f0c0";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #10b981;
+        }
+
+        .sidebar-icon-building::before {
+            content: "\f1ad";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #8b5cf6;
+        }
+
+        .sidebar-icon-user-cog::before {
+            content: "\f4fe";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #6b7280;
+        }
+
+        /* Fallback icon detection */
+        .icon-fallback {
+            display: none !important;
+        }
+
+        .icon-primary:empty+.icon-fallback,
+        .icon-primary[data-empty="true"]+.icon-fallback {
+            display: inline-block !important;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Mobile responsive behavior */
+        @media (max-width: 1279px) {
+            .porsche-sidebar {
+                transform: translateX(-100%) !important;
+                z-index: 999;
+                margin: 0 !important;
+                top: 0 !important;
+                left: 0 !important;
+                border-radius: 0 !important;
+                width: 280px !important;
+                max-width: 280px !important;
+                height: 100vh !important;
+            }
+
+            .sidenav-overlay.show {
+                opacity: 1;
+                visibility: visible;
+                z-index: 998;
+            }
+
+            .porsche-sidebar.sidenav-show {
+                transform: translateX(0) !important;
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+        }
+
+        /* Desktop sidebar */
+        @media (min-width: 1280px) {
+            .porsche-sidebar {
+                transform: translateX(0) !important;
+                position: fixed !important;
+                margin-left: 1.5rem !important;
+                top: 1rem !important;
+                left: 0 !important;
+                height: calc(100vh - 2rem) !important;
+                border-radius: var(--porsche-radius-lg) !important;
+                z-index: 40 !important;
+            }
+
+            .main-content {
+                margin-left: 17rem !important;
+                padding-left: 0 !important;
+            }
+
+            .sidenav-overlay {
+                display: none !important;
+            }
+
+            #sidebarCloseBtn {
+                display: none !important;
+            }
+        }
+
+        /* Enhanced sidebar behavior for desktop */
+        @media (min-width: 1280px) {
+            .sidebar-enhanced {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 768px) {
+            .module-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+
+            .w-full.px-6 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            nav .mx-6 {
+                margin-left: 1rem !important;
+                margin-right: 1rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .porsche-sidebar {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .flex-wrap-inherit {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            .user-info {
+                margin-top: 0.5rem !important;
+                margin-right: 0 !important;
+            }
+        }
+
+        /* Ensure proper z-index hierarchy */
+        .porsche-sidebar {
+            z-index: 999 !important;
+        }
+
+        .sidenav-overlay {
+            z-index: 998 !important;
+        }
+
+        nav {
+            z-index: 997 !important;
+        }
+
+        .main-content {
+            z-index: 1 !important;
+        }
+
+        /* ====== COMPREHENSIVE RESPONSIVE DESIGN SYSTEM ====== */
+
+        /* Statistics grid responsiveness */
+        .stats-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            margin-bottom: 2rem;
+        }
+
+        /* Table responsive wrapper */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-wrapper table {
+            min-width: 600px;
+            width: 100%;
+        }
+
+        /* Form responsive design */
+        .responsive-form {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+
+        /* Modal responsive design */
+        .responsive-modal .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 1rem;
+        }
+
+        /* ====== DESKTOP BREAKPOINT (1200px+) ====== */
+        @media (min-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+
+            .responsive-form {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .main-content {
+                margin-left: 17rem;
+                padding: 2rem;
+            }
+
+            /* Enhanced spacing for desktop */
+            .w-full.px-6 {
+                padding-left: 3rem !important;
+                padding-right: 3rem !important;
+            }
+        }
+
+        /* ====== LAPTOP BREAKPOINT (992px - 1199px) ====== */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .responsive-form {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .w-full.px-6 {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* ====== TABLET BREAKPOINT (768px - 991px) ====== */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .responsive-modal .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .table-wrapper table {
+                min-width: 500px;
+            }
+
+            /* Better table cells for tablet */
+            .table-wrapper td,
+            .table-wrapper th {
+                padding: 0.75rem 0.5rem;
+            }
+
+            /* Optimize navbar for tablet */
+            nav .flex-wrap-inherit {
+                flex-wrap: wrap;
+            }
+
+            .user-info {
+                margin-right: 1rem;
+            }
+        }
+
+        /* ====== MOBILE LARGE BREAKPOINT (480px - 767px) ====== */
+        @media (min-width: 480px) and (max-width: 767px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 0.75rem;
+            }
+
+            .responsive-modal .modal-content {
+                padding: 1rem;
+                margin: 0.5rem;
+                border-radius: 8px;
+            }
+
+            .responsive-form {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            /* Mobile-friendly buttons */
+            button,
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                min-height: 44px;
+            }
+
+            /* Compact stat cards */
+            .stat-card {
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .table-wrapper {
+                margin: 0 -0.75rem;
+                border-radius: 0;
+            }
+
+            .table-wrapper table {
+                min-width: 400px;
+                font-size: 0.9rem;
+            }
+
+            /* Hide less important table columns */
+            .table-hide-mobile {
+                display: none;
+            }
+
+            /* Simplified navbar */
+            .user-info span {
+                font-size: 0.875rem;
+            }
+
+            nav h6 {
+                font-size: 1rem;
+            }
+
+            nav p {
+                display: none;
+            }
+        }
+
+        /* ====== MOBILE SMALL BREAKPOINT (up to 479px) ====== */
+        @media (max-width: 479px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 0.5rem;
+            }
+
+            .responsive-modal .modal-content {
+                padding: 0.75rem;
+                margin: 0.25rem;
+                border-radius: 6px;
+                max-height: 95vh;
+            }
+
+            /* Ultra-compact stat cards */
+            .stat-card {
+                padding: 0.75rem;
+                min-height: 60px;
+                text-align: center;
+            }
+
+            .stat-card h3 {
+                font-size: 0.875rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .stat-card .text-2xl {
+                font-size: 1.25rem;
+            }
+
+            /* Minimal table */
+            .table-wrapper {
+                margin: 0 -0.5rem;
+            }
+
+            .table-wrapper table {
+                min-width: 300px;
+                font-size: 0.75rem;
+            }
+
+            .table-wrapper td,
+            .table-wrapper th {
+                padding: 0.375rem 0.25rem;
+            }
+
+            /* Simplified buttons */
+            button,
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+                min-height: 40px;
+                width: 100%;
+            }
+
+            /* Ultra-compact navbar */
+            nav h6 {
+                font-size: 0.875rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            /* Stack form elements */
+            .flex-wrap-inherit {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            /* Better spacing */
+            .w-full.px-6 {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+        }
+
+        /* ====== ENHANCED TABLE RESPONSIVENESS ====== */
+        @media (max-width: 640px) {
+
+            /* Make tables scrollable with better UX */
+            .table-wrapper {
+                position: relative;
+                border: 1px solid #e5e7eb;
+            }
+
+            .table-wrapper::after {
+                content: '→';
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #9ca3af;
+                font-size: 1.5rem;
+                pointer-events: none;
+                opacity: 0.7;
+                animation: scroll-hint 2s infinite;
+            }
+
+            @keyframes scroll-hint {
+
+                0%,
+                100% {
+                    transform: translateY(-50%) translateX(0);
+                }
+
+                50% {
+                    transform: translateY(-50%) translateX(4px);
+                }
+            }
+
+            /* Improve table readability */
+            .table-wrapper table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .table-wrapper th,
+            .table-wrapper td {
+                border-right: 1px solid #e5e7eb;
+                white-space: nowrap;
+            }
+
+            .table-wrapper th:last-child,
+            .table-wrapper td:last-child {
+                border-right: none;
+            }
+        }
+
+        /* ====== MODAL IMPROVEMENTS ====== */
+        @media (max-width: 640px) {
+            .modal {
+                padding: 0.5rem;
+                align-items: flex-start;
+                padding-top: 2rem;
+            }
+
+            .modal .modal-content {
+                margin: 0;
+                max-height: calc(100vh - 4rem);
+                overflow-y: auto;
+                border-radius: 12px 12px 0 0;
+                width: 100%;
+                position: relative;
+            }
+
+            /* Add modal close handle */
+            .modal .modal-content::before {
+                content: '';
+                position: absolute;
+                top: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 4px;
+                background: #e5e7eb;
+                border-radius: 2px;
+            }
+        }
+
+        /* ====== ACCESSIBILITY IMPROVEMENTS ====== */
+        @media (max-width: 768px) {
+
+            /* Larger touch targets */
+            button,
+            .action-btn,
+            a {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Better focus indicators */
+            button:focus,
+            input:focus,
+            select:focus {
+                outline: 2px solid var(--porsche-accent);
+                outline-offset: 2px;
+                border-radius: 4px;
+            }
+
+            /* Improved text contrast */
+            .text-gray-500 {
+                color: #6b7280 !important;
+            }
+
+            .text-gray-400 {
+                color: #9ca3af !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default text-slate-500">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990 xl:ml-6 xl:left-0 xl:translate-x-0 scroll-enhanced"
+        aria-expanded="false">
+        <div class="h-24 py-4 relative">
+            <!-- Botón de cerrar para móvil -->
+            <button class="xl:hidden absolute top-2 right-2 text-white hover:text-gray-300 text-2xl z-50 p-2"
+                id="sidebarCloseBtn" sidenav-close aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <a class="porsche-logo block px-8 m-0 text-center whitespace-nowrap" href="dashboard.html" target="_blank">
+                <img src="./assets/img/apple-icon.png"
+                    class="block mx-auto h-20 w-20 max-w-full transition-all duration-200 ease-nav-brand mb-3"
+                    alt="main_logo" />
+                <span class="block text-sm transition-all duration-200 ease-nav-brand text-white font-medium">Clúster
+                    Admin</span>
+            </a>
+        </div>
+
+        <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0">
+                <!-- Dashboard -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html" onclick="showSection('dashboard')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="gestionar_usuarios.php" onclick="showSection('users')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500 sidebar-icon-users icon-primary"></i>
+                            <span class="text-green-500 font-bold text-lg icon-fallback"></span>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html" onclick="showSection('companies')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500 sidebar-icon-building icon-primary"></i>
+                            <span class="text-purple-500 font-bold text-lg icon-fallback"></span>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_evento.html" onclick="showSection('events')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar-alt text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+
+                <!-- Boletines -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_boletines.html" onclick="showSection('bulletins')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-newspaper text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
+                    </a>
+                </li>
+
+                <!-- Documentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html" onclick="showSection('companies')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-file text-purple-500 sidebar-icon-building icon-primary"></i>
+                            <span class="text-purple-500 font-bold text-lg icon-fallback"></span>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Documentos</span>
+                    </a>
+                </li>
+
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_descuentos.html" onclick="showSection('discounts')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500 icon-primary"></i>
+                            <span class="text-red-500 font-bold text-lg icon-fallback"></span>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+
+                <!-- Perfil -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="profile.html" onclick="showSection('system')">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-user-cog text-gray-500 sidebar-icon-user-cog icon-primary"></i>
+                            <span class="text-gray-500 font-bold text-lg icon-fallback"></span>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mx-4">
+            <button onclick="logout()"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
+                <!-- Icono en cuadro -->
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Sidebar overlay for mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Main content -->
+    <main class="main-content ease-soft-in-out relative rounded-xl transition-all duration-200">
+        <!-- Navbar -->
+        <nav class="bg-black text-white relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start"
+            navbar-main navbar-scroll="true">
+            <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+                <div class="flex items-center">
+                    <!-- Hamburger Menu Button for Mobile -->
+                    <button
+                        class="xl:hidden mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md"
+                        sidenav-trigger aria-label="Abrir menú de navegación">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h6 class="mb-0 font-bold capitalize text-white">Panel de Administración</h6>
+                        <p class="text-sm leading-normal mb-0 text-white">Sistema de gestión completo</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center text-white">
+                    <div class="user-info mr-4" id="adminUserInfo">
+                        <span class="text-sm font-semibold text-white" id="adminUserName">Cargando...</span>
+                        <br>
+                        <span class="text-xs text-gray-500 text-white" id="adminUserRole">Administrador</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content sections -->
+        <div class="w-full px-6 py-6 mx-auto">
+            <!-- Alert container -->
+            <div id="alertContainer"></div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Estadísticas del Sistema</h2>
+                    <button onclick="refreshStats()" class="porsche-btn porsche-btn-accent" id="refreshStatsBtn">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
+                <div class="stats-grid grid gap-3 mb-6"
+                    style="grid-template-columns: repeat(3, 1fr) !important; display: grid !important;">
+                    <div class="stat-card users">
+                        <div class="flex items-center justify-between">
+                            <div class="text-3xl font-bold" id="totalUsers">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                            <i class="fas fa-users text-blue-500"></i>
+                        </div>
+                        <div class="text-sm opacity-80">Total Usuarios</div>
+                    </div>
+                    <div class="stat-card companies">
+                        <div class="flex items-center justify-between">
+                            <div class="text-3xl font-bold" id="totalCompanies">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                            <i class="fas fa-building text-green-500"></i>
+                        </div>
+                        <div class="text-sm opacity-80">Empresas Activas</div>
+                    </div>
+                    <div class="stat-card events">
+                        <div class="flex items-center justify-between">
+                            <div class="text-3xl font-bold" id="totalEvents">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                            <i class="fas fa-calendar text-purple-500"></i>
+                        </div>
+                        <div class="text-sm opacity-80">Eventos</div>
+                    </div>
+                    <div class="stat-card bulletins">
+                        <div class="flex items-center justify-between">
+                            <div class="text-3xl font-bold" id="totalBulletins">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                            <i class="fas fa-newspaper text-orange-500"></i>
+                        </div>
+                        <div class="text-sm opacity-80">Boletines</div>
+                    </div>
+                    <div class="stat-card documents">
+                        <div class="flex items-center justify-between">
+                            <div class="text-3xl font-bold" id="totalDocuments">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                            <i class="fas fa-file-alt text-red-500"></i>
+                        </div>
+                        <div class="text-sm opacity-80">Documentos</div>
+                    </div>
+                    <div class="stat-card discounts">
+                        <div class="flex items-center justify-between">
+                            <div class="text-3xl font-bold" id="totalDiscounts">
+                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
+                            </div>
+                            <i class="fas fa-percent text-yellow-500"></i>
+                        </div>
+                        <div class="text-sm opacity-80">Descuentos</div>
+                    </div>
+                </div>
+
+
+
+
+                <!-- Módulos de Gestión -->
+                <div class="admin-section mb-8">
+                    <h3 class="text-xl font-bold mb-6">Módulos de Gestión</h3>
+                    <div class="module-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                        <!-- Gestión de Banners -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 7h18M3 12h18M3 17h18" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Banners</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra los banners del carrusel
+                                principal y las imágenes promocionales.</p>
+                            <button onclick="window.open('./admin/banner-admin-mejorado.php', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #3b82f6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
+                                </svg>
+                                Gestionar Banners
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Boletines -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #10b981, #047857);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21H5a2 2 0 01-2-2V7h18v12a2 2 0 01-2 2zM3 7V5a2 2 0 012-2h2" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Boletines</h4>
+                            <p class="module-description text-gray-600 mb-4">Crea y publica boletines informativos para
+                                la comunidad.</p>
+                            <button onclick="window.open('../demo_boletines.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #10b981;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
+                                </svg>
+                                Gestionar Boletines
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Documentos -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Documentos</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra la documentación organizacional
+                                con categorías y permisos.</p>
+                            <button onclick="window.open('./demo_documentos.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #6366f1;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
+                                </svg>
+                                Gestionar Documentos
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Descuentos -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #e53e3e, #c53030);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Descuentos</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra descuentos empresariales con
+                                códigos promocionales y vigencias.</p>
+                            <button onclick="window.open('./demo_descuentos.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #e53e3e;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                Gestionar Descuentos
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Comités -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M9 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Comités</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra los comités y grupos de trabajo
+                                de la organización.</p>
+                            <button onclick="window.open('../demo_comite.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #8b5cf6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
+                                </svg>
+                                Gestionar Comités
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Empresas -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 21h18V8H3v13zM16 3v5m-4-5v5M8 3v5" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Empresas</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra las empresas afiliadas y sus
+                                convenios comerciales.</p>
+                            <button onclick="window.open('../demo_empresas.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #6366f1;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 21h18V8H3v13zM16 3v5m-4-5v5M8 3v5" />
+                                </svg>
+                                Gestionar Empresas
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Eventos -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10m-12 8h14V7H4v13z" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Eventos</h4>
+                            <p class="module-description text-gray-600 mb-4">Crea y administra eventos, conferencias y
+                                actividades.</p>
+                            <button onclick="window.open('../demo_evento.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #ef4444;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10m-12 8h14V7H4v13z" />
+                                </svg>
+                                Gestionar Eventos
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Gráficos -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #14b8a6, #0f766e);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 3v18m6-6H5" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Gráficos</h4>
+                            <p class="module-description text-gray-600 mb-4">Configura dashboards y visualizaciones de
+                                datos del sistema.</p>
+                            <button onclick="window.open('../demo_gestion_grafico.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #14b8a6;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 3v18m6-6H5" />
+                                </svg>
+                                Gestionar Gráficos
+                            </button>
+                        </div>
+
+                        <!-- Estadísticas Dinámicas -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #f97316, #ea580c);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Estadísticas Dinámicas</h4>
+                            <p class="module-description text-gray-600 mb-4">Personaliza las estadísticas del dashboard
+                                principal del sistema.</p>
+                            <button onclick="window.open('../demo_estadisticasdinamicas.html', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #f97316;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3" />
+                                </svg>
+                                Configurar Estadísticas
+                            </button>
+                        </div>
+
+                        <!-- Gestión de Usuarios -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M9 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Usuarios</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra usuarios, permisos, roles y
+                                configuraciones de acceso.</p>
+                            <button onclick="window.open('../gestionar_usuarios.php', '_blank')"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #06b6d4;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M9 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                Gestionar Usuarios
+                            </button>
+                        </div>
+
+                        <!-- Módulo de Gestión de Visitantes -->
+                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center" id="gestionVisitantes">
+                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                                style="background: linear-gradient(135deg, #7c3aed, #5b21b6);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </div>
+                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Visitantes</h4>
+                            <p class="module-description text-gray-600 mb-4">Administra el acceso de visitantes y
+                                configura las páginas disponibles</p>
+                            <button onclick="abrirDemoVisitante()"
+                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
+                                style="background: #7c3aed;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Gestionar Visitantes
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="admin-section">
+                    <h3 class="text-xl font-bold mb-4">Actividad Reciente</h3>
+                    <div id="recentActivity">Cargando actividad...</div>
+                </div>
+            </div>
+
+
+
+
+            <!-- Scripts -->
+            <script src="./js/auth-session.js"></script>
+            <script>
+                // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+                document.addEventListener('DOMContentLoaded', function () {
+                    initializeSidebar();
+                });
+
+                function initializeSidebar() {
+                    const sidebar = document.querySelector('.porsche-sidebar');
+                    const overlay = document.getElementById('sidenavOverlay');
+                    const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+                    const closeBtn = document.getElementById('sidebarCloseBtn');
+
+                    if (!sidebar || !overlay || !hamburgerBtn) {
+                        console.warn('Sidebar elements not found');
+                        return;
+                    }
+
+                    // Toggle sidebar function
+                    function toggleSidebar() {
+                        const isVisible = sidebar.classList.contains('sidenav-show');
+
+                        if (!isVisible) {
+                            // Open sidebar
+                            sidebar.classList.add('sidenav-show');
+                            sidebar.setAttribute('aria-expanded', 'true');
+                            overlay.classList.add('show');
+                            document.body.style.overflow = 'hidden';
+
+                            // Focus management for accessibility
+                            const firstLink = sidebar.querySelector('.porsche-nav-item');
+                            if (firstLink) {
+                                setTimeout(() => firstLink.focus(), 100);
+                            }
+                        } else {
+                            // Close sidebar
+                            closeSidebar();
+                        }
+                    }
+
+                    // Close sidebar function
+                    function closeSidebar() {
+                        sidebar.classList.remove('sidenav-show');
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        overlay.classList.remove('show');
+                        document.body.style.overflow = '';
+
+                        // Return focus to hamburger button
+                        if (hamburgerBtn && window.innerWidth < 1280) {
+                            hamburgerBtn.focus();
+                        }
+                    }
+
+                    // Event listeners
+                    hamburgerBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleSidebar();
+                    });
+
+                    hamburgerBtn.addEventListener('touchstart', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleSidebar();
+                    }, { passive: false });
+
+                    if (overlay) {
+                        overlay.addEventListener('click', closeSidebar);
+                        overlay.addEventListener('touchstart', function (e) {
+                            e.preventDefault();
+                            closeSidebar();
+                        }, { passive: false });
+                    }
+
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            closeSidebar();
+                        });
+                        closeBtn.addEventListener('touchstart', function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            closeSidebar();
+                        }, { passive: false });
+                    }
+
+                    // Close on escape key
+                    document.addEventListener('keydown', function (e) {
+                        if (e.key === 'Escape') {
+                            closeSidebar();
+                        }
+                    });
+
+                    // Handle window resize
+                    window.addEventListener('resize', function () {
+                        if (window.innerWidth >= 1280) {
+                            closeSidebar();
+                        }
+                    });
+
+                    // Swipe to close functionality
+                    let touchStartX = 0;
+                    let touchStartY = 0;
+
+                    sidebar.addEventListener('touchstart', function (e) {
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    sidebar.addEventListener('touchmove', function (e) {
+                        if (!touchStartX) return;
+
+                        const currentX = e.touches[0].clientX;
+                        const currentY = e.touches[0].clientY;
+                        const diffX = touchStartX - currentX;
+                        const diffY = Math.abs(touchStartY - currentY);
+
+                        // Swipe left to close
+                        if (diffX > 50 && diffY < 100) {
+                            closeSidebar();
+                            touchStartX = 0;
+                            touchStartY = 0;
+                        }
+                    }, { passive: true });
+
+                    // Keyboard navigation in sidebar
+                    sidebar.addEventListener('keydown', function (e) {
+                        if (e.key === 'Escape') {
+                            closeSidebar();
+                        }
+
+                        // Arrow navigation
+                        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                            const currentIndex = navItems.indexOf(document.activeElement);
+
+                            if (e.key === 'ArrowDown') {
+                                const nextIndex = (currentIndex + 1) % navItems.length;
+                                navItems[nextIndex].focus();
+                            } else {
+                                const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                                navItems[prevIndex].focus();
+                            }
+                        }
+                    });
+
+                    console.log('✅ Sidebar functionality initialized successfully');
+                }
+
+                // Legacy function compatibility
+                function closeSidebar() {
+                    const sidebar = document.querySelector('.porsche-sidebar');
+                    const overlay = document.getElementById('sidenavOverlay');
+
+                    if (sidebar && overlay) {
+                        sidebar.classList.remove('sidenav-show');
+                        sidebar.setAttribute('aria-expanded', 'false');
+                        overlay.classList.remove('show');
+                        document.body.style.overflow = '';
+                    }
+                }
+            </script>
+            <script>
+                // Icon fallback detection
+                document.addEventListener('DOMContentLoaded', function () {
+                    setTimeout(function () {
+                        // Check if FontAwesome icons are loaded
+                        const iconElements = document.querySelectorAll('.icon-primary');
+                        iconElements.forEach(function (icon) {
+                            const computedStyle = window.getComputedStyle(icon, '::before');
+                            const content = computedStyle.content;
+
+                            // If content is 'none' or empty, the icon didn't load
+                            if (content === 'none' || content === '""' || content === "''" || !content) {
+                                icon.style.display = 'none';
+                                const fallback = icon.nextElementSibling;
+                                if (fallback && fallback.classList.contains('icon-fallback')) {
+                                    fallback.style.display = 'inline-block';
+                                }
+                            }
+                        });
+                    }, 1000); // Wait 1 second for fonts to load
+                });
+
+                // Variables globales
+                let currentSection = 'dashboard';
+                let allUsers = [];
+                let allCompanies = [];
+
+                // Función para cerrar sidebar en móviles
+                function closeSidebar() {
+                    const sidebar = document.querySelector('aside');
+                    sidebar.classList.add('-translate-x-full');
+                }
+
+                // Inicialización
+                document.addEventListener('DOMContentLoaded', function () {
+                    checkAdminAuthentication();
+                });
+
+                // Verificar autenticación de administrador
+                async function checkAdminAuthentication() {
+                    console.log('🔍 Verificando autenticación de administrador...');
+
+                    // Probar múltiples endpoints como en dashboard
+                    const endpoints = [
+                        './api/auth/login-compatible.php?action=check',
+                        './api/auth/session.php?action=check',
+                        '../api/auth/login-compatible.php?action=check',
+                        '../api/auth/session.php?action=check'
+                    ];
+
+                    let authSuccess = false;
+                    let userData = null;
+
+                    for (const endpoint of endpoints) {
+                        try {
+                            console.log(`🔍 Probando endpoint admin: ${endpoint}`);
+
+                            const response = await fetch(endpoint, {
+                                method: 'GET',
+                                credentials: 'include',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+
+                            if (!response.ok) {
+                                console.log(`❌ HTTP error en ${endpoint}: ${response.status}`);
+                                continue;
+                            }
+
+                            const result = await response.json();
+                            console.log(`📄 Respuesta admin de ${endpoint}:`, result);
+
+                            if (result.success && result.data) {
+                                userData = result.data;
+                                authSuccess = true;
+                                console.log(`✅ Usuario autenticado desde ${endpoint}:`, userData.nombre || userData.email, 'Rol:', userData.rol);
+                                break;
+                            }
+                        } catch (error) {
+                            console.log(`❌ Error en ${endpoint}:`, error.message);
+                            continue;
+                        }
+                    }
+
+                    if (authSuccess && userData && userData.rol === 'admin') {
+                        console.log('✅ Administrador autenticado correctamente');
+                        updateAdminInfo(userData);
+
+                        // Cargar datos del dashboard con un pequeño delay para asegurar que la sesión esté lista
+                        setTimeout(() => {
+                            loadDashboardData();
+                            loadDashboardStats(); // Llamar también a la función de estadísticas alternativa
+                        }, 500);
+
+                        showSection('dashboard'); // Mostrar la sección dashboard por defecto
+                    } else {
+                        if (authSuccess && userData) {
+                            console.log(`❌ Usuario autenticado pero no es admin. Rol: ${userData.rol}`);
+                            showAlert(`Acceso denegado. Tu rol es "${userData.rol}" pero se requiere rol "admin".`, 'error');
+                        } else {
+                            console.log('❌ Usuario no autenticado en ningún endpoint');
+                            showAlert('Acceso denegado. Solo administradores pueden acceder.', 'error');
+                        }
+
+                        setTimeout(() => {
+                            window.location.href = './pages/sign-in.html';
+                        }, 3000);
+                    }
+                }
+
+                // Actualizar información del administrador
+                function updateAdminInfo(admin) {
+                    document.getElementById('adminUserName').textContent = `${admin.nombre} ${admin.apellido}`;
+                    document.getElementById('adminUserRole').textContent = 'Administrador del Sistema';
+
+                    if (admin.avatar_url) {
+                        document.getElementById('adminUserAvatar').src = admin.avatar_url;
+                    }
+                }
+
+                // Mostrar sección
+                function showSection(section) {
+                    // Ocultar todas las secciones
+                    document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+
+                    // Mostrar sección seleccionada
+                    document.getElementById(section + '-section').classList.remove('hidden');
+
+                    // Actualizar navegación
+                    document.querySelectorAll('aside a').forEach(a => a.classList.remove('active-nav'));
+                    const activeLink = document.querySelector(`a[href="#${section}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active-nav');
+                    }
+
+                    currentSection = section;
+
+                    // Cargar datos según la sección
+                    switch (section) {
+                        case 'dashboard':
+                            loadDashboardData();
+                            break;
+                        case 'users':
+                            loadUsers();
+                            break;
+                        case 'companies':
+                            loadCompanies();
+                            break;
+                        case 'events':
+                            loadEvents();
+                            break;
+                        case 'bulletins':
+                            loadBulletins();
+                            break;
+                        case 'documents':
+                            loadDocuments();
+                            break;
+                        case 'discounts':
+                            loadDiscounts();
+                            break;
+                    }
+                }
+
+                // Cargar datos del dashboard
+                async function loadDashboardData() {
+                    console.log('🔄 Cargando datos del dashboard...');
+                    try {
+                        // Cargar estadísticas con mejor manejo de errores
+                        const statsResponse = await fetch('./api/admin/stats.php', {
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!statsResponse.ok) {
+                            console.error('❌ Error HTTP en stats:', statsResponse.status);
+                            throw new Error(`HTTP error! status: ${statsResponse.status}`);
+                        }
+
+                        const statsResult = await statsResponse.json();
+                        console.log('📊 Respuesta de stats:', statsResult);
+
+                        if (statsResult.success && statsResult.data) {
+                            console.log('✅ Actualizando estadísticas con datos reales');
+                            document.getElementById('totalUsers').textContent = statsResult.data.users || 0;
+                            document.getElementById('totalCompanies').textContent = statsResult.data.companies || 0;
+                            document.getElementById('totalEvents').textContent = statsResult.data.events || 0;
+                            document.getElementById('totalBulletins').textContent = statsResult.data.bulletins || 0;
+                        } else {
+                            console.error('❌ Error en respuesta de stats:', statsResult.message);
+                            console.log('🔍 Verificando estado de autenticación actual...');
+
+                            // Verificar si realmente estamos autenticados
+                            if (document.getElementById('adminUserName').textContent &&
+                                document.getElementById('adminUserName').textContent !== '') {
+                                console.log('✅ Usuario autenticado en navbar pero API stats falla');
+                                showAlert('Problema de sesión detectado. Reintentando...', 'warning');
+
+                                // Intentar con endpoints alternativos directamente
+                                setTimeout(() => {
+                                    loadDashboardStats();
+                                }, 1000);
+                            } else {
+                                showAlert('Error de autenticación. Reintentando...', 'warning');
+                                // Reintentar autenticación completa si falla
+                                setTimeout(() => {
+                                    checkAdminAuthentication();
+                                }, 2000);
+                            }
+                        }
+
+                        // Cargar estadísticas de documentos
+                        try {
+                            const docsResponse = await fetch('./api/documentos.php');
+                            const docsResult = await docsResponse.json();
+                            if (docsResult.success && docsResult.stats) {
+                                document.getElementById('totalDocuments').textContent = docsResult.stats.total || 0;
+                            }
+                        } catch (error) {
+                            console.error('Error loading documents stats:', error);
+                            document.getElementById('totalDocuments').textContent = '0';
+                        }
+
+                        // Cargar estadísticas de descuentos
+                        try {
+                            const discountsResponse = await fetch('./api/descuentos.php?estado=todos');
+                            const discountsResult = await discountsResponse.json();
+                            if (discountsResult.success && discountsResult.stats) {
+                                document.getElementById('totalDiscounts').textContent = discountsResult.stats.total || 0;
+                            }
+                        } catch (error) {
+                            console.error('Error loading discounts stats:', error);
+                            document.getElementById('totalDiscounts').textContent = '0';
+                        }
+
+                        // Cargar actividad reciente
+                        loadRecentActivity();
+
+                    } catch (error) {
+                        console.error('Error cargando dashboard:', error);
+                        showAlert('Error cargando datos del dashboard', 'error');
+                    }
+                }
+
+                // Cargar actividad reciente
+                async function loadRecentActivity() {
+                    try {
+                        const response = await fetch('./api/admin/recent-activity.php', {
+                            credentials: 'include'
+                        });
+                        const result = await response.json();
+
+                        if (result.success && result.data && result.data.length > 0) {
+                            const activityHtml = result.data.map(activity => `
+                        <div class="flex items-center p-3 border-b">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium">${activity.action}</div>
+                                <div class="text-xs text-gray-500">${activity.created_at}</div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                            document.getElementById('recentActivity').innerHTML = activityHtml;
+                        } else {
+                            document.getElementById('recentActivity').innerHTML = '<p class="text-gray-500">No hay actividad reciente</p>';
+                        }
+                    } catch (error) {
+                        document.getElementById('recentActivity').innerHTML = '<p class="text-red-500">Error cargando actividad</p>';
+                    }
+                }
+
+                // Cargar usuarios
+                async function loadUsers() {
+                    try {
+                        const response = await fetch('./api/admin/users.php', {
+                            credentials: 'include'
+                        });
+                        const result = await response.json();
+
+                        if (result.success && result.data) {
+                            allUsers = result.data;
+                            renderUsers(allUsers);
+                        } else {
+                            showAlert('Error cargando usuarios', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error cargando usuarios:', error);
+                        showAlert('Error de conexión', 'error');
+                    }
+                }
+
+                // Renderizar usuarios
+                function renderUsers(users) {
+                    const tbody = document.getElementById('usersTableBody');
+
+                    if (users.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-gray-500">No hay usuarios</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = users.map(user => `
+                <tr class="table-row">
+                    <td class="p-3">
+                        <div class="flex items-center">
+                            <div>
+                                <div class="font-medium">${user.nombre} ${user.apellido}</div>
+                                <div class="text-xs text-gray-500">${user.telefono || 'Sin teléfono'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-3">${user.email}</td>
+                    <td class="p-3">
+                        <span class="badge ${user.rol}">${user.rol}</span>
+                    </td>
+                    <td class="p-3">${user.nombre_empresa || 'Sin empresa'}</td>
+                    <td class="p-3">
+                        <span class="badge ${user.activo ? 'activo' : 'inactivo'}">
+                            ${user.activo ? 'Activo' : 'Inactivo'}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <button onclick="editUser(${user.id})" class="action-btn edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="toggleUserStatus(${user.id}, ${user.activo})" 
+                                class="action-btn ${user.activo ? 'delete' : 'edit'}">
+                            <i class="fas fa-${user.activo ? 'ban' : 'check'}"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+                }
+
+                // Filtrar usuarios
+                function filterUsers() {
+                    const search = document.getElementById('userSearch').value.toLowerCase();
+                    const filtered = allUsers.filter(user =>
+                        user.nombre.toLowerCase().includes(search) ||
+                        user.apellido.toLowerCase().includes(search) ||
+                        user.email.toLowerCase().includes(search) ||
+                        user.rol.toLowerCase().includes(search)
+                    );
+                    renderUsers(filtered);
+                }
+
+                // Cargar empresas
+                async function loadCompanies() {
+                    try {
+                        const response = await fetch('./api/empresas_convenio.php', {
+                            credentials: 'include'
+                        });
+                        const result = await response.json();
+
+                        if (result.success && result.data) {
+                            allCompanies = result.data;
+                            renderCompanies(allCompanies);
+                        } else {
+                            showAlert('Error cargando empresas', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error cargando empresas:', error);
+                        showAlert('Error de conexión', 'error');
+                    }
+                }
+
+                // Renderizar empresas
+                function renderCompanies(companies) {
+                    const tbody = document.getElementById('companiesTableBody');
+
+                    if (companies.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">No hay empresas</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = companies.map(company => `
+                <tr class="table-row">
+                    <td class="p-3">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-gray-200 rounded mr-3 flex items-center justify-center">
+                                <i class="fas fa-building text-gray-500"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">${company.nombre_empresa}</div>
+                                <div class="text-xs text-gray-500">${company.email || 'Sin email'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-3">${company.categoria || 'Sin categoría'}</td>
+                    <td class="p-3">
+                        <span class="font-medium text-green-600">${company.descuento || 0}%</span>
+                    </td>
+                    <td class="p-3">
+                        <span class="badge ${company.activo ? 'activo' : 'inactivo'}">
+                            ${company.activo ? 'Activo' : 'Inactivo'}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <button onclick="editCompany(${company.id})" class="action-btn edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="viewCompany(${company.id})" class="action-btn view">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+                }
+
+                // Funciones de usuarios
+                function openUserModal(userId = null) {
+                    const modal = document.getElementById('userModal');
+                    const title = document.getElementById('userModalTitle');
+                    const form = document.getElementById('userForm');
+
+                    form.reset();
+                    document.getElementById('userId').value = '';
+
+                    if (userId) {
+                        title.textContent = 'Editar Usuario';
+                        loadUserData(userId);
+                    } else {
+                        title.textContent = 'Agregar Usuario';
+                        document.getElementById('userPasswordGroup').style.display = 'block';
+                        document.getElementById('userPassword').required = true;
+                    }
+
+                    loadCompaniesForUser();
+                    modal.style.display = 'block';
+                }
+
+                function closeUserModal() {
+                    document.getElementById('userModal').style.display = 'none';
+                }
+
+                function toggleUserEmpresaField() {
+                    const rol = document.getElementById('userRol').value;
+                    const empresaGroup = document.getElementById('userEmpresaGroup');
+                    const empresaSelect = document.getElementById('userEmpresa');
+
+                    if (rol === 'empresa') {
+                        empresaGroup.style.display = 'block';
+                        empresaSelect.required = true;
+                    } else {
+                        empresaGroup.style.display = 'none';
+                        empresaSelect.required = false;
+                        empresaSelect.value = '';
+                    }
+                }
+
+                async function loadCompaniesForUser() {
+                    try {
+                        const response = await fetch('./api/empresas_convenio.php?activo=1', {
+                            credentials: 'include'
+                        });
+                        const result = await response.json();
+
+                        const select = document.getElementById('userEmpresa');
+                        select.innerHTML = '<option value="">Seleccionar empresa</option>';
+
+                        if (result.success && result.data) {
+                            result.data.forEach(company => {
+                                const option = document.createElement('option');
+                                option.value = company.id;
+                                option.textContent = company.nombre_empresa;
+                                select.appendChild(option);
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error cargando empresas:', error);
+                    }
+                }
+
+                // Formulario de usuario
+                const userForm = document.getElementById('userForm');
+                if (userForm) {
+                    userForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        const submitBtn = document.getElementById('userSubmitBtn');
+                        const originalText = submitBtn.textContent;
+
+                        try {
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Guardando...';
+
+                            const formData = new FormData(this);
+                            const data = Object.fromEntries(formData.entries());
+
+                            // Agregar campos del formulario
+                            data.nombre = document.getElementById('userNombre').value;
+                            data.apellido = document.getElementById('userApellido').value;
+                            data.email = document.getElementById('userEmail').value;
+                            data.rol = document.getElementById('userRol').value;
+                            data.telefono = document.getElementById('userTelefono').value;
+                            data.cargo = document.getElementById('userCargo').value;
+                            data.departamento = document.getElementById('userDepartamento').value;
+                            data.empresa_id = document.getElementById('userEmpresa').value || null;
+                            data.password = document.getElementById('userPassword').value;
+
+                            const userId = document.getElementById('userId').value;
+                            const isEdit = !!userId;
+
+                            const url = isEdit ? `./api/admin/users.php?id=${userId}` : './api/admin/users.php';
+                            const method = isEdit ? 'PUT' : 'POST';
+
+                            const response = await fetch(url, {
+                                method: method,
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify(data)
+                            });
+
+                            const result = await response.json();
+
+                            if (result.success) {
+                                showAlert(`Usuario ${isEdit ? 'actualizado' : 'creado'} correctamente`, 'success');
+                                closeUserModal();
+                                loadUsers();
+                            } else {
+                                showAlert(result.message || 'Error al guardar usuario', 'error');
+                            }
+
+                        } catch (error) {
+                            console.error('Error:', error);
+                            showAlert('Error de conexión', 'error');
+                        } finally {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = originalText;
+                        }
+                    });
+                }
+
+                // Funciones adicionales
+                function loadEvents() {
+                    document.getElementById('eventsContainer').innerHTML = '<p class="text-center py-8">Cargando eventos...</p>';
+                    // TODO: Implementar carga de eventos
+                }
+
+                function loadBulletins() {
+                    document.getElementById('bulletinsContainer').innerHTML = '<p class="text-center py-8">Cargando boletines...</p>';
+                    // TODO: Implementar carga de boletines
+                }
+
+                function openCompanyModal() {
+                    showAlert('Funcionalidad de empresas en desarrollo', 'warning');
+                }
+
+                function openEventModal() {
+                    showAlert('Funcionalidad de eventos en desarrollo', 'warning');
+                }
+
+                function openBulletinModal() {
+                    showAlert('Funcionalidad de boletines en desarrollo', 'warning');
+                }
+
+                // Utility functions for documents
+                function formatFileSize(bytes) {
+                    if (!bytes || bytes === 0) return '0 bytes';
+                    if (bytes >= 1073741824) {
+                        return (bytes / 1073741824).toFixed(2) + ' GB';
+                    } else if (bytes >= 1048576) {
+                        return (bytes / 1048576).toFixed(2) + ' MB';
+                    } else if (bytes >= 1024) {
+                        return (bytes / 1024).toFixed(2) + ' KB';
+                    } else {
+                        return bytes + ' bytes';
+                    }
+                }
+
+                function formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    return date.toLocaleDateString('es-ES', options);
+                }
+
+                function getFileIcon(tipoArchivo) {
+                    const iconos = {
+                        'PDF': 'fa-file-pdf',
+                        'DOCX': 'fa-file-alt',
+                        'XLSX': 'fa-chart-line',
+                        'PPTX': 'fa-file-powerpoint',
+                        'TXT': 'fa-file-text',
+                        'IMG': 'fa-file-image',
+                        'JPG': 'fa-file-image',
+                        'JPEG': 'fa-file-image',
+                        'PNG': 'fa-file-image',
+                        'GIF': 'fa-file-image'
+                    };
+                    return iconos[tipoArchivo] || 'fa-file';
+                }
+
+                async function loadDocuments() {
+                    const container = document.getElementById('documentsContainer');
+                    container.innerHTML = '<p class="text-center py-8">Cargando documentos...</p>';
+
+                    try {
+                        const response = await fetch('./api/documentos.php');
+                        if (response.ok) {
+                            const result = await response.json();
+                            const documents = result.data || [];
+
+                            if (documents.length === 0) {
+                                container.innerHTML = '<p class="text-center py-8 text-gray-500">No hay documentos disponibles</p>';
+                                return;
+                            }
+
+                            container.innerHTML = `
+                        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documento</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tamaño</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descargas</th>
+                                        <th class="relative px-6 py-3"><span class="sr-only">Acciones</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    ${documents.map(doc => `
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <i class="fas ${getFileIcon(doc.tipo_archivo)} text-lg text-indigo-500 mr-3"></i>
+                                                    <div>
+                                                        <div class="text-sm font-medium text-gray-900">${doc.titulo}</div>
+                                                        <div class="text-sm text-gray-500">${doc.archivo_nombre}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    ${doc.categoria}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                ${doc.tamaño_formateado || formatFileSize(doc.tamaño_archivo)}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                ${formatDate(doc.fecha_subida)}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                ${doc.descargas}
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a href="${doc.archivo_ruta}" target="_blank" class="text-indigo-600 hover:text-indigo-900">Descargar</a>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                        } else {
+                            container.innerHTML = '<p class="text-center py-8 text-red-500">Error al cargar documentos</p>';
+                        }
+                    } catch (error) {
+                        console.error('Error loading documents:', error);
+                        container.innerHTML = '<p class="text-center py-8 text-red-500">Error de conexión</p>';
+                    }
+                }
+                function openDocumentModal() {
+                    showAlert('Funcionalidad de documentos en desarrollo', 'warning');
+                }
+
+                // Cargar descuentos
+                async function loadDiscounts() {
+                    const container = document.getElementById('discountsContainer');
+                    container.innerHTML = '<p class="text-center py-8">Cargando descuentos...</p>';
+
+                    try {
+                        const response = await fetch('./api/descuentos.php?estado=todos');
+                        if (response.ok) {
+                            const result = await response.json();
+                            const discounts = result.data;
+
+                            if (discounts.length === 0) {
+                                container.innerHTML = '<p class="text-center py-8 text-gray-500">No hay descuentos disponibles</p>';
+                                return;
+                            }
+
+                            container.innerHTML = `
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Empresa</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Descuento</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Código</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Vigencia</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Usos</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    ${discounts.map(discount => {
+                                const discountText = discount.porcentaje_descuento
+                                    ? `${discount.porcentaje_descuento}%`
+                                    : `$${discount.monto_descuento || 0}`;
+
+                                const usosText = discount.usos_maximos
+                                    ? `${discount.usos_actuales || 0}/${discount.usos_maximos}`
+                                    : `${discount.usos_actuales || 0}/∞`;
+
+                                const estadoBadge = getDiscountStateBadge(discount.estado_calculado || discount.estado);
+
+                                return `
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-4 py-2">
+                                                    <div class="font-medium text-gray-900">${discount.titulo}</div>
+                                                    <div class="text-sm text-gray-500">${discount.descripcion || 'Sin descripción'}</div>
+                                                </td>
+                                                <td class="px-4 py-2">
+                                                    <div class="font-medium text-gray-900">${discount.empresa_nombre}</div>
+                                                    <div class="text-sm text-gray-500">${discount.sector || 'General'}</div>
+                                                </td>
+                                                <td class="px-4 py-2">
+                                                    <span class="text-lg font-bold text-red-600">${discountText}</span>
+                                                </td>
+                                                <td class="px-4 py-2">
+                                                    <span class="font-mono text-sm">${discount.codigo_descuento || 'N/A'}</span>
+                                                </td>
+                                                <td class="px-4 py-2 text-sm">
+                                                    <div>${new Date(discount.fecha_inicio).toLocaleDateString('es-MX')}</div>
+                                                    <div class="text-gray-500">al ${new Date(discount.fecha_fin).toLocaleDateString('es-MX')}</div>
+                                                </td>
+                                                <td class="px-4 py-2">${estadoBadge}</td>
+                                                <td class="px-4 py-2 text-sm">${usosText}</td>
+                                            </tr>
+                                        `;
+                            }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                        } else {
+                            container.innerHTML = '<p class="text-center py-8 text-red-500">Error al cargar descuentos</p>';
+                        }
+                    } catch (error) {
+                        console.error('Error loading discounts:', error);
+                        container.innerHTML = '<p class="text-center py-8 text-red-500">Error de conexión</p>';
+                    }
+                }
+
+                function getDiscountStateBadge(estado) {
+                    const badges = {
+                        'activo': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Activo</span>',
+                        'inactivo': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactivo</span>',
+                        'expirado': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Expirado</span>',
+                        'agotado': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Agotado</span>'
+                    };
+                    return badges[estado] || badges['inactivo'];
+                }
+
+                function openDiscountModal() {
+                    showAlert('Funcionalidad de descuentos en desarrollo', 'warning');
+                }
+
+                // Funciones del sistema
+                function optimizeDatabase() {
+                    showAlert('Optimización de base de datos en desarrollo', 'warning');
+                }
+
+                function backupDatabase() {
+                    showAlert('Backup de base de datos en desarrollo', 'warning');
+                }
+
+                function viewLogs() {
+                    showAlert('Visor de logs en desarrollo', 'warning');
+                }
+
+                function clearLogs() {
+                    showAlert('Limpieza de logs en desarrollo', 'warning');
+                }
+
+                // Cerrar sesión
+                async function logout() {
+                    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                        console.log('🚪 Cerrando sesión de administrador...');
+
+                        // Probar múltiples endpoints para logout
+                        const endpoints = [
+                            './api/auth/login-compatible.php?action=logout',
+                            './api/auth/session.php?action=logout',
+                            '../api/auth/login-compatible.php?action=logout',
+                            '../api/auth/session.php?action=logout'
+                        ];
+
+                        let logoutSuccess = false;
+
+                        for (const endpoint of endpoints) {
+                            try {
+                                const response = await fetch(endpoint, {
+                                    method: 'POST',
+                                    credentials: 'include',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+
+                                if (!response.ok) continue;
+
+                                const result = await response.json();
+
+                                if (result.success) {
+                                    console.log(`✅ Logout exitoso desde ${endpoint}`);
+                                    logoutSuccess = true;
+                                    break;
+                                }
+                            } catch (error) {
+                                console.error(`❌ Error en logout ${endpoint}:`, error);
+                                continue;
+                            }
+                        }
+
+                        // Redirigir al login independientemente del resultado
+                        window.location.href = './pages/sign-in.html';
+                    }
+                }
+
+                // Mostrar alertas
+                function showAlert(message, type = 'info') {
+                    const container = document.getElementById('alertContainer');
+                    const alert = document.createElement('div');
+                    alert.className = `alert ${type}`;
+                    alert.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-current opacity-50 hover:opacity-100">
+                        <i class="fas fa-times" style="font-size: 16px;"></i>
+                    </button>
+                </div>
+            `;
+
+                    container.appendChild(alert);
+
+                    setTimeout(() => {
+                        if (alert.parentElement) {
+                            alert.remove();
+                        }
+                    }, 5000);
+                }
+
+                // Funciones adicionales para usuarios
+                async function loadUserData(userId) {
+                    try {
+                        const user = allUsers.find(u => u.id == userId);
+                        if (!user) return;
+
+                        document.getElementById('userId').value = user.id;
+                        document.getElementById('userNombre').value = user.nombre;
+                        document.getElementById('userApellido').value = user.apellido;
+                        document.getElementById('userEmail').value = user.email;
+                        document.getElementById('userRol').value = user.rol;
+                        document.getElementById('userTelefono').value = user.telefono || '';
+                        document.getElementById('userCargo').value = user.cargo || '';
+                        document.getElementById('userDepartamento').value = user.departamento || '';
+                        document.getElementById('userEmpresa').value = user.empresa_id || '';
+
+                        // La contraseña no se carga por seguridad
+                        document.getElementById('userPasswordGroup').style.display = 'block';
+                        document.getElementById('userPassword').required = false;
+                        document.getElementById('userPassword').placeholder = 'Dejar vacío para mantener actual';
+
+                        // Mostrar/ocultar campo empresa según el rol
+                        toggleUserEmpresaField();
+
+                    } catch (error) {
+                        console.error('Error cargando datos del usuario:', error);
+                        showAlert('Error cargando datos del usuario', 'error');
+                    }
+                }
+
+                function editUser(userId) {
+                    openUserModal(userId);
+                }
+
+                async function toggleUserStatus(userId, currentStatus) {
+                    const action = currentStatus ? 'desactivar' : 'activar';
+
+                    if (!confirm(`¿Estás seguro de que quieres ${action} este usuario?`)) {
+                        return;
+                    }
+
+                    try {
+                        const method = currentStatus ? 'DELETE' : 'PUT';
+                        let body = null;
+
+                        if (!currentStatus) {
+                            // Para reactivar, necesitamos enviar los datos actuales
+                            const user = allUsers.find(u => u.id == userId);
+                            if (user) {
+                                body = JSON.stringify({
+                                    nombre: user.nombre,
+                                    apellido: user.apellido,
+                                    email: user.email,
+                                    rol: user.rol,
+                                    telefono: user.telefono,
+                                    cargo: user.cargo,
+                                    departamento: user.departamento,
+                                    empresa_id: user.empresa_id
+                                });
+                            }
+                        }
+
+                        const response = await fetch(`./api/admin/users.php?id=${userId}`, {
+                            method: method,
+                            headers: method === 'PUT' ? { 'Content-Type': 'application/json' } : {},
+                            credentials: 'include',
+                            body: body
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            showAlert(`Usuario ${action}do correctamente`, 'success');
+                            loadUsers();
+                        } else {
+                            showAlert(result.message || `Error al ${action} usuario`, 'error');
+                        }
+
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showAlert('Error de conexión', 'error');
+                    }
+                }
+
+                function editCompany(companyId) {
+                    showAlert('Edición de empresas en desarrollo', 'warning');
+                }
+
+                function viewCompany(companyId) {
+                    const company = allCompanies.find(c => c.id == companyId);
+                    if (company) {
+                        const info = `Empresa: ${company.nombre_empresa}
+Categoría: ${company.categoria || 'N/A'}
+Descuento: ${company.descuento || 0}%
+Email: ${company.email || 'N/A'}
+Teléfono: ${company.telefono || 'N/A'}
+Sitio web: ${company.sitio_web || 'N/A'}
+Beneficios: ${company.beneficios || 'N/A'}`;
+
+                        alert(info);
+                    }
+                }
+
+                // Cargar estadísticas del dashboard
+                async function loadDashboardStats() {
+                    console.log('🔄 Cargando estadísticas alternativas del dashboard...');
+
+                    try {
+                        // Primero intentar con el endpoint principal de stats
+                        try {
+                            const mainStatsResponse = await fetch('./api/admin/stats.php', {
+                                credentials: 'include',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+
+                            if (mainStatsResponse.ok) {
+                                const mainStatsResult = await mainStatsResponse.json();
+                                if (mainStatsResult.success && mainStatsResult.data) {
+                                    console.log('✅ Estadísticas principales cargadas exitosamente');
+                                    document.getElementById('totalUsers').textContent = mainStatsResult.data.users || 0;
+                                    document.getElementById('totalCompanies').textContent = mainStatsResult.data.companies || 0;
+                                    document.getElementById('totalEvents').textContent = mainStatsResult.data.events || 0;
+                                    document.getElementById('totalBulletins').textContent = mainStatsResult.data.bulletins || 0;
+                                    return; // Si funciona, no necesitamos cargar estadísticas alternativas
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error con endpoint principal, intentando alternativas:', error);
+                        }
+
+                        // Si el endpoint principal falla, usar endpoints alternativos
+                        console.log('📊 Usando endpoints alternativos para estadísticas...');
+
+                        // Cargar estadísticas de usuarios
+                        try {
+                            console.log('🔄 Obteniendo usuarios desde ./api/admin/users.php...');
+                            const usersResponse = await fetch('./api/admin/users.php', {
+                                credentials: 'include'
+                            });
+
+                            console.log('📡 Respuesta de usuarios - Status:', usersResponse.status);
+
+                            if (usersResponse.ok) {
+                                const usersResult = await usersResponse.json();
+                                console.log('📊 Resultado completo de usuarios:', usersResult);
+
+                                if (usersResult.success && usersResult.data) {
+                                    const userCount = usersResult.data.length;
+                                    document.getElementById('totalUsers').textContent = userCount;
+                                    console.log('✅ Total usuarios encontrados:', userCount);
+                                } else {
+                                    console.error('❌ Error en respuesta de usuarios:', usersResult.message);
+                                    document.getElementById('totalUsers').textContent = '0';
+                                }
+                            } else {
+                                console.error('❌ Error HTTP en usuarios:', usersResponse.status, usersResponse.statusText);
+                                document.getElementById('totalUsers').textContent = 'Error';
+                            }
+                        } catch (error) {
+                            console.error('❌ Error cargando estadísticas de usuarios:', error);
+                            document.getElementById('totalUsers').textContent = 'Error';
+                        }
+
+                        // Cargar estadísticas de empresas
+                        try {
+                            const companiesResponse = await fetch('./api/empresas_convenio.php', {
+                                credentials: 'include'
+                            });
+                            if (companiesResponse.ok) {
+                                const companiesResult = await companiesResponse.json();
+                                if (companiesResult.success && companiesResult.data) {
+                                    const activeCompanies = companiesResult.data.filter(c => c.activo === 1);
+                                    document.getElementById('totalCompanies').textContent = activeCompanies.length;
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error cargando estadísticas de empresas:', error);
+                        }
+
+                        // Cargar estadísticas de eventos
+                        try {
+                            const eventsResponse = await fetch('./api/eventos.php', {
+                                credentials: 'include'
+                            });
+                            if (eventsResponse.ok) {
+                                const eventsResult = await eventsResponse.json();
+                                if (eventsResult.success && eventsResult.data) {
+                                    document.getElementById('totalEvents').textContent = eventsResult.data.length;
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error cargando estadísticas de eventos:', error);
+                        }
+
+                        // Cargar estadísticas de boletines
+                        try {
+                            const bulletinsResponse = await fetch('./api/boletines.php', {
+                                credentials: 'include'
+                            });
+                            if (bulletinsResponse.ok) {
+                                const bulletinsResult = await bulletinsResponse.json();
+                                if (bulletinsResult.success && bulletinsResult.data) {
+                                    document.getElementById('totalBulletins').textContent = bulletinsResult.data.length;
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error cargando estadísticas de boletines:', error);
+                        }
+
+                        // Cargar estadísticas de documentos
+                        try {
+                            const documentsResponse = await fetch('./api/documentos.php', {
+                                credentials: 'include'
+                            });
+                            if (documentsResponse.ok) {
+                                const documentsResult = await documentsResponse.json();
+                                if (documentsResult.success && documentsResult.data) {
+                                    document.getElementById('totalDocuments').textContent = documentsResult.data.length;
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error cargando estadísticas de documentos:', error);
+                        }
+
+                        // Cargar estadísticas de descuentos
+                        try {
+                            const discountsResponse = await fetch('./api/descuentos.php?estado=todos', {
+                                credentials: 'include'
+                            });
+                            if (discountsResponse.ok) {
+                                const discountsResult = await discountsResponse.json();
+                                if (discountsResult.success && discountsResult.data) {
+                                    document.getElementById('totalDiscounts').textContent = discountsResult.data.length;
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error cargando estadísticas de descuentos:', error);
+                        }
+
+                        console.log('✅ Estadísticas del dashboard cargadas');
+
+                    } catch (error) {
+                        console.error('❌ Error general cargando estadísticas:', error);
+                    }
+                }
+
+                // Función para refrescar estadísticas manualmente
+                async function refreshStats() {
+                    const refreshBtn = document.getElementById('refreshStatsBtn');
+                    const originalText = refreshBtn.innerHTML;
+
+                    try {
+                        // Cambiar estado del botón
+                        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+                        refreshBtn.disabled = true;
+
+                        console.log('🔄 Refrescando estadísticas manualmente...');
+
+                        // Llamar a ambas funciones de carga
+                        await Promise.all([
+                            loadDashboardData(),
+                            loadDashboardStats()
+                        ]);
+
+                        showAlert('Estadísticas actualizadas correctamente', 'success');
+
+                    } catch (error) {
+                        console.error('Error refrescando estadísticas:', error);
+                        showAlert('Error al actualizar estadísticas', 'error');
+                    } finally {
+                        // Restaurar estado del botón
+                        refreshBtn.innerHTML = originalText;
+                        refreshBtn.disabled = false;
+                    }
+                }
+
+                // Función para abrir demo de visitantes
+                function abrirDemoVisitante() {
+                    console.log('🔗 Abriendo configuración de visitantes...');
+                    window.open('./demo_visitante.html', '_blank');
+                }
+
+                // Inicializar la página cuando se carga
+                document.addEventListener('DOMContentLoaded', function () {
+                    console.log('🚀 Inicializando panel de administración...');
+
+                    // Cargar estadísticas inmediatamente
+                    loadDashboardStats();
+
+                    // Actualizar estadísticas cada 30 segundos
+                    setInterval(loadDashboardStats, 30000);
+                });
+
+                // Cerrar modales al hacer clic fuera
+                window.addEventListener('click', function (e) {
+                    const modals = document.querySelectorAll('.modal');
+                    modals.forEach(modal => {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                });
+
+                // === FUNCIONES PARA ESTADÍSTICAS DE EVENTOS ===
+
+                // Variables para eventos
+                let eventosData = [];
+                const API_BASE = './api';
+
+                // Cargar eventos desde la API
+                async function loadEventos() {
+                    try {
+                        console.log('🔄 Cargando eventos para estadísticas...');
+
+                        const response = await fetch(`${API_BASE}/eventos.php`, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Error HTTP: ${response.status}`);
+                        }
+
+                        const responseText = await response.text();
+                        let data;
+                        try {
+                            data = JSON.parse(responseText);
+                        } catch (jsonError) {
+                            console.error('Error al parsear JSON:', jsonError);
+                            throw new Error('Respuesta no válida del servidor');
+                        }
+
+                        if (data.success) {
+                            eventosData = data.eventos || [];
+                            console.log('✅ Eventos cargados:', eventosData.length);
+                            updateEventStats();
+                        } else {
+                            throw new Error(data.message || 'Error al cargar eventos');
+                        }
+
+                    } catch (error) {
+                        console.error('❌ Error al cargar eventos:', error);
+                        // Mostrar valores por defecto en caso de error
+                        setDefaultEventStats();
+                    }
+                }
+
+                // Actualizar estadísticas de eventos
+                function updateEventStats() {
+                    const total = eventosData.length;
+                    const proximos = eventosData.filter(e => e.estado === 'proximo' || e.estado === 'programado' || e.estado === 'activo').length;
+                    const enCurso = eventosData.filter(e => e.estado === 'en_curso').length;
+                    const totalRegistros = eventosData.reduce((sum, e) => sum + (parseInt(e.registrados) || parseInt(e.capacidad_actual) || 0), 0);
+
+                    console.log('📊 Estadísticas calculadas:', { total, proximos, enCurso, totalRegistros });
+
+                    // Actualizar contadores solo si los elementos existen
+                    const totalElement = document.getElementById('totalEventos');
+                    if (totalElement) totalElement.textContent = total;
+
+                    const proximosElement = document.getElementById('proximosEventos');
+                    if (proximosElement) proximosElement.textContent = proximos;
+
+                    const enCursoElement = document.getElementById('enCursoEventos');
+                    if (enCursoElement) enCursoElement.textContent = enCurso;
+
+                    const totalRegistrosElement = document.getElementById('totalRegistros');
+                    if (totalRegistrosElement) totalRegistrosElement.textContent = totalRegistros;
+
+                    // Actualizar también el contador de eventos principal si existe
+                    const totalEventsElement = document.getElementById('totalEvents');
+                    if (totalEventsElement) totalEventsElement.textContent = total;
+                }
+
+                // Establecer valores por defecto en caso de error
+                function setDefaultEventStats() {
+                    const defaultValue = '0';
+
+                    const totalElement = document.getElementById('totalEventos');
+                    if (totalElement) totalElement.textContent = defaultValue;
+
+                    const proximosElement = document.getElementById('proximosEventos');
+                    if (proximosElement) proximosElement.textContent = defaultValue;
+
+                    const enCursoElement = document.getElementById('enCursoEventos');
+                    if (enCursoElement) enCursoElement.textContent = defaultValue;
+
+                    const totalRegistrosElement = document.getElementById('totalRegistros');
+                    if (totalRegistrosElement) totalRegistrosElement.textContent = defaultValue;
+                }
+
+                // Función para refrescar estadísticas de eventos
+                async function refreshEventStats() {
+                    const refreshBtn = document.querySelector('button[onclick="refreshEventStats()"]');
+                    if (refreshBtn) {
+                        const originalText = refreshBtn.innerHTML;
+                        refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+                        refreshBtn.disabled = true;
+
+                        await loadEventos();
+
+                        refreshBtn.innerHTML = originalText;
+                        refreshBtn.disabled = false;
+                    } else {
+                        await loadEventos();
+                    }
+                }
+
+                // Cargar estadísticas al cargar la página
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Cargar eventos después de un pequeño delay para asegurar que el DOM esté listo
+                    setTimeout(() => {
+                        loadEventos();
+                    }, 500);
+                });
+
+                // Exponer funciones globalmente
+                window.refreshEventStats = refreshEventStats;
+            </script>
+</body>
+
+</html>

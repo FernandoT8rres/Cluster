@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Admin - Clúster</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #C7252B 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #C7252B;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .btn {
+            padding: 10px 20px;
+            background: #C7252B;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px;
+        }
+        .btn:hover {
+            background: #C7252B;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Acceso Administrador</h1>
+        <div class="spinner" id="spinner"></div>
+        <div id="status">Verificando autenticación...</div>
+        <div id="actions" style="display: none;">
+            <a href="../pages/sign-in.html" class="btn">🔐 Ir al Login</a>
+            <a href="../dashboard.html" class="btn">🔍 Ver Dashboard</a>
+            <a href="../debug-login.html" class="btn">🔍 Debug Login</a>
+        </div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const spinner = document.getElementById('spinner');
+        const actions = document.getElementById('actions');
+
+        function updateStatus(message, type = 'info') {
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function hideSpinner() {
+            spinner.style.display = 'none';
+        }
+
+        function showActions() {
+            actions.style.display = 'block';
+        }
+
+        async function verificarAcceso() {
+            try {
+                // 1. Verificar datos en localStorage
+                const token = localStorage.getItem('clúster_token');
+                const userStr = localStorage.getItem('clúster_user');
+                
+                if (!token || !userStr) {
+                    updateStatus('❌ No hay sesión activa. Redirigiendo al login...', 'error');
+                    hideSpinner();
+                    setTimeout(() => {
+                        window.location.href = '../pages/sign-in.html?message=' + encodeURIComponent('Por favor inicia sesión como administrador');
+                    }, 2000);
+                    return;
+                }
+
+                const user = JSON.parse(userStr);
+                
+                if (user.rol !== 'admin') {
+                    updateStatus('❌ Usuario no es administrador', 'error');
+                    hideSpinner();
+                    showActions();
+                    return;
+                }
+
+                updateStatus('✅ Usuario admin detectado. Estableciendo sesión...', 'success');
+
+                // 2. Establecer sesión en el servidor
+                const response = await fetch('./establecer-sesion.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        user: user
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    updateStatus('✅ Sesión establecida. Redirigiendo al panel...', 'success');
+                    
+                    // 3. Redirigir al panel de admin
+                    setTimeout(() => {
+                        window.location.href = './admin-dashboard.php';
+                    }, 1500);
+                } else {
+                    updateStatus(`❌ Error estableciendo sesión: ${result.message}`, 'error');
+                    hideSpinner();
+                    showActions();
+                }
+
+            } catch (error) {
+                updateStatus(`💥 Error: ${error.message}`, 'error');
+                hideSpinner();
+                showActions();
+            }
+        }
+
+        // Ejecutar verificación al cargar
+        verificarAcceso();
+    </script>
+</body>
+</html>

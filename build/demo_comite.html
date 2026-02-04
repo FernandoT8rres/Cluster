@@ -1,0 +1,2317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Comités - CRUD Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal-backdrop { backdrop-filter: blur(5px); }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .comite-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-radius-lg: 12px;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            font-family: var(--porsche-font) !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: 700 !important;
+            font-size: 1.5rem !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: var(--porsche-white) !important;
+            border-left: 3px solid #C7252B !important;
+        }
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Sidebar always retractable - All screens */
+        .porsche-sidebar {
+            transform: translateX(-100%) !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0 !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            position: fixed !important;
+            display: block !important;
+        }
+
+        .porsche-sidebar.sidenav-show {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content always without sidebar margin */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .container {
+            margin-left: 0 !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1280px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Force sidebar behavior on all screens - Override any conflicting styles */
+        .porsche-sidebar.sidebar-enhanced {
+            transform: translateX(-100%) !important;
+        }
+
+        .porsche-sidebar.sidebar-enhanced.sidenav-show {
+            transform: translateX(0) !important;
+        }
+
+        /* Override any Tailwind classes that might interfere */
+        aside.porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure hamburger button works on all screens */
+        @media (min-width: 1280px) {
+            [sidenav-trigger] {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Enhanced sidebar behavior for desktop */
+        @media (min-width: 1280px) {
+            .sidebar-enhanced {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 768px) {
+            header .flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            header .flex.items-center.space-x-4 {
+                margin-top: 1rem !important;
+                align-self: flex-end !important;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .overflow-x-auto table {
+                font-size: 0.75rem !important;
+            }
+
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.5rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .porsche-sidebar {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            header .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .flex.flex-wrap {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .flex.items-center.space-x-4 {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                space-x: 0 !important;
+                gap: 0.5rem !important;
+            }
+
+            .flex.items-center.space-x-4 > * {
+                margin: 0 !important;
+            }
+
+            .grid-cols-1 {
+                grid-template-columns: 1fr !important;
+            }
+
+            .lg\:col-span-1,
+            .lg\:col-span-2 {
+                grid-column: span 1 / span 1 !important;
+            }
+        }
+
+        /* Ensure proper z-index hierarchy */
+        .porsche-sidebar {
+            z-index: 999 !important;
+        }
+
+        .sidenav-overlay {
+            z-index: 998 !important;
+        }
+
+        header {
+            z-index: 997 !important;
+        }
+
+        .main-content {
+            z-index: 1 !important;
+        }
+
+        /* Hamburger button styling */
+        .hamburger-btn {
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Responsive table improvements */
+        @media (max-width: 768px) {
+            .overflow-x-auto {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Porsche Sidebar -->
+    <aside id="porscheSidebar"
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-48 py-6 relative mb-4">
+            <!-- Botón de cerrar para todas las pantallas -->
+            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                    id="sidebarCloseBtn"
+                    sidenav-close
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
+              target="_blank">
+                <img src="../assets/img/apple-icon.png"
+                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                  alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+            </a>
+        </div>
+
+        <hr class="h-px mt-4 mb-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0 pt-4">
+                <!-- Dashboard -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- admin panel -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin-panel.html?login=success">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                    </a>
+                </li>
+
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_usuarios.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_evento.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar-alt text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+
+                <!-- Comités -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg active"
+                        href="demo_comite.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Comités</span>
+                    </a>
+                </li>
+
+                <!-- Boletines -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_boletines.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-newspaper text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
+                    </a>
+                </li>
+
+                <!-- Documentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_documentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-file-alt text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Documentos</span>
+                    </a>
+                </li>
+
+                <!-- Banners -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin/banner-admin-mejorado.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-images text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Banners</span>
+                    </a>
+                </li>
+
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_descuentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+
+                <!-- Perfil -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="profile.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-user-cog text-gray-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mx-4">
+            <button onclick="window.location.href='pages/sign-in.html'"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Header -->
+    <header class="main-content bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- Hamburger Menu Button for All Screens -->
+                    <button class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
+                            id="hamburgerBtn"
+                            sidenav-trigger
+                            aria-label="Abrir menú de navegación">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold">👥 Administrador de Comités</h1>
+                        <p class="text-red-200 mt-1">CRUD Completo - Gestión de Comités</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userInfo" class="text-sm"></span>
+                    <button onclick="location.href='dashboard.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver al Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content container mx-auto px-4 py-6">
+        <!-- Controls -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Gestión de Comités</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="if(window.adminComites) window.adminComites.cargarComites()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nueva sección para gestión de solicitudes -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-clipboard-list mr-2 text-blue-600"></i>
+                Gestión de Solicitudes
+            </h3>
+            <div class="flex space-x-4">
+                <button onclick="if(window.adminComites) window.adminComites.cargarSolicitudesPendientes()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-inbox mr-2"></i>Ver Solicitudes Pendientes
+                </button>
+                <button onclick="abrirModalMensajeria()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    <i class="fas fa-envelope mr-2"></i>Enviar Mensaje a Miembros
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Formulario -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        <i class="fas fa-plus-circle mr-2 text-green-600"></i>
+                        Crear/Editar Comité
+                    </h3>
+
+                    <form id="comiteForm" class="space-y-4">
+                        <div>
+                            <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+                            <input type="text" id="nombre" name="nombre" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
+                            <textarea id="descripcion" name="descripcion" rows="3" required
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="objetivo" class="block text-sm font-medium text-gray-700 mb-1">Objetivo *</label>
+                            <textarea id="objetivo" name="objetivo" rows="3" required
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="periodicidad" class="block text-sm font-medium text-gray-700 mb-1">Periodicidad</label>
+                                <select id="periodicidad" name="periodicidad"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                    <option value="Semanal">Semanal</option>
+                                    <option value="Quincenal">Quincenal</option>
+                                    <option value="Mensual" selected>Mensual</option>
+                                    <option value="Bimestral">Bimestral</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                    <option value="Semestral">Semestral</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="miembros_activos" class="block text-sm font-medium text-gray-700 mb-1">Miembros Activos</label>
+                                <input type="number" id="miembros_activos" name="miembros_activos" min="0" value="0"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="organizacion" class="block text-sm font-medium text-gray-700 mb-1">Organización</label>
+                            <input type="text" id="organizacion" name="organizacion"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="estado" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                            <select id="estado" name="estado"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <option value="activo" selected>Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                                <option value="suspendido">Suspendido</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Imagen del Comité</label>
+                            <div class="space-y-3">
+                                <!-- Subir archivo -->
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Subir imagen:</label>
+                                    <input type="file" id="imagen_file" accept="image/*"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                </div>
+                                <!-- O usar URL -->
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">O usar URL:</label>
+                                    <input type="url" id="imagen_url" name="imagen_url"
+                                           placeholder="https://ejemplo.com/imagen.jpg"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                </div>
+                            </div>
+                            <div id="imagenPreview" class="mt-3 hidden">
+                                <img id="imagenImg" src="" alt="Preview" class="h-24 w-auto border rounded-lg shadow-sm">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Formatos: JPG, PNG, GIF, WEBP. Máximo 5MB.</p>
+                        </div>
+
+                        <div class="flex space-x-4 pt-4">
+                            <button type="submit" id="submitBtn"
+                                    class="flex-1 text-white px-4 py-2 rounded-lg hover:opacity-90 transition flex items-center justify-center"
+                                    style="background: #C7252B;">
+                                <span id="submitSpinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                                <span id="submitText">Guardar Comité</span>
+                            </button>
+                            <button type="button" id="cancelBtn"
+                                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista de Comités y Solicitudes -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Solicitudes Pendientes -->
+                <div id="solicitudesSection" class="bg-white rounded-lg shadow hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <i class="fas fa-clock mr-2 text-yellow-600"></i>
+                            Solicitudes Pendientes
+                        </h3>
+                    </div>
+                    <div id="solicitudesList" class="p-6">
+                        <!-- Las solicitudes se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Lista de Comités -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <i class="fas fa-list mr-2 text-blue-600"></i>
+                            Lista de Comités
+                        </h3>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loadingComites" class="hidden p-8 text-center">
+                        <div class="inline-block w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="mt-2 text-gray-600">Cargando comités...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-2xl text-gray-400"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No hay comités</h3>
+                        <p class="text-gray-500">Crea tu primer comité para comenzar.</p>
+                    </div>
+
+                    <!-- Comités List -->
+                    <div id="comitesList" class="p-6 grid gap-4">
+                        <!-- Los comités se cargarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Mensajes Enviados -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-6">
+            <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-white">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Mensajes Enviados
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button onclick="cargarMensajesEnviados()" class="bg-green-800 hover:bg-green-900 text-white px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                        </button>
+                        <button onclick="abrirModalMensajeria()" class="bg-white hover:bg-gray-100 text-green-700 px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-plus mr-2"></i>Nuevo Mensaje
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros para mensajes -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div>
+                        <label for="filtroDestinatario" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Destinatario:</label>
+                        <select id="filtroDestinatario" onchange="filtrarMensajes()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Todos los destinatarios</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filtroFechaMensaje" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Fecha:</label>
+                        <input type="date" id="filtroFechaMensaje" onchange="filtrarMensajes()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <div>
+                        <label for="filtroEstadoMensaje" class="block text-sm font-medium text-gray-700 mb-1">Estado:</label>
+                        <select id="filtroEstadoMensaje" onchange="filtrarMensajes()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Todos</option>
+                            <option value="enviado">Enviado</option>
+                            <option value="leido">Leído</option>
+                            <option value="pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="limpiarFiltrosMensajes()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-times mr-2"></i>Limpiar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State para mensajes -->
+            <div id="loadingMensajes" class="hidden p-8 text-center">
+                <div class="inline-block w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                <p class="mt-2 text-gray-600">Cargando mensajes enviados...</p>
+            </div>
+
+            <!-- Empty State para mensajes -->
+            <div id="emptyMensajes" class="hidden p-8 text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-paper-plane text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No hay mensajes enviados</h3>
+                <p class="text-gray-500">Envía tu primer mensaje a los miembros del comité.</p>
+                <button onclick="abrirModalMensajeria()" class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-plus mr-2"></i>Enviar Primer Mensaje
+                </button>
+            </div>
+
+            <!-- Lista de mensajes -->
+            <div id="mensajesContainer" class="divide-y divide-gray-200">
+                <!-- Los mensajes se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Sección de Registros de Usuarios -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-white">
+                        <i class="fas fa-users mr-2"></i>
+                        Registros de Usuarios en Comités
+                    </h2>
+                    <button onclick="cargarRegistrosUsuarios()" class="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div>
+                        <label for="filtroComite" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Comité:</label>
+                        <select id="filtroComite" onchange="filtrarRegistros()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todos los comités</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filtroEstado" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Estado:</label>
+                        <select id="filtroEstado" onchange="filtrarRegistros()" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="aprobado">Aprobados</option>
+                            <option value="rechazado">Rechazados</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de Registros -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cargo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comité</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enviado por</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaRegistros" class="bg-white divide-y divide-gray-200">
+                        <!-- Los registros se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Estado de carga -->
+            <div id="registrosLoading" class="hidden flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span class="ml-2 text-gray-600">Cargando registros...</span>
+            </div>
+
+            <div id="noRegistros" class="hidden text-center py-8 text-gray-500">
+                <i class="fas fa-inbox text-4xl mb-2"></i>
+                <p>No hay registros para mostrar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Container -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Modal de Mensajería -->
+    <div id="modalMensajeria" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <!-- Header del Modal -->
+            <div class="border-b border-gray-200 p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-800">
+                        <i class="fas fa-envelope mr-2 text-blue-600"></i>
+                        Enviar Mensaje a Comité
+                    </h3>
+                    <button onclick="cerrarModalMensajeria()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenido del Modal -->
+            <div class="p-6">
+                <form id="mensajeriaForm" class="space-y-6">
+                    <!-- Selección de Comité -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="comiteSelect" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-users mr-1 text-blue-600"></i>
+                                Comité Destinatario *
+                            </label>
+                            <select id="comiteSelect" name="comite_id" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <option value="">Selecciona un comité...</option>
+                            </select>
+                        </div>
+
+                        <!-- Selección de Destinatarios -->
+                        <div>
+                            <label for="destinatarioSelect" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user-friends mr-1 text-green-600"></i>
+                                Destinatarios *
+                            </label>
+                            <select id="destinatarioSelect" name="destinatario" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <option value="">Primero selecciona un comité</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tipo de Mensaje -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            <i class="fas fa-list mr-1 text-purple-600"></i>
+                            Tipo de Mensaje *
+                        </label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <label class="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="tipo_mensaje" value="texto" checked class="mr-2">
+                                <i class="fas fa-comment-alt text-blue-600 mr-2"></i>
+                                <span class="text-sm">Texto</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="tipo_mensaje" value="link" class="mr-2">
+                                <i class="fas fa-link text-green-600 mr-2"></i>
+                                <span class="text-sm">Link</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="tipo_mensaje" value="imagen" class="mr-2">
+                                <i class="fas fa-image text-yellow-600 mr-2"></i>
+                                <span class="text-sm">Imagen</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="tipo_mensaje" value="documento" class="mr-2">
+                                <i class="fas fa-file-alt text-red-600 mr-2"></i>
+                                <span class="text-sm">Documento</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Asunto -->
+                    <div>
+                        <label for="asuntoMensaje" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-heading mr-1 text-indigo-600"></i>
+                            Asunto *
+                        </label>
+                        <input type="text" id="asuntoMensaje" name="asunto" required maxlength="200"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                               placeholder="Escribe el asunto del mensaje...">
+                    </div>
+
+                    <!-- Contenido del Mensaje - Texto -->
+                    <div id="contenidoTexto" class="mensaje-content">
+                        <label for="mensajeTexto" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-edit mr-1 text-blue-600"></i>
+                            Mensaje
+                        </label>
+                        <textarea id="mensajeTexto" name="contenido_texto" rows="4"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                  placeholder="Escribe tu mensaje aquí..."></textarea>
+                    </div>
+
+                    <!-- Contenido del Mensaje - Link -->
+                    <div id="contenidoLink" class="mensaje-content hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="linkUrl" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-link mr-1 text-green-600"></i>
+                                    URL *
+                                </label>
+                                <input type="url" id="linkUrl" name="link_url"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                       placeholder="https://ejemplo.com">
+                            </div>
+                            <div>
+                                <label for="linkTexto" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="fas fa-tag mr-1 text-green-600"></i>
+                                    Texto del enlace
+                                </label>
+                                <input type="text" id="linkTexto" name="link_texto"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                       placeholder="Haz clic aquí">
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <label for="linkDescripcion" class="block text-sm font-medium text-gray-700 mb-1">
+                                Descripción
+                            </label>
+                            <textarea id="linkDescripcion" name="link_descripcion" rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                      placeholder="Describe brevemente el enlace..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Contenido del Mensaje - Imagen -->
+                    <div id="contenidoImagen" class="mensaje-content hidden">
+                        <label for="imagenFile" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-image mr-1 text-yellow-600"></i>
+                            Seleccionar Imagen *
+                        </label>
+                        <input type="file" id="imagenFile" name="imagen_archivo" accept="image/*"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                        <div class="mt-3">
+                            <label for="imagenDescripcion" class="block text-sm font-medium text-gray-700 mb-1">
+                                Descripción de la imagen
+                            </label>
+                            <textarea id="imagenDescripcion" name="imagen_descripcion" rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                      placeholder="Describe la imagen..."></textarea>
+                        </div>
+                        <div id="imagenPreview" class="mt-3 hidden">
+                            <img id="imagenPreviewImg" src="" alt="Preview" class="max-w-xs h-auto border rounded-lg">
+                        </div>
+                    </div>
+
+                    <!-- Contenido del Mensaje - Documento -->
+                    <div id="contenidoDocumento" class="mensaje-content hidden">
+                        <label for="documentoFile" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-file-alt mr-1 text-red-600"></i>
+                            Seleccionar Documento *
+                        </label>
+                        <input type="file" id="documentoFile" name="documento_archivo"
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                        <div class="mt-3">
+                            <label for="documentoDescripcion" class="block text-sm font-medium text-gray-700 mb-1">
+                                Descripción del documento
+                            </label>
+                            <textarea id="documentoDescripcion" name="documento_descripcion" rows="2"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                      placeholder="Describe el contenido del documento..."></textarea>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">
+                            Formatos permitidos: PDF, Word, Excel, PowerPoint, TXT. Máximo 10MB.
+                        </p>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                        <button type="button" onclick="cerrarModalMensajeria()"
+                                class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                        <button type="submit" id="enviarMensajeBtn"
+                                class="px-6 py-2 text-white rounded-lg hover:opacity-90 transition flex items-center"
+                                style="background: #C7252B;">
+                            <span id="mensajeSpinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                            <i id="mensajeIcon" class="fas fa-paper-plane mr-2"></i>
+                            <span id="mensajeText">Enviar Mensaje</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar mensaje -->
+    <div id="modalEditarMensaje" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <!-- Header del Modal -->
+            <div class="border-b border-gray-200 p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-800">
+                        <i class="fas fa-edit mr-2 text-blue-600"></i>
+                        Editar Mensaje
+                    </h3>
+                    <button onclick="cerrarModalEditarMensaje()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenido del Modal -->
+            <div class="p-6">
+                <form id="formEditarMensaje" class="space-y-6">
+                    <input type="hidden" id="editMensajeId">
+
+                    <!-- Información del mensaje -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">Información del Mensaje</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500">Fecha de envío:</span>
+                                <span id="editFechaEnvio" class="ml-2 font-medium"></span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Destinatarios:</span>
+                                <span id="editDestinatarios" class="ml-2 font-medium"></span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Estado:</span>
+                                <span id="editEstado" class="ml-2 font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asunto -->
+                    <div>
+                        <label for="editAsunto" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-heading mr-2"></i>Asunto *
+                        </label>
+                        <input type="text" id="editAsunto" name="asunto" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Asunto del mensaje">
+                    </div>
+
+                    <!-- Mensaje -->
+                    <div>
+                        <label for="editMensajeTexto" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-comment-alt mr-2"></i>Mensaje *
+                        </label>
+                        <textarea id="editMensajeTexto" name="mensaje" required rows="8"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                                  placeholder="Escriba su mensaje aquí..."></textarea>
+                        <div class="mt-2 text-sm text-gray-500">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Puede usar texto plano o formato básico.
+                        </div>
+                    </div>
+
+                    <!-- Tipo de mensaje -->
+                    <div>
+                        <label for="editTipoMensaje" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-tag mr-2"></i>Tipo de Mensaje
+                        </label>
+                        <select id="editTipoMensaje" name="tipo_mensaje"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="informativo">Informativo</option>
+                            <option value="urgente">Urgente</option>
+                            <option value="recordatorio">Recordatorio</option>
+                            <option value="convocatoria">Convocatoria</option>
+                        </select>
+                    </div>
+
+                    <!-- Prioridad -->
+                    <div>
+                        <label for="editPrioridad" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-flag mr-2"></i>Prioridad
+                        </label>
+                        <select id="editPrioridad" name="prioridad"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="normal">Normal</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                        <button type="button" onclick="cerrarModalEditarMensaje()"
+                                class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                        <button type="submit" id="guardarCambiosBtn"
+                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center">
+                            <i class="fas fa-spinner fa-spin mr-2 hidden" id="editSpinner"></i>
+                            <i class="fas fa-save mr-2" id="editIcon"></i>
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ver mensaje completo -->
+    <div id="modalVerMensaje" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <!-- Header del Modal -->
+            <div class="border-b border-gray-200 p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-800">
+                        <i class="fas fa-eye mr-2 text-green-600"></i>
+                        Ver Mensaje
+                    </h3>
+                    <button onclick="cerrarModalVerMensaje()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenido del Modal -->
+            <div class="p-6">
+                <!-- Información del mensaje -->
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500">Fecha de envío:</span>
+                            <div id="verFechaEnvio" class="font-medium"></div>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Destinatarios:</span>
+                            <div id="verDestinatarios" class="font-medium"></div>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Estado:</span>
+                            <div id="verEstado" class="font-medium"></div>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Prioridad:</span>
+                            <div id="verPrioridad" class="font-medium"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asunto -->
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                        <i class="fas fa-heading mr-2 text-blue-600"></i>
+                        <span id="verAsunto"></span>
+                    </h4>
+                </div>
+
+                <!-- Mensaje -->
+                <div class="mb-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <div id="verMensajeTexto" class="prose max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed"></div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                    <button type="button" onclick="cerrarModalVerMensaje()"
+                            class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition">
+                        <i class="fas fa-times mr-2"></i>Cerrar
+                    </button>
+                    <button type="button" onclick="editarMensajeDesdeVer()"
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        <i class="fas fa-edit mr-2"></i>Editar Mensaje
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir el administrador de comités -->
+    <script src="./js/admin-comites.js"></script>
+
+    <script>
+        // Inicializar el administrador de comités siguiendo el patrón de demo_empresas.html
+        let adminComites;
+
+        function initializeAdminComites() {
+            console.log('🚀 Inicializando AdminComitesManager...');
+
+            // Verificar que la clase exista
+            if (typeof AdminComitesManager === 'undefined') {
+                console.error('❌ AdminComitesManager no está definida. ¿Se cargó admin-comites.js?');
+                return;
+            }
+
+            // Verificar elementos críticos del DOM
+            const elementosCriticos = ['comiteForm', 'submitBtn', 'comitesList'];
+            let elementosFaltantes = [];
+
+            elementosCriticos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (!elemento) {
+                    elementosFaltantes.push(id);
+                    console.error(`❌ Elemento faltante: ${id}`);
+                }
+            });
+
+            if (elementosFaltantes.length > 0) {
+                console.error('❌ Elementos faltantes en el DOM:', elementosFaltantes);
+                return;
+            }
+
+            console.log('✅ Todos los elementos críticos del DOM encontrados');
+
+            try {
+                adminComites = new AdminComitesManager();
+
+                // Hacer la instancia disponible globalmente
+                window.adminComites = adminComites;
+
+                console.log('✅ AdminComitesManager inicializado correctamente');
+                console.log('🔧 Instancia disponible como window.adminComites');
+
+            } catch (error) {
+                console.error('❌ Error inicializando AdminComitesManager:', error);
+                console.error('Stack trace:', error.stack);
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeAdminComites();
+                // Initialize sidebar functionality
+                setTimeout(initializeSidebar, 100);
+            });
+        } else {
+            // DOM ya está listo
+            initializeAdminComites();
+            setTimeout(initializeSidebar, 100);
+        }
+
+        // ======== FUNCIONES DEL MODAL DE MENSAJERÍA ========
+
+        function abrirModalMensajeria() {
+            const modal = document.getElementById('modalMensajeria');
+            if (modal) {
+                modal.classList.remove('hidden');
+                cargarComitesParaMensajeria();
+                configurarTiposMensaje();
+            }
+        }
+
+        function cerrarModalMensajeria() {
+            const modal = document.getElementById('modalMensajeria');
+            if (modal) {
+                modal.classList.add('hidden');
+                limpiarFormularioMensajeria();
+            }
+        }
+
+        async function cargarComitesParaMensajeria() {
+            try {
+                const response = await fetch('./api/comites.php?action=listar');
+                const data = await response.json();
+
+                const comiteSelect = document.getElementById('comiteSelect');
+                if (data.success && data.comites) {
+                    comiteSelect.innerHTML = '<option value="">Selecciona un comité...</option>';
+                    data.comites.forEach(comite => {
+                        const option = document.createElement('option');
+                        option.value = comite.id;
+                        option.textContent = comite.nombre;
+                        comiteSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error cargando comités:', error);
+            }
+        }
+
+        function cargarMiembrosComite(comiteId) {
+            if (!comiteId) {
+                const destinatarioSelect = document.getElementById('destinatarioSelect');
+                destinatarioSelect.innerHTML = '<option value="">Primero selecciona un comité</option>';
+                return;
+            }
+
+            fetch(`./api/comites.php?action=obtener_miembros&comite_id=${comiteId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const destinatarioSelect = document.getElementById('destinatarioSelect');
+                    destinatarioSelect.innerHTML = '<option value="todos">📧 Todos los miembros del comité</option>';
+
+                    if (data.success && data.miembros) {
+                        data.miembros.forEach(miembro => {
+                            const option = document.createElement('option');
+                            option.value = miembro.email_contacto;
+                            option.textContent = `👤 ${miembro.nombre_usuario} (${miembro.nombre_empresa})`;
+                            destinatarioSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error cargando miembros:', error));
+        }
+
+        function configurarTiposMensaje() {
+            const tipoInputs = document.querySelectorAll('input[name="tipo_mensaje"]');
+            tipoInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Ocultar todos los contenidos
+                    document.querySelectorAll('.mensaje-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    // Mostrar el contenido seleccionado
+                    const selectedType = this.value;
+                    const contentDiv = document.getElementById(`contenido${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)}`);
+                    if (contentDiv) {
+                        contentDiv.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Configurar preview de imagen
+            const imagenFile = document.getElementById('imagenFile');
+            if (imagenFile) {
+                imagenFile.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = document.getElementById('imagenPreview');
+                            const img = document.getElementById('imagenPreviewImg');
+                            img.src = e.target.result;
+                            preview.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+
+        function limpiarFormularioMensajeria() {
+            const form = document.getElementById('mensajeriaForm');
+            if (form) {
+                form.reset();
+
+                // Ocultar contenidos específicos
+                document.querySelectorAll('.mensaje-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                // Mostrar contenido de texto por defecto
+                document.getElementById('contenidoTexto').classList.remove('hidden');
+
+                // Ocultar preview de imagen
+                document.getElementById('imagenPreview').classList.add('hidden');
+
+                // Resetear destinatarios
+                document.getElementById('destinatarioSelect').innerHTML = '<option value="">Primero selecciona un comité</option>';
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Listener para cambio de comité
+            const comiteSelect = document.getElementById('comiteSelect');
+            if (comiteSelect) {
+                comiteSelect.addEventListener('change', function() {
+                    cargarMiembrosComite(this.value);
+                });
+            }
+
+            // Listener para el formulario
+            const mensajeriaForm = document.getElementById('mensajeriaForm');
+            if (mensajeriaForm) {
+                mensajeriaForm.addEventListener('submit', enviarMensajeComite);
+            }
+
+            // Cerrar modal con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    cerrarModalMensajeria();
+                }
+            });
+        });
+
+        async function enviarMensajeComite(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('enviarMensajeBtn');
+            const spinner = document.getElementById('mensajeSpinner');
+            const icon = document.getElementById('mensajeIcon');
+            const text = document.getElementById('mensajeText');
+
+            // Mostrar loading
+            submitBtn.disabled = true;
+            spinner.classList.remove('hidden');
+            icon.classList.add('hidden');
+            text.textContent = 'Enviando...';
+
+            try {
+                const formData = new FormData(e.target);
+
+                const response = await fetch('./api/comites.php?action=enviar_mensaje', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (window.adminComites) {
+                        window.adminComites.mostrarExito(result.message || 'Mensaje enviado exitosamente');
+                    }
+                    cerrarModalMensajeria();
+                } else {
+                    if (window.adminComites) {
+                        window.adminComites.mostrarError(result.message || 'Error al enviar mensaje');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                if (window.adminComites) {
+                    window.adminComites.mostrarError('Error al enviar mensaje: ' + error.message);
+                }
+            } finally {
+                // Restaurar botón
+                submitBtn.disabled = false;
+                spinner.classList.add('hidden');
+                icon.classList.remove('hidden');
+                text.textContent = 'Enviar Mensaje';
+            }
+        }
+
+        // === GESTIÓN DE REGISTROS DE USUARIOS ===
+
+        let registrosOriginales = [];
+        let registrosFiltrados = [];
+
+        // Cargar registros de usuarios al inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarRegistrosUsuarios();
+            cargarComitesParaFiltro();
+        });
+
+        async function cargarRegistrosUsuarios() {
+            const loadingElement = document.getElementById('registrosLoading');
+            const tablaElement = document.getElementById('tablaRegistros');
+            const noRegistrosElement = document.getElementById('noRegistros');
+
+            // Mostrar loading
+            loadingElement.classList.remove('hidden');
+            noRegistrosElement.classList.add('hidden');
+
+            try {
+                const response = await fetch('./api/comites.php?action=obtener_todos_registros');
+                const data = await response.json();
+
+                if (data.success && data.registros) {
+                    registrosOriginales = data.registros;
+                    registrosFiltrados = [...registrosOriginales];
+                    renderizarRegistros();
+                } else {
+                    console.error('Error cargando registros:', data.message);
+                    mostrarNoRegistros();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarNoRegistros();
+            } finally {
+                loadingElement.classList.add('hidden');
+            }
+        }
+
+        async function cargarComitesParaFiltro() {
+            try {
+                const response = await fetch('./api/comites.php?action=listar');
+                const data = await response.json();
+
+                const filtroComite = document.getElementById('filtroComite');
+                if (data.success && data.comites) {
+                    // Limpiar opciones existentes (excepto "Todos")
+                    filtroComite.innerHTML = '<option value="">Todos los comités</option>';
+
+                    data.comites.forEach(comite => {
+                        const option = document.createElement('option');
+                        option.value = comite.id;
+                        option.textContent = comite.nombre;
+                        filtroComite.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error cargando comités para filtro:', error);
+            }
+        }
+
+        function renderizarRegistros() {
+            const tablaElement = document.getElementById('tablaRegistros');
+            const noRegistrosElement = document.getElementById('noRegistros');
+
+            if (registrosFiltrados.length === 0) {
+                mostrarNoRegistros();
+                return;
+            }
+
+            noRegistrosElement.classList.add('hidden');
+
+            const html = registrosFiltrados.map(registro => {
+                const estadoClass = {
+                    'pendiente': 'bg-yellow-100 text-yellow-800',
+                    'aprobado': 'bg-green-100 text-green-800',
+                    'rechazado': 'bg-red-100 text-red-800'
+                }[registro.estado_registro] || 'bg-gray-100 text-gray-800';
+
+                const estadoIcon = {
+                    'pendiente': 'fas fa-clock',
+                    'aprobado': 'fas fa-check-circle',
+                    'rechazado': 'fas fa-times-circle'
+                }[registro.estado_registro] || 'fas fa-question-circle';
+
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                        <i class="fas fa-user text-gray-600"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">${registro.nombre_usuario}</div>
+                                    <div class="text-sm text-gray-500">${registro.telefono_contacto || 'Sin teléfono'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${registro.nombre_empresa}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">
+                                <a href="mailto:${registro.email_contacto}" class="text-blue-600 hover:text-blue-800">
+                                    ${registro.email_contacto}
+                                </a>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${registro.cargo}</div>
+                            ${registro.departamento ? `<div class="text-sm text-gray-500">${registro.departamento}</div>` : ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${registro.comite_nombre}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-xs text-gray-600">
+                                ${registro.info_usuario_loggeado || 'No disponible'}
+                            </div>
+                            ${registro.ip_address ? `<div class="text-xs text-gray-400">IP: ${registro.ip_address}</div>` : ''}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${estadoClass}">
+                                <i class="${estadoIcon} mr-1"></i>
+                                ${registro.estado_registro.charAt(0).toUpperCase() + registro.estado_registro.slice(1)}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${new Date(registro.fecha_registro).toLocaleDateString('es-ES')}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            ${registro.estado_registro === 'pendiente' ? `
+                                <div class="flex space-x-2">
+                                    <button onclick="cambiarEstadoRegistro(${registro.id}, 'aprobado')"
+                                            class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded">
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                    <button onclick="cambiarEstadoRegistro(${registro.id}, 'rechazado')"
+                                            class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                </div>
+                            ` : `
+                                <div class="text-gray-400 text-xs">
+                                    ${registro.fecha_aprobacion ? 'Procesado el ' + new Date(registro.fecha_aprobacion).toLocaleDateString('es-ES') : 'Sin fecha de procesamiento'}
+                                </div>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            tablaElement.innerHTML = html;
+        }
+
+        function filtrarRegistros() {
+            const filtroComite = document.getElementById('filtroComite').value;
+            const filtroEstado = document.getElementById('filtroEstado').value;
+
+            registrosFiltrados = registrosOriginales.filter(registro => {
+                const pasaComite = !filtroComite || registro.comite_id == filtroComite;
+                const pasaEstado = !filtroEstado || registro.estado_registro === filtroEstado;
+                return pasaComite && pasaEstado;
+            });
+
+            renderizarRegistros();
+        }
+
+        async function cambiarEstadoRegistro(registroId, nuevoEstado) {
+            if (!confirm(`¿Está seguro de ${nuevoEstado === 'aprobado' ? 'aprobar' : 'rechazar'} este registro?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('./api/comites.php?action=cambiar_estado_registro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        registro_id: registroId,
+                        nuevo_estado: nuevoEstado
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (window.adminComites) {
+                        window.adminComites.mostrarExito(result.message || `Registro ${nuevoEstado} exitosamente`);
+                    }
+                    cargarRegistrosUsuarios(); // Recargar lista
+                } else {
+                    if (window.adminComites) {
+                        window.adminComites.mostrarError(result.message || 'Error al cambiar estado del registro');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                if (window.adminComites) {
+                    window.adminComites.mostrarError('Error al cambiar estado: ' + error.message);
+                }
+            }
+        }
+
+        function mostrarNoRegistros() {
+            document.getElementById('tablaRegistros').innerHTML = '';
+            document.getElementById('noRegistros').classList.remove('hidden');
+        }
+
+        // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+        function initializeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+
+            console.log('Sidebar elements:', {
+                sidebar: !!sidebar,
+                overlay: !!overlay,
+                hamburgerBtn: !!hamburgerBtn,
+                closeBtn: !!closeBtn,
+                screenWidth: window.innerWidth,
+                isDesktop: window.innerWidth >= 1280
+            });
+
+            // Log computed styles for debugging
+            if (sidebar) {
+                const styles = window.getComputedStyle(sidebar);
+                console.log('Sidebar computed styles:', {
+                    display: styles.display,
+                    transform: styles.transform,
+                    left: styles.left,
+                    position: styles.position,
+                    zIndex: styles.zIndex
+                });
+            }
+
+            if (!sidebar || !overlay || !hamburgerBtn) {
+                console.error('Sidebar elements not found:', {
+                    sidebar: !!sidebar,
+                    overlay: !!overlay,
+                    hamburgerBtn: !!hamburgerBtn
+                });
+                return;
+            }
+
+            // Toggle sidebar function
+            function toggleSidebar(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                const isVisible = sidebar.classList.contains('sidenav-show');
+                console.log('Toggle sidebar - currently visible:', isVisible);
+
+                if (!isVisible) {
+                    // Open sidebar
+                    console.log('Opening sidebar');
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+
+                    // Focus management for accessibility
+                    const firstLink = sidebar.querySelector('.porsche-nav-item');
+                    if (firstLink) {
+                        setTimeout(() => firstLink.focus(), 100);
+                    }
+                } else {
+                    // Close sidebar
+                    console.log('Closing sidebar');
+                    closeSidebarInternal();
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebarInternal() {
+                console.log('Executing closeSidebarInternal');
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+
+                // Return focus to hamburger button
+                if (hamburgerBtn) {
+                    hamburgerBtn.focus();
+                }
+            }
+
+            // Event listeners
+            console.log('Adding click event to hamburger button');
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+
+            hamburgerBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar(e);
+            }, { passive: false });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebarInternal);
+                overlay.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+            });
+
+            // Handle window resize - Keep sidebar closed on all screen sizes
+            window.addEventListener('resize', function() {
+                // Optional: could add logic here if needed
+            });
+
+            // Swipe to close functionality
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            sidebar.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const diffX = touchStartX - currentX;
+                const diffY = Math.abs(touchStartY - currentY);
+
+                // Swipe left to close
+                if (diffX > 50 && diffY < 100) {
+                    closeSidebarInternal();
+                    touchStartX = 0;
+                    touchStartY = 0;
+                }
+            }, { passive: true });
+
+            // Keyboard navigation in sidebar
+            sidebar.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+
+                // Arrow navigation
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                    const currentIndex = navItems.indexOf(document.activeElement);
+
+                    if (e.key === 'ArrowDown') {
+                        const nextIndex = (currentIndex + 1) % navItems.length;
+                        navItems[nextIndex].focus();
+                    } else {
+                        const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                        navItems[prevIndex].focus();
+                    }
+                }
+            });
+
+            console.log('✅ Sidebar functionality initialized successfully');
+        }
+
+        // === FUNCIONALIDAD DE GESTIÓN DE MENSAJES ENVIADOS ===
+
+        // Variables globales para mensajes
+        let mensajesOriginales = [];
+        let mensajesFiltrados = [];
+        let mensajeActual = null;
+
+        // Inicializar la gestión de mensajes
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarMensajesEnviados();
+            configurarEventosMensajes();
+        });
+
+        function configurarEventosMensajes() {
+            // Configurar el formulario de edición
+            const formEditar = document.getElementById('formEditarMensaje');
+            if (formEditar) {
+                formEditar.addEventListener('submit', guardarCambiosMensaje);
+            }
+        }
+
+        // Cargar mensajes enviados desde la API
+        async function cargarMensajesEnviados() {
+            const loadingElement = document.getElementById('loadingMensajes');
+            const emptyElement = document.getElementById('emptyMensajes');
+            const containerElement = document.getElementById('mensajesContainer');
+
+            // Mostrar loading
+            if (loadingElement) loadingElement.classList.remove('hidden');
+            if (emptyElement) emptyElement.classList.add('hidden');
+            if (containerElement) containerElement.innerHTML = '';
+
+            try {
+                console.log('📧 Cargando mensajes enviados...');
+
+                const response = await fetch('./api/comites.php?action=obtener_mensajes_enviados', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('📧 Respuesta mensajes:', result);
+
+                if (result.success && result.mensajes) {
+                    mensajesOriginales = result.mensajes;
+                    mensajesFiltrados = [...mensajesOriginales];
+                    renderizarMensajes();
+                    cargarDestinatariosEnFiltros();
+                } else {
+                    throw new Error(result.message || 'Error al cargar mensajes');
+                }
+
+            } catch (error) {
+                console.error('❌ Error al cargar mensajes:', error);
+                mostrarErrorMensajes(error.message);
+            } finally {
+                if (loadingElement) loadingElement.classList.add('hidden');
+            }
+        }
+
+        // Renderizar la lista de mensajes
+        function renderizarMensajes() {
+            const containerElement = document.getElementById('mensajesContainer');
+            const emptyElement = document.getElementById('emptyMensajes');
+
+            if (!containerElement) return;
+
+            if (mensajesFiltrados.length === 0) {
+                containerElement.innerHTML = '';
+                if (emptyElement) emptyElement.classList.remove('hidden');
+                return;
+            }
+
+            if (emptyElement) emptyElement.classList.add('hidden');
+
+            const html = mensajesFiltrados.map(mensaje => createMensajeCard(mensaje)).join('');
+            containerElement.innerHTML = html;
+
+            console.log(`✅ Renderizados ${mensajesFiltrados.length} mensajes`);
+        }
+
+        // Crear tarjeta HTML para un mensaje
+        function createMensajeCard(mensaje) {
+            const fechaEnvio = new Date(mensaje.fecha_envio || mensaje.created_at);
+            const fechaFormateada = fechaEnvio.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const asunto = mensaje.asunto || mensaje.titulo || 'Sin asunto';
+            const contenidoPreview = (mensaje.mensaje || mensaje.contenido || '').substring(0, 150);
+            const destinatarios = mensaje.destinatarios || mensaje.num_destinatarios || 0;
+            const estado = mensaje.estado || 'enviado';
+            const prioridad = mensaje.prioridad || 'normal';
+            const tipoMensaje = mensaje.tipo_mensaje || 'informativo';
+
+            // Iconos y colores según el tipo y prioridad
+            const tipoIcon = {
+                'informativo': 'fas fa-info-circle text-blue-500',
+                'urgente': 'fas fa-exclamation-triangle text-red-500',
+                'recordatorio': 'fas fa-bell text-yellow-500',
+                'convocatoria': 'fas fa-calendar-alt text-purple-500'
+            }[tipoMensaje] || 'fas fa-envelope text-gray-500';
+
+            const prioridadBadge = {
+                'normal': 'bg-gray-100 text-gray-800',
+                'alta': 'bg-yellow-100 text-yellow-800',
+                'urgente': 'bg-red-100 text-red-800'
+            }[prioridad] || 'bg-gray-100 text-gray-800';
+
+            const estadoBadge = {
+                'enviado': 'bg-green-100 text-green-800',
+                'leido': 'bg-blue-100 text-blue-800',
+                'pendiente': 'bg-yellow-100 text-yellow-800'
+            }[estado] || 'bg-gray-100 text-gray-800';
+
+            return `
+                <div class="p-6 hover:bg-gray-50 transition-colors">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <i class="${tipoIcon} mr-2"></i>
+                                <h4 class="text-lg font-medium text-gray-900">${asunto}</h4>
+                                <div class="ml-auto flex space-x-2">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full ${prioridadBadge}">
+                                        ${prioridad.toUpperCase()}
+                                    </span>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full ${estadoBadge}">
+                                        ${estado.toUpperCase()}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p class="text-gray-600 text-sm mb-3 leading-relaxed">
+                                ${contenidoPreview}${contenidoPreview.length >= 150 ? '...' : ''}
+                            </p>
+
+                            <div class="flex items-center text-sm text-gray-500 space-x-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-calendar mr-1"></i>
+                                    ${fechaFormateada}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-users mr-1"></i>
+                                    ${mensaje.total_destinatarios || destinatarios} destinatario${(mensaje.total_destinatarios || destinatarios) !== 1 ? 's' : ''}
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-building mr-1"></i>
+                                    ${mensaje.comite_nombre || 'Sin comité'}
+                                </div>
+                            </div>
+                            ${mensaje.destinatarios_nombres && mensaje.destinatarios_nombres.length > 0 ? `
+                            <div class="mt-2 pt-2 border-t border-gray-200">
+                                <div class="flex items-start text-sm text-gray-600">
+                                    <i class="fas fa-paper-plane mr-2 mt-1 flex-shrink-0"></i>
+                                    <div>
+                                        <span class="font-medium">Enviado a:</span>
+                                        <div class="mt-1">
+                                            ${mensaje.destinatarios_nombres.slice(0, 3).map(nombre =>
+                                                `<span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1 mb-1">${nombre}</span>`
+                                            ).join('')}
+                                            ${mensaje.destinatarios_nombres.length > 3 ?
+                                                `<span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">+${mensaje.destinatarios_nombres.length - 3} más</span>` : ''
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="ml-4 flex space-x-2">
+                            <button onclick="verMensaje(${mensaje.id})"
+                                    class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition"
+                                    title="Ver mensaje completo">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="editarMensaje(${mensaje.id})"
+                                    class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition"
+                                    title="Editar mensaje">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="eliminarMensaje(${mensaje.id})"
+                                    class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
+                                    title="Eliminar mensaje">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filtrar mensajes
+        function filtrarMensajes() {
+            const filtroDestinatario = document.getElementById('filtroDestinatario').value;
+            const filtroFecha = document.getElementById('filtroFechaMensaje').value;
+            const filtroEstado = document.getElementById('filtroEstadoMensaje').value;
+
+            mensajesFiltrados = mensajesOriginales.filter(mensaje => {
+                const pasaDestinatario = !filtroDestinatario ||
+                                       (mensaje.destinatarios && mensaje.destinatarios.includes(filtroDestinatario));
+
+                let pasaFecha = true;
+                if (filtroFecha) {
+                    const fechaMensaje = new Date(mensaje.fecha_envio || mensaje.created_at);
+                    const fechaFiltro = new Date(filtroFecha);
+                    pasaFecha = fechaMensaje.toDateString() === fechaFiltro.toDateString();
+                }
+
+                const pasaEstado = !filtroEstado || mensaje.estado === filtroEstado;
+
+                return pasaDestinatario && pasaFecha && pasaEstado;
+            });
+
+            renderizarMensajes();
+        }
+
+        // Limpiar filtros
+        function limpiarFiltrosMensajes() {
+            document.getElementById('filtroDestinatario').value = '';
+            document.getElementById('filtroFechaMensaje').value = '';
+            document.getElementById('filtroEstadoMensaje').value = '';
+
+            mensajesFiltrados = [...mensajesOriginales];
+            renderizarMensajes();
+        }
+
+        // Cargar destinatarios en filtros
+        function cargarDestinatariosEnFiltros() {
+            const selectDestinatario = document.getElementById('filtroDestinatario');
+            if (!selectDestinatario) return;
+
+            const destinatarios = new Set();
+            mensajesOriginales.forEach(mensaje => {
+                if (mensaje.destinatarios) {
+                    // Asumiendo que destinatarios puede ser una lista
+                    const destList = typeof mensaje.destinatarios === 'string'
+                        ? mensaje.destinatarios.split(',')
+                        : [mensaje.destinatarios];
+                    destList.forEach(dest => destinatarios.add(dest.trim()));
+                }
+            });
+
+            selectDestinatario.innerHTML = '<option value="">Todos los destinatarios</option>';
+            destinatarios.forEach(dest => {
+                selectDestinatario.innerHTML += `<option value="${dest}">${dest}</option>`;
+            });
+        }
+
+        // Ver mensaje completo
+        function verMensaje(mensajeId) {
+            const mensaje = mensajesOriginales.find(m => m.id == mensajeId);
+            if (!mensaje) {
+                console.error('❌ Mensaje no encontrado:', mensajeId);
+                return;
+            }
+
+            mensajeActual = mensaje;
+
+            // Llenar el modal de visualización
+            document.getElementById('verFechaEnvio').textContent = new Date(mensaje.fecha_envio || mensaje.created_at).toLocaleString('es-ES');
+            document.getElementById('verDestinatarios').textContent = mensaje.destinatarios || mensaje.num_destinatarios + ' destinatarios';
+            document.getElementById('verEstado').textContent = (mensaje.estado || 'enviado').toUpperCase();
+            document.getElementById('verPrioridad').textContent = (mensaje.prioridad || 'normal').toUpperCase();
+            document.getElementById('verAsunto').textContent = mensaje.asunto || mensaje.titulo || 'Sin asunto';
+            document.getElementById('verMensajeTexto').textContent = mensaje.mensaje || mensaje.contenido || '';
+
+            // Mostrar modal
+            document.getElementById('modalVerMensaje').classList.remove('hidden');
+        }
+
+        // Editar mensaje
+        function editarMensaje(mensajeId) {
+            const mensaje = mensajesOriginales.find(m => m.id == mensajeId);
+            if (!mensaje) {
+                console.error('❌ Mensaje no encontrado:', mensajeId);
+                return;
+            }
+
+            mensajeActual = mensaje;
+
+            // Llenar el formulario de edición
+            document.getElementById('editMensajeId').value = mensaje.id;
+            document.getElementById('editFechaEnvio').textContent = new Date(mensaje.fecha_envio || mensaje.created_at).toLocaleString('es-ES');
+            document.getElementById('editDestinatarios').textContent = mensaje.destinatarios || mensaje.num_destinatarios + ' destinatarios';
+            document.getElementById('editEstado').textContent = (mensaje.estado || 'enviado').toUpperCase();
+            document.getElementById('editAsunto').value = mensaje.asunto || mensaje.titulo || '';
+            document.getElementById('editMensajeTexto').value = mensaje.mensaje || mensaje.contenido || '';
+            document.getElementById('editTipoMensaje').value = mensaje.tipo_mensaje || 'informativo';
+            document.getElementById('editPrioridad').value = mensaje.prioridad || 'normal';
+
+            // Mostrar modal
+            document.getElementById('modalEditarMensaje').classList.remove('hidden');
+        }
+
+        // Editar desde el modal de ver
+        function editarMensajeDesdeVer() {
+            cerrarModalVerMensaje();
+            if (mensajeActual) {
+                editarMensaje(mensajeActual.id);
+            }
+        }
+
+        // Guardar cambios del mensaje
+        async function guardarCambiosMensaje(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('guardarCambiosBtn');
+            const spinner = document.getElementById('editSpinner');
+            const icon = document.getElementById('editIcon');
+
+            // UI loading state
+            submitBtn.disabled = true;
+            if (spinner) spinner.classList.remove('hidden');
+            if (icon) icon.classList.add('hidden');
+
+            try {
+                const formData = new FormData();
+                formData.append('id', document.getElementById('editMensajeId').value);
+                formData.append('asunto', document.getElementById('editAsunto').value);
+                formData.append('mensaje', document.getElementById('editMensajeTexto').value);
+                formData.append('tipo_mensaje', document.getElementById('editTipoMensaje').value);
+                formData.append('prioridad', document.getElementById('editPrioridad').value);
+
+                const response = await fetch('./api/comites.php?action=actualizar_mensaje', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ Mensaje actualizado:', result);
+
+                    // Mostrar mensaje de éxito
+                    if (window.adminComites) {
+                        window.adminComites.mostrarExito('Mensaje actualizado correctamente');
+                    } else {
+                        alert('✅ Mensaje actualizado correctamente');
+                    }
+
+                    // Cerrar modal y recargar lista
+                    cerrarModalEditarMensaje();
+                    cargarMensajesEnviados();
+                } else {
+                    throw new Error(result.message || 'Error al actualizar mensaje');
+                }
+
+            } catch (error) {
+                console.error('❌ Error al actualizar mensaje:', error);
+                if (window.adminComites) {
+                    window.adminComites.mostrarError('Error al actualizar mensaje: ' + error.message);
+                } else {
+                    alert('❌ Error al actualizar mensaje: ' + error.message);
+                }
+            } finally {
+                // Restaurar UI
+                submitBtn.disabled = false;
+                if (spinner) spinner.classList.add('hidden');
+                if (icon) icon.classList.remove('hidden');
+            }
+        }
+
+        // Eliminar mensaje
+        async function eliminarMensaje(mensajeId) {
+            const mensaje = mensajesOriginales.find(m => m.id == mensajeId);
+            if (!mensaje) {
+                console.error('❌ Mensaje no encontrado:', mensajeId);
+                return;
+            }
+
+            const asunto = mensaje.asunto || mensaje.titulo || 'Sin asunto';
+            if (!confirm(`¿Está seguro de que desea eliminar el mensaje "${asunto}"?\\n\\nEsta acción no se puede deshacer.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('./api/comites.php?action=eliminar_mensaje', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: mensajeId })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('✅ Mensaje eliminado:', result);
+
+                    // Mostrar mensaje de éxito
+                    if (window.adminComites) {
+                        window.adminComites.mostrarExito('Mensaje eliminado correctamente');
+                    } else {
+                        alert('✅ Mensaje eliminado correctamente');
+                    }
+
+                    // Recargar lista
+                    cargarMensajesEnviados();
+                } else {
+                    throw new Error(result.message || 'Error al eliminar mensaje');
+                }
+
+            } catch (error) {
+                console.error('❌ Error al eliminar mensaje:', error);
+                if (window.adminComites) {
+                    window.adminComites.mostrarError('Error al eliminar mensaje: ' + error.message);
+                } else {
+                    alert('❌ Error al eliminar mensaje: ' + error.message);
+                }
+            }
+        }
+
+        // Mostrar error en mensajes
+        function mostrarErrorMensajes(errorMessage) {
+            const containerElement = document.getElementById('mensajesContainer');
+            const emptyElement = document.getElementById('emptyMensajes');
+
+            if (emptyElement) emptyElement.classList.add('hidden');
+
+            if (containerElement) {
+                containerElement.innerHTML = `
+                    <div class="p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Error al cargar mensajes</h3>
+                        <p class="text-gray-500 mb-4">${errorMessage}</p>
+                        <button onclick="cargarMensajesEnviados()"
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-sync-alt mr-2"></i>Reintentar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Cerrar modales
+        function cerrarModalEditarMensaje() {
+            document.getElementById('modalEditarMensaje').classList.add('hidden');
+            document.getElementById('formEditarMensaje').reset();
+            mensajeActual = null;
+        }
+
+        function cerrarModalVerMensaje() {
+            document.getElementById('modalVerMensaje').classList.add('hidden');
+            mensajeActual = null;
+        }
+
+        // Legacy function compatibility
+        function closeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+
+            if (sidebar && overlay) {
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+</body>
+</html>

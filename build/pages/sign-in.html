@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+    <title>Clúster Intranet - Iniciar Sesión</title>
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <!-- Nucleo Icons -->
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Main Styling -->
+    <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+    <!-- Responsive Sign-in Styles -->
+    <link href="../assets/css/responsive-signin.css" rel="stylesheet" />
+    <!-- Los estilos CSS ahora están en responsive-signin.css -->
+
+    <!-- Sidebar Styles -->
+    <style>
+        /* Porsche-inspired Design System Variables */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Clúster red for brand consistency */
+
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-font-weight-light: 300;
+            --porsche-font-weight-regular: 400;
+            --porsche-font-weight-medium: 500;
+            --porsche-font-weight-semibold: 600;
+            --porsche-font-weight-bold: 700;
+
+            /* Spacing */
+            --porsche-space-xs: 0.5rem;
+            --porsche-space-sm: 1rem;
+            --porsche-space-md: 1.5rem;
+            --porsche-space-lg: 2rem;
+            --porsche-space-xl: 3rem;
+
+            /* Shadows */
+            --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+            /* Border Radius */
+            --porsche-radius-sm: 4px;
+            --porsche-radius-md: 8px;
+            --porsche-radius-lg: 12px;
+            --porsche-radius-xl: 16px;
+        }
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%);
+            border-radius: var(--porsche-radius-lg);
+            box-shadow: var(--porsche-shadow-large);
+            z-index: 999 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
+            width: 256px !important;
+            max-width: 256px !important;
+            transform: translateX(-100%) !important;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            margin: 1rem !important;
+            height: calc(100vh - 2rem) !important;
+        }
+
+        /* Sidebar visible state */
+        .porsche-sidebar.sidenav-show,
+        .porsche-sidebar[aria-expanded="true"] {
+            transform: translateX(0) !important;
+        }
+
+        /* Desktop sidebar */
+        @media (min-width: 1280px) {
+            .porsche-sidebar {
+                transform: translateX(0) !important;
+                position: fixed !important;
+                z-index: 10 !important;
+            }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 1279px) {
+            .porsche-sidebar {
+                transform: translateX(-100%) !important;
+                z-index: 999 !important;
+            }
+        }
+
+        /* Overlay for mobile */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white);
+            font-weight: var(--porsche-font-weight-bold);
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: var(--porsche-radius-md);
+            margin: var(--porsche-space-xs) 0;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--porsche-white);
+            transform: translateX(4px);
+        }
+
+        .porsche-nav-item.active {
+            background: var(--porsche-accent);
+            color: var(--porsche-white);
+        }
+
+        /* Mobile toggle button */
+        .mobile-toggle {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
+            background: var(--porsche-black);
+            color: var(--porsche-white);
+            border: none;
+            border-radius: var(--porsche-radius-md);
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-toggle:hover {
+            background: var(--porsche-charcoal);
+        }
+
+        @media (min-width: 1280px) {
+            .mobile-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle" id="mobileToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="container sticky top-0 z-sticky">
+        <div class="flex flex-wrap -mx-3">
+            <div class="w-full max-w-full px-3 flex-0">
+            </div>
+        </div>
+        <main class="mt-0 transition-all duration-200 ease-in-out">
+            <section class="login-section">
+                <!-- LADO IZQUIERDO: Formulario -->
+                <div class="login-form-container">
+                    <div class="login-form-content">
+                        <div class="text-center mb-6 logo-container">
+                            <img src="../assets/img/apple-icon.png" alt="Logo" class="mx-auto mb-4">
+                            <h4 class="font-bold text-lg login-title">Iniciar Sesión</h4>
+                            <p class="text-sm text-slate-600 login-subtitle">Ingresa tus datos de Clúster</p>
+                        </div>
+
+                        <!-- Mensajes de error/éxito -->
+                        <div id="message-container"></div>
+
+                        <form id="loginForm" action="../login/login.php" method="POST">
+                            <div class="mb-4">
+                                <input type="email" name="email" id="email" placeholder="Email" required
+                                    class="form-input" />
+                                <div class="error-field" id="email-error"></div>
+                            </div>
+                            <div class="mb-4">
+                                <input type="password" name="password" id="password" placeholder="Contraseña" required
+                                    class="form-input" />
+                                <div class="error-field" id="password-error"></div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" id="loginBtn" class="form-button">
+                                    <span id="btnText">Iniciar Sesión</span>
+                                    <span id="btnSpinner" class="spinner hidden"></span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Botón de Acceso Visitante -->
+                        <div class="text-center mt-4">
+                            <button type="button" id="visitanteBtn" onclick="accederComoVisitante()"
+                                class="w-full bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700 transition duration-200 flex items-center justify-center">
+                                <i class="fas fa-eye mr-2"></i>
+                                <span>Acceder como Visitante</span>
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="forgot-password.php" class="text-sm text-blue-500 hover:text-blue-600">¿Olvidaste
+                                tu contraseña?</a>
+                        </div>
+                        <p class="text-sm mt-4 text-center">¿No tienes una cuenta?
+                            <a href="sign-up.html" class="text-blue-500 font-semibold hover:text-blue-600">Crear
+                                Cuenta</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- LADO DERECHO: Carrusel de Banners -->
+                <div class="banner-container" id="bannerCarousel">
+                    <div class="absolute inset-0 bg-gradient-to-tl from-blue-500 to-violet-500 opacity-40 z-10"></div>
+
+                    <!-- Slides del carrusel -->
+                    <div class="carousel-container relative w-full h-full" id="carouselSlides">
+                        <!-- Los banners se cargan dinámicamente -->
+                    </div>
+
+
+                    <!-- Loading state -->
+                    <div class="absolute inset-0 bg-gradient-to-tl from-blue-500 to-violet-500 opacity-60 z-10 flex items-center justify-center"
+                        id="bannerLoading">
+                        <div class="text-center px-10">
+                            <div class="spinner-border text-white mb-4" role="status">
+                                <span class="sr-only">Cargando...</span>
+                            </div>
+                            <h4 class="font-bold text-white text-xl mb-4">"Bienvenido a Clúster"</h4>
+                            <p class="text-white">Conectando con la comunidad automotriz de México</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="py-12">
+            <div class="container">
+                <div class="flex flex-wrap -mx-3">
+                    <div class="w-8/12 max-w-full px-3 mx-auto mt-1 text-center flex-0">
+                        <p class="mb-0 text-slate-400">
+                            Copyright ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            Clúster.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const loginForm = document.getElementById('loginForm');
+                const loginBtn = document.getElementById('loginBtn');
+                const btnText = document.getElementById('btnText');
+                const btnSpinner = document.getElementById('btnSpinner');
+                const messageContainer = document.getElementById('message-container');
+
+                // Verificar si hay mensajes en la URL
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('error') === '1') {
+                    checkForMessages();
+                }
+                if (urlParams.get('success') === '1') {
+                    showMessage('Cuenta creada exitosamente. Ahora puedes iniciar sesión.', 'success');
+                }
+                if (urlParams.get('logout') === '1') {
+                    showMessage('Sesión cerrada exitosamente.', 'success');
+                }
+
+                // Manejar envío del formulario
+                loginForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Limpiar errores previos
+                    clearErrors();
+
+                    // Validar formulario
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+
+                    if (!validateForm(email, password)) {
+                        return;
+                    }
+
+                    // Mostrar estado de carga
+                    setLoadingState(true);
+
+                    // Crear FormData
+                    const formData = new FormData();
+                    formData.append('email', email);
+                    formData.append('password', password);
+
+                    // Usar la API de login
+                    loginWithAPI(email, password);
+                });
+
+                function validateForm(email, password) {
+                    let isValid = true;
+
+                    // Validar email
+                    if (!email) {
+                        showFieldError('email', 'El email es requerido.');
+                        isValid = false;
+                    } else if (!isValidEmail(email)) {
+                        showFieldError('email', 'Por favor, ingresa un email válido.');
+                        isValid = false;
+                    }
+
+                    // Validar contraseña
+                    if (!password) {
+                        showFieldError('password', 'La contraseña es requerida.');
+                        isValid = false;
+                    }
+
+                    return isValid;
+                }
+
+                function isValidEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                }
+
+                function showFieldError(fieldId, message) {
+                    const errorDiv = document.getElementById(fieldId + '-error');
+                    errorDiv.textContent = message;
+                    errorDiv.style.color = '#dc2626';
+                    errorDiv.style.fontSize = '0.875rem';
+                    errorDiv.style.marginTop = '0.25rem';
+
+                    const field = document.getElementById(fieldId);
+                    field.classList.add('border-red-500');
+                }
+
+                function clearErrors() {
+                    const errorFields = document.querySelectorAll('.error-field');
+                    errorFields.forEach(field => {
+                        field.textContent = '';
+                    });
+
+                    const inputs = document.querySelectorAll('input');
+                    inputs.forEach(input => {
+                        input.classList.remove('border-red-500');
+                    });
+
+                    messageContainer.innerHTML = '';
+                }
+
+                function showMessage(message, type) {
+                    const messageClass = type === 'error' ? 'error-message' : 'success-message';
+                    messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
+                }
+
+                function setLoadingState(loading) {
+                    if (loading) {
+                        loginBtn.classList.add('loading');
+                        btnText.classList.add('hidden');
+                        btnSpinner.classList.remove('hidden');
+                    } else {
+                        loginBtn.classList.remove('loading');
+                        btnText.classList.remove('hidden');
+                        btnSpinner.classList.add('hidden');
+                    }
+                }
+
+                async function loginWithAPI(email, password) {
+                    try {
+                        console.log('🚀 Iniciando login con API');
+
+                        // Usar el endpoint compatible con sesiones CLAUT_SESSION
+                        const endpoint = '../api/auth/login-compatible.php?action=login';
+
+                        console.log(`🔍 Usando endpoint: ${endpoint}`);
+
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ email, password })
+                        });
+
+                        const result = await response.json();
+                        console.log(`📄 Response data:`, result);
+
+                        // Verificar rate limiting (HTTP 429)
+                        if (response.status === 429) {
+                            const retryMinutes = result.retry_after ? Math.ceil(result.retry_after / 60) : 5;
+                            throw new Error(`Demasiados intentos de login. Intenta de nuevo en ${retryMinutes} minutos.`);
+                        }
+
+                        if (!response.ok) {
+                            throw new Error(result.message || `HTTP ${response.status}: ${response.statusText}`);
+                        }
+
+                        if (!result.success) {
+                            throw new Error(result.message || 'Login fallido');
+                        }
+
+                        // Login exitoso
+                        const userData = result.data || result.user;
+                        console.log(`✅ Login exitoso`);
+
+                        // ============================================
+                        // NUEVO: Guardar tokens JWT si existen
+                        // ============================================
+                        if (result.token && result.refresh_token && window.jwtManager) {
+                            window.jwtManager.saveTokens(
+                                result.token,
+                                result.refresh_token,
+                                result.expires_in || 900
+                            );
+                            window.jwtManager.saveUserData(userData);
+                            console.log('✅ Tokens JWT guardados en localStorage');
+
+                            // Iniciar worker de renovación automática
+                            if (window.tokenRefreshWorker) {
+                                window.tokenRefreshWorker.start();
+                                console.log('🔄 Worker de renovación iniciado');
+                            }
+                        } else {
+                            console.log('⚠️ No se recibieron tokens JWT (modo sesión solamente)');
+                        }
+                        // ============================================
+
+                        // Marcar flag de login exitoso para el dashboard
+                        sessionStorage.setItem('recentLogin', 'true');
+
+                        // Guardar datos del usuario para el dashboard
+                        if (userData) {
+                            console.log('💾 Guardando datos del usuario:', userData);
+                            localStorage.setItem('userData', JSON.stringify(userData));
+                            sessionStorage.setItem('userSession', JSON.stringify(userData));
+                        } else {
+                            // Si no hay userData específica, crear datos básicos
+                            const basicUserData = {
+                                nombre: 'Usuario',
+                                apellido: 'Loggeado',
+                                email: email,
+                                rol: 'usuario',
+                                login_time: new Date().toISOString()
+                            };
+                            console.log('💾 Guardando datos básicos del usuario:', basicUserData);
+                            localStorage.setItem('userData', JSON.stringify(basicUserData));
+                            sessionStorage.setItem('userSession', JSON.stringify(basicUserData));
+                        }
+
+                        // Verificar si es admin para redirigir al panel correspondiente
+                        if (userData && userData.rol === 'admin') {
+                            showMessage('¡Bienvenido Administrador! Redirigiendo al panel de admin...', 'success');
+
+                            console.log('👑 Admin detectado, redirigiendo a admin-panel...');
+
+                            setTimeout(() => {
+                                window.location.href = '../admin-panel.html?login=success';
+                            }, 1500);
+                        } else {
+                            showMessage('Inicio de sesión exitoso. Bienvenido!', 'success');
+
+                            console.log('👤 Usuario normal, redirigiendo al dashboard...');
+
+                            setTimeout(() => {
+                                window.location.href = '../dashboard.html?login=success';
+                            }, 1500);
+                        }
+
+                    } catch (error) {
+                        console.error('💥 Error en login:', error);
+                        showMessage(`Error de autenticación: ${error.message}`, 'error');
+                    } finally {
+                        setLoadingState(false);
+                    }
+                }
+
+                function checkForMessages() {
+                    // Verificar mensajes en la URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('message')) {
+                        const message = decodeURIComponent(urlParams.get('message'));
+                        const type = urlParams.get('type') || 'info';
+                        showMessage(message, type);
+
+                        // Limpiar la URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                }
+
+                // Cargar e inicializar el carrusel de banners
+                cargarBannerCarrusel();
+
+                // Initialize sidebar functionality
+                initializeSidebar();
+            });
+
+            // Sistema de Carrusel de Banners
+            let currentSlide = 0;
+            let banners = [];
+            let carouselInterval = null;
+
+            async function cargarBannerCarrusel() {
+                try {
+                    console.log('Iniciando carga de banners...');
+                    // Agregar timestamp para evitar caché
+                    const timestamp = Date.now();
+                    const response = await fetch(`/build/api/banners.php?action=active&t=${timestamp}`, {
+                        cache: 'no-cache',
+                        headers: {
+                            'Cache-Control': 'no-cache',
+                            'Pragma': 'no-cache'
+                        }
+                    });
+
+                    // Verificar si la respuesta es OK
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // Obtener el texto primero para verificar si hay warnings
+                    const responseText = await response.text();
+                    console.log('Respuesta raw del servidor:', responseText);
+
+                    // Limpiar warnings de PHP si existen (empiezan con <br />)
+                    let cleanedResponse = responseText;
+                    if (responseText.includes('<br />')) {
+                        // Encontrar donde empieza el JSON (buscar el primer {)
+                        const jsonStart = responseText.indexOf('{');
+                        if (jsonStart !== -1) {
+                            cleanedResponse = responseText.substring(jsonStart);
+                            console.warn('Se detectaron warnings de PHP, limpiando respuesta...');
+                        }
+                    }
+
+                    // Parsear el JSON limpio
+                    const result = JSON.parse(cleanedResponse);
+                    console.log('Datos parseados:', result);
+
+                    if (result.success && result.data && result.data.length > 0) {
+                        banners = result.data;
+                        console.log(`✅ Cargados ${banners.length} banners de la base de datos:`, banners);
+                        inicializarCarrusel();
+                        // Ocultar loading cuando hay banners
+                        document.getElementById('bannerLoading').style.display = 'none';
+                    } else {
+                        // NO mostrar banner por defecto, solo mostrar mensaje
+                        console.warn('❌ No hay banners activos en la base de datos');
+                        console.log('Respuesta completa:', result);
+                        mostrarMensajeSinBanners();
+                    }
+                } catch (error) {
+                    console.error('❌ Error al cargar banners:', error);
+                    console.error('Error completo:', error.message);
+                    mostrarMensajeSinBanners();
+                }
+            }
+
+            function inicializarCarrusel() {
+                const slidesContainer = document.getElementById('carouselSlides');
+
+                console.log('Inicializando carrusel con banners:', banners);
+
+                // Crear slides
+                slidesContainer.innerHTML = banners.map((banner, index) => {
+                    // La API ya devuelve URLs absolutas correctas
+                    const imagenUrl = banner.imagen_url || banner.imagen || '';
+                    console.log(`Banner ${index + 1}: ${banner.titulo} - Imagen: ${imagenUrl}`);
+
+                    return `
+                        <div class="carousel-slide ${index === 0 ? 'active' : ''}" 
+                             data-slide-index="${index}"
+                             style="background-image: url('${imagenUrl}');">
+                            <div class="carousel-content">
+                                <h4 class="font-bold text-white text-xl mb-4 drop-shadow-lg">
+                                    ${banner.titulo || 'Banner ' + (index + 1)}
+                                </h4>
+                                <p class="text-white drop-shadow-md">
+                                    ${banner.descripcion || ''}
+                                </p>
+                                ${banner.enlace ? `<a href="${banner.enlace}" class="inline-block mt-4 px-6 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors">Ver más</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Iniciar autoplay si hay más de un banner
+                if (banners.length > 1) {
+                    console.log('Iniciando autoplay para', banners.length, 'banners');
+                    iniciarAutoplay();
+                } else {
+                    console.log('Solo hay un banner, no se activa autoplay');
+                }
+            }
+
+            function mostrarMensajeSinBanners() {
+                const slidesContainer = document.getElementById('carouselSlides');
+                const loadingContainer = document.getElementById('bannerLoading');
+
+                // Ocultar el loading spinner
+                if (loadingContainer) {
+                    loadingContainer.style.display = 'none';
+                }
+
+                // Mostrar mensaje informativo sin imagen de fondo
+                slidesContainer.innerHTML = `
+                    <div class="carousel-slide active" 
+                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="carousel-content">
+                            <div class="text-center">
+                                <i class="fas fa-image text-white text-5xl mb-4 opacity-50"></i>
+                                <h4 class="font-bold text-white text-xl mb-2">
+                                    Sin banners disponibles
+                                </h4>
+                                <p class="text-white text-sm opacity-80">
+                                    Los banners del carrusel se cargarán cuando estén configurados en el sistema
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            }
+
+            function cambiarSlide(index) {
+                if (index === currentSlide) return;
+
+                // Cambiar slide activo
+                const slides = document.querySelectorAll('.carousel-slide');
+
+                slides[currentSlide].classList.remove('active');
+
+                currentSlide = index;
+
+                slides[currentSlide].classList.add('active');
+
+                // Reiniciar autoplay
+                if (carouselInterval) {
+                    clearInterval(carouselInterval);
+                    iniciarAutoplay();
+                }
+            }
+
+            function siguienteSlide() {
+                const nextIndex = (currentSlide + 1) % banners.length;
+                console.log(`Cambiando de slide ${currentSlide} a ${nextIndex}`);
+                cambiarSlide(nextIndex);
+            }
+
+            function iniciarAutoplay() {
+                // Limpiar intervalo anterior si existe
+                if (carouselInterval) {
+                    clearInterval(carouselInterval);
+                }
+
+                if (banners.length > 1) {
+                    console.log('Autoplay activado: cambio cada 5 segundos');
+                    carouselInterval = setInterval(siguienteSlide, 5000); // Cambiar cada 5 segundos
+                }
+            }
+
+            function detenerAutoplay() {
+                if (carouselInterval) {
+                    clearInterval(carouselInterval);
+                    carouselInterval = null;
+                }
+            }
+
+            // Pausar autoplay cuando el usuario interactúa
+            document.getElementById('bannerCarousel')?.addEventListener('mouseenter', detenerAutoplay);
+            document.getElementById('bannerCarousel')?.addEventListener('mouseleave', iniciarAutoplay);
+
+            // Función para acceder como visitante
+            window.accederComoVisitante = function () {
+                console.log('🔍 Accediendo como visitante...');
+
+                // Crear sesión de visitante en localStorage
+                localStorage.setItem('visitante_mode', 'true');
+                localStorage.setItem('visitante_timestamp', Date.now());
+
+                // Mostrar loading en el botón
+                const visitanteBtn = document.getElementById('visitanteBtn');
+                const originalContent = visitanteBtn.innerHTML;
+                visitanteBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Accediendo...';
+                visitanteBtn.disabled = true;
+
+                // Redirigir a la página principal de visitante después de un delay
+                setTimeout(() => {
+                    window.location.href = '../visitante.html';
+                }, 800);
+            };
+
+            // Sidebar functionality
+            function initializeSidebar() {
+                const sidebar = document.querySelector('.porsche-sidebar');
+                const overlay = document.getElementById('sidenavOverlay');
+                const mobileToggle = document.getElementById('mobileToggle');
+
+                if (!sidebar || !overlay || !mobileToggle) {
+                    console.log('Sidebar elements not found');
+                    return;
+                }
+
+                // Toggle sidebar function
+                function toggleSidebar() {
+                    const isVisible = sidebar.classList.contains('sidenav-show');
+
+                    if (isVisible) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
+                }
+
+                function openSidebar() {
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                }
+
+                function closeSidebar() {
+                    sidebar.classList.remove('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'false');
+                    overlay.classList.remove('show');
+                }
+
+                // Event listeners
+                mobileToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    toggleSidebar();
+                });
+
+                // Close sidebar when clicking overlay
+                overlay.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    closeSidebar();
+                });
+
+                // Close sidebar on ESC key
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        closeSidebar();
+                    }
+                });
+
+                console.log('✅ Sidebar functionality initialized');
+            }
+        </script>
+
+        <!-- JWT Manager -->
+        <script src="../assets/js/jwt-manager.js"></script>
+        <script src="../assets/js/token-refresh-worker.js"></script>
+
+        <!-- plugin for scrollbar -->
+        <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+        <!-- main script file -->
+        <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+</body>
+
+</html>

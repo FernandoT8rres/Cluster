@@ -1,0 +1,95 @@
+RewriteEngine On
+
+# Configuración básica de seguridad
+Options -Indexes
+
+# Configurar archivos índice por prioridad
+DirectoryIndex index.php dashboard.html
+
+# Configurar página de error personalizada  
+ErrorDocument 404 /404.html
+
+# ==== REDIRECCIÓN PRINCIPAL DEL DOMINIO ====
+# Permitir acceso completo a index.php y permitir que maneje toda la lógica
+# No interferir con el funcionamiento normal
+
+# ==== PROTECCIÓN DE RUTAS PRIVADAS ====
+# Proteger el dashboard.html para que solo se muestre después de login
+RewriteCond %{REQUEST_URI} ^/dashboard\.html$
+RewriteCond %{QUERY_STRING} !authenticated=true
+RewriteCond %{HTTP_COOKIE} !claut_authenticated=true
+RewriteRule ^dashboard\.html$ pages/sign-in.html?message=Debes%20iniciar%20sesión%20primero [R=302,L]
+
+# ==== ACCESO DIRECTO A PÁGINAS PÚBLICAS ====
+# Permitir acceso directo a páginas de autenticación
+RewriteCond %{REQUEST_URI} ^/pages/(sign-in|sign-up|forgot-password)\.html$
+RewriteRule .* - [L]
+
+# Permitir acceso a archivos de API y assets sin restricciones
+RewriteCond %{REQUEST_URI} ^/(api|assets|js|css|uploads)/
+RewriteRule .* - [L]
+
+# Permitir acceso a archivos específicos del sistema
+RewriteCond %{REQUEST_URI} ^/(404\.html|robots\.txt|favicon\.ico|sitemap\.xml)$
+RewriteRule .* - [L]
+
+# ==== RUTAS DE ADMINISTRACIÓN ====
+# Permitir acceso al área de administración
+RewriteCond %{REQUEST_URI} ^/admin/
+RewriteRule .* - [L]
+
+# ==== PÁGINAS DEMO PÚBLICAS ====
+# Permitir acceso a páginas demo sin autenticación
+RewriteCond %{REQUEST_URI} ^/demo_
+RewriteRule .* - [L]
+
+# ==== CONFIGURACIONES DE RENDIMIENTO ====
+# Configuraciones de cache para optimizar rendimiento
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 3 months"
+    ExpiresByType image/jpg "access plus 3 months"
+    ExpiresByType image/jpeg "access plus 3 months"
+    ExpiresByType image/gif "access plus 3 months"
+    ExpiresByType image/webp "access plus 3 months"
+    ExpiresByType application/json "access plus 1 day"
+</IfModule>
+
+# Configuración de compresión
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ==== CONFIGURACIONES DE SEGURIDAD ====
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # CORS para API
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>
+
+# ==== REGLAS PARA PRETTY URLs ====
+# Si necesitas URLs amigables en el futuro
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^([^/]+)/?$ pages/$1.html [NC,L]
+
+# ==== PROTECCIÓN DE ARCHIVOS SENSIBLES ====
+# Denegar acceso a archivos de configuración y backups
+<Files ~ "\.(env|log|sql|bak|config|ini)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Proteger archivos PHP de configuración
+<Files ~ "^(config|database|connection)\.php$">
+    Order allow,deny
+    Deny from all
+</Files>

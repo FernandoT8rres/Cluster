@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=build/">
+    <title>Claut Intranet - Redirigiendo...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #C7252B 0%, #8B1538 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .redirect-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #C7252B 0%, #8B1538 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #C7252B;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h1 {
+            color: #C7252B;
+            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: 300;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #C7252B 0%, #8B1538 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .manual-links {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        
+        .manual-links a {
+            color: #C7252B;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+        
+        .manual-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="logo">C</div>
+        <h1>Claut Intranet</h1>
+        <p>Redirigiendo al sistema de acceso...</p>
+        <div class="spinner"></div>
+        
+        <div class="manual-links">
+            <p style="color: #888; font-size: 0.9em;">Si no eres redirigido automáticamente:</p>
+            <a href="build/pages/sign-in.html">Iniciar Sesión</a> |
+            <a href="build/pages/sign-up.html">Registrarse</a> |
+        </div>
+    </div>
+
+    <script>
+        // Verificar autenticación
+        function checkAuth() {
+            const token = localStorage.getItem('claut_token');
+            const user = localStorage.getItem('claut_user');
+            
+            if (token && user) {
+                try {
+                    const userData = JSON.parse(user);
+                    
+                    // Si es admin, ir al panel de admin
+                    if (userData.rol === 'admin') {
+                        window.location.href = 'build/admin/admin-dashboard.php';
+                        return;
+                    }
+                    
+                    // Usuario normal, ir al dashboard
+                    window.location.href = 'build/dashboard.html?authenticated=true';
+                    return;
+                } catch (e) {
+                    console.warn('Datos de usuario corruptos, limpiando...');
+                    localStorage.removeItem('claut_token');
+                    localStorage.removeItem('claut_user');
+                }
+            }
+            
+            // No hay autenticación, ir al login
+            window.location.href = 'build/pages/sign-in.html';
+        }
+        
+        // Redirigir inmediatamente a build/
+        setTimeout(() => {
+            window.location.href = '/build/';
+        }, 1000);
+        
+        // También permitir click manual
+        document.querySelector('.redirect-container').addEventListener('click', function() {
+            window.location.href = '/build/';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Eventos - CRUD Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal-backdrop { backdrop-filter: blur(5px); }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-radius-lg: 12px;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            font-family: var(--porsche-font) !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: 700 !important;
+            font-size: 1.5rem !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: var(--porsche-white) !important;
+            border-left: 3px solid #C7252B !important;
+        }
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Sidebar always retractable - All screens */
+        .porsche-sidebar {
+            transform: translateX(-100%) !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0 !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            position: fixed !important;
+            display: block !important;
+        }
+
+        .porsche-sidebar.sidenav-show {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content always without sidebar margin */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .container {
+            margin-left: 0 !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1280px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Force sidebar behavior on all screens - Override any conflicting styles */
+        .porsche-sidebar.sidebar-enhanced {
+            transform: translateX(-100%) !important;
+        }
+
+        .porsche-sidebar.sidebar-enhanced.sidenav-show {
+            transform: translateX(0) !important;
+        }
+
+        /* Override any Tailwind classes that might interfere */
+        aside.porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure hamburger button works on all screens */
+        @media (min-width: 1280px) {
+            [sidenav-trigger] {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Enhanced sidebar behavior for desktop */
+        @media (min-width: 1280px) {
+            .sidebar-enhanced {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 768px) {
+            header .flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            header .flex.items-center.space-x-4 {
+                margin-top: 1rem !important;
+                align-self: flex-end !important;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .overflow-x-auto table {
+                font-size: 0.75rem !important;
+            }
+
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.5rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .porsche-sidebar {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            header .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .flex.flex-wrap {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .flex.items-center.space-x-4 {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                space-x: 0 !important;
+                gap: 0.5rem !important;
+            }
+
+            .flex.items-center.space-x-4 > * {
+                margin: 0 !important;
+            }
+
+            .grid-cols-1 {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Ensure proper z-index hierarchy */
+        .porsche-sidebar {
+            z-index: 999 !important;
+        }
+
+        .sidenav-overlay {
+            z-index: 998 !important;
+        }
+
+        header {
+            z-index: 997 !important;
+        }
+
+        .main-content {
+            z-index: 1 !important;
+        }
+
+        /* Hamburger button styling */
+        .hamburger-btn {
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Responsive table improvements */
+        @media (max-width: 768px) {
+            .overflow-x-auto {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+
+        /* Event Cards Text Overflow Fix */
+        .event-card-container {
+            overflow: hidden;
+        }
+
+        .event-card-description {
+            line-height: 1.4;
+            max-height: calc(1.4em * 2); /* Limita a 2 líneas */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
+        /* Ensure the card container doesn't grow */
+        .event-card-content {
+            flex: 1;
+            min-width: 0; /* Permite que el contenido se contraiga */
+            overflow: hidden;
+        }
+
+        .event-card-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Fixed width for action buttons container */
+        .event-card-actions {
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+
+        /* Responsive adjustments for event cards */
+        @media (max-width: 768px) {
+            .event-card-description {
+                max-height: calc(1.4em * 3); /* Permite 3 líneas en móviles */
+                -webkit-line-clamp: 3;
+            }
+
+            .event-card-actions {
+                min-width: 100px;
+            }
+
+            .event-card-actions button {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .event-card-actions {
+                flex-direction: column;
+                gap: 0.25rem;
+                min-width: 80px;
+            }
+
+            .event-card-actions button {
+                padding: 0.375rem 0.25rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Specific fixes for the actual event card structure */
+        .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md {
+            overflow: hidden !important;
+        }
+
+        .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex.items-center.justify-between {
+            align-items: flex-start !important;
+            gap: 1rem;
+        }
+
+        .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex-1.min-w-0 {
+            overflow: hidden;
+        }
+
+        .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .text-sm.text-gray-500.truncate {
+            white-space: normal !important;
+            line-height: 1.4;
+            max-height: calc(1.4em * 2);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
+        .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex-shrink-0.flex.items-center.space-x-2 {
+            flex-shrink: 0;
+            min-width: 120px;
+            align-self: flex-start;
+        }
+
+        /* Responsive adjustments for the specific structure */
+        @media (max-width: 768px) {
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .text-sm.text-gray-500.truncate {
+                max-height: calc(1.4em * 3);
+                -webkit-line-clamp: 3;
+            }
+
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex-shrink-0.flex.items-center.space-x-2 {
+                min-width: 100px;
+            }
+
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex.items-center.justify-between {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex-shrink-0.flex.items-center.space-x-2 {
+                align-self: stretch;
+                justify-content: space-between;
+                min-width: auto;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex-shrink-0.flex.items-center.space-x-2 {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: stretch;
+            }
+
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md .flex-shrink-0.flex.items-center.space-x-2 button {
+                width: 100%;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .border.border-gray-200.rounded-lg.p-4.hover\:shadow-md {
+                padding: 0.75rem !important;
+            }
+        }
+
+        /* Fix for text that extends beyond container in any flexbox context */
+        #eventosContainer .border {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        #eventosContainer .text-sm.text-gray-500 {
+            overflow: hidden !important;
+        }
+
+        /* Additional safety for long descriptions */
+        #eventosContainer p {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* === COMPREHENSIVE RESPONSIVE DESIGN === */
+
+        /* Header responsive improvements */
+        @media (max-width: 768px) {
+            header .flex.justify-between {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem;
+            }
+
+            header .flex.items-center.space-x-4 {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem !important;
+                line-height: 1.2;
+            }
+
+            header p {
+                font-size: 0.875rem !important;
+            }
+
+            header button {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.875rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            header .container {
+                padding: 1rem !important;
+            }
+
+            header h1 {
+                font-size: 1.25rem !important;
+            }
+
+            header .flex.items-center.space-x-4 {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            header button {
+                width: 100% !important;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        /* Statistics grid responsive */
+        @media (max-width: 1024px) {
+            .grid.grid-cols-1.md\:grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .grid.grid-cols-1.md\:grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+
+            .grid.grid-cols-1.md\:grid-cols-4 .bg-white.rounded-lg.shadow.p-4 {
+                padding: 1rem !important;
+            }
+
+            .grid.grid-cols-1.md\:grid-cols-4 .text-2xl {
+                font-size: 1.5rem !important;
+            }
+
+            .grid.grid-cols-1.md\:grid-cols-4 .text-3xl {
+                font-size: 1.75rem !important;
+            }
+        }
+
+        /* Controls section responsive */
+        @media (max-width: 768px) {
+            .flex.flex-wrap.items-center.justify-between {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 1rem !important;
+            }
+
+            .flex.items-center.space-x-4:has(button) {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .flex.items-center.space-x-4:has(input, select) {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            .flex.items-center.space-x-4 input,
+            .flex.items-center.space-x-4 select {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .flex.items-center.space-x-4:has(button) {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .flex.items-center.space-x-4 button {
+                width: 100% !important;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        /* Notification section responsive */
+        @media (max-width: 768px) {
+            .flex.items-center.justify-between:has(.fas.fa-bell) {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .flex.items-center.space-x-2:has(.fas.fa-bell) {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .flex.items-center.space-x-2 h3 {
+                font-size: 1rem !important;
+            }
+
+            .flex.space-x-1 {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            /* Tabs responsive */
+            .flex.border-b.border-gray-200 {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                border-bottom: none !important;
+            }
+
+            .flex.border-b.border-gray-200 button {
+                flex: 1;
+                min-width: 0;
+                text-align: center;
+                border: 1px solid #e5e7eb !important;
+                border-radius: 0.375rem !important;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .flex.items-center.space-x-2:has(.fas.fa-bell) {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .flex.border-b.border-gray-200 button {
+                font-size: 0.75rem !important;
+                padding: 0.5rem 0.75rem !important;
+            }
+
+            .flex.flex-wrap.items-center.gap-4 {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+
+            .flex.flex-wrap.items-center.gap-4 input,
+            .flex.flex-wrap.items-center.gap-4 select {
+                width: 100% !important;
+            }
+        }
+
+        /* Event list section responsive */
+        @media (max-width: 768px) {
+            .bg-white.rounded-lg.shadow:has(#eventosContainer) .flex.items-center.justify-between {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .flex.flex-wrap.items-center.gap-4:has(#filterEventoEstado) {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+            }
+
+            .flex.flex-wrap.items-center.gap-4 input,
+            .flex.flex-wrap.items-center.gap-4 select {
+                width: 100% !important;
+            }
+        }
+
+        /* Modal responsive improvements */
+        @media (max-width: 768px) {
+            .max-w-2xl {
+                max-width: calc(100% - 2rem) !important;
+                margin: 1rem !important;
+            }
+
+            .max-w-4xl {
+                max-width: calc(100% - 2rem) !important;
+                margin: 1rem !important;
+            }
+
+            .grid.grid-cols-1.md\:grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+
+            .flex.justify-end.space-x-3 {
+                flex-direction: column-reverse;
+                gap: 0.75rem;
+            }
+
+            .flex.justify-end.space-x-3 button {
+                width: 100% !important;
+                justify-content: center;
+            }
+
+            .flex.justify-between {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .flex.justify-between button {
+                width: 100% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .max-w-2xl,
+            .max-w-4xl {
+                max-width: calc(100% - 1rem) !important;
+                margin: 0.5rem !important;
+            }
+
+            .p-6 {
+                padding: 1rem !important;
+            }
+
+            .p-4 {
+                padding: 0.75rem !important;
+            }
+
+            .text-2xl {
+                font-size: 1.25rem !important;
+            }
+
+            .text-lg {
+                font-size: 1rem !important;
+            }
+
+            /* Image upload area responsive */
+            .h-32 {
+                height: 6rem !important;
+            }
+
+            /* Tabs in modal responsive */
+            .flex.border-b.border-gray-200.mb-4 button {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.875rem !important;
+            }
+        }
+
+        /* Table responsive improvements */
+        @media (max-width: 1024px) {
+            .overflow-x-auto table {
+                min-width: 600px;
+                font-size: 0.875rem;
+            }
+
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.5rem 0.375rem;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .overflow-x-auto {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 0.5rem;
+                border: 1px solid #e5e7eb;
+            }
+
+            .overflow-x-auto table {
+                min-width: 500px;
+                font-size: 0.75rem;
+            }
+
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.375rem 0.25rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Touch improvements for mobile */
+        @media (max-width: 768px) {
+            button, a, input, select, textarea {
+                min-height: 44px; /* Apple's recommended touch target size */
+                touch-action: manipulation;
+            }
+
+            /* Improve button spacing on touch devices */
+            .space-x-2 button,
+            .space-x-3 button,
+            .space-x-4 button {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Landscape phone optimizations */
+        @media (max-width: 896px) and (max-height: 414px) and (orientation: landscape) {
+            header {
+                padding: 0.5rem 0 !important;
+            }
+
+            .py-6 {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+
+            .mb-6 {
+                margin-bottom: 1rem !important;
+            }
+
+            .grid.grid-cols-1.md\:grid-cols-4 {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+        }
+
+        /* Large screen optimizations */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1200px !important;
+            }
+
+            .grid.grid-cols-1.md\:grid-cols-4 {
+                gap: 2rem;
+            }
+
+            .text-3xl {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .porsche-sidebar,
+            header button,
+            .flex:has(button),
+            button {
+                display: none !important;
+            }
+
+            body {
+                font-size: 12pt;
+                line-height: 1.5;
+                color: black;
+                background: white;
+            }
+
+            .bg-white {
+                background: white !important;
+                border: 1px solid black !important;
+            }
+
+            .shadow,
+            .shadow-lg,
+            .shadow-md {
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Porsche Sidebar -->
+    <aside id="porscheSidebar"
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-48 py-6 relative mb-4">
+            <!-- Botón de cerrar para todas las pantallas -->
+            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                    id="sidebarCloseBtn"
+                    sidenav-close
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
+              target="_blank">
+                <img src="../assets/img/apple-icon.png"
+                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                  alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+            </a>
+        </div>
+
+        <hr class="h-px mt-4 mb-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0 pt-4">
+                <!-- Dashboard -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- admin panel -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin-panel.html?login=success">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                    </a>
+                </li>
+
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_usuarios.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg active"
+                        href="demo_evento.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar-alt text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+
+                <!-- Comités -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_comite.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Comités</span>
+                    </a>
+                </li>
+
+                <!-- Boletines -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_boletines.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-newspaper text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
+                    </a>
+                </li>
+
+                <!-- Documentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_documentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-file-alt text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Documentos</span>
+                    </a>
+                </li>
+
+                <!-- Banners -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin/banner-admin-mejorado.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-images text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Banners</span>
+                    </a>
+                </li>
+
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_descuentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+
+                <!-- Perfil -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="profile.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-user-cog text-gray-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mx-4">
+            <button onclick="window.location.href='pages/sign-in.html'"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Header -->
+    <header class="main-content bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- Hamburger Menu Button for All Screens -->
+                    <button class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
+                            id="hamburgerBtn"
+                            sidenav-trigger
+                            aria-label="Abrir menú de navegación">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold">🎯 Administrador de Eventos</h1>
+                        <p class="text-red-200 mt-1">CRUD Completo - Base de Datos</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userInfo" class="text-sm"></span>
+                    <button onclick="location.href='eventos.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver a Eventos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Estadísticas -->
+    <div class="main-content container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Eventos</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalEventos">0</p>
+                    </div>
+                    <i class="fas fa-calendar-alt text-3xl" style="color: #C7252B;"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Próximos</p>
+                        <p class="text-2xl font-bold text-blue-600" id="proximosEventos">0</p>
+                    </div>
+                    <i class="fas fa-clock text-3xl text-blue-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">En Curso</p>
+                        <p class="text-2xl font-bold text-green-600" id="enCursoEventos">0</p>
+                    </div>
+                    <i class="fas fa-play-circle text-3xl text-green-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Registros Totales</p>
+                        <p class="text-2xl font-bold text-orange-600" id="totalRegistros">0</p>
+                    </div>
+                    <i class="fas fa-users text-3xl text-orange-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <button onclick="showCreateModal()" class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                        <i class="fas fa-plus mr-2"></i>Crear Evento
+                    </button>
+                    <button onclick="reloadEvents()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="searchInput" placeholder="Buscar eventos..." 
+                           class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    
+                    <select id="filterEstado" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <option value="">Todos los estados</option>
+                        <option value="proximo">Próximo</option>
+                        <option value="en_curso">En Curso</option>
+                        <option value="finalizado">Finalizado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                    
+                    <select id="filterCategoria" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <option value="">Todas las categorías</option>
+                        <option value="reunion">Reunión</option>
+                        <option value="capacitacion">Capacitación</option>
+                        <option value="social">Social</option>
+                        <option value="importante">Importante</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestión de Notificaciones de Eventos -->
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-bell text-orange-600 text-xl"></i>
+                        <h3 class="text-lg font-semibold text-gray-800">Notificaciones de Registro a Eventos</h3>
+                        <div class="flex space-x-1">
+                            <span id="totalPendientes" class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full">0</span>
+                            <span id="totalConfirmados" class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">0</span>
+                            <span id="totalRechazados" class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">0</span>
+                        </div>
+                    </div>
+                    <button onclick="loadNotificaciones()" class="bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700 transition">
+                        <i class="fas fa-sync-alt mr-1"></i>Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <!-- Tabs para filtrar por estado -->
+                <div class="flex border-b border-gray-200 mb-4">
+                    <button onclick="showTab('pendientes')" id="tabPendientes"
+                            class="px-4 py-2 text-sm font-medium border-b-2 border-orange-500 text-orange-600">
+                        Pendientes <span id="badgePendientes" class="ml-1 bg-orange-100 text-orange-800 text-xs px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                    <button onclick="showTab('confirmados')" id="tabConfirmados"
+                            class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Confirmados <span id="badgeConfirmados" class="ml-1 bg-gray-100 text-gray-800 text-xs px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                    <button onclick="showTab('rechazados')" id="tabRechazados"
+                            class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Rechazados <span id="badgeRechazados" class="ml-1 bg-gray-100 text-gray-800 text-xs px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="flex flex-wrap items-center gap-4 mb-4">
+                    <input type="text" id="searchNotificaciones" placeholder="Buscar por nombre, email o evento..."
+                           class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm">
+
+                    <select id="filterEventoNotif" class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm">
+                        <option value="">Todos los eventos</option>
+                    </select>
+                </div>
+
+                <!-- Contenedor para las notificaciones por tabs -->
+                <div id="notificacionesPendientes" class="space-y-3">
+                    <!-- Las notificaciones pendientes se cargarán aquí -->
+                </div>
+
+                <div id="notificacionesConfirmados" class="space-y-3 hidden">
+                    <!-- Las notificaciones confirmadas se cargarán aquí -->
+                </div>
+
+                <div id="notificacionesRechazados" class="space-y-3 hidden">
+                    <!-- Las notificaciones rechazadas se cargarán aquí -->
+                </div>
+
+                <!-- Estado vacío -->
+                <div id="emptyNotificaciones" class="hidden text-center py-8">
+                    <i class="fas fa-bell-slash text-4xl text-gray-400"></i>
+                    <p class="mt-4 text-gray-600">No hay notificaciones en esta categoría</p>
+                </div>
+
+                <!-- Estado de carga -->
+                <div id="loadingNotificaciones" class="hidden text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-4xl text-orange-600"></i>
+                    <p class="mt-4 text-gray-600">Cargando notificaciones...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Eventos -->
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-calendar-alt text-green-600 text-xl"></i>
+                        <h3 class="text-lg font-semibold text-gray-800">Eventos Disponibles</h3>
+                        <span id="totalEventosDemo" class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">0</span>
+                    </div>
+                    <button onclick="refreshEventosDemo()" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition">
+                        <i class="fas fa-sync-alt mr-1"></i>Actualizar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4">
+                <!-- Filtros de eventos -->
+                <div class="flex flex-wrap items-center gap-4 mb-4">
+                    <select id="filterEventoEstado" class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                        <option value="">Todos los estados</option>
+                        <option value="programado">Programado</option>
+                        <option value="en-curso">En Curso</option>
+                        <option value="finalizado">Finalizado</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                    
+                    <input type="text" id="searchEvento" placeholder="Buscar evento..." 
+                           class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                    
+                    <select id="filterEventoTipo" class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+                        <option value="">Todos los tipos</option>
+                        <option value="conferencia">Conferencia</option>
+                        <option value="taller">Taller</option>
+                        <option value="networking">Networking</option>
+                        <option value="webinar">Webinar</option>
+                    </select>
+                </div>
+                
+                <!-- Lista de Eventos -->
+                <div id="eventosContainer" class="space-y-3">
+                    <!-- Los eventos se cargarán aquí -->
+                </div>
+                
+                <!-- Estado vacío -->
+                <div id="emptyEventos" class="hidden text-center py-8">
+                    <i class="fas fa-calendar-times text-4xl text-gray-400"></i>
+                    <p class="mt-4 text-gray-600">No hay eventos disponibles</p>
+                </div>
+                
+                <!-- Estado de carga -->
+                <div id="loadingEventos" class="hidden text-center py-8">
+                    <i class="fas fa-spinner fa-spin text-4xl text-green-600"></i>
+                    <p class="mt-4 text-gray-600">Cargando eventos...</p>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- Modal Crear/Editar Evento -->
+    <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto slide-in">
+                <div class="p-6 border-b">
+                    <h2 class="text-2xl font-bold text-gray-800" id="modalTitle">Crear Evento</h2>
+                </div>
+                
+                <form id="eventForm" class="p-6" enctype="multipart/form-data">
+                    <input type="hidden" id="eventId" name="eventId">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                            <input type="text" id="titulo" name="titulo" required 
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
+                            <textarea id="descripcion" name="descripcion" rows="3" required
+                                      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha *</label>
+                            <input type="date" id="fecha_evento" name="fecha_evento" required
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Hora *</label>
+                            <input type="time" id="hora_evento" name="hora_evento" required
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ubicación *</label>
+                            <input type="text" id="ubicacion" name="ubicacion" required
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+
+                        <!-- Sección de Imagen del Evento -->
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Imagen del Evento</label>
+
+                            <!-- Tabs para método de imagen -->
+                            <div class="flex border-b border-gray-200 mb-4">
+                                <button type="button" id="uploadTab" onclick="switchImageMethod('upload')"
+                                        class="px-4 py-2 text-sm font-medium border-b-2 border-red-500 text-red-600">Subir Archivo</button>
+                                <button type="button" id="urlTab" onclick="switchImageMethod('url')"
+                                        class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">URL Externa</button>
+                            </div>
+
+                            <!-- Upload de archivo -->
+                            <div id="uploadMethod" class="space-y-3">
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="imagenFile" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <i class="fas fa-cloud-upload-alt text-gray-400 text-2xl mb-2"></i>
+                                            <p class="text-sm text-gray-500"><span class="font-semibold">Click para subir</span> o arrastra la imagen</p>
+                                            <p class="text-xs text-gray-500">JPG, PNG, GIF, WEBP (MAX. 5MB)</p>
+                                        </div>
+                                        <input id="imagenFile" name="imagenFile" type="file" class="hidden" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- URL externa -->
+                            <div id="urlMethod" class="space-y-3 hidden">
+                                <input type="text" id="imagenUrl" name="imagenUrl" placeholder="https://ejemplo.com/imagen.jpg"
+                                       class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <button type="button" onclick="previewUrlImage()" class="text-sm text-red-600 hover:text-red-700">
+                                    <i class="fas fa-eye mr-1"></i>Vista Previa
+                                </button>
+                            </div>
+
+                            <!-- Preview de imagen -->
+                            <div id="imagenPreview" class="hidden mt-4">
+                                <div class="relative inline-block">
+                                    <img id="imagenPreviewImg" class="h-32 w-auto rounded-lg border border-gray-300" />
+                                    <button type="button" onclick="clearImagePreview()"
+                                            class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                            <select id="categoria" name="categoria"
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="reunion">Reunión</option>
+                                <option value="capacitacion">Capacitación</option>
+                                <option value="social">Social</option>
+                                <option value="importante">Importante</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                            <select id="estado" name="estado"
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="activo">Activo</option>
+                                <option value="programado">Programado</option>
+                                <option value="finalizado">Finalizado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Precio (MXN)</label>
+                            <input type="number" id="precio" name="precio" min="0" step="0.01" value="0"
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Número De Beneficios</label>
+                            <input type="number" id="capacidad_maxima" name="capacidad_maxima" min="1" value="100"
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+
+                        <!-- === NUEVOS CAMPOS PARA BENEFICIOS Y LINKS === -->
+
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Link del Evento *</label>
+                            <input type="url" id="link_evento" name="link_evento" required
+                                   placeholder="https://ejemplo.com/registro-evento"
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <p class="text-xs text-gray-500 mt-1">URL donde los usuarios se registrarán al evento</p>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Link del Mapa</label>
+                            <input type="url" id="link_mapa" name="link_mapa"
+                                   placeholder="https://maps.google.com/..."
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <p class="text-xs text-gray-500 mt-1">URL de Google Maps o ubicación exacta del evento</p>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">¿Este evento tiene beneficio especial?</label>
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center">
+                                    <input type="radio" id="tiene_beneficio_si" name="tiene_beneficio" value="1"
+                                           class="text-red-500 focus:ring-red-500">
+                                    <span class="ml-2 text-sm text-gray-700">Sí, mostrar formulario interno</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" id="tiene_beneficio_no" name="tiene_beneficio" value="0" checked
+                                           class="text-red-500 focus:ring-red-500">
+                                    <span class="ml-2 text-sm text-gray-700">No, redirección directa</span>
+                                </label>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Si selecciona "Sí", el usuario llenará un formulario antes de ser redirigido</p>
+                        </div>
+
+                        <!-- Campos ocultos para imagen -->
+                        <input type="hidden" id="imagen_method" name="imagen_method" value="upload">
+                        <input type="hidden" id="imagen_url_final" name="imagen_url_final" value="">
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeModal()" 
+                                class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            Cancelar
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                            <i class="fas fa-save mr-2"></i>Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Registros -->
+    <div id="registrosModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto slide-in">
+                <div class="p-6 border-b">
+                    <h2 class="text-2xl font-bold text-gray-800">Registros del Evento</h2>
+                    <p class="text-gray-600" id="registrosEventTitle"></p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Teléfono</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Empresa</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha Registro</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="registrosTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Los registros se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="noRegistros" class="hidden text-center py-8">
+                        <i class="fas fa-users-slash text-4xl text-gray-400"></i>
+                        <p class="mt-4 text-gray-600">No hay registros para este evento</p>
+                    </div>
+                </div>
+                
+                <div class="p-6 border-t flex justify-end">
+                    <button onclick="closeRegistrosModal()" 
+                            class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Registro -->
+    <div id="detalleRegistroModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto slide-in">
+                <div class="p-6 border-b">
+                    <h2 class="text-2xl font-bold text-gray-800">Detalle del Registro</h2>
+                </div>
+                
+                <div class="p-6">
+                    <div id="detalleRegistroContent">
+                        <!-- El contenido se cargará aquí -->
+                    </div>
+                </div>
+                
+                <div class="p-6 border-t flex justify-between">
+                    <button onclick="eliminarRegistro()" id="btnEliminarRegistro"
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <i class="fas fa-trash mr-2"></i>Eliminar Registro
+                    </button>
+                    <button onclick="closeDetalleRegistroModal()" 
+                            class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <script src="./js/demo-eventos.js"></script>
+
+    <script>
+        // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize sidebar functionality
+            setTimeout(initializeSidebar, 100); // Pequeño delay para asegurar que el DOM esté listo
+        });
+
+        function initializeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+
+            console.log('Sidebar elements:', {
+                sidebar: !!sidebar,
+                overlay: !!overlay,
+                hamburgerBtn: !!hamburgerBtn,
+                closeBtn: !!closeBtn,
+                screenWidth: window.innerWidth,
+                isDesktop: window.innerWidth >= 1280
+            });
+
+            // Log computed styles for debugging
+            if (sidebar) {
+                const styles = window.getComputedStyle(sidebar);
+                console.log('Sidebar computed styles:', {
+                    display: styles.display,
+                    transform: styles.transform,
+                    left: styles.left,
+                    position: styles.position,
+                    zIndex: styles.zIndex
+                });
+            }
+
+            if (!sidebar || !overlay || !hamburgerBtn) {
+                console.error('Sidebar elements not found:', {
+                    sidebar: !!sidebar,
+                    overlay: !!overlay,
+                    hamburgerBtn: !!hamburgerBtn
+                });
+                return;
+            }
+
+            // Toggle sidebar function
+            function toggleSidebar(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                const isVisible = sidebar.classList.contains('sidenav-show');
+                console.log('Toggle sidebar - currently visible:', isVisible);
+
+                if (!isVisible) {
+                    // Open sidebar
+                    console.log('Opening sidebar');
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+
+                    // Focus management for accessibility
+                    const firstLink = sidebar.querySelector('.porsche-nav-item');
+                    if (firstLink) {
+                        setTimeout(() => firstLink.focus(), 100);
+                    }
+                } else {
+                    // Close sidebar
+                    console.log('Closing sidebar');
+                    closeSidebarInternal();
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebarInternal() {
+                console.log('Executing closeSidebarInternal');
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+
+                // Return focus to hamburger button
+                if (hamburgerBtn) {
+                    hamburgerBtn.focus();
+                }
+            }
+
+            // Event listeners
+            console.log('Adding click event to hamburger button');
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+
+            hamburgerBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar(e);
+            }, { passive: false });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebarInternal);
+                overlay.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+            });
+
+            // Handle window resize - Keep sidebar closed on all screen sizes
+            window.addEventListener('resize', function() {
+                // Optional: could add logic here if needed
+            });
+
+            // Swipe to close functionality
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            sidebar.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const diffX = touchStartX - currentX;
+                const diffY = Math.abs(touchStartY - currentY);
+
+                // Swipe left to close
+                if (diffX > 50 && diffY < 100) {
+                    closeSidebarInternal();
+                    touchStartX = 0;
+                    touchStartY = 0;
+                }
+            }, { passive: true });
+
+            // Keyboard navigation in sidebar
+            sidebar.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+
+                // Arrow navigation
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                    const currentIndex = navItems.indexOf(document.activeElement);
+
+                    if (e.key === 'ArrowDown') {
+                        const nextIndex = (currentIndex + 1) % navItems.length;
+                        navItems[nextIndex].focus();
+                    } else {
+                        const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                        navItems[prevIndex].focus();
+                    }
+                }
+            });
+
+            console.log('✅ Sidebar functionality initialized successfully');
+
+            // Inicializar manejo de imágenes si aún no se ha hecho
+            initializeImageHandling();
+        }
+
+        // Legacy function compatibility
+        function closeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+
+            if (sidebar && overlay) {
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // === FUNCIONES PARA MANEJO DE IMÁGENES ===
+
+        // Cambiar entre método de carga de imagen
+        function switchImageMethod(method) {
+            const uploadTab = document.getElementById('uploadTab');
+            const urlTab = document.getElementById('urlTab');
+            const uploadMethod = document.getElementById('uploadMethod');
+            const urlMethod = document.getElementById('urlMethod');
+            const imageMethodInput = document.getElementById('imagen_method');
+
+            if (method === 'upload') {
+                uploadTab.classList.add('border-b-2', 'border-red-500', 'text-red-600');
+                uploadTab.classList.remove('text-gray-500');
+                urlTab.classList.remove('border-b-2', 'border-red-500', 'text-red-600');
+                urlTab.classList.add('text-gray-500');
+                uploadMethod.classList.remove('hidden');
+                urlMethod.classList.add('hidden');
+                imageMethodInput.value = 'upload';
+            } else {
+                urlTab.classList.add('border-b-2', 'border-red-500', 'text-red-600');
+                urlTab.classList.remove('text-gray-500');
+                uploadTab.classList.remove('border-b-2', 'border-red-500', 'text-red-600');
+                uploadTab.classList.add('text-gray-500');
+                urlMethod.classList.remove('hidden');
+                uploadMethod.classList.add('hidden');
+                imageMethodInput.value = 'url';
+            }
+
+            clearImagePreview();
+        }
+
+        // Limpiar preview de imagen
+        function clearImagePreview() {
+            const preview = document.getElementById('imagenPreview');
+            const img = document.getElementById('imagenPreviewImg');
+            const imagenFile = document.getElementById('imagenFile');
+            const imagenUrl = document.getElementById('imagenUrl');
+            const imagenUrlFinal = document.getElementById('imagen_url_final');
+
+            preview.classList.add('hidden');
+            img.src = '';
+            if (imagenFile) imagenFile.value = '';
+            if (imagenUrl) imagenUrl.value = '';
+            if (imagenUrlFinal) imagenUrlFinal.value = '';
+        }
+
+        // Preview de imagen desde URL
+        function previewUrlImage() {
+            const urlInput = document.getElementById('imagenUrl');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                alert('Por favor ingresa una URL de imagen');
+                return;
+            }
+
+            // Validación básica de URL de imagen
+            const imageExtensions = /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
+            if (!imageExtensions.test(url) && !url.includes('placeholder')) {
+                if (!confirm('¿Estás seguro que esta URL es una imagen válida?')) {
+                    return;
+                }
+            }
+
+            const img = document.getElementById('imagenPreviewImg');
+            const preview = document.getElementById('imagenPreview');
+            const imagenUrlFinal = document.getElementById('imagen_url_final');
+
+            img.onload = function() {
+                preview.classList.remove('hidden');
+                imagenUrlFinal.value = url;
+                console.log('✅ Imagen URL cargada correctamente');
+            };
+
+            img.onerror = function() {
+                alert('Error al cargar la imagen. Verifica que la URL sea correcta.');
+                clearImagePreview();
+            };
+
+            img.src = url;
+        }
+
+        // Inicializar manejo de archivos de imagen
+        function initializeImageHandling() {
+            const imagenFile = document.getElementById('imagenFile');
+
+            if (imagenFile) {
+                imagenFile.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+
+                    if (file) {
+                        // Validar tipo de archivo
+                        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                        if (!allowedTypes.includes(file.type)) {
+                            alert('Tipo de archivo no válido. Solo se permiten: JPG, PNG, GIF, WEBP');
+                            clearImagePreview();
+                            return;
+                        }
+
+                        // Validar tamaño (5MB max)
+                        const maxSize = 5 * 1024 * 1024; // 5MB
+                        if (file.size > maxSize) {
+                            alert('El archivo es demasiado grande. Tamaño máximo: 5MB');
+                            clearImagePreview();
+                            return;
+                        }
+
+                        // Mostrar preview
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = document.getElementById('imagenPreview');
+                            const img = document.getElementById('imagenPreviewImg');
+                            const imagenUrlFinal = document.getElementById('imagen_url_final');
+
+                            img.src = e.target.result;
+                            preview.classList.remove('hidden');
+                            imagenUrlFinal.value = ''; // Limpiar URL si se sube archivo
+
+                            console.log('✅ Archivo de imagen cargado para preview');
+                        };
+
+                        reader.onerror = function() {
+                            alert('Error al leer el archivo');
+                            clearImagePreview();
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+
+        // === FUNCIONES PARA MANEJO DEL FORMULARIO ===
+
+        // Manejar envío del formulario
+        function handleFormSubmit(event) {
+            console.log('🚨 FUNCIÓN handleFormSubmit INICIADA 🚨');
+            event.preventDefault();
+
+            const form = document.getElementById('eventForm');
+            const formData = new FormData();
+
+            // Obtener todos los campos del formulario
+            const eventId = document.getElementById('eventId').value; // Para edición
+            const titulo = document.getElementById('titulo').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const fecha_evento = document.getElementById('fecha_evento').value;
+            const hora_evento = document.getElementById('hora_evento').value;
+            const ubicacion = document.getElementById('ubicacion').value;
+            const categoria = document.getElementById('categoria').value;
+            const estado = document.getElementById('estado').value;
+            const precio = document.getElementById('precio').value;
+            const capacidad_maxima = document.getElementById('capacidad_maxima').value;
+
+            console.log('✅ CAMPOS BÁSICOS CAPTURADOS, PROCEDIENDO A NUEVOS CAMPOS...');
+
+            // === NUEVOS CAMPOS ===
+            console.log('🚀 EMPEZANDO A CAPTURAR NUEVOS CAMPOS...');
+
+            const link_evento_element = document.getElementById('link_evento');
+            const link_evento = link_evento_element ? link_evento_element.value : '';
+
+            const link_mapa_element = document.getElementById('link_mapa');
+            const link_mapa = link_mapa_element ? link_mapa_element.value : '';
+
+            const tiene_beneficio_element = document.querySelector('input[name="tiene_beneficio"]:checked');
+            const tiene_beneficio = tiene_beneficio_element ? tiene_beneficio_element.value : '0';
+
+            console.log('✅ CAMPOS CAPTURADOS EXITOSAMENTE');
+
+            // === DEBUG LOGS ===
+            console.log('🔍🔍🔍 DEBUGGING NUEVOS CAMPOS 🔍🔍🔍');
+            console.log('link_evento_element:', link_evento_element);
+            console.log('link_evento:', link_evento);
+            console.log('link_mapa_element:', link_mapa_element);
+            console.log('link_mapa:', link_mapa);
+            console.log('tiene_beneficio_element:', tiene_beneficio_element);
+            console.log('tiene_beneficio:', tiene_beneficio);
+            console.log('🔍🔍🔍 FIN DEBUG CAMPOS 🔍🔍🔍');
+
+            const isEditing = eventId && eventId.trim() !== '';
+
+            console.log('🧪 VALIDACIÓN - titulo:', titulo, 'link_evento:', link_evento);
+
+            // Validación básica
+            if (!titulo || !descripcion || !fecha_evento || !hora_evento || !ubicacion || !link_evento) {
+                console.log('❌ VALIDACIÓN FALLIDA - Campos faltantes');
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+
+            console.log('✅ VALIDACIÓN EXITOSA - Continuando con FormData...');
+
+            // Combinar fecha y hora
+            const fecha_inicio = `${fecha_evento} ${hora_evento}:00`;
+
+            // Agregar campos básicos
+            formData.append('titulo', titulo);
+            formData.append('descripcion', descripcion);
+            formData.append('fecha_inicio', fecha_inicio);
+            formData.append('fecha_fin', fecha_inicio); // Por ahora, mismo que fecha_inicio
+            formData.append('ubicacion', ubicacion);
+            formData.append('tipo', categoria);
+            formData.append('modalidad', 'Presencial'); // Valor por defecto
+            formData.append('precio', precio || 0);
+            formData.append('capacidad_maxima', capacidad_maxima || 100);
+
+            // === AGREGAR NUEVOS CAMPOS ===
+            formData.append('link_evento', link_evento);
+            formData.append('link_mapa', link_mapa || '');
+            formData.append('tiene_beneficio', tiene_beneficio);
+
+            // Agregar datos de imagen
+            const imagen_method = document.getElementById('imagen_method').value;
+            const imagen_url_final = document.getElementById('imagen_url_final').value;
+            const imagenFile = document.getElementById('imagenFile').files[0];
+
+            formData.append('imagen_method', imagen_method);
+            formData.append('imagen_url_final', imagen_url_final);
+
+            if (imagen_method === 'upload' && imagenFile) {
+                formData.append('imagenFile', imagenFile);
+            }
+
+            // Si es edición, agregar ID del evento
+            if (isEditing) {
+                formData.append('id', eventId);
+            }
+
+            // Mostrar indicador de carga
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
+            submitBtn.disabled = true;
+
+            // Determinar acción y mensaje
+            const action = isEditing ? 'editar' : 'crear';
+            const successMessage = isEditing ? 'Evento actualizado exitosamente' : 'Evento creado exitosamente';
+            const errorMessage = isEditing ? 'Error al actualizar evento: ' : 'Error al crear evento: ';
+
+            // Enviar a la API
+            fetch(`./api/eventos.php?action=${action}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(successMessage);
+                    if (!isEditing) {
+                        form.reset();
+                    }
+                    clearImagePreview();
+                    // Opcional: cerrar modal si existe
+                    if (typeof closeModal === 'function') {
+                        closeModal();
+                    }
+                    // Recargar la lista si estamos en una página con lista
+                    if (typeof loadEvents === 'function') {
+                        loadEvents();
+                    }
+                } else {
+                    alert(errorMessage + (data.message || 'Error desconocido'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error de conexión al servidor');
+            })
+            .finally(() => {
+                // Restaurar botón
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        }
+
+        // Inicializar manejo del formulario
+        function initializeFormHandling() {
+            const form = document.getElementById('eventForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+                console.log('✅ Form handling initialized');
+            }
+        }
+
+        // === FUNCIONES PARA EDICIÓN DE EVENTOS ===
+
+        // Cargar datos de evento existente para edición
+        async function loadEventData(eventId) {
+            try {
+                console.log(`🔄 Cargando datos del evento ID: ${eventId}`);
+
+                const response = await fetch(`./api/eventos.php?action=obtener&id=${eventId}`);
+                const data = await response.json();
+
+                if (data.success && data.evento) {
+                    return data.evento;
+                } else {
+                    console.error('Error al cargar evento:', data.message);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error de conexión al cargar evento:', error);
+                return null;
+            }
+        }
+
+        // Poblar formulario con datos existentes
+        function populateEventForm(evento) {
+            console.log('📋 Poblando formulario con:', evento);
+
+            // Llenar campos básicos
+            document.getElementById('titulo').value = evento.titulo || '';
+            document.getElementById('descripcion').value = evento.descripcion || '';
+            document.getElementById('ubicacion').value = evento.ubicacion || '';
+            document.getElementById('categoria').value = evento.tipo || 'reunion';
+            document.getElementById('estado').value = evento.estado || 'activo';
+            document.getElementById('precio').value = evento.precio || 0;
+            document.getElementById('capacidad_maxima').value = evento.capacidad_maxima || 100;
+
+            // === LLENAR NUEVOS CAMPOS ===
+            document.getElementById('link_evento').value = evento.link_evento || '';
+            document.getElementById('link_mapa').value = evento.link_mapa || '';
+
+            // Seleccionar radio button para beneficio
+            const tieneBeneficio = evento.tiene_beneficio || 0;
+            if (tieneBeneficio == 1) {
+                document.getElementById('tiene_beneficio_si').checked = true;
+            } else {
+                document.getElementById('tiene_beneficio_no').checked = true;
+            }
+
+            // Procesar fecha y hora
+            if (evento.fecha_inicio) {
+                const fecha = new Date(evento.fecha_inicio);
+                const fechaString = fecha.toISOString().split('T')[0]; // YYYY-MM-DD
+                const horaString = fecha.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
+
+                document.getElementById('fecha_evento').value = fechaString;
+                document.getElementById('hora_evento').value = horaString;
+            }
+
+            // Manejar imagen existente
+            loadExistingEventImage(evento);
+        }
+
+        // Cargar imagen existente y mostrar preview
+        function loadExistingEventImage(evento) {
+            // Limpiar preview actual
+            clearImagePreview();
+
+            if (evento.imagen && evento.imagen.trim()) {
+                console.log('🖼️ Cargando imagen existente:', evento.imagen);
+
+                const img = document.getElementById('imagenPreviewImg');
+                const preview = document.getElementById('imagenPreview');
+                const imagenUrlFinal = document.getElementById('imagen_url_final');
+
+                // Determinar la URL de la imagen
+                let imageUrl = evento.imagen;
+
+                // Si no es una URL completa, usar el endpoint de la API
+                if (!imageUrl.startsWith('http') && !imageUrl.startsWith('data:')) {
+                    imageUrl = `./api/eventos.php?action=imagen&id=${evento.id}&t=${Date.now()}`;
+                }
+
+                // Configurar preview
+                img.onload = function() {
+                    preview.classList.remove('hidden');
+                    imagenUrlFinal.value = evento.imagen; // Guardar valor original
+                    console.log('✅ Preview de imagen existente cargado');
+                };
+
+                img.onerror = function() {
+                    console.log('⚠️ Error cargando imagen, usando placeholder');
+                    // Si falla, usar placeholder con el título del evento
+                    const placeholderUrl = `https://via.placeholder.com/300x200/c9302c/ffffff?text=${encodeURIComponent(evento.titulo || 'Evento')}`;
+                    this.src = placeholderUrl;
+                };
+
+                img.src = imageUrl;
+
+                // Configurar el método como URL ya que es imagen existente
+                document.getElementById('imagen_method').value = 'url';
+                document.getElementById('imagen_url_final').value = evento.imagen;
+
+                // Mostrar el tab correcto
+                switchImageMethod('url');
+                document.getElementById('imagenUrl').value = imageUrl;
+            }
+        }
+
+        // Abrir modal para editar evento
+        async function editEvent(eventId) {
+            const evento = await loadEventData(eventId);
+
+            if (evento) {
+                // Cambiar título del modal
+                document.getElementById('modalTitle').textContent = 'Editar Evento';
+
+                // Poblar formulario
+                populateEventForm(evento);
+
+                // Guardar ID del evento para actualización
+                document.getElementById('eventId').value = eventId;
+
+                // Abrir modal
+                openModal();
+            } else {
+                alert('Error al cargar los datos del evento');
+            }
+        }
+
+        // === FUNCIONES PARA MANEJO DE MODALS ===
+
+        function closeModal() {
+            const modal = document.getElementById('eventModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                // Reset form
+                const form = document.getElementById('eventForm');
+                if (form) {
+                    form.reset();
+                    clearImagePreview();
+                    // Limpiar ID del evento
+                    document.getElementById('eventId').value = '';
+                    // Resetear título del modal
+                    document.getElementById('modalTitle').textContent = 'Crear Evento';
+                    // Volver al tab de upload
+                    switchImageMethod('upload');
+                }
+            }
+        }
+
+        function openModal() {
+            const modal = document.getElementById('eventModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        }
+
+        // Abrir modal para crear nuevo evento
+        function newEvent() {
+            // Resetear formulario
+            const form = document.getElementById('eventForm');
+            if (form) {
+                form.reset();
+                clearImagePreview();
+                document.getElementById('eventId').value = '';
+                document.getElementById('modalTitle').textContent = 'Crear Evento';
+                switchImageMethod('upload');
+            }
+            openModal();
+        }
+
+        // Funciones globales para uso externo
+        window.editEvent = editEvent;
+        window.newEvent = newEvent;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+
+        function closeRegistrosModal() {
+            const modal = document.getElementById('registrosModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function closeDetalleRegistroModal() {
+            const modal = document.getElementById('detalleRegistroModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // === FUNCIONES PARA MANEJO DE NOTIFICACIONES ===
+
+        let currentTab = 'pendientes';
+        let notificacionesData = {
+            pendientes: [],
+            confirmados: [],
+            rechazados: []
+        };
+
+        // Cargar notificaciones desde la API
+        async function loadNotificaciones() {
+            console.log('🔔 Cargando notificaciones...');
+
+            document.getElementById('loadingNotificaciones').classList.remove('hidden');
+            document.getElementById('emptyNotificaciones').classList.add('hidden');
+
+            try {
+                const response = await fetch('./api/notificaciones_eventos.php');
+                const data = await response.json();
+
+                console.log('📥 Respuesta de la API:', data);
+
+                if (data.success) {
+                    notificacionesData = data.data.por_estado;
+
+                    console.log('📊 Datos de notificaciones:', notificacionesData);
+
+                    // Actualizar contadores
+                    updateNotificationCounters();
+
+                    // Renderizar notificaciones según el tab activo
+                    renderNotificaciones(currentTab);
+
+                    console.log('✅ Notificaciones cargadas:', data.data.total);
+
+                    if (data.data.debug_info) {
+                        console.log('🐛 Debug info:', data.data.debug_info);
+                    }
+                } else {
+                    throw new Error(data.message || 'Error al cargar notificaciones');
+                }
+
+            } catch (error) {
+                console.error('❌ Error cargando notificaciones:', error);
+                showNotification('Error al cargar notificaciones', 'error');
+            } finally {
+                document.getElementById('loadingNotificaciones').classList.add('hidden');
+            }
+        }
+
+        // Actualizar contadores de notificaciones
+        function updateNotificationCounters() {
+            const pendientes = notificacionesData.pendientes?.length || 0;
+            const confirmados = notificacionesData.confirmados?.length || 0;
+            const rechazados = notificacionesData.rechazados?.length || 0;
+
+            // Contadores principales
+            document.getElementById('totalPendientes').textContent = pendientes;
+            document.getElementById('totalConfirmados').textContent = confirmados;
+            document.getElementById('totalRechazados').textContent = rechazados;
+
+            // Badges de tabs
+            document.getElementById('badgePendientes').textContent = pendientes;
+            document.getElementById('badgeConfirmados').textContent = confirmados;
+            document.getElementById('badgeRechazados').textContent = rechazados;
+        }
+
+        // Cambiar entre tabs
+        function showTab(tab) {
+            currentTab = tab;
+
+            // Actualizar estilos de tabs
+            const tabs = ['pendientes', 'confirmados', 'rechazados'];
+            tabs.forEach(t => {
+                const tabElement = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                const containerElement = document.getElementById(`notificaciones${t.charAt(0).toUpperCase() + t.slice(1)}`);
+
+                if (t === tab) {
+                    tabElement.className = 'px-4 py-2 text-sm font-medium border-b-2 border-orange-500 text-orange-600';
+                    containerElement.classList.remove('hidden');
+                } else {
+                    tabElement.className = 'px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700';
+                    containerElement.classList.add('hidden');
+                }
+            });
+
+            // Renderizar notificaciones del tab activo
+            renderNotificaciones(tab);
+        }
+
+        // Renderizar notificaciones
+        function renderNotificaciones(tab) {
+            const containerMap = {
+                'pendientes': 'notificacionesPendientes',
+                'confirmados': 'notificacionesConfirmados',
+                'rechazados': 'notificacionesRechazados'
+            };
+
+            const container = document.getElementById(containerMap[tab]);
+            const notificaciones = notificacionesData[tab] || [];
+
+            if (notificaciones.length === 0) {
+                container.innerHTML = '';
+                document.getElementById('emptyNotificaciones').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('emptyNotificaciones').classList.add('hidden');
+
+            container.innerHTML = notificaciones.map(notif => {
+                const fecha = new Date(notif.fecha_registro).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const statusBadge = getStatusBadge(notif.estado_registro);
+                const actionButtons = getActionButtons(notif, tab);
+
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-900">${notif.nombre_usuario}</h4>
+                                        <p class="text-sm text-gray-600">${notif.email_contacto}</p>
+                                    </div>
+                                    ${statusBadge}
+                                </div>
+
+                                <div class="mb-3">
+                                    <p class="font-medium text-blue-600">${notif.evento_titulo}</p>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500 mt-1">
+                                        <span><i class="fas fa-calendar mr-1"></i>${fecha}</span>
+                                        ${notif.nombre_empresa ? `<span><i class="fas fa-building mr-1"></i>${notif.nombre_empresa}</span>` : ''}
+                                        ${notif.telefono_contacto ? `<span><i class="fas fa-phone mr-1"></i>${notif.telefono_contacto}</span>` : ''}
+                                    </div>
+                                </div>
+
+                                ${notif.comentarios ? `<div class="mb-3"><p class="text-sm text-gray-700 italic">"${notif.comentarios}"</p></div>` : ''}
+                            </div>
+                        </div>
+
+                        ${actionButtons}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Obtener badge de estado
+        function getStatusBadge(estado) {
+            const badges = {
+                'pendiente': '<span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Pendiente</span>',
+                'confirmado': '<span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Confirmado</span>',
+                'rechazado': '<span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Rechazado</span>'
+            };
+            return badges[estado] || '';
+        }
+
+        // Obtener botones de acción según el estado
+        function getActionButtons(notif, tab) {
+            if (tab === 'pendientes') {
+                return `
+                    <div class="flex space-x-2 mt-3">
+                        <button onclick="updateRegistroStatus(${notif.id}, 'confirmado')"
+                                class="flex-1 bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700 transition">
+                            <i class="fas fa-check mr-1"></i>Aceptar
+                        </button>
+                        <button onclick="showRejectModal(${notif.id})"
+                                class="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-700 transition">
+                            <i class="fas fa-times mr-1"></i>Rechazar
+                        </button>
+                    </div>
+                `;
+            } else if (tab === 'rechazados') {
+                return `
+                    <div class="flex space-x-2 mt-3">
+                        <button onclick="updateRegistroStatus(${notif.id}, 'confirmado')"
+                                class="bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700 transition">
+                            <i class="fas fa-undo mr-1"></i>Aceptar
+                        </button>
+                        <button onclick="deleteRegistro(${notif.id})"
+                                class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-700 transition">
+                            <i class="fas fa-trash mr-1"></i>Eliminar
+                        </button>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="flex space-x-2 mt-3">
+                        <button onclick="updateRegistroStatus(${notif.id}, 'rechazado')"
+                                class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-700 transition">
+                            <i class="fas fa-ban mr-1"></i>Rechazar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Actualizar estado de registro
+        async function updateRegistroStatus(registroId, nuevoEstado, motivoRechazo = null) {
+            try {
+                const requestData = {
+                    id: registroId,
+                    estado: nuevoEstado
+                };
+
+                if (motivoRechazo) {
+                    requestData.motivo_rechazo = motivoRechazo;
+                }
+
+                console.log('📤 Enviando actualización:', requestData);
+
+                const response = await fetch('./api/notificaciones_eventos.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                console.log('📨 Response status:', response.status);
+
+                const data = await response.json();
+                console.log('📥 Response data:', data);
+
+                if (data.success) {
+                    showNotification(`Registro ${nuevoEstado === 'confirmado' ? 'confirmado' : 'rechazado'} exitosamente`, 'success');
+                    loadNotificaciones(); // Recargar notificaciones
+                } else {
+                    throw new Error(data.message || 'Error al actualizar estado');
+                }
+
+            } catch (error) {
+                console.error('❌ Error actualizando estado:', error);
+                console.error('❌ Error details:', error.message);
+                showNotification('Error al actualizar estado del registro: ' + error.message, 'error');
+            }
+        }
+
+        // Mostrar modal de rechazo
+        function showRejectModal(registroId) {
+            const motivo = prompt('Motivo del rechazo (opcional):');
+            if (motivo !== null) { // Usuario no canceló
+                updateRegistroStatus(registroId, 'rechazado', motivo);
+            }
+        }
+
+        // Eliminar registro (solo rechazados)
+        async function deleteRegistro(registroId) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('./api/notificaciones_eventos.php', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: registroId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showNotification('Registro eliminado exitosamente', 'success');
+                    loadNotificaciones(); // Recargar notificaciones
+                } else {
+                    throw new Error(data.message || 'Error al eliminar registro');
+                }
+
+            } catch (error) {
+                console.error('❌ Error eliminando registro:', error);
+                showNotification('Error al eliminar registro', 'error');
+            }
+        }
+
+        // Función auxiliar para mostrar notificaciones toast
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeImageHandling();
+            // initializeFormHandling(); // COMENTADO: El manejo del formulario se hace en demo-eventos.js
+
+            // Cargar notificaciones al iniciar
+            loadNotificaciones();
+
+            // Configurar auto-refresh cada 30 segundos
+            setInterval(loadNotificaciones, 30000);
+
+            // Cerrar modals con Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    closeRegistrosModal();
+                    closeDetalleRegistroModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

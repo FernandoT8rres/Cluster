@@ -1,0 +1,78 @@
+RewriteEngine On
+
+# Configuración de seguridad básica
+Options -Indexes
+ServerSignature Off
+
+# Permitir acceso a index.html en la raíz (que redirigirá a build)
+DirectoryIndex index.html
+
+# Redireccionar todo lo demás al directorio build si no existe en la raíz
+RewriteCond %{REQUEST_URI} !^/build/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ build/$1 [L]
+
+# Proteger acceso directo al dashboard sin autenticación
+RewriteCond %{REQUEST_URI} ^/build/dashboard\.html$
+RewriteCond %{QUERY_STRING} !authenticated=true
+RewriteCond %{HTTP_COOKIE} !claut_authenticated=true
+RewriteRule ^build/dashboard\.html$ build/pages/sign-in.html?message=Debes%20iniciar%20sesión [R=302,L]
+
+# Permitir acceso libre a páginas de autenticación
+RewriteCond %{REQUEST_URI} ^/build/pages/(sign-in|sign-up|forgot-password)\.html$
+RewriteRule .* - [L]
+
+# Permitir acceso a APIs y recursos
+RewriteCond %{REQUEST_URI} ^/build/(api|assets|js|css|uploads)/
+RewriteRule .* - [L]
+
+# Permitir acceso a administración
+RewriteCond %{REQUEST_URI} ^/build/admin/
+RewriteRule .* - [L]
+
+# Permitir páginas demo y otros recursos
+RewriteCond %{REQUEST_URI} ^/build/(demo_|404\.html|robots\.txt)
+RewriteRule .* - [L]
+
+# Configuraciones de rendimiento
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 3 months"
+    ExpiresByType image/jpg "access plus 3 months"
+    ExpiresByType image/jpeg "access plus 3 months"
+    ExpiresByType image/gif "access plus 3 months"
+    ExpiresByType image/webp "access plus 3 months"
+    ExpiresByType application/json "access plus 1 day"
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Headers de seguridad
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # CORS para APIs
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>
+
+# Proteger archivos sensibles
+<Files ~ "\.(env|log|sql|bak|config|ini|backup)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Proteger directorios de sistema
+<DirectoryMatch "^\.|\/\.">
+    Order allow,deny
+    Deny from all
+</DirectoryMatch>

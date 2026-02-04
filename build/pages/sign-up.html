@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+    <title>Clúster Intranet - Crear Cuenta</title>
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <!-- Nucleo Icons -->
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Main Styling -->
+    <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+    <style>
+        .error-message {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            background-color: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #16a34a;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .strength-weak {
+            background-color: #ef4444;
+            width: 33%;
+        }
+
+        .strength-medium {
+            background-color: #f59e0b;
+            width: 66%;
+        }
+
+        .strength-strong {
+            background-color: #10b981;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container sticky top-0 z-sticky">
+        <div class="flex flex-wrap -mx-3">
+            <div class="w-full max-w-full px-3 flex-0">
+            </div>
+        </div>
+        <main class="mt-0 transition-all duration-200 ease-in-out">
+            <section class="min-h-screen flex items-center justify-center py-8">
+                <div class="w-full max-w-lg p-6 bg-white rounded-xl shadow">
+                    <div class="text-center mb-6">
+                        <img src="../assets/img/apple-icon.png" alt="Logo" class="mx-auto mb-4"
+                            style="max-width: 150px;">
+                        <h4 class="font-bold text-lg">Crear Cuenta</h4>
+                        <p class="text-sm text-slate-600">Únete a la plataforma Clúster</p>
+                    </div>
+
+                    <!-- Mensajes de error/éxito -->
+                    <div id="message-container"></div>
+
+                    <form id="registerForm" action="../login/register.php" method="POST">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <input type="text" name="nombre" id="nombre" placeholder="Nombre" required
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="nombre-error"></div>
+                            </div>
+                            <div>
+                                <input type="text" name="apellidos" id="apellidos" placeholder="Apellidos" required
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="apellidos-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="email" name="email" id="email" placeholder="Email" required
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <div class="error-field" id="email-error"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <input type="tel" name="telefono" id="telefono" placeholder="Teléfono (opcional)"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="telefono-error"></div>
+                            </div>
+                            <div>
+                                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento"
+                                    placeholder="Fecha de Nacimiento"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="fecha_nacimiento-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <select name="rol" id="rol" required onchange="toggleEmpresaFields()"
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Selecciona tu tipo de cuenta</option>
+                                <option value="empleado">Empleado CLAUT</option>
+                                <option value="empresa">Representante de Empresa</option>
+                            </select>
+                            <div class="error-field" id="rol-error"></div>
+                        </div>
+
+                        <!-- Campos para empresa (ocultos por defecto) -->
+                        <div id="empresaFields" class="mb-4 hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Empresa asociada</label>
+                            <select name="empresa_id" id="empresa_id"
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Selecciona tu empresa</option>
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </select>
+                            <div class="error-field" id="empresa_id-error"></div>
+                            <p class="text-xs text-gray-500 mt-1">¿No encuentras tu empresa? <a href="#"
+                                    class="text-blue-600 hover:text-blue-800" onclick="showNewEmpresaForm()">Registrar
+                                    nueva empresa</a></p>
+                        </div>
+
+                        <!-- Campo nombre de empresa -->
+                        <div class="mb-4">
+                            <input type="text" name="nombre_empresa" id="nombre_empresa" placeholder="Nombre de Empresa"
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <div class="error-field" id="nombre_empresa-error"></div>
+                        </div>
+
+                        <!-- Campos de dirección -->
+                        <div class="mb-4">
+                            <input type="text" name="direccion" id="direccion" placeholder="Dirección (opcional)"
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <div class="error-field" id="direccion-error"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad (opcional)"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="ciudad-error"></div>
+                            </div>
+                            <div>
+                                <input type="text" name="estado" id="estado" placeholder="Estado (opcional)"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="estado-error"></div>
+                            </div>
+                            <div>
+                                <input type="text" name="codigo_postal" id="codigo_postal"
+                                    placeholder="Código Postal (opcional)"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="codigo_postal-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <input type="text" name="pais" id="pais" placeholder="País (opcional)" value="México"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="pais-error"></div>
+                            </div>
+                            <div>
+                                <input type="tel" name="telefono_emergencia" id="telefono_emergencia"
+                                    placeholder="Teléfono(opcional)"
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                <div class="error-field" id="telefono_emergencia-error"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="text" name="contacto_emergencia" id="contacto_emergencia"
+                                placeholder="Segundo Contacto(opcional)"
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <div class="error-field" id="contacto_emergencia-error"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <textarea name="biografia" id="biografia" placeholder="Información adicional (opcional)"
+                                rows="3"
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                            <div class="error-field" id="biografia-error"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="password" name="password" id="password" placeholder="Contraseña" required
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <div class="password-strength" id="password-strength"></div>
+                            <div class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres, incluye mayúsculas, minúsculas
+                                y números</div>
+                            <div class="error-field" id="password-error"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="password" name="confirm_password" id="confirm_password"
+                                placeholder="Confirmar Contraseña" required
+                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <div class="error-field" id="confirm_password-error"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="accept_terms" id="accept_terms" required class="mr-2" />
+                                <span class="text-sm">Acepto los <a href="#" class="text-blue-500 hover:text-blue-600"
+                                        onclick="alert('Términos y condiciones: Al usar esta plataforma aceptas nuestras políticas de uso y privacidad.'); return false;">términos
+                                        y condiciones</a></span>
+                            </label>
+                            <div class="error-field" id="accept_terms-error"></div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" id="registerBtn"
+                                class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                <span id="btnText">Crear Cuenta</span>
+                                <span id="btnSpinner" class="spinner hidden"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="text-sm mt-4 text-center">¿Ya tienes una cuenta? <a href="sign-in.html"
+                            class="text-blue-500 font-semibold hover:text-blue-600">Iniciar Sesión</a></p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="py-12">
+            <div class="container">
+                <div class="flex flex-wrap -mx-3">
+                    <div class="w-8/12 max-w-full px-3 mx-auto mt-1 text-center flex-0">
+                        <p class="mb-0 text-slate-400">
+                            Copyright ©
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script>
+                            Clúster.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const registerForm = document.getElementById('registerForm');
+                const registerBtn = document.getElementById('registerBtn');
+                const btnText = document.getElementById('btnText');
+                const btnSpinner = document.getElementById('btnSpinner');
+                const messageContainer = document.getElementById('message-container');
+                const passwordField = document.getElementById('password');
+                const passwordStrength = document.getElementById('password-strength');
+
+                // Verificador de fortaleza de contraseña
+                passwordField.addEventListener('input', function () {
+                    const password = this.value;
+                    const strength = calculatePasswordStrength(password);
+                    updatePasswordStrength(strength);
+                });
+
+                // Manejar envío del formulario
+                registerForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Limpiar errores previos
+                    clearErrors();
+
+                    // Obtener datos del formulario
+                    const formData = new FormData(registerForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    // Validar formulario
+                    if (!validateForm(data)) {
+                        return;
+                    }
+
+                    // Mostrar estado de carga
+                    setLoadingState(true);
+
+                    // Enviar solicitud
+                    fetch('../api/auth/register.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify(data)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showMessage('Cuenta creada exitosamente. Redirigiendo al login...', 'success');
+                                setTimeout(() => {
+                                    window.location.href = './sign-in.html?success=1';
+                                }, 2000);
+                            } else {
+                                if (data.errors) {
+                                    Object.keys(data.errors).forEach(field => {
+                                        showFieldError(field, data.errors[field]);
+                                    });
+                                } else {
+                                    showMessage(data.message || 'Error al crear la cuenta.', 'error');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
+                        })
+                        .finally(() => {
+                            setLoadingState(false);
+                        });
+                });
+
+                function validateForm(data) {
+                    let isValid = true;
+
+                    // Validar nombre
+                    if (!data.nombre || data.nombre.length < 2) {
+                        showFieldError('nombre', 'El nombre debe tener al menos 2 caracteres.');
+                        isValid = false;
+                    }
+
+                    // Validar apellidos
+                    if (!data.apellidos || data.apellidos.length < 2) {
+                        showFieldError('apellidos', 'Los apellidos deben tener al menos 2 caracteres.');
+                        isValid = false;
+                    }
+
+                    // Validar email
+                    if (!data.email) {
+                        showFieldError('email', 'El email es requerido.');
+                        isValid = false;
+                    } else if (!isValidEmail(data.email)) {
+                        showFieldError('email', 'Por favor, ingresa un email válido.');
+                        isValid = false;
+                    }
+
+                    // Validar teléfono (opcional)
+                    if (data.telefono && !isValidPhone(data.telefono)) {
+                        showFieldError('telefono', 'Por favor, ingresa un teléfono válido.');
+                        isValid = false;
+                    }
+
+                    // Validar rol
+                    if (!data.rol) {
+                        showFieldError('rol', 'Por favor, selecciona un tipo de cuenta.');
+                        isValid = false;
+                    }
+
+                    // Validar empresa si es rol empresa
+                    if (data.rol === 'empresa' && !data.empresa_id) {
+                        showFieldError('empresa_id', 'Debes seleccionar una empresa para el rol de empresa.');
+                        isValid = false;
+                    }
+
+                    // Validar contraseña
+                    if (!data.password) {
+                        showFieldError('password', 'La contraseña es requerida.');
+                        isValid = false;
+                    } else if (!isValidPassword(data.password)) {
+                        showFieldError('password', 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números.');
+                        isValid = false;
+                    }
+
+                    // Validar confirmación de contraseña
+                    if (data.password !== data.confirm_password) {
+                        showFieldError('confirm_password', 'Las contraseñas no coinciden.');
+                        isValid = false;
+                    }
+
+                    // Validar términos
+                    if (!data.accept_terms) {
+                        showFieldError('accept_terms', 'Debes aceptar los términos y condiciones.');
+                        isValid = false;
+                    }
+
+                    return isValid;
+                }
+
+                function isValidEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                }
+
+                function isValidPhone(phone) {
+                    const phoneRegex = /^\+?[\d\s\-\(\)]{8,}$/;
+                    return phoneRegex.test(phone);
+                }
+
+                function isValidPassword(password) {
+                    const hasMinLength = password.length >= 8;
+                    const hasUppercase = /[A-Z]/.test(password);
+                    const hasLowercase = /[a-z]/.test(password);
+                    const hasNumbers = /\d/.test(password);
+
+                    return hasMinLength && hasUppercase && hasLowercase && hasNumbers;
+                }
+
+                function calculatePasswordStrength(password) {
+                    let score = 0;
+
+                    if (password.length >= 8) score++;
+                    if (/[A-Z]/.test(password)) score++;
+                    if (/[a-z]/.test(password)) score++;
+                    if (/\d/.test(password)) score++;
+                    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+                    return score;
+                }
+
+                function updatePasswordStrength(strength) {
+                    passwordStrength.className = 'password-strength';
+
+                    if (strength <= 2) {
+                        passwordStrength.classList.add('strength-weak');
+                    } else if (strength <= 3) {
+                        passwordStrength.classList.add('strength-medium');
+                    } else {
+                        passwordStrength.classList.add('strength-strong');
+                    }
+                }
+
+                function showFieldError(fieldId, message) {
+                    const errorDiv = document.getElementById(fieldId + '-error');
+                    if (errorDiv) {
+                        errorDiv.textContent = message;
+                        errorDiv.style.color = '#dc2626';
+                        errorDiv.style.fontSize = '0.875rem';
+                        errorDiv.style.marginTop = '0.25rem';
+
+                        const field = document.getElementById(fieldId);
+                        if (field) {
+                            field.classList.add('border-red-500');
+                        }
+                    }
+                }
+
+                function clearErrors() {
+                    const errorFields = document.querySelectorAll('.error-field');
+                    errorFields.forEach(field => {
+                        field.textContent = '';
+                    });
+
+                    const inputs = document.querySelectorAll('input, select');
+                    inputs.forEach(input => {
+                        input.classList.remove('border-red-500');
+                    });
+
+                    messageContainer.innerHTML = '';
+                }
+
+                function showMessage(message, type) {
+                    const messageClass = type === 'error' ? 'error-message' : 'success-message';
+                    messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
+                }
+
+                function setLoadingState(loading) {
+                    if (loading) {
+                        registerBtn.classList.add('loading');
+                        btnText.classList.add('hidden');
+                        btnSpinner.classList.remove('hidden');
+                    } else {
+                        registerBtn.classList.remove('loading');
+                        btnText.classList.remove('hidden');
+                        btnSpinner.classList.add('hidden');
+                    }
+                }
+
+                // Cargar empresas al cargar la página
+                loadEmpresas();
+            });
+
+            // Funciones para manejo de empresas
+            function toggleEmpresaFields() {
+                const rol = document.getElementById('rol').value;
+                const empresaFields = document.getElementById('empresaFields');
+                const empresaSelect = document.getElementById('empresa_id');
+
+                if (rol === 'empresa') {
+                    empresaFields.classList.remove('hidden');
+                    empresaSelect.required = true;
+                } else {
+                    empresaFields.classList.add('hidden');
+                    empresaSelect.required = false;
+                    empresaSelect.value = '';
+                }
+            }
+
+            async function loadEmpresas() {
+                const empresaSelect = document.getElementById('empresa_id');
+                empresaSelect.innerHTML = '<option value="">Cargando empresas...</option>';
+
+                try {
+                    console.log('🔄 Cargando empresas desde API...');
+
+                    // Usar directamente empresas-simple.php que tiene mejores datos
+                    const response = await fetch('../api/empresas-simple.php?action=listar');
+                    const result = await response.json();
+
+                    console.log('📋 Respuesta API:', result);
+
+                    if (result.success && result.data && result.data.empresas) {
+                        empresaSelect.innerHTML = '<option value="">Selecciona tu empresa</option>';
+
+                        let empresasValidas = 0;
+                        result.data.empresas.forEach(empresa => {
+                            console.log('🔍 Procesando empresa:', {
+                                id: empresa.id,
+                                nombre_mostrar: empresa.nombre_mostrar,
+                                nombre: empresa.nombre,
+                                nombre_empresa: empresa.nombre_empresa,
+                                descripcion: empresa.descripcion
+                            });
+
+                            // Determinar el mejor nombre disponible con validación estricta
+                            let nombreMostrar = null;
+
+                            // Priorizar campos que tengan contenido real (no vacío, no null, no undefined)
+                            if (empresa.nombre_mostrar && empresa.nombre_mostrar.trim() && empresa.nombre_mostrar.trim() !== 'null') {
+                                nombreMostrar = empresa.nombre_mostrar.trim();
+                            } else if (empresa.nombre && empresa.nombre.trim() && empresa.nombre.trim() !== 'null') {
+                                nombreMostrar = empresa.nombre.trim();
+                            } else if (empresa.nombre_empresa && empresa.nombre_empresa.trim() && empresa.nombre_empresa.trim() !== 'null') {
+                                nombreMostrar = empresa.nombre_empresa.trim();
+                            } else if (empresa.descripcion && empresa.descripcion.trim() && empresa.descripcion.trim() !== 'null') {
+                                // Solo usar descripción como último recurso y limitar caracteres
+                                nombreMostrar = empresa.descripcion.trim().substring(0, 50);
+                            }
+
+                            // Si no encontramos nombre válido, crear uno genérico
+                            if (!nombreMostrar) {
+                                nombreMostrar = `Empresa ID ${empresa.id}`;
+                            }
+
+                            const option = document.createElement('option');
+                            option.value = empresa.id;
+                            option.textContent = nombreMostrar;
+                            empresaSelect.appendChild(option);
+                            empresasValidas++;
+
+                            console.log(`✅ Empresa agregada: ID ${empresa.id} - "${nombreMostrar}"`);
+                        });
+
+                        console.log(`✅ Total empresas válidas cargadas: ${empresasValidas}`);
+
+                        if (empresasValidas === 0) {
+                            empresaSelect.innerHTML = '<option value="">No hay empresas disponibles</option>';
+                            console.warn('⚠️ No se encontraron empresas con nombres válidos');
+                        }
+
+                    } else {
+                        console.error('❌ Respuesta API inválida:', result);
+                        empresaSelect.innerHTML = '<option value="">Error cargando empresas</option>';
+                    }
+
+                } catch (error) {
+                    console.error('❌ Error cargando empresas:', error);
+                    empresaSelect.innerHTML = '<option value="">Error de conexión</option>';
+
+                    // Intentar fallback con empresas_convenio.php
+                    try {
+                        console.log('🔄 Intentando fallback...');
+                        const fallbackResponse = await fetch('../api/empresas_convenio.php?activo=1');
+                        const fallbackResult = await fallbackResponse.json();
+
+                        if (fallbackResult.success && fallbackResult.data) {
+                            empresaSelect.innerHTML = '<option value="">Selecciona tu empresa</option>';
+
+                            fallbackResult.data.forEach(empresa => {
+                                const nombreMostrar = empresa.nombre_empresa || empresa.descripcion || `Empresa ID ${empresa.id}`;
+
+                                if (nombreMostrar && nombreMostrar.trim() !== '') {
+                                    const option = document.createElement('option');
+                                    option.value = empresa.id;
+                                    option.textContent = nombreMostrar.trim();
+                                    empresaSelect.appendChild(option);
+                                }
+                            });
+
+                            console.log('✅ Fallback exitoso');
+                        }
+                    } catch (fallbackError) {
+                        console.error('❌ Fallback también falló:', fallbackError);
+                    }
+                }
+            }
+
+            function showNewEmpresaForm() {
+                // Crear modal dinámico para nueva empresa
+                const modalHtml = `
+        <div id="modalNuevaEmpresa" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 class="text-lg font-medium text-gray-900">Registrar Nueva Empresa</h3>
+                    <button onclick="closeNuevaEmpresaForm()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <form id="formNuevaEmpresa" class="p-6 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Empresa *</label>
+                            <input type="text" name="nombre_empresa" required 
+                                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                            <select name="categoria" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Seleccionar categoría</option>
+                                <option value="Tecnología">Tecnología</option>
+                                <option value="Salud">Salud</option>
+                                <option value="Educación">Educación</option>
+                                <option value="Finanzas">Finanzas</option>
+                                <option value="Comercio">Comercio</option>
+                                <option value="Servicios">Servicios</option>
+                                <option value="Manufactura">Manufactura</option>
+                                <option value="Alimentación">Alimentación</option>
+                                <option value="Deportes">Deportes</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                        <textarea name="descripcion" rows="3" 
+                                  placeholder="Describe brevemente la empresa y sus servicios..."
+                                  class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email de Contacto</label>
+                            <input type="email" name="email" 
+                                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                            <input type="tel" name="telefono" 
+                                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
+                        <input type="url" name="sitio_web" placeholder="https://empresa.com" 
+                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <textarea name="direccion" rows="2" 
+                                  class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                        La empresa será registrada como "pendiente" y requerirá aprobación de un administrador antes de estar disponible.
+                    </div>
+                    
+                    <div class="flex items-center justify-end space-x-3 pt-4 border-t">
+                        <button type="button" onclick="closeNuevaEmpresaForm()" 
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <span id="btnRegistrarText">Registrar Empresa</span>
+                            <span id="btnRegistrarSpinner" class="spinner hidden ml-2"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>`;
+
+                // Agregar modal al DOM
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                // Configurar evento del formulario
+                document.getElementById('formNuevaEmpresa').addEventListener('submit', handleNuevaEmpresaSubmit);
+            }
+
+            function closeNuevaEmpresaForm() {
+                const modal = document.getElementById('modalNuevaEmpresa');
+                if (modal) {
+                    modal.remove();
+                }
+            }
+
+            async function handleNuevaEmpresaSubmit(e) {
+                e.preventDefault();
+
+                const btnText = document.getElementById('btnRegistrarText');
+                const btnSpinner = document.getElementById('btnRegistrarSpinner');
+
+                // Estado de carga
+                btnText.classList.add('hidden');
+                btnSpinner.classList.remove('hidden');
+
+                const formData = new FormData(e.target);
+                const empresaData = {
+                    nombre_empresa: formData.get('nombre_empresa'),
+                    descripcion: formData.get('descripcion'),
+                    email: formData.get('email'),
+                    telefono: formData.get('telefono'),
+                    sitio_web: formData.get('sitio_web'),
+                    direccion: formData.get('direccion'),
+                    categoria: formData.get('categoria'),
+                    activo: 0, // Pendiente de aprobación
+                    destacado: 0
+                };
+
+                try {
+                    const response = await fetch('../api/empresas_convenio.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(empresaData)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert(`✅ Empresa "${empresaData.nombre_empresa}" registrada exitosamente.\n\nLa empresa está pendiente de aprobación por un administrador.`);
+                        closeNuevaEmpresaForm();
+                        // Recargar lista de empresas
+                        loadEmpresas();
+                    } else {
+                        alert(`❌ Error al registrar empresa: ${result.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('❌ Error de conexión al registrar la empresa. Intenta nuevamente.');
+                } finally {
+                    // Restaurar estado del botón
+                    btnText.classList.remove('hidden');
+                    btnSpinner.classList.add('hidden');
+                }
+            }
+
+        </script>
+
+        <!-- plugin for scrollbar -->
+        <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+        <!-- main script file -->
+        <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+</body>
+
+</html>

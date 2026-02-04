@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Panel Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+
+        .filter-btn {
+            background: #f1f3f4;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .users-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pendiente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-activo {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rechazado {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-lista_espera {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-waitlist {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Gestión de Usuarios</h1>
+            <p>Panel de administración para aprobar, rechazar o gestionar solicitudes de usuarios</p>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="stat-pendientes">-</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-activos">-</div>
+                <div class="stat-label">Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-rechazados">-</div>
+                <div class="stat-label">Rechazados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="stat-espera">-</div>
+                <div class="stat-label">En Espera</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filtrarUsuarios('pendiente')">Pendientes</button>
+            <button class="filter-btn" onclick="filtrarUsuarios('activo')">Activos</button>
+            <button class="filter-btn" onclick="filtrarUsuarios('rechazado')">Rechazados</button>
+            <button class="filter-btn" onclick="filtrarUsuarios('lista_espera')">En Espera</button>
+            <button class="filter-btn" onclick="filtrarUsuarios('todos')">Todos</button>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Empresa</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    <tr>
+                        <td colspan="7" class="loading">Cargando usuarios...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Confirmar acción</h3>
+            <p id="modal-message">¿Estás seguro de realizar esta acción?</p>
+            <textarea id="modal-comment" placeholder="Comentario (opcional)" rows="3" style="width: 100%; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn btn-approve" id="modal-confirm" onclick="confirmarAccion()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuarios = [];
+        let filtroActual = 'pendiente';
+        let accionPendiente = null;
+
+        // Cargar usuarios al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarUsuarios();
+        });
+
+        async function cargarUsuarios(status = 'todos') {
+            try {
+                const response = await fetch(`api/admin/manage_users.php?status=${status}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    usuarios = result.data;
+                    mostrarUsuarios();
+                    actualizarEstadisticas();
+                } else {
+                    mostrarError('Error al cargar usuarios: ' + result.message);
+                }
+            } catch (error) {
+                mostrarError('Error de conexión: ' + error.message);
+            }
+        }
+
+        function mostrarUsuarios() {
+            const tbody = document.getElementById('users-tbody');
+
+            if (usuarios.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666;">No hay usuarios para mostrar</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = usuarios.map(user => `
+                <tr>
+                    <td><strong>${user.nombre} ${user.apellidos}</strong></td>
+                    <td>${user.email}</td>
+                    <td>${user.nombre_empresa || user.empresa_convenio_nombre || '-'}</td>
+                    <td>${user.rol}</td>
+                    <td><span class="status status-${user.estado_usuario}">${getStatusText(user.estado_usuario)}</span></td>
+                    <td>${new Date(user.fecha_registro).toLocaleDateString()}</td>
+                    <td class="actions">
+                        ${getActionButtons(user)}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusText(status) {
+            const statusTexts = {
+                'pendiente': 'Pendiente',
+                'activo': 'Activo',
+                'rechazado': 'Rechazado',
+                'lista_espera': 'En Espera'
+            };
+            return statusTexts[status] || status;
+        }
+
+        function getActionButtons(user) {
+            if (user.estado_usuario === 'activo') {
+                return `
+                    <button class="btn btn-waitlist" onclick="cambiarEstado(${user.id}, 'lista_espera', '${user.email}')">Espera</button>
+                    <button class="btn btn-reject" onclick="cambiarEstado(${user.id}, 'rechazado', '${user.email}')">Rechazar</button>
+                `;
+            } else if (user.estado_usuario === 'pendiente') {
+                return `
+                    <button class="btn btn-approve" onclick="cambiarEstado(${user.id}, 'activo', '${user.email}')">Aprobar</button>
+                    <button class="btn btn-reject" onclick="cambiarEstado(${user.id}, 'rechazado', '${user.email}')">Rechazar</button>
+                    <button class="btn btn-waitlist" onclick="cambiarEstado(${user.id}, 'lista_espera', '${user.email}')">Espera</button>
+                `;
+            } else {
+                return `
+                    <button class="btn btn-approve" onclick="cambiarEstado(${user.id}, 'activo', '${user.email}')">Aprobar</button>
+                `;
+            }
+        }
+
+        function filtrarUsuarios(status) {
+            // Actualizar botones activos
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            filtroActual = status;
+            cargarUsuarios(status);
+        }
+
+        function cambiarEstado(userId, nuevoEstado, userEmail) {
+            const acciones = {
+                'activo': 'aprobar',
+                'rechazado': 'rechazar',
+                'lista_espera': 'poner en lista de espera'
+            };
+
+            accionPendiente = { userId, nuevoEstado, userEmail };
+
+            document.getElementById('modal-title').textContent = `Confirmar ${acciones[nuevoEstado]}`;
+            document.getElementById('modal-message').textContent = `¿Confirmas ${acciones[nuevoEstado]} a ${userEmail}?`;
+            document.getElementById('modal-comment').value = '';
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+        async function confirmarAccion() {
+            if (!accionPendiente) return;
+
+            const comentario = document.getElementById('modal-comment').value;
+
+            try {
+                const response = await fetch('api/admin/manage_users.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: accionPendiente.userId,
+                        estado_usuario: accionPendiente.nuevoEstado,
+                        comentario: comentario
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    mostrarExito(result.message);
+                    cargarUsuarios(filtroActual);
+                    cerrarModal();
+                } else {
+                    mostrarError('Error: ' + result.message);
+                }
+            } catch (error) {
+                mostrarError('Error de conexión: ' + error.message);
+            }
+
+            accionPendiente = null;
+        }
+
+        function cerrarModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            accionPendiente = null;
+        }
+
+        function actualizarEstadisticas() {
+            const stats = usuarios.reduce((acc, user) => {
+                acc[user.estado_usuario] = (acc[user.estado_usuario] || 0) + 1;
+                return acc;
+            }, {});
+
+            document.getElementById('stat-pendientes').textContent = stats.pendiente || 0;
+            document.getElementById('stat-activos').textContent = stats.activo || 0;
+            document.getElementById('stat-rechazados').textContent = stats.rechazado || 0;
+            document.getElementById('stat-espera').textContent = stats.lista_espera || 0;
+        }
+
+        function mostrarError(mensaje) {
+            alert('Error: ' + mensaje);
+        }
+
+        function mostrarExito(mensaje) {
+            alert('Éxito: ' + mensaje);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmModal');
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        }
+    </script>
+</body>
+</html>

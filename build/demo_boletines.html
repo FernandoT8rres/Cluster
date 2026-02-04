@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Boletines - CRUD Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal-backdrop { backdrop-filter: blur(5px); }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-radius-lg: 12px;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            font-family: var(--porsche-font) !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: 700 !important;
+            font-size: 1.5rem !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: var(--porsche-white) !important;
+            border-left: 3px solid #C7252B !important;
+        }
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Sidebar always retractable - All screens */
+        .porsche-sidebar {
+            transform: translateX(-100%) !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0 !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            position: fixed !important;
+            display: block !important;
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        .porsche-sidebar.sidenav-show {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content always without sidebar margin */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .container {
+            margin-left: 0 !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1280px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Force sidebar behavior on all screens - Override any conflicting styles */
+        .porsche-sidebar.sidebar-enhanced {
+            transform: translateX(-100%) !important;
+        }
+
+        .porsche-sidebar.sidebar-enhanced.sidenav-show {
+            transform: translateX(0) !important;
+        }
+
+        /* Override any Tailwind classes that might interfere */
+        aside.porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure hamburger button works on all screens */
+        @media (min-width: 1280px) {
+            [sidenav-trigger] {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Enhanced sidebar behavior for desktop */
+        @media (min-width: 1280px) {
+            .sidebar-enhanced {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 768px) {
+            header .flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            header .flex.items-center.space-x-4 {
+                margin-top: 1rem !important;
+                align-self: flex-end !important;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .porsche-sidebar {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            header .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
+        /* Ensure proper z-index hierarchy */
+        .porsche-sidebar {
+            z-index: 999 !important;
+        }
+
+        .sidenav-overlay {
+            z-index: 998 !important;
+        }
+
+        header {
+            z-index: 997 !important;
+        }
+
+        .main-content {
+            z-index: 1 !important;
+        }
+
+        /* Hamburger button styling */
+        .hamburger-btn {
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <!-- Hamburger Menu Button for All Screens -->
+                    <button class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
+                            id="hamburgerBtn"
+                            sidenav-trigger
+                            aria-label="Abrir menú de navegación">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold">📋 Administrador de Boletines</h1>
+                        <p class="text-red-200 mt-1">CRUD Completo - Gestión de Boletines</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="location.href='boletines.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Ver Boletines
+                    </button>
+                    <button onclick="location.href='test_boletines_completo.php'" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                        <i class="fas fa-vial mr-2"></i>Tests
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Porsche Sidebar -->
+    <aside id="porscheSidebar"
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-48 py-6 relative mb-4">
+            <!-- Botón de cerrar para todas las pantallas -->
+            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                    id="sidebarCloseBtn"
+                    sidenav-close
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
+              target="_blank">
+                <img src="../assets/img/apple-icon.png"
+                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                  alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+            </a>
+        </div>
+
+        <hr class="h-px mt-4 mb-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0 pt-4">
+                <!-- Dashboard -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- admin panel -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin-panel.html?login=success">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                    </a>
+                </li>
+
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_usuarios.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_evento.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar-alt text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+
+                <!-- Boletines -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg active"
+                        href="demo_boletines.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-newspaper text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
+                    </a>
+                </li>
+
+                <!-- Banners -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin/banner-admin-mejorado.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-images text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Banners</span>
+                    </a>
+                </li>
+
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_descuentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+
+                <!-- Perfil -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="profile.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-user-cog text-gray-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mx-4">
+            <button onclick="window.location.href='pages/sign-in.html'"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Estadísticas -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Boletines</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalBoletines">0</p>
+                    </div>
+                    <i class="fas fa-newspaper text-3xl text-red-500" style="color: #C7252B;"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Publicados</p>
+                        <p class="text-2xl font-bold text-green-600" id="boletinesPublicados">0</p>
+                    </div>
+                    <i class="fas fa-check-circle text-3xl text-green-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Borradores</p>
+                        <p class="text-2xl font-bold text-yellow-600" id="boletienesBorradores">0</p>
+                    </div>
+                    <i class="fas fa-edit text-3xl text-yellow-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Visualizaciones</p>
+                        <p class="text-2xl font-bold text-blue-600" id="totalVisualizaciones">0</p>
+                    </div>
+                    <i class="fas fa-eye text-3xl text-blue-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <button onclick="showCreateModal()" class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                        <i class="fas fa-plus mr-2"></i>Crear Boletín
+                    </button>
+                    <button onclick="loadBulletins()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <select id="filterEstado" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <option value="">Todos los estados</option>
+                        <option value="publicado">Publicado</option>
+                        <option value="borrador">Borrador</option>
+                        <option value="archivado">Archivado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4">
+            <!-- Lista de Boletines -->
+            <section class="mb-6">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">
+                            <i class="fas fa-newspaper mr-2" style="color: #C7252B;"></i>
+                            Lista de Boletines
+                        </h2>
+                    </div>
+                                        <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-clúster-dark">📋 Boletines de la Base de Datos</h2>
+                    </div>
+                    <div id="bulletins-list" class="space-y-4">
+                        <div class="text-center py-8 text-gray-500">
+                            <div class="text-4xl mb-2">📄</div>
+                            <p>Haz click en "Actualizar" para cargar los boletines</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Visor de Documentos -->
+            <section id="document-viewer" class="mb-12 hidden">
+                <div class="bg-white rounded-lg p-6 shadow-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-clúster-dark">👁️ Visor de Documentos</h2>
+                        <button onclick="closeDocumentViewer()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                            ❌ Cerrar
+                        </button>
+                    </div>
+                    <div id="document-content" class="border rounded-lg p-4 min-h-96">
+                        <!-- Contenido del documento -->
+                    </div>
+                </div>
+            </section>
+
+
+
+
+    <!-- Modal Crear/Editar Boletín -->
+    <div id="bulletinModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto slide-in">
+                <div class="p-6 border-b">
+                    <h2 class="text-2xl font-bold text-gray-800" id="modalTitle">Crear Boletín</h2>
+                </div>
+
+                <form id="bulletin-form" class="p-6">
+                    <input type="hidden" id="bulletinId" name="bulletinId">
+
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                            <input type="text" id="titulo" name="titulo" required
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Contenido *</label>
+                            <textarea id="contenido" name="contenido" rows="6" required
+                                      class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                                      placeholder="Escribe el contenido del boletín aquí..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                            <select id="estado" name="estado"
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="borrador">🏗️ Borrador</option>
+                                <option value="publicado">✅ Publicado</option>
+                                <option value="archivado">📁 Archivado</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Archivo Adjunto</label>
+                            <input type="file" id="archivo" name="archivo"
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.mp3,.csv"
+                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <p class="text-xs text-gray-500 mt-1">Formatos: PDF, Word, Excel, PowerPoint, imágenes, videos, audio, texto</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                            <i class="fas fa-times mr-2"></i>Cancelar
+                        </button>
+                        <button type="submit" id="submitBtn" class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                            <i class="fas fa-save mr-2"></i>Guardar
+                        </button>
+                    </div>
+                </form>
+
+                <div id="creation-result" class="p-6 pt-0 hidden">
+                    <!-- Resultado de la creación -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript -->
+    <script>
+        // Variables globales
+        let currentBulletinId = null;
+        const API_BASE = './api';
+
+        // Modal functions
+        function showCreateModal() {
+            currentBulletinId = null;
+            document.getElementById('modalTitle').textContent = 'Crear Nuevo Boletín';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save mr-2"></i>Crear Boletín';
+            document.getElementById('bulletin-form').reset();
+            document.getElementById('bulletinId').value = '';
+            document.getElementById('bulletinModal').classList.remove('hidden');
+        }
+
+        function showEditModal(bulletin) {
+            currentBulletinId = bulletin.id;
+            document.getElementById('modalTitle').textContent = 'Editar Boletín';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save mr-2"></i>Actualizar Boletín';
+
+            document.getElementById('bulletinId').value = bulletin.id;
+            document.getElementById('titulo').value = bulletin.titulo;
+            document.getElementById('contenido').value = bulletin.contenido;
+            document.getElementById('estado').value = bulletin.estado;
+
+            document.getElementById('bulletinModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('bulletinModal').classList.add('hidden');
+            document.getElementById('creation-result').classList.add('hidden');
+        }
+
+        // Verificar estado del sistema
+        async function checkSystemStatus() {
+            const checks = [
+                { id: 'db-status', test: 'database' },
+                { id: 'api-status', test: 'api' },
+                { id: 'js-status', test: 'javascript' },
+                { id: 'html-status', test: 'html' }
+            ];
+
+            for (const check of checks) {
+                try {
+                    const result = await runStatusCheck(check.test);
+                    updateStatus(check.id, result.status, result.message);
+                } catch (error) {
+                    updateStatus(check.id, 'error', 'Error en verificación');
+                }
+            }
+        }
+
+        async function runStatusCheck(test) {
+            switch (test) {
+                case 'database':
+                    try {
+                        const response = await fetch('./api/boletines_simple.php?limit=1');
+                        if (response.ok) {
+                            return { status: 'success', message: 'Conectado correctamente' };
+                        } else {
+                            return { status: 'error', message: 'Error de conexión' };
+                        }
+                    } catch (error) {
+                        return { status: 'error', message: 'No disponible' };
+                    }
+
+                case 'api':
+                    try {
+                        const response = await fetch('./api/boletines_simple.php');
+                        const data = await response.json();
+                        if (data.success) {
+                            return { status: 'success', message: `${data.data.length} boletines` };
+                        } else {
+                            return { status: 'warning', message: 'API funciona, sin datos' };
+                        }
+                    } catch (error) {
+                        return { status: 'error', message: 'No disponible' };
+                    }
+
+                case 'javascript':
+                    const jsFiles = ['./assets/js/boletines-manager.js', './assets/js/document-viewer.js'];
+                    let jsStatus = 'success';
+                    let jsMessage = 'Archivos cargados';
+                    
+                    for (const file of jsFiles) {
+                        try {
+                            const response = await fetch(file);
+                            if (!response.ok) {
+                                jsStatus = 'error';
+                                jsMessage = 'Archivos faltantes';
+                                break;
+                            }
+                        } catch (error) {
+                            jsStatus = 'error';
+                            jsMessage = 'Error de carga';
+                            break;
+                        }
+                    }
+                    
+                    return { status: jsStatus, message: jsMessage };
+
+                case 'html':
+                    try {
+                        const response = await fetch('./boletines.html');
+                        if (response.ok) {
+                            const html = await response.text();
+                            if (html.includes('boletines-manager.js')) {
+                                return { status: 'success', message: 'HTML correcto' };
+                            } else {
+                                return { status: 'warning', message: 'HTML incompleto' };
+                            }
+                        } else {
+                            return { status: 'error', message: 'HTML no encontrado' };
+                        }
+                    } catch (error) {
+                        return { status: 'error', message: 'Error de carga' };
+                    }
+
+                default:
+                    return { status: 'error', message: 'Test desconocido' };
+            }
+        }
+
+        function updateStatus(elementId, status, message) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const statusConfig = {
+                success: { color: 'text-green-600', icon: '✅', text: message },
+                warning: { color: 'text-yellow-600', icon: '⚠️', text: message },
+                error: { color: 'text-red-600', icon: '❌', text: message }
+            };
+
+            const config = statusConfig[status] || statusConfig.error;
+            element.className = config.color;
+            element.innerHTML = `${config.icon} ${config.text}`;
+        }
+
+        // Test de API
+        async function testAPI(method, endpoint) {
+            const resultElement = document.getElementById('api-result');
+            resultElement.innerHTML = '<p class="text-yellow-600">🔄 Ejecutando...</p>';
+
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json();
+                
+                const html = `
+                    <div class="space-y-2">
+                        <p><strong>Método:</strong> ${method}</p>
+                        <p><strong>Endpoint:</strong> ${endpoint}</p>
+                        <p><strong>Estado:</strong> ${response.status} ${response.statusText}</p>
+                        <p><strong>Respuesta:</strong></p>
+                        <pre class="bg-white p-3 rounded border text-xs overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+                resultElement.innerHTML = html;
+                
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <p class="text-red-600"><strong>❌ Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Reparar estructura de tabla
+        async function fixTableStructure() {
+            const resultElement = document.getElementById('api-result');
+            resultElement.innerHTML = '<p class="text-yellow-600">🔄 Verificando y reparando estructura de tabla...</p>';
+            
+            try {
+                const response = await fetch('./api/fix_boletines_table.php');
+                const data = await response.json();
+                
+                let html = '<div class="space-y-3">';
+                html += '<h3 class="font-bold text-lg mb-2">🔧 Resultados de la Reparación</h3>';
+                
+                // Mostrar acciones realizadas
+                if (data.actions && data.actions.length > 0) {
+                    data.actions.forEach(action => {
+                        const icon = action.status === 'success' ? '✅' : action.status === 'warning' ? '⚠️' : '❌';
+                        const colorClass = action.status === 'success' ? 'text-green-600' : action.status === 'warning' ? 'text-yellow-600' : 'text-red-600';
+                        
+                        html += `
+                            <div class="border-l-4 ${action.status === 'success' ? 'border-green-500' : action.status === 'warning' ? 'border-yellow-500' : 'border-red-500'} pl-3">
+                                <p class="${colorClass} font-semibold">${icon} ${action.action}</p>
+                                <p class="text-sm text-gray-600">${action.message}</p>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Mostrar estructura final
+                if (data.final_structure) {
+                    html += `
+                        <div class="mt-4 p-3 bg-gray-50 rounded">
+                            <p class="font-semibold mb-2">Estructura final de la tabla:</p>
+                            <div class="text-xs space-y-1">
+                    `;
+                    data.final_structure.forEach(col => {
+                        html += `<div>📄 ${col.Field} - ${col.Type}</div>`;
+                    });
+                    html += `
+                            </div>
+                            <p class="text-sm mt-2 text-gray-600">Total de registros: ${data.total_records || 0}</p>
+                        </div>
+                    `;
+                }
+                
+                // Resumen
+                const summaryClass = data.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
+                html += `
+                    <div class="${summaryClass} p-3 rounded mt-3">
+                        <p class="font-semibold">${data.summary || 'Proceso completado'}</p>
+                    </div>
+                `;
+                
+                html += '</div>';
+                resultElement.innerHTML = html;
+                
+                // Si fue exitoso, mostrar mensaje adicional
+                if (data.success) {
+                    setTimeout(() => {
+                        alert('✅ Tabla reparada exitosamente. Ya puedes crear boletines.');
+                    }, 500);
+                }
+                
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <div class="bg-red-50 p-3 rounded">
+                        <p class="text-red-800 font-semibold">❌ Error al ejecutar reparación</p>
+                        <p class="text-red-600 text-sm mt-1">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Test de conexión a BD
+        async function testDBConnection() {
+            const resultElement = document.getElementById('api-result');
+            resultElement.innerHTML = '<p class="text-yellow-600">🔄 Probando conexión a base de datos...</p>';
+            
+            try {
+                const response = await fetch('./api/test_db.php');
+                const data = await response.json();
+                
+                let html = '<div class="space-y-3">';
+                html += '<h3 class="font-bold text-lg mb-2">🔌 Resultados del Test de Conexión</h3>';
+                
+                // Mostrar cada test
+                for (const [key, test] of Object.entries(data.tests)) {
+                    const icon = test.success ? '✅' : '❌';
+                    const colorClass = test.success ? 'text-green-600' : 'text-red-600';
+                    
+                    html += `
+                        <div class="border-l-4 ${test.success ? 'border-green-500' : 'border-red-500'} pl-3">
+                            <p class="${colorClass} font-semibold">${icon} ${test.name}</p>
+                            <p class="text-sm text-gray-600">${test.message}</p>
+                            ${test.details ? `<pre class="text-xs mt-1 text-gray-500">${JSON.stringify(test.details, null, 2)}</pre>` : ''}
+                        </div>
+                    `;
+                }
+                
+                // Resumen
+                const summaryClass = data.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800';
+                html += `
+                    <div class="${summaryClass} p-3 rounded mt-3">
+                        <p class="font-semibold">${data.summary}</p>
+                    </div>
+                `;
+                
+                html += '</div>';
+                resultElement.innerHTML = html;
+                
+            } catch (error) {
+                resultElement.innerHTML = `
+                    <div class="bg-red-50 p-3 rounded">
+                        <p class="text-red-800 font-semibold">❌ Error al ejecutar test</p>
+                        <p class="text-red-600 text-sm mt-1">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function clearAPIResult() {
+            document.getElementById('api-result').innerHTML = '<p class="text-gray-600">Haz click en un botón para probar la API...</p>';
+        }
+
+        // Actualizar estadísticas
+        async function updateStatistics() {
+            try {
+                const response = await fetch('./api/boletines_simple.php');
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const boletines = result.data;
+                    const total = boletines.length;
+                    const publicados = boletines.filter(b => b.estado === 'publicado').length;
+                    const borradores = boletines.filter(b => b.estado === 'borrador').length;
+                    const totalVisualizaciones = boletines.reduce((sum, b) => sum + (parseInt(b.visualizaciones) || 0), 0);
+
+                    document.getElementById('totalBoletines').textContent = total;
+                    document.getElementById('boletinesPublicados').textContent = publicados;
+                    document.getElementById('boletienesBorradores').textContent = borradores;
+                    document.getElementById('totalVisualizaciones').textContent = totalVisualizaciones;
+
+                    document.getElementById('stats-info').textContent = `${total} boletines cargados`;
+                }
+            } catch (error) {
+                console.error('Error updating statistics:', error);
+            }
+        }
+
+        // === FUNCIONES PARA CREACIÓN DE BOLETINES ===
+
+        // Manejar envío del formulario
+        // Note: DOMContentLoaded is handled at the end of the script
+        
+        async function handleBulletinSubmit(event) {
+            event.preventDefault();
+
+            const resultDiv = document.getElementById('creation-result');
+            const bulletinId = document.getElementById('bulletinId').value;
+            const isEditing = bulletinId !== '';
+            
+            resultDiv.className = 'mt-4 block';
+            resultDiv.innerHTML = `<p class="text-yellow-600">🔄 ${isEditing ? 'Actualizando' : 'Creando'} boletín...</p>`;
+            
+            const formData = new FormData();
+            formData.append('titulo', document.getElementById('titulo').value);
+            formData.append('contenido', document.getElementById('contenido').value);
+            formData.append('estado', document.getElementById('estado').value);
+            
+            if (isEditing) {
+                formData.append('id', bulletinId);
+            }
+            
+            const fileInput = document.getElementById('archivo');
+            if (fileInput.files.length > 0) {
+                formData.append('archivo', fileInput.files[0]);
+            }
+            
+            try {
+                const method = isEditing ? 'PUT' : 'POST';
+                const response = await fetch('./api/boletines_simple.php', {
+                    method: method,
+                    body: formData
+                });
+                
+                // Verificar primero el tipo de contenido
+                const contentType = response.headers.get('content-type');
+                console.log('Response Content-Type:', contentType);
+                console.log('Response Status:', response.status);
+                
+                // Obtener el texto de respuesta primero
+                const responseText = await response.text();
+                console.log('Response Text:', responseText);
+                
+                // Intentar parsear como JSON
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Error parsing JSON:', parseError);
+                    // Si no es JSON, mostrar el error
+                    resultDiv.innerHTML = `
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p class="text-red-800 font-semibold">❌ Error del servidor</p>
+                            <p class="text-red-600 text-sm mt-1">Respuesta no válida del servidor. Ver consola para detalles.</p>
+                            <details class="mt-2">
+                                <summary class="cursor-pointer text-red-600 text-xs">Ver respuesta del servidor</summary>
+                                <pre class="mt-2 p-2 bg-gray-100 text-xs overflow-x-auto">${responseText.substring(0, 500)}</pre>
+                            </details>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p class="text-green-800 font-semibold">✅ Boletín ${isEditing ? 'actualizado' : 'creado'} exitosamente</p>
+                            <p class="text-green-600 text-sm mt-1">ID: ${result.id || bulletinId}</p>
+                        </div>
+                    `;
+
+                    // Cerrar modal después de éxito
+                    setTimeout(() => {
+                        closeModal();
+                        loadBulletins();
+                        updateStatistics();
+                    }, 1500);
+                    
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p class="text-red-800 font-semibold">❌ Error al ${isEditing ? 'actualizar' : 'crear'} boletín</p>
+                            <p class="text-red-600 text-sm mt-1">${result.message || 'Error desconocido'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-red-800 font-semibold">❌ Error de conexión</p>
+                        <p class="text-red-600 text-sm mt-1">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function clearForm() {
+            document.getElementById('bulletin-form').reset();
+            document.getElementById('creation-result').className = 'mt-4 hidden';
+        }
+        
+        // === FUNCIONES PARA VISUALIZACIÓN DE BOLETINES ===
+        
+        async function loadBulletins() {
+            const listDiv = document.getElementById('bulletins-list');
+            listDiv.innerHTML = '<div class="text-center py-8 text-gray-500"><div class="text-4xl mb-2">🔄</div><p>Cargando boletines...</p></div>';
+            
+            try {
+                const response = await fetch('./api/boletines_simple.php');
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    const bulletinsHTML = result.data.map(bulletin => createBulletinCard(bulletin)).join('');
+                    listDiv.innerHTML = bulletinsHTML;
+                } else {
+                    listDiv.innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <div class="text-4xl mb-2">📭</div>
+                            <p>No hay boletines en la base de datos</p>
+                            <p class="text-sm mt-2">Crea uno nuevo usando el formulario superior</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                listDiv.innerHTML = `
+                    <div class="text-center py-8 text-red-500">
+                        <div class="text-4xl mb-2">❌</div>
+                        <p>Error al cargar boletines</p>
+                        <p class="text-sm mt-2">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // === FUNCIONES PARA EDICIÓN DE BOLETINES ===
+        
+        async function editBulletin(id) {
+            try {
+                // Obtener datos del boletín
+                const response = await fetch(`./api/boletines_simple.php?id=${id}`);
+                const result = await response.json();
+                
+                if (!result.success) {
+                    alert('Error al obtener el boletín');
+                    return;
+                }
+                
+                const bulletin = result.data;
+                
+                // Llenar formulario con datos existentes
+                document.getElementById('titulo').value = bulletin.titulo;
+                document.getElementById('contenido').value = bulletin.contenido;
+                document.getElementById('estado').value = bulletin.estado;
+                
+                // Modificar el formulario para modo edición
+                const form = document.getElementById('bulletin-form');
+                const submitButton = form.querySelector('button[type="submit"]');
+                
+                // Agregar campo hidden con ID
+                let hiddenId = document.getElementById('edit-id');
+                if (!hiddenId) {
+                    hiddenId = document.createElement('input');
+                    hiddenId.type = 'hidden';
+                    hiddenId.id = 'edit-id';
+                    hiddenId.name = 'edit-id';
+                    form.appendChild(hiddenId);
+                }
+                hiddenId.value = id;
+                
+                // Cambiar texto del botón
+                submitButton.innerHTML = '✏️ Actualizar Boletín';
+                submitButton.className = 'bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition-colors';
+                
+                // Agregar botón cancelar si no existe
+                let cancelButton = document.getElementById('cancel-edit');
+                if (!cancelButton) {
+                    cancelButton = document.createElement('button');
+                    cancelButton.type = 'button';
+                    cancelButton.id = 'cancel-edit';
+                    cancelButton.className = 'bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors';
+                    cancelButton.innerHTML = '❌ Cancelar Edición';
+                    cancelButton.onclick = cancelEdit;
+                    submitButton.parentNode.insertBefore(cancelButton, submitButton.nextSibling);
+                }
+                
+                // Scroll al formulario
+                document.getElementById('bulletin-creator').scrollIntoView({ behavior: 'smooth' });
+                
+                // Mostrar mensaje de modo edición
+                const resultDiv = document.getElementById('creation-result');
+                resultDiv.className = 'mt-4 block';
+                resultDiv.innerHTML = `
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <p class="text-blue-800 font-semibold">✏️ Modo de edición activado</p>
+                        <p class="text-blue-600 text-sm mt-1">Editando boletín ID: ${id}</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                alert('Error al cargar el boletín para edición: ' + error.message);
+            }
+        }
+        
+        function cancelEdit() {
+            // Limpiar formulario
+            document.getElementById('bulletin-form').reset();
+            
+            // Remover campo hidden de ID
+            const hiddenId = document.getElementById('edit-id');
+            if (hiddenId) {
+                hiddenId.remove();
+            }
+            
+            // Restaurar botón submit
+            const submitButton = document.querySelector('#bulletin-form button[type="submit"]');
+            submitButton.innerHTML = '💾 Crear Boletín';
+            submitButton.className = 'bg-clúster-red text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors';
+            
+            // Remover botón cancelar
+            const cancelButton = document.getElementById('cancel-edit');
+            if (cancelButton) {
+                cancelButton.remove();
+            }
+            
+            // Limpiar mensaje de resultado
+            document.getElementById('creation-result').className = 'mt-4 hidden';
+        }
+        
+        // === FUNCIONES PARA ELIMINACIÓN DE BOLETINES ===
+        
+        async function deleteBulletin(id, title) {
+            if (!confirm(`¿Estás seguro de que quieres eliminar el boletín "${title}"?\n\nEsta acción no se puede deshacer.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('./api/boletines_simple.php', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: id })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Mostrar mensaje de éxito
+                    const listDiv = document.getElementById('bulletins-list');
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'bg-green-50 border border-green-200 rounded-lg p-4 mb-4';
+                    successMessage.innerHTML = `
+                        <p class="text-green-800 font-semibold">✅ Boletín eliminado correctamente</p>
+                        <p class="text-green-600 text-sm mt-1">"${title}" ha sido eliminado de la base de datos</p>
+                    `;
+                    listDiv.insertBefore(successMessage, listDiv.firstChild);
+                    
+                    // Remover mensaje después de 3 segundos
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 3000);
+                    
+                    // Recargar lista
+                    loadBulletins();
+                } else {
+                    alert('Error al eliminar el boletín: ' + (result.message || 'Error desconocido'));
+                }
+            } catch (error) {
+                alert('Error de conexión al eliminar el boletín: ' + error.message);
+            }
+        }
+        
+        function createBulletinCard(bulletin) {
+            const fechaCreacion = new Date(bulletin.fecha_creacion).toLocaleString('es-MX');
+            const estadoConfig = {
+                'publicado': { class: 'bg-green-100 text-green-800', icon: '✅' },
+                'borrador': { class: 'bg-yellow-100 text-yellow-800', icon: '🏗️' },
+                'archivado': { class: 'bg-gray-100 text-gray-800', icon: '📁' }
+            };
+            const estado = estadoConfig[bulletin.estado] || estadoConfig['borrador'];
+
+            const attachmentHTML = bulletin.archivo_adjunto ? `
+                <button onclick="viewDocument('${bulletin.archivo_adjunto}', '${bulletin.titulo.replace(/'/g, "\'").replace(/"/g, '&quot;')}')"
+                        class="text-blue-600 hover:text-blue-800 text-sm">
+                    <i class="fas fa-paperclip mr-1"></i>${getFileIcon(bulletin.archivo_adjunto)} Ver archivo
+                </button>
+            ` : '<span class="text-gray-500 text-sm">Sin archivo adjunto</span>';
+
+            return `
+                <div class="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">${bulletin.titulo}</h3>
+                            <p class="text-gray-600 text-sm line-clamp-2">${bulletin.contenido}</p>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${estado.class} ml-3">
+                            ${estado.icon} ${bulletin.estado.charAt(0).toUpperCase() + bulletin.estado.slice(1)}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-sm text-gray-500 mb-3">
+                        <div class="flex items-center space-x-4">
+                            <span><i class="fas fa-calendar mr-1"></i>${fechaCreacion}</span>
+                            <span><i class="fas fa-eye mr-1"></i>${bulletin.visualizaciones || 0}</span>
+                        </div>
+                        <span class="text-xs">#${bulletin.id}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-3 border-t">
+                        <div class="flex-1">
+                            ${attachmentHTML}
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="showEditModal(${JSON.stringify(bulletin).replace(/"/g, '&quot;')})"
+                                    class="px-3 py-1 bg-yellow-600 text-white rounded text-xs hover:bg-yellow-700 transition-colors">
+                                <i class="fas fa-edit mr-1"></i>Editar
+                            </button>
+                            <button onclick="deleteBulletin(${bulletin.id}, '${bulletin.titulo.replace(/'/g, "\\'")}')"
+                                    class="px-3 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors">
+                                <i class="fas fa-trash mr-1"></i>Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // === FUNCIONES PARA ELIMINAR BOLETINES ===
+
+        async function deleteBulletin(id, title) {
+            if (!confirm(`¿Estás seguro de que deseas eliminar el boletín "${title}"?\n\nEsta acción no se puede deshacer.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('./api/boletines_simple.php', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: id })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Recargar lista y estadísticas
+                    loadBulletins();
+                    updateStatistics();
+
+                    // Mostrar notificación temporal
+                    showNotification('Boletín eliminado correctamente', 'success');
+                } else {
+                    showNotification('Error al eliminar el boletín: ' + (result.message || 'Error desconocido'), 'error');
+                }
+            } catch (error) {
+                showNotification('Error de conexión al eliminar el boletín: ' + error.message, 'error');
+            }
+        }
+
+        // Función para mostrar notificaciones
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+                type === 'success' ? 'bg-green-500 text-white' :
+                type === 'error' ? 'bg-red-500 text-white' :
+                type === 'warning' ? 'bg-yellow-500 text-white' :
+                'bg-blue-500 text-white'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <span class="mr-2">${
+                        type === 'success' ? '✅' :
+                        type === 'error' ? '❌' :
+                        type === 'warning' ? '⚠️' : 'ℹ️'
+                    }</span>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // === FUNCIONES PARA VISUALIZACIÓN DE DOCUMENTOS ===
+        
+        async function viewDocument(filename, title) {
+            const viewerSection = document.getElementById('document-viewer');
+            const contentDiv = document.getElementById('document-content');
+            
+            // Mostrar visor
+            viewerSection.classList.remove('hidden');
+            contentDiv.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-2">🔄</div><p>Cargando documento...</p></div>';
+            
+            // Scroll al visor
+            viewerSection.scrollIntoView({ behavior: 'smooth' });
+            
+            try {
+                const fileExtension = filename.split('.').pop().toLowerCase();
+                const filePath = `./uploads/${filename}`;
+                
+                let viewerHTML = '';
+                
+                switch (fileExtension) {
+                    case 'pdf':
+                        viewerHTML = `<iframe src="${filePath}" class="w-full h-96 border rounded" title="${title}"></iframe>`;
+                        break;
+                        
+                    case 'jpg':
+                    case 'jpeg':
+                    case 'png':
+                    case 'gif':
+                    case 'webp':
+                        viewerHTML = `<img src="${filePath}" alt="${title}" class="max-w-full h-auto mx-auto rounded shadow">`;
+                        break;
+                        
+                    case 'mp4':
+                    case 'webm':
+                    case 'ogg':
+                        viewerHTML = `
+                            <video controls class="max-w-full h-auto mx-auto rounded shadow">
+                                <source src="${filePath}" type="video/${fileExtension}">
+                                Tu navegador no soporta el elemento video.
+                            </video>
+                        `;
+                        break;
+                        
+                    case 'mp3':
+                    case 'wav':
+                    case 'ogg':
+                        viewerHTML = `
+                            <audio controls class="w-full">
+                                <source src="${filePath}" type="audio/${fileExtension}">
+                                Tu navegador no soporta el elemento audio.
+                            </audio>
+                        `;
+                        break;
+                        
+                    case 'txt':
+                    case 'csv':
+                        const textResponse = await fetch(filePath);
+                        const textContent = await textResponse.text();
+                        viewerHTML = `<pre class="whitespace-pre-wrap bg-gray-100 p-4 rounded border text-sm">${textContent}</pre>`;
+                        break;
+                        
+                    case 'doc':
+                    case 'docx':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'ppt':
+                    case 'pptx':
+                        viewerHTML = `
+                            <div class="text-center py-8">
+                                <div class="text-6xl mb-4">${getFileIcon(filename)}</div>
+                                <h3 class="text-xl font-semibold mb-2">${title}</h3>
+                                <p class="text-gray-600 mb-4">Archivo de ${fileExtension.toUpperCase()}</p>
+                                <a href="${filePath}" download class="bg-clúster-red text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                                    📥 Descargar archivo
+                                </a>
+                                <div class="mt-4 text-sm text-gray-500">
+                                    <p>Este tipo de archivo requiere una aplicación externa para visualizarse completamente.</p>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    default:
+                        viewerHTML = `
+                            <div class="text-center py-8">
+                                <div class="text-6xl mb-4">📄</div>
+                                <h3 class="text-xl font-semibold mb-2">${title}</h3>
+                                <p class="text-gray-600 mb-4">Formato: ${fileExtension.toUpperCase()}</p>
+                                <a href="${filePath}" download class="bg-clúster-red text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                                    📥 Descargar archivo
+                                </a>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                contentDiv.innerHTML = viewerHTML;
+                
+            } catch (error) {
+                contentDiv.innerHTML = `
+                    <div class="text-center py-8 text-red-500">
+                        <div class="text-4xl mb-2">❌</div>
+                        <p>Error al cargar el documento</p>
+                        <p class="text-sm mt-2">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function closeDocumentViewer() {
+            document.getElementById('document-viewer').classList.add('hidden');
+        }
+        
+        function getFileIcon(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            const icons = {
+                pdf: '📄',
+                doc: '📝', docx: '📝',
+                xls: '📊', xlsx: '📊',
+                ppt: '📽️', pptx: '📽️',
+                txt: '📄',
+                csv: '📊',
+                jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', webp: '🖼️',
+                mp4: '🎥', webm: '🎥', ogg: '🎥',
+                mp3: '🎵', wav: '🎵'
+            };
+            return icons[extension] || '📎';
+        }
+
+        // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize existing functionality
+            console.log('🚀 Demo del Sistema de Boletines cargado');
+            checkSystemStatus();
+            updateStatistics();
+
+            // Initialize sidebar functionality
+            setTimeout(initializeSidebar, 100); // Pequeño delay para asegurar que el DOM esté listo
+
+            // Configurar formulario de creación
+            const form = document.getElementById('bulletin-form');
+            if (form) {
+                form.addEventListener('submit', handleBulletinSubmit);
+            }
+        });
+
+        function initializeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+
+            console.log('Sidebar elements:', {
+                sidebar: !!sidebar,
+                overlay: !!overlay,
+                hamburgerBtn: !!hamburgerBtn,
+                closeBtn: !!closeBtn,
+                screenWidth: window.innerWidth,
+                isDesktop: window.innerWidth >= 1280
+            });
+
+            // Log computed styles for debugging
+            if (sidebar) {
+                const styles = window.getComputedStyle(sidebar);
+                console.log('Sidebar computed styles:', {
+                    display: styles.display,
+                    transform: styles.transform,
+                    left: styles.left,
+                    position: styles.position,
+                    zIndex: styles.zIndex
+                });
+            }
+
+            if (!sidebar || !overlay || !hamburgerBtn) {
+                console.error('Sidebar elements not found:', {
+                    sidebar: !!sidebar,
+                    overlay: !!overlay,
+                    hamburgerBtn: !!hamburgerBtn
+                });
+                return;
+            }
+
+            // Toggle sidebar function
+            function toggleSidebar(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                const isVisible = sidebar.classList.contains('sidenav-show');
+                console.log('Toggle sidebar - currently visible:', isVisible);
+
+                if (!isVisible) {
+                    // Open sidebar
+                    console.log('Opening sidebar');
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+
+                    // Focus management for accessibility
+                    const firstLink = sidebar.querySelector('.porsche-nav-item');
+                    if (firstLink) {
+                        setTimeout(() => firstLink.focus(), 100);
+                    }
+                } else {
+                    // Close sidebar
+                    console.log('Closing sidebar');
+                    closeSidebarInternal();
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebarInternal() {
+                console.log('Executing closeSidebarInternal');
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+
+                // Return focus to hamburger button
+                if (hamburgerBtn) {
+                    hamburgerBtn.focus();
+                }
+            }
+
+            // Event listeners
+            console.log('Adding click event to hamburger button');
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+
+            hamburgerBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar(e);
+            }, { passive: false });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebarInternal);
+                overlay.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+            });
+
+            // Handle window resize - Keep sidebar closed on all screen sizes
+            window.addEventListener('resize', function() {
+                // Optional: could add logic here if needed
+            });
+
+            // Swipe to close functionality
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            sidebar.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const diffX = touchStartX - currentX;
+                const diffY = Math.abs(touchStartY - currentY);
+
+                // Swipe left to close
+                if (diffX > 50 && diffY < 100) {
+                    closeSidebarInternal();
+                    touchStartX = 0;
+                    touchStartY = 0;
+                }
+            }, { passive: true });
+
+            // Keyboard navigation in sidebar
+            sidebar.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+
+                // Arrow navigation
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                    const currentIndex = navItems.indexOf(document.activeElement);
+
+                    if (e.key === 'ArrowDown') {
+                        const nextIndex = (currentIndex + 1) % navItems.length;
+                        navItems[nextIndex].focus();
+                    } else {
+                        const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                        navItems[prevIndex].focus();
+                    }
+                }
+            });
+
+            console.log('✅ Sidebar functionality initialized successfully');
+        }
+
+        // Legacy function compatibility
+        function closeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+
+            if (sidebar && overlay) {
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+
+    <!-- Auth Session Script -->
+    <script src="./js/auth-session.js"></script>
+</body>
+</html>

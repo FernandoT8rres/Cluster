@@ -1,0 +1,49 @@
+# Claut Intranet - Git Ignore
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Rate limiting data
+/tmp/rate_limits/
+
+# Backups
+*.backup
+*.bak
+*.old
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/local.db
+
+# Uploads (opcional - descomentar si no quieres subir uploads)
+# uploads/
+
+# Node modules (si usas npm)
+node_modules/
+
+# Composer (si usas composer)
+vendor/

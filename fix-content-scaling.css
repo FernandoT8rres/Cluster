@@ -1,0 +1,37 @@
+/* CSS Fix para evitar que el contenido se "agrande" por animaciones GSAP */
+
+/* Desactivar transformaciones en contenedores principales */
+.max-w-7xl.mx-auto,
+.max-w-7xl .px-6,
+.max-w-7xl .lg\:px-8 {
+  transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
+/* Estabilizar elementos que tienen animaciones */
+.apple-card,
+.claut-card,
+.stats-option {
+  transform-origin: center center !important;
+  backface-visibility: hidden !important;
+  will-change: opacity, transform !important;
+}
+
+/* Prevenir scaling no deseado en contenedores flexbox */
+.flex.flex-wrap.max-w-7xl,
+.w-full.max-w-full.px-3 {
+  transform: none !important;
+  scale: none !important;
+}
+
+/* Override para elementos que pueden tener conflictos */
+.apple-space-responsive {
+  transform: none !important;
+  transition-property: opacity !important;
+}
+
+/* Asegurar que no hay overflow por escalado */
+.max-w-7xl {
+  overflow-x: hidden !important;
+}

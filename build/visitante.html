@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+  <title>Portal Visitante - Claut Intranet</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Estilos personalizados para visitante */
+    .visitante-card {
+      background: #C7252B;
+      border-radius: 20px;
+      padding: 2rem;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .visitante-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .nav-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-3px);
+      border-color: #C7252B;
+      box-shadow: 0 10px 30px rgba(199, 37, 43, 0.2);
+    }
+
+    .nav-card i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #C7252B;
+    }
+
+    .header-visitante {
+      background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);
+      color: white;
+    }
+
+    .btn-salir {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-salir:hover {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+
+<body class="m-0 font-sans text-base antialiased font-normal leading-default bg-gray-50 text-slate-500">
+  <!-- Header -->
+  <header class="header-visitante shadow-lg">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <img src="./assets/img/apple-icon.png" alt="Logo" class="w-10 h-10 mr-3">
+          <div>
+            <h1 class="text-white text-2xl font-bold">Portal Visitante</h1>
+            <p class="text-red-200 text-sm">Acceso público a información</p>
+          </div>
+        </div>
+        <button onclick="salirModoVisitante()" class="btn-salir">
+          <i class="fas fa-sign-out-alt mr-2"></i>
+          Salir
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <div class="container mx-auto px-6 py-8">
+    <!-- Bienvenida -->
+    <div class="visitante-card mb-8">
+      <div class="text-center">
+        <i class="fas fa-eye text-4xl mb-4 opacity-80"></i>
+        <h2 class="text-white text-3xl font-bold mb-2">¡Bienvenido Visitante!</h2>
+        <p class="text-lg opacity-90">
+          Explora la información pública disponible. Tienes acceso de solo lectura a las siguientes secciones.
+        </p>
+      </div>
+    </div>
+
+    <!-- Navegación de Secciones -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="navegacionVisitante">
+      <!-- Las secciones se cargarán dinámicamente -->
+    </div>
+
+    <!-- Información Adicional -->
+    <div class="mt-8 text-center">
+      <div class="bg-white rounded-lg p-6 shadow-md">
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">Información Importante</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+          <div>
+            <i class="fas fa-eye text-blue-500 mb-2"></i>
+            <p><strong>Solo Lectura:</strong> Puedes visualizar información pero no modificarla</p>
+          </div>
+          <div>
+            <i class="fas fa-shield-alt text-green-500 mb-2"></i>
+            <p><strong>Acceso Limitado:</strong> Solo secciones públicas disponibles</p>
+          </div>
+          <div>
+            <i class="fas fa-user-plus text-orange-500 mb-2"></i>
+            <p><strong>¿Necesitas más acceso?</strong> <a href="./pages/sign-up.html" class="text-blue-500">Regístrate aquí</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-lg mt-12">
+    <div class="container mx-auto px-6 py-4">
+      <div class="text-center text-gray-600">
+        <p>© <span id="currentYear"></span> Clúster Metropolitano. Portal Visitante.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Configuración de páginas permitidas para visitantes - ACTUALIZADO con páginas finales de BD
+    const paginasPermitidas = [
+      {
+        id: 'empresas',
+        titulo: 'Empresas',
+        descripcion: 'Directorio de empresas con convenios',
+        icono: 'fas fa-handshake',
+        url: './visitante-empresas-final.html',
+        activo: true
+      },
+      {
+        id: 'boletines',
+        titulo: 'Boletines',
+        descripcion: 'Boletines informativos públicos',
+        icono: 'fas fa-newspaper',
+        url: './visitante-boletines-final.html',
+        activo: true
+      },
+      {
+        id: 'eventos',
+        titulo: 'Eventos',
+        descripcion: 'Calendario de eventos públicos',
+        icono: 'fas fa-calendar-alt',
+        url: './visitante-eventos-final.html',
+        activo: true
+      },
+      {
+        id: 'documentacion',
+        titulo: 'Documentación',
+        descripcion: 'Centro de documentación pública',
+        icono: 'fas fa-file-alt',
+        url: './visitante-documentacion-final.html',
+        activo: true
+      }
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificar si el usuario está en modo visitante
+      if (!localStorage.getItem('visitante_mode')) {
+        console.log('❌ Acceso no autorizado al portal visitante');
+        window.location.href = './pages/sign-in.html';
+        return;
+      }
+
+      console.log('✅ Acceso autorizado al portal visitante');
+
+      // Configurar año actual
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+      // Cargar navegación
+      cargarNavegacionVisitante();
+
+      // Cargar configuración desde el servidor (si existe)
+      cargarConfiguracionVisitante();
+    });
+
+    function cargarNavegacionVisitante() {
+      const navegacion = document.getElementById('navegacionVisitante');
+
+      const html = paginasPermitidas.filter(pagina => pagina.activo).map(pagina => `
+        <div class="nav-card" onclick="navegarA('${pagina.url}', '${pagina.titulo}')">
+          <i class="${pagina.icono}"></i>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">${pagina.titulo}</h3>
+          <p class="text-gray-600">${pagina.descripcion}</p>
+          <div class="mt-4">
+            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+              <i class="fas fa-database mr-1"></i>Datos Reales
+            </span>
+          </div>
+        </div>
+      `).join('');
+
+      navegacion.innerHTML = html;
+    }
+
+    async function cargarConfiguracionVisitante() {
+      try {
+        // Intentar cargar configuración desde el servidor
+        const response = await fetch('./api/visitante-config.php');
+        if (response.ok) {
+          const config = await response.json();
+          if (config.success && config.paginas) {
+            // Actualizar configuración con datos del servidor
+            console.log('📋 Configuración cargada desde servidor');
+            actualizarConfiguracion(config.paginas);
+          }
+        }
+      } catch (error) {
+        console.log('📋 Usando configuración por defecto con páginas finales de BD');
+      }
+    }
+
+    function actualizarConfiguracion(nuevaConfig) {
+      // Actualizar configuración de páginas
+      nuevaConfig.forEach(pagina => {
+        const index = paginasPermitidas.findIndex(p => p.id === pagina.id);
+        if (index !== -1) {
+          paginasPermitidas[index].activo = pagina.activo;
+        }
+      });
+
+      // Recargar navegación
+      cargarNavegacionVisitante();
+    }
+
+    function navegarA(url, titulo) {
+      console.log(`🔗 Navegando a: ${titulo} (${url})`);
+
+      // Navegar directamente a las páginas finales de visitante con BD
+      window.location.href = url;
+    }
+
+    function salirModoVisitante() {
+      console.log('🚪 Saliendo del modo visitante');
+
+      // Limpiar localStorage
+      localStorage.removeItem('visitante_mode');
+      localStorage.removeItem('visitante_timestamp');
+
+      // Redirigir al login
+      window.location.href = './pages/sign-in.html';
+    }
+
+    // Verificar sesión cada 30 minutos
+    setInterval(() => {
+      const timestamp = localStorage.getItem('visitante_timestamp');
+      if (timestamp) {
+        const tiempoTranscurrido = Date.now() - parseInt(timestamp);
+        const dosHoras = 2 * 60 * 60 * 1000; // 2 horas en milisegundos
+
+        if (tiempoTranscurrido > dosHoras) {
+          console.log('⏰ Sesión de visitante expirada');
+          salirModoVisitante();
+        }
+      }
+    }, 30 * 60 * 1000); // Verificar cada 30 minutos
+  </script>
+</body>
+</html>

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Documentos - CRUD Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal-backdrop { backdrop-filter: blur(5px); }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-radius-lg: 12px;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            font-family: var(--porsche-font) !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: 700 !important;
+            font-size: 1.5rem !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: var(--porsche-white) !important;
+            border-left: 3px solid #C7252B !important;
+        }
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Sidebar always retractable - All screens */
+        .porsche-sidebar {
+            transform: translateX(-100%) !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0 !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            position: fixed !important;
+            display: block !important;
+        }
+
+        .porsche-sidebar.sidenav-show {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content always without sidebar margin */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .container {
+            margin-left: 0 !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1280px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Force sidebar behavior on all screens - Override any conflicting styles */
+        .porsche-sidebar.sidebar-enhanced {
+            transform: translateX(-100%) !important;
+        }
+
+        .porsche-sidebar.sidebar-enhanced.sidenav-show {
+            transform: translateX(0) !important;
+        }
+
+        /* Override any Tailwind classes that might interfere */
+        aside.porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure hamburger button works on all screens */
+        @media (min-width: 1280px) {
+            [sidenav-trigger] {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Enhanced sidebar behavior for desktop */
+        @media (min-width: 1280px) {
+            .sidebar-enhanced {
+                transform: translateX(0) !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* Responsive grid adjustments */
+        @media (max-width: 768px) {
+            header .flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            header .flex.items-center.space-x-4 {
+                margin-top: 1rem !important;
+                align-self: flex-end !important;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .overflow-x-auto table {
+                font-size: 0.75rem !important;
+            }
+
+            .overflow-x-auto th,
+            .overflow-x-auto td {
+                padding: 0.5rem !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .porsche-sidebar {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            header .container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .flex.flex-wrap {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .flex.items-center.space-x-4 {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                space-x: 0 !important;
+                gap: 0.5rem !important;
+            }
+
+            .flex.items-center.space-x-4 > * {
+                margin: 0 !important;
+            }
+
+            .grid-cols-1 {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Ensure proper z-index hierarchy */
+        .porsche-sidebar {
+            z-index: 999 !important;
+        }
+
+        .sidenav-overlay {
+            z-index: 998 !important;
+        }
+
+        header {
+            z-index: 997 !important;
+        }
+
+        .main-content {
+            z-index: 1 !important;
+        }
+
+        /* Hamburger button styling */
+        .hamburger-btn {
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Responsive table improvements */
+        @media (max-width: 768px) {
+            .overflow-x-auto {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- Porsche Sidebar -->
+    <aside id="porscheSidebar"
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-48 py-6 relative mb-4">
+            <!-- Botón de cerrar para todas las pantallas -->
+            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                    id="sidebarCloseBtn"
+                    sidenav-close
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
+              target="_blank">
+                <img src="../assets/img/apple-icon.png"
+                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                  alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+            </a>
+        </div>
+
+        <hr class="h-px mt-4 mb-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0 pt-4">
+                <!-- Dashboard -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- admin panel -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin-panel.html?login=success">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                    </a>
+                </li>
+
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_usuarios.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_evento.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar-alt text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+
+                <!-- Boletines -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_boletines.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-newspaper text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
+                    </a>
+                </li>
+
+                <!-- Documentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg active"
+                        href="demo_documentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-file-alt text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Documentos</span>
+                    </a>
+                </li>
+
+                <!-- Banners -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin/banner-admin-mejorado.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-images text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Banners</span>
+                    </a>
+                </li>
+
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_descuentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+
+                <!-- Perfil -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="profile.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-user-cog text-gray-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mx-4">
+            <button onclick="window.location.href='pages/sign-in.html'"
+                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
+                <div
+                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
+                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                </div>
+                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Header -->
+    <header class="main-content bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- Hamburger Menu Button for All Screens -->
+                    <button class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
+                            id="hamburgerBtn"
+                            sidenav-trigger
+                            aria-label="Abrir menú de navegación">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold">📄 Administrador de Documentos</h1>
+                        <p class="text-red-200 mt-1">CRUD Completo - Base de Datos</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userInfo" class="text-sm"></span>
+                    <button onclick="location.href='boletines.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-arrow-left mr-2"></i>Volver a Documentación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Estadísticas -->
+    <div class="main-content container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Documentos</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalDocumentos">0</p>
+                    </div>
+                    <i class="fas fa-file-alt text-3xl text-purple-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Públicos</p>
+                        <p class="text-2xl font-bold text-blue-600" id="publicosDocumentos">0</p>
+                    </div>
+                    <i class="fas fa-globe text-3xl text-blue-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Privados</p>
+                        <p class="text-2xl font-bold text-green-600" id="privadosDocumentos">0</p>
+                    </div>
+                    <i class="fas fa-lock text-3xl text-green-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Categorías</p>
+                        <p class="text-2xl font-bold text-orange-600" id="totalCategorias">0</p>
+                    </div>
+                    <i class="fas fa-tags text-3xl text-orange-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <button onclick="showCreateModal()" class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                        <i class="fas fa-plus mr-2"></i>Crear Documento
+                    </button>
+                    <button onclick="reloadDocuments()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="searchInput" placeholder="Buscar documentos..."
+                           class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+
+                    <select id="filterCategoria" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Todas las categorías</option>
+                        <option value="politicas">Políticas</option>
+                        <option value="procedimientos">Procedimientos</option>
+                        <option value="manuales">Manuales</option>
+                        <option value="reglamentos">Reglamentos</option>
+                        <option value="formatos">Formatos</option>
+                    </select>
+
+                    <select id="filterVisibilidad" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Todas las visibilidades</option>
+                        <option value="publico">Público</option>
+                        <option value="privado">Privado</option>
+                        <option value="restringido">Restringido</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Documentos -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b">
+                <h2 class="text-xl font-semibold text-gray-800">Lista de Documentos</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documento</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visibilidad</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Autor</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Los documentos se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingDocuments" class="text-center py-8" style="display: none;">
+            <i class="fas fa-spinner fa-spin text-3xl mb-4" style="color: #C7252B;"></i>
+            <p class="text-gray-600">Cargando documentos...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyDocuments" class="text-center py-12" style="display: none;">
+            <i class="fas fa-file-alt text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-600 mb-2">No hay documentos</h3>
+            <p class="text-gray-500 mb-4">Crea tu primer documento para comenzar</p>
+            <button onclick="showCreateModal()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition">
+                <i class="fas fa-plus mr-2"></i>Crear Documento
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para Crear/Editar Documento -->
+    <div id="documentModal" class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden z-50">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full slide-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold" id="modalTitle">Crear Documento</h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <form id="documentForm">
+                        <input type="hidden" id="documentId">
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Título *</label>
+                            <input type="text" id="titulo" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                            <textarea id="descripcion" rows="3"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Categoría *</label>
+                            <select id="categoria" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="">Seleccionar categoría</option>
+                                <option value="politicas">Políticas</option>
+                                <option value="procedimientos">Procedimientos</option>
+                                <option value="manuales">Manuales</option>
+                                <option value="reglamentos">Reglamentos</option>
+                                <option value="formatos">Formatos</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Visibilidad *</label>
+                            <select id="visibilidad" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="">Seleccionar visibilidad</option>
+                                <option value="publico">Público</option>
+                                <option value="privado">Privado</option>
+                                <option value="restringido">Restringido</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2" id="archivoLabel">Archivo *</label>
+                            <input type="file" id="archivo" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.gif"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                   onchange="updateFileSelection()">
+                            <p class="text-xs text-gray-500 mt-1" id="archivoHelp">Formatos permitidos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, imágenes. Máximo 50MB.</p>
+                        </div>
+
+                        <div class="mb-6" id="archivoActual" style="display: none;">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Archivo Actual</label>
+                            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                <i class="fas fa-file"></i>
+                                <span id="archivoActualNombre"></span>
+                                <span id="archivoActualTamaño" class="text-gray-400"></span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeModal()"
+                                    class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                                Cancelar
+                            </button>
+                            <button type="button" onclick="handleSaveClick(event)"
+                                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                <i class="fas fa-save mr-2"></i>Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        let documents = [];
+        let editingId = null;
+
+        // Cargar documentos al iniciar
+        // Note: DOMContentLoaded is handled in the sidebar section
+
+        function setupEventListeners() {
+            // Búsqueda en tiempo real
+            document.getElementById('searchInput').addEventListener('input', filterDocuments);
+            document.getElementById('filterCategoria').addEventListener('change', filterDocuments);
+            document.getElementById('filterVisibilidad').addEventListener('change', filterDocuments);
+
+            // Form submit
+            document.getElementById('documentForm').addEventListener('submit', saveDocument);
+        }
+
+        async function loadDocuments() {
+            showLoading(true);
+            try {
+                const response = await fetch('./api/documentos.php');
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('📋 API Response completa:', result);
+                    documents = result.data || [];
+                    console.log('📚 Documents cargados:', documents.length, 'documentos');
+                } else {
+                    console.error('Error en API:', response.status);
+                    showError('Error al cargar documentos desde el servidor');
+                    documents = [];
+                }
+
+                updateStatistics();
+                renderDocuments();
+
+            } catch (error) {
+                console.error('Error cargando documentos:', error);
+                showError('Error de conexión al cargar los documentos');
+                documents = [];
+                updateStatistics();
+                renderDocuments();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function updateStatistics() {
+            console.log('📊 updateStatistics() iniciado');
+            const total = documents.length;
+            const publicos = documents.filter(d => d.visibilidad === 'publico').length;
+            const privados = documents.filter(d => d.visibilidad === 'privado').length;
+            const categorias = new Set(documents.map(d => d.categoria)).size;
+
+            console.log('📈 Estadísticas:', { total, publicos, privados, categorias });
+
+            document.getElementById('totalDocumentos').textContent = total;
+            document.getElementById('publicosDocumentos').textContent = publicos;
+            document.getElementById('privadosDocumentos').textContent = privados;
+            document.getElementById('totalCategorias').textContent = categorias;
+            console.log('✅ updateStatistics() completado');
+        }
+
+        function renderDocuments(filteredDocuments = null) {
+            console.log('🎨 renderDocuments() iniciado');
+            const documentsToRender = filteredDocuments || documents;
+            console.log('📄 Documentos a renderizar:', documentsToRender.length);
+            const tbody = document.getElementById('documentsTableBody');
+            console.log('🎯 tbody element:', tbody ? 'ENCONTRADO' : 'NO ENCONTRADO');
+
+            if (documentsToRender.length === 0) {
+                console.log('📭 No hay documentos, mostrando estado vacío');
+                document.getElementById('emptyDocuments').style.display = 'block';
+                tbody.innerHTML = '';
+                return;
+            }
+
+            console.log('📋 Hay documentos, ocultando estado vacío y renderizando tabla');
+            document.getElementById('emptyDocuments').style.display = 'none';
+
+            tbody.innerHTML = documentsToRender.map(doc => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">${doc.titulo}</div>
+                            <div class="text-sm text-gray-500">${doc.descripcion || 'Sin descripción'}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(doc.categoria)}">
+                            ${formatCategory(doc.categoria)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${getVisibilityColor(doc.visibilidad)}">
+                            ${formatVisibility(doc.visibilidad)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                        ${formatDate(doc.fecha_subida)}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                        ${doc.subido_por || 'Usuario'}
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium">
+                        <div class="flex space-x-2">
+                            <button onclick="editDocument(${doc.id})"
+                                    class="text-indigo-600 hover:text-indigo-900">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteDocument(${doc.id})"
+                                    class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            ${doc.archivo_ruta ? `
+                                <a href="${doc.archivo_ruta}" target="_blank"
+                                   class="text-green-600 hover:text-green-900" title="Descargar ${doc.archivo_nombre}">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            console.log('✅ renderDocuments() completado - DOM actualizado');
+        }
+
+        function filterDocuments() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const categoria = document.getElementById('filterCategoria').value;
+            const visibilidad = document.getElementById('filterVisibilidad').value;
+
+            const filtered = documents.filter(doc => {
+                const matchesSearch = doc.titulo.toLowerCase().includes(search) ||
+                                    (doc.descripcion && doc.descripcion.toLowerCase().includes(search)) ||
+                                    (doc.archivo_nombre && doc.archivo_nombre.toLowerCase().includes(search));
+                const matchesCategoria = !categoria || doc.categoria === categoria;
+                const matchesVisibilidad = !visibilidad || doc.visibilidad === visibilidad;
+
+                return matchesSearch && matchesCategoria && matchesVisibilidad;
+            });
+
+            renderDocuments(filtered);
+        }
+
+        function showCreateModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Crear Documento';
+            document.getElementById('documentForm').reset();
+
+            // Limpiar explícitamente el campo hidden del ID
+            document.getElementById('documentId').value = '';
+
+            // Para documentos nuevos, el archivo es requerido
+            document.getElementById('archivo').setAttribute('required', 'required');
+            document.getElementById('archivoActual').style.display = 'none';
+            document.getElementById('archivoLabel').textContent = 'Archivo *';
+            document.getElementById('archivoHelp').textContent = 'Formatos permitidos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, imágenes. Máximo 50MB.';
+
+            document.getElementById('documentModal').classList.remove('hidden');
+        }
+
+        function editDocument(id) {
+            const doc = documents.find(d => d.id === id);
+            if (!doc) return;
+
+            editingId = id;
+            document.getElementById('modalTitle').textContent = 'Editar Documento';
+            document.getElementById('documentId').value = doc.id;
+            document.getElementById('titulo').value = doc.titulo;
+            document.getElementById('descripcion').value = doc.descripcion || '';
+            document.getElementById('categoria').value = doc.categoria;
+            document.getElementById('visibilidad').value = doc.visibilidad;
+
+            // Mostrar archivo actual si existe
+            if (doc.archivo_nombre) {
+                document.getElementById('archivoActual').style.display = 'block';
+                document.getElementById('archivoActualNombre').textContent = doc.archivo_nombre;
+                document.getElementById('archivoActualTamaño').textContent = `(${formatFileSize(doc.tamaño_archivo)})`;
+                document.getElementById('archivo').removeAttribute('required');
+                document.getElementById('archivoLabel').textContent = 'Nuevo Archivo (opcional)';
+                document.getElementById('archivoHelp').textContent = 'Selecciona un nuevo archivo solo si quieres reemplazar el actual. Formatos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, imágenes.';
+            } else {
+                document.getElementById('archivoActual').style.display = 'none';
+                document.getElementById('archivo').setAttribute('required', 'required');
+                document.getElementById('archivoLabel').textContent = 'Archivo *';
+                document.getElementById('archivoHelp').textContent = 'Formatos permitidos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, imágenes. Máximo 50MB.';
+            }
+
+            document.getElementById('documentModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('documentModal').classList.add('hidden');
+            editingId = null;
+        }
+
+        function handleSaveClick(event) {
+            console.log('=== HANDLE SAVE CLICK ===');
+            console.log('Event:', event);
+            console.log('EditingId global:', editingId);
+            console.log('Modal title:', document.getElementById('modalTitle').textContent);
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Verificar que tenemos editingId
+            if (!editingId) {
+                console.error('EditingId está perdido!');
+                // Intentar recuperarlo del campo hidden
+                const hiddenId = document.getElementById('documentId').value;
+                if (hiddenId) {
+                    editingId = parseInt(hiddenId);
+                    console.log('EditingId recuperado del campo hidden:', editingId);
+                }
+            }
+
+            // Llamar directamente a saveDocument
+            const fakeEvent = {
+                preventDefault: () => {},
+                target: document.getElementById('documentForm')
+            };
+
+            saveDocument(fakeEvent);
+        }
+
+        async function saveDocument(e) {
+            e.preventDefault();
+
+            console.log('=== SAVE DOCUMENT INICIADO ===');
+            console.log('Event:', e);
+            console.log('EditingId:', editingId);
+            console.log('Form válido:', e.target.checkValidity());
+
+            // Verificar campos requeridos manualmente
+            const titulo = document.getElementById('titulo').value.trim();
+            const categoria = document.getElementById('categoria').value;
+            const visibilidad = document.getElementById('visibilidad').value;
+            const archivo = document.getElementById('archivo');
+
+            console.log('Valores del formulario:');
+            console.log('- Titulo:', titulo);
+            console.log('- Categoria:', categoria);
+            console.log('- Visibilidad:', visibilidad);
+            console.log('- Archivo requerido:', archivo.hasAttribute('required'));
+            console.log('- Archivo seleccionado:', archivo.files?.length || 0);
+
+            // Validar campos requeridos
+            if (!titulo) {
+                showError('El título es requerido');
+                showLoading(false);
+                return;
+            }
+
+            if (!categoria) {
+                showError('La categoría es requerida');
+                showLoading(false);
+                return;
+            }
+
+            if (!visibilidad) {
+                showError('La visibilidad es requerida');
+                showLoading(false);
+                return;
+            }
+
+            // Solo validar archivo si es requerido (modo crear)
+            if (archivo.hasAttribute('required') && (!archivo.files || archivo.files.length === 0)) {
+                showError('El archivo es requerido');
+                showLoading(false);
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                if (editingId) {
+                    console.log('Modo edición detectado');
+
+                    // Actualizar documento existente - usar FormData como en crear
+                    const formData = new FormData();
+                    formData.append('id', editingId);
+                    formData.append('titulo', document.getElementById('titulo').value);
+                    formData.append('descripcion', document.getElementById('descripcion').value);
+                    formData.append('categoria', document.getElementById('categoria').value);
+                    formData.append('visibilidad', document.getElementById('visibilidad').value);
+
+                    // Si hay un nuevo archivo seleccionado, incluirlo
+                    const archivoInput = document.getElementById('archivo');
+                    console.log('Archivo input files:', archivoInput.files?.length || 0);
+
+                    if (archivoInput.files && archivoInput.files[0]) {
+                        console.log('Archivo nuevo detectado:', archivoInput.files[0].name);
+                        formData.append('archivo', archivoInput.files[0]);
+                    } else {
+                        console.log('Sin archivo nuevo, solo actualizando metadatos');
+                    }
+
+                    console.log('Enviando petición PUT...');
+
+                    // Usar POST con parámetro especial para updates
+                    formData.append('_method', 'PUT');
+
+                    const response = await fetch('./api/documentos.php', {
+                        method: 'POST',
+                        body: formData // Usar FormData directamente
+                    });
+
+                    console.log('Respuesta recibida, status:', response.status);
+
+                    const result = await response.json();
+                    console.log('Resultado:', result);
+
+                    if (result.success) {
+                        showSuccess('Documento actualizado correctamente');
+                        closeModal();
+                        console.log('🔄 Iniciando recarga de documentos después de actualizar...');
+                        loadDocuments(); // Recargar documentos desde API
+                    } else {
+                        showError(result.message || 'Error al actualizar el documento');
+                    }
+
+                } else {
+                    // Crear nuevo documento con archivo
+                    const archivoInput = document.getElementById('archivo');
+
+                    if (!archivoInput.files[0]) {
+                        showError('⚠️ Debes seleccionar un archivo para crear un documento. Haz click en "Elegir archivo" y selecciona un documento.');
+                        showLoading(false);
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('titulo', document.getElementById('titulo').value);
+                    formData.append('descripcion', document.getElementById('descripcion').value);
+                    formData.append('categoria', document.getElementById('categoria').value);
+                    formData.append('visibilidad', document.getElementById('visibilidad').value);
+                    formData.append('archivo', archivoInput.files[0]);
+                    formData.append('subido_por', 1); // ID del usuario actual
+
+                    const response = await fetch('./api/documentos.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showSuccess('Documento creado correctamente');
+                        closeModal();
+                        console.log('🔄 Iniciando recarga de documentos después de crear...');
+                        loadDocuments(); // Recargar documentos desde API
+                    } else {
+                        showError(result.message || 'Error al crear el documento');
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error guardando documento:', error);
+                console.error('Stack trace:', error.stack);
+                showError('Error de conexión al guardar el documento: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function deleteDocument(id) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este documento?')) return;
+
+            showLoading(true);
+
+            try {
+                const response = await fetch(`./api/documentos.php?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSuccess('Documento eliminado correctamente');
+                    loadDocuments(); // Recargar documentos desde API
+                } else {
+                    showError(result.message || 'Error al eliminar el documento');
+                }
+
+            } catch (error) {
+                console.error('Error eliminando documento:', error);
+                showError('Error de conexión al eliminar el documento');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function reloadDocuments() {
+            loadDocuments();
+        }
+
+        function updateFileSelection() {
+            const fileInput = document.getElementById('archivo');
+            const helpText = document.getElementById('archivoHelp');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const sizeText = formatFileSize(file.size);
+                helpText.textContent = `✅ Archivo seleccionado: ${file.name} (${sizeText})`;
+                helpText.className = 'text-xs text-green-600 mt-1 font-medium';
+            } else {
+                // Restaurar texto original según el contexto
+                if (fileInput.hasAttribute('required')) {
+                    helpText.textContent = 'Formatos permitidos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, imágenes. Máximo 50MB.';
+                    helpText.className = 'text-xs text-gray-500 mt-1';
+                } else {
+                    helpText.textContent = 'Selecciona un nuevo archivo solo si quieres reemplazar el actual. Formatos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, imágenes.';
+                    helpText.className = 'text-xs text-gray-500 mt-1';
+                }
+            }
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            document.getElementById('loadingDocuments').style.display = show ? 'block' : 'none';
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes || bytes === 0) return '0 bytes';
+            if (bytes >= 1073741824) {
+                return (bytes / 1073741824).toFixed(2) + ' GB';
+            } else if (bytes >= 1048576) {
+                return (bytes / 1048576).toFixed(2) + ' MB';
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).toFixed(2) + ' KB';
+            } else {
+                return bytes + ' bytes';
+            }
+        }
+
+        function getCategoryColor(categoria) {
+            const colors = {
+                'politicas': 'bg-red-100 text-red-800',
+                'procedimientos': 'bg-blue-100 text-blue-800',
+                'manuales': 'bg-green-100 text-green-800',
+                'reglamentos': 'bg-yellow-100 text-yellow-800',
+                'formatos': 'bg-purple-100 text-purple-800'
+            };
+            return colors[categoria] || 'bg-gray-100 text-gray-800';
+        }
+
+        function getVisibilityColor(visibilidad) {
+            const colors = {
+                'publico': 'bg-green-100 text-green-800',
+                'privado': 'bg-red-100 text-red-800',
+                'restringido': 'bg-yellow-100 text-yellow-800'
+            };
+            return colors[visibilidad] || 'bg-gray-100 text-gray-800';
+        }
+
+        function formatCategory(categoria) {
+            const names = {
+                'politicas': 'Políticas',
+                'procedimientos': 'Procedimientos',
+                'manuales': 'Manuales',
+                'reglamentos': 'Reglamentos',
+                'formatos': 'Formatos'
+            };
+            return names[categoria] || categoria;
+        }
+
+        function formatVisibility(visibilidad) {
+            const names = {
+                'publico': 'Público',
+                'privado': 'Privado',
+                'restringido': 'Restringido'
+            };
+            return names[visibilidad] || visibilidad;
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('es-ES');
+        }
+
+        function showSuccess(message) {
+            console.log('Success:', message);
+            // Crear notificación visual de éxito
+            showNotification(message, 'success');
+        }
+
+        function showError(message) {
+            console.error('Error:', message);
+            // Crear notificación visual de error
+            showNotification(message, 'error');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Remover notificaciones anteriores
+            const existingNotifications = document.querySelectorAll('.notification-toast');
+            existingNotifications.forEach(notification => notification.remove());
+
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = `notification-toast fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full`;
+
+            // Estilos según el tipo
+            if (type === 'success') {
+                notification.className += ' bg-green-500 text-white';
+                notification.innerHTML = `<i class="fas fa-check-circle mr-2"></i>${message}`;
+            } else if (type === 'error') {
+                notification.className += ' bg-red-500 text-white';
+                notification.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${message}`;
+            } else {
+                notification.className += ' bg-blue-500 text-white';
+                notification.innerHTML = `<i class="fas fa-info-circle mr-2"></i>${message}`;
+            }
+
+            // Agregar al DOM
+            document.body.appendChild(notification);
+
+            // Mostrar con animación
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+                notification.classList.add('translate-x-0');
+            }, 100);
+
+            // Ocultar después de 4 segundos
+            setTimeout(() => {
+                notification.classList.remove('translate-x-0');
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize existing functionality
+            loadDocuments();
+            setupEventListeners();
+
+            // Initialize sidebar functionality
+            setTimeout(initializeSidebar, 100); // Pequeño delay para asegurar que el DOM esté listo
+        });
+
+        function initializeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+
+            console.log('Sidebar elements:', {
+                sidebar: !!sidebar,
+                overlay: !!overlay,
+                hamburgerBtn: !!hamburgerBtn,
+                closeBtn: !!closeBtn,
+                screenWidth: window.innerWidth,
+                isDesktop: window.innerWidth >= 1280
+            });
+
+            // Log computed styles for debugging
+            if (sidebar) {
+                const styles = window.getComputedStyle(sidebar);
+                console.log('Sidebar computed styles:', {
+                    display: styles.display,
+                    transform: styles.transform,
+                    left: styles.left,
+                    position: styles.position,
+                    zIndex: styles.zIndex
+                });
+            }
+
+            if (!sidebar || !overlay || !hamburgerBtn) {
+                console.error('Sidebar elements not found:', {
+                    sidebar: !!sidebar,
+                    overlay: !!overlay,
+                    hamburgerBtn: !!hamburgerBtn
+                });
+                return;
+            }
+
+            // Toggle sidebar function
+            function toggleSidebar(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                const isVisible = sidebar.classList.contains('sidenav-show');
+                console.log('Toggle sidebar - currently visible:', isVisible);
+
+                if (!isVisible) {
+                    // Open sidebar
+                    console.log('Opening sidebar');
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+
+                    // Focus management for accessibility
+                    const firstLink = sidebar.querySelector('.porsche-nav-item');
+                    if (firstLink) {
+                        setTimeout(() => firstLink.focus(), 100);
+                    }
+                } else {
+                    // Close sidebar
+                    console.log('Closing sidebar');
+                    closeSidebarInternal();
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebarInternal() {
+                console.log('Executing closeSidebarInternal');
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+
+                // Return focus to hamburger button
+                if (hamburgerBtn) {
+                    hamburgerBtn.focus();
+                }
+            }
+
+            // Event listeners
+            console.log('Adding click event to hamburger button');
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+
+            hamburgerBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar(e);
+            }, { passive: false });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebarInternal);
+                overlay.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+            });
+
+            // Handle window resize - Keep sidebar closed on all screen sizes
+            window.addEventListener('resize', function() {
+                // Optional: could add logic here if needed
+            });
+
+            // Swipe to close functionality
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            sidebar.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const diffX = touchStartX - currentX;
+                const diffY = Math.abs(touchStartY - currentY);
+
+                // Swipe left to close
+                if (diffX > 50 && diffY < 100) {
+                    closeSidebarInternal();
+                    touchStartX = 0;
+                    touchStartY = 0;
+                }
+            }, { passive: true });
+
+            // Keyboard navigation in sidebar
+            sidebar.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+
+                // Arrow navigation
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                    const currentIndex = navItems.indexOf(document.activeElement);
+
+                    if (e.key === 'ArrowDown') {
+                        const nextIndex = (currentIndex + 1) % navItems.length;
+                        navItems[nextIndex].focus();
+                    } else {
+                        const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                        navItems[prevIndex].focus();
+                    }
+                }
+            });
+
+            console.log('✅ Sidebar functionality initialized successfully');
+        }
+
+        // Legacy function compatibility
+        function closeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+
+            if (sidebar && overlay) {
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
+  <link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+  <title>Clúster Intranet</title>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <!-- Font Awesome Icons - Multiple sources for reliability -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous" defer></script>
+
+  <!-- Porsche-inspired Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Nucleo Icons -->
+  <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Popper -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <!-- Main Styling -->
+  <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'clúster-red': 'black',
+            'clúster-gray': '#F5F5F7',
+            'clúster-dark': '#1D1D1F'
+          },
+          fontFamily: {
+            'inter': ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<style>
+  /* Porsche-inspired Design System */
+  :root {
+    /* Primary Colors - Inspired by Porsche */
+    --porsche-black: #1a1a1a;
+    --porsche-charcoal: #2d2d2d;
+    --porsche-silver: #8a8a8a;
+    --porsche-white: #ffffff;
+    --porsche-light-gray: #f5f5f5;
+    --porsche-accent: #c9302c;
+    /* Clúster red for brand consistency */
+
+    /* Typography */
+    --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --porsche-font-weight-light: 300;
+    --porsche-font-weight-regular: 400;
+    --porsche-font-weight-medium: 500;
+    --porsche-font-weight-semibold: 600;
+    --porsche-font-weight-bold: 700;
+
+    /* Spacing */
+    --porsche-space-xs: 0.5rem;
+    --porsche-space-sm: 1rem;
+    --porsche-space-md: 1.5rem;
+    --porsche-space-lg: 2rem;
+    --porsche-space-xl: 3rem;
+
+    /* Shadows */
+    --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+    /* Border Radius */
+    --porsche-radius-sm: 4px;
+    --porsche-radius-md: 8px;
+    --porsche-radius-lg: 12px;
+    --porsche-radius-xl: 16px;
+  }
+
+  /* Global Typography Enhancement */
+  * {
+    font-family: var(--porsche-font) !important;
+  }
+
+  body {
+    font-weight: var(--porsche-font-weight-regular);
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Anti-scroll horizontal rules */
+  html,
+  body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  * {
+    box-sizing: border-box !important;
+  }
+
+  .main-content,
+  .container,
+  .row,
+  .col {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+  }
+
+  /* Navigation System Variables */
+  :root {
+    --header-height: 70px;
+    --bottom-nav-height: 80px;
+    --claut-primary: #1a1a1a;
+    --claut-primary-rgb: 26, 26, 26;
+    --claut-secondary: #2d2d2d;
+    --claut-accent: #c9302c;
+    --claut-accent-rgb: 201, 48, 44;
+    --claut-red: #dc2626;
+    --claut-red-rgb: 220, 38, 38;
+    --claut-surface: rgba(26, 26, 26, 0.95);
+    --claut-bg-surface: rgba(26, 26, 26, 0.95);
+    --claut-text-primary: #ffffff;
+    --claut-text-secondary: rgba(255, 255, 255, 0.7);
+    --claut-border-light: rgba(255, 255, 255, 0.1);
+    --claut-border-medium: rgba(255, 255, 255, 0.15);
+    --claut-shadow-red: 0 4px 12px rgba(var(--claut-red-rgb), 0.3);
+    --transition-fast: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-normal: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+  }
+
+  /* Header Horizontal Premium con Men\u00fa Integrado */
+  .claut-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: var(--header-height);
+    background: var(--claut-bg-surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--claut-border-light);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 var(--space-6);
+    z-index: 99999 !important;
+    transition: var(--transition-normal);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    will-change: transform, backdrop-filter;
+    transform: translateY(0px) !important;
+    overflow: visible !important;
+  }
+
+  /* Header scroll effects */
+  .claut-header.scrolled {
+    background: rgba(26, 26, 26, 0.98) !important;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      0 8px 24px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    position: fixed !important;
+    top: 0 !important;
+  }
+
+  /* Logo area - usando el logo existente del sidebar */
+  .claut-header-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: var(--claut-text-primary);
+    font-weight: var(--apple-font-semibold);
+    transition: all var(--transition-normal);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+  }
+
+  .claut-header-logo:hover {
+    color: var(--claut-red);
+    background: rgba(var(--claut-red-rgb, 199, 37, 43), 0.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--claut-red-rgb, 199, 37, 43), 0.15);
+  }
+
+  .claut-header-logo:hover img {
+    transform: scale(1.05) rotate(2deg);
+    filter: brightness(1.1);
+  }
+
+  .claut-header-logo img {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    transition: all var(--transition-normal);
+    object-fit: cover;
+  }
+
+  /* Actions area */
+  .claut-header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--space-3);
+    z-index: inherit;
+    position: relative;
+    height: 100%;
+  }
+
+  .claut-header-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--claut-border-light);
+    border-radius: 10px;
+    color: var(--claut-text-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative !important;
+    z-index: inherit;
+    overflow: visible !important;
+  }
+
+  .claut-header-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+  }
+
+  .claut-header-btn.active {
+    background: var(--claut-red);
+    color: var(--claut-text-primary);
+    box-shadow: var(--claut-shadow-red);
+  }
+
+  /* Navegación horizontal principal */
+  .claut-header-nav {
+    display: none;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-6);
+  }
+
+  .claut-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--space-2) var(--space-3);
+    text-decoration: none;
+    color: var(--claut-text-tertiary);
+    border-radius: 12px;
+    transition: var(--transition-normal);
+    position: relative;
+    min-width: 60px;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .claut-nav-item:hover {
+    color: var(--claut-text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .claut-nav-item.active {
+    color: var(--claut-red);
+    background: rgba(var(--claut-red-rgb), 0.1);
+    box-shadow: var(--claut-shadow-red);
+  }
+
+  .claut-nav-item.active i {
+    color: var(--claut-red);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .claut-nav-item.active span {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .claut-nav-item i {
+    font-size: 18px;
+    margin-bottom: 2px;
+    transition: var(--transition-fast);
+  }
+
+  .claut-nav-item span {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    transition: var(--transition-fast);
+    opacity: 0.9;
+  }
+
+  .claut-nav-item:hover i {
+    color: var(--claut-red);
+    transform: scale(1.1);
+  }
+
+  /* Bottom Navigation - Solo m\u00f3vil y tablet */
+  .claut-bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 95% !important;
+    max-width: 600px !important;
+    height: 70px !important;
+    background: var(--claut-bg-surface) !important;
+    border-radius: 35px 35px 0 0 !important;
+    border: 1px solid var(--claut-border-medium) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3), 0 -8px 40px rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .claut-bottom-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(180deg, var(--claut-bg-surface) 0%, var(--claut-bg-secondary) 100%);
+    opacity: 0.8;
+    z-index: -1;
+  }
+
+  .claut-nav-container {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-evenly !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .claut-nav-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Curva decorativa */
+  .claut-nav-curve {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 40px;
+    background: var(--claut-bg-surface);
+    border-radius: 50px 50px 0 0;
+    border: 1px solid var(--claut-border-light);
+    border-bottom: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .claut-nav-curve::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--claut-red);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--claut-red);
+  }
+
+  /* Navigation links - Bottom */
+  .claut-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--space-2) var(--space-3);
+    color: var(--claut-text-secondary);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: var(--transition-fast);
+    font-size: 0.75rem;
+    font-weight: 500;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .claut-nav-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+    z-index: -1;
+  }
+
+  .claut-nav-link:active::before {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .claut-nav-link i {
+    font-size: 1.25rem;
+    transition: var(--transition-fast);
+  }
+
+  .claut-nav-link span {
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .claut-nav-link:hover {
+    color: var(--claut-text-primary);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .claut-nav-link.active {
+    color: var(--claut-text-primary);
+    background: linear-gradient(135deg, var(--claut-red), #ef4444);
+    box-shadow: var(--claut-shadow-red);
+  }
+
+  .claut-nav-link.active i {
+    transform: scale(1.1);
+  }
+
+  /* Responsive navigation */
+  @media (min-width: 768px) {
+    .claut-header-nav {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .claut-mobile-menu-btn {
+      display: flex !important;
+    }
+
+    .claut-header-nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--claut-bg-surface);
+      backdrop-filter: blur(20px);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      padding: var(--space-4);
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+    }
+
+    .claut-header-nav.show {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /* Control de visibilidad entre header y bottom nav */
+  @media (max-width: 1024px) {
+    .claut-header-nav {
+      display: none !important;
+    }
+
+    .claut-bottom-nav {
+      display: flex !important;
+    }
+
+    /* Mantener los botones de acción del header visibles */
+    .claut-header-actions {
+      display: flex !important;
+    }
+
+    /* Ajustar el header para que sea más compacto en mobile */
+    .claut-header {
+      padding: 0 var(--space-4) !important;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .claut-header-nav {
+      display: flex !important;
+    }
+
+    .claut-bottom-nav {
+      display: none !important;
+    }
+
+    .claut-header-actions {
+      display: flex !important;
+    }
+  }
+
+  /* Bottom navigation responsive design */
+  @media (max-width: 480px) {
+    .claut-bottom-nav {
+      width: 95%;
+      height: 65px;
+    }
+
+    .claut-nav-link {
+      width: 55px;
+      height: 55px;
+    }
+
+    .claut-nav-link i {
+      font-size: 20px;
+    }
+  }
+
+  /* Ajuste para el contenido principal para evitar superposición con el menú inferior */
+  .main-content {
+    padding-bottom: 90px;
+  }
+
+  /* Navigation touch optimization for mobile */
+  @media (max-width: 768px) {
+    .claut-nav-link {
+      padding: var(--space-2);
+      min-width: 48px;
+      min-height: 48px;
+    }
+
+    .claut-nav-link i {
+      font-size: 1.1rem;
+    }
+
+    .claut-nav-link span {
+      font-size: 0.6rem;
+    }
+
+    .claut-nav-container {
+      padding: 0 var(--space-2);
+    }
+  }
+
+  /* Old Porsche Sidebar - REMOVED
+  .porsche-sidebar {
+    background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%);
+    border-radius: var(--porsche-radius-lg);
+    box-shadow: var(--porsche-shadow-large);
+    margin: var(--porsche-space-sm);
+    */
+
+  /* FontAwesome fixes */
+  .fa,
+  .fas,
+  .far,
+  .fal,
+  .fab {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    display: inline-block !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+
+  /* Fallback for specific icons */
+  .fa-home::before {
+    content: "\f015" !important;
+  }
+
+  .fa-calendar-alt::before {
+    content: "\f073" !important;
+  }
+
+  .fa-file-alt::before {
+    content: "\f15c" !important;
+  }
+
+  .fa-newspaper::before {
+    content: "\f1ea" !important;
+  }
+
+  .fa-users::before {
+    content: "\f0c0" !important;
+  }
+
+  .fa-headset::before {
+    content: "\f590" !important;
+  }
+
+  .fa-handshake::before {
+    content: "\f2b5" !important;
+  }
+
+  .fa-tags::before {
+    content: "\f02c" !important;
+  }
+
+  .fa-user::before {
+    content: "\f007" !important;
+  }
+
+  .fa-sign-out-alt::before {
+    content: "\f2f5" !important;
+  }
+
+  /* Navbar improvements */
+  .porsche-navbar {
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--porsche-space-sm) var(--porsche-space-lg);
+    border-radius: var(--porsche-radius-lg);
+    margin: var(--porsche-space-sm);
+    z-index: 50;
+    position: relative;
+  }
+
+  /* Main content area adjustments */
+  .main-content {
+    margin-left: 272px;
+    transition: margin-left 0.3s ease;
+    background: transparent;
+    width: calc(100% - 272px);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 1279px) {
+    .main-content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  /* Ensure main container doesn't cause horizontal scroll */
+  main {
+    overflow-x: hidden;
+  }
+
+  /* Porsche-inspired Card System for Comites */
+  .porsche-card {
+    background: var(--porsche-white);
+    border-radius: var(--porsche-radius-lg);
+    box-shadow: var(--porsche-shadow-medium);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .porsche-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .porsche-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--porsche-shadow-large);
+  }
+
+  .porsche-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Breadcrumb styling */
+  .breadcrumb {
+    background: transparent !important;
+    padding: var(--porsche-space-sm) 0;
+  }
+
+  .breadcrumb a {
+    color: var(--porsche-white) !important;
+    opacity: 0.8 !important;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .breadcrumb a:hover {
+    opacity: 1 !important;
+  }
+
+  .breadcrumb li {
+    color: var(--porsche-white) !important;
+    font-weight: var(--porsche-font-weight-medium);
+  }
+
+  .breadcrumb .breadcrumb-title {
+    color: white !important;
+    font-weight: var(--porsche-font-weight-bold);
+    margin-top: var(--porsche-space-xs);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .card-animate {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .logo-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .logo-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+
+  .card-hover:hover .logo-container::before {
+    transform: translateX(100%);
+  }
+
+  .circle-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .card-hover:hover .circle-logo {
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: rotate(360deg);
+  }
+
+  .badge-animate {
+    animation: pulse 2s infinite;
+  }
+
+  .member-count {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .member-count::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(199, 37, 43, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .card-hover:hover .member-count::after {
+    left: 100%;
+  }
+
+  .btn-join {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .btn-join::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+    z-index: -1;
+  }
+
+  .btn-join:hover::before {
+    left: 100%;
+  }
+
+  .title-section {
+    animation: slideIn 0.8s ease-out;
+  }
+
+  /* Estilos para secciones bloqueadas */
+  .restricted-section {
+    position: relative;
+    filter: blur(3px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* OVERRIDE GLOBAL: Redefinir h-56 para que sea más grande en TODO EL SISTEMA */
+  .h-56 {
+    height: 20rem !important;
+    /* 320px en lugar de 14rem/224px original */
+  }
+
+  .restricted-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: inherit;
+    backdrop-filter: blur(5px);
+  }
+
+  .restricted-message {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    max-width: 300px;
+  }
+
+  .shadow-xl {
+    --tw-shadow: 0 20px 25px -5px rgba(255, 0, 0, 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+
+  /* Enhanced Image Handling Styles */
+  .comite-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+
+  .comite-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+  }
+
+  .comite-image.loaded {
+    opacity: 1;
+  }
+
+  .comite-image.error {
+    display: none;
+  }
+
+  .image-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .image-fallback.show {
+    opacity: 1;
+  }
+
+  .image-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    z-index: 1;
+  }
+
+  .image-retry-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+
+  .image-retry-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  .comite-image-container:hover .image-retry-btn {
+    opacity: 1;
+  }
+</style>
+
+<body
+  class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default text-slate-500 overflow-x-hidden">
+  <!-- Header Horizontal con Navegación Premium -->
+  <header class="claut-header">
+    <!-- Logo area con logo existente -->
+    <a href="#" class="claut-header-logo">
+      <img src="./assets/img/apple-icon.png" alt="Clúster Logo" />
+    </a>
+
+    <!-- Navegación horizontal principal -->
+    <nav class="claut-header-nav" id="clautMainNav">
+      <a href="dashboard.html" class="claut-nav-item">
+        <i class="fas fa-home text-white"></i>
+        <span class="text-white">Inicio</span>
+      </a>
+      <a href="./descuentos.html" class="claut-nav-item">
+        <i class="fas fa-tags text-white"></i>
+        <span class="text-white">Descuentos</span>
+      </a>
+      <a href="./boletines.html" class="claut-nav-item">
+        <i class="fas fa-newspaper text-white"></i>
+        <span class="text-white">Boletines</span>
+      </a>
+      <a href="./comites.html" class="claut-nav-item active">
+        <i class="fas fa-users text-white"></i>
+        <span class="text-white">Comites</span>
+      </a>
+      <a href="./contacto.html" class="claut-nav-item">
+        <i class="fas fa-headset text-white"></i>
+        <span class="text-white">Contacto</span>
+      </a>
+      <a href="./eventos.html" class="claut-nav-item">
+        <i class="fas fa-calendar-alt text-white"></i>
+        <span class="text-white">Eventos</span>
+      </a>
+      <a href="./empresas-convenio.html" class="claut-nav-item">
+        <i class="fas fa-handshake text-white"></i>
+        <span class="text-white">Socios</span>
+      </a>
+    </nav>
+
+    <!-- Actions area -->
+    <div class="claut-header-actions">
+
+
+      <!-- Menú usuario -->
+      <div class="relative">
+        <a href="./profile.html" class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
+          <i class="fas fa-user-circle text-lg"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú curvo animado en la parte inferior -->
+  <nav class="claut-bottom-nav">
+    <div class="claut-nav-container">
+      <div class="claut-nav-curve"></div>
+
+      <a href="dashboard.html" class="claut-nav-link authenticated" data-section="inicio">
+        <i class="fas fa-home"></i>
+        <span>Inicio</span>
+      </a>
+
+      <a href="./descuentos.html" class="claut-nav-link authenticated" data-section="descuentos">
+        <i class="fas fa-tags"></i>
+        <span>Descuentos</span>
+      </a>
+
+      <a href="./boletines.html" class="claut-nav-link authenticated" data-section="boletines">
+        <i class="fas fa-newspaper"></i>
+        <span>Boletines</span>
+      </a>
+
+      <a href="./comites.html" class="claut-nav-link authenticated active" data-section="comite">
+        <i class="fas fa-users"></i>
+        <span>Comité</span>
+      </a>
+
+      <a href="./contacto.html" class="claut-nav-link authenticated" data-section="contacto">
+        <i class="fas fa-headset"></i>
+        <span>Contacto</span>
+      </a>
+
+      <a href="./eventos.html" class="claut-nav-link authenticated" data-section="eventos">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Eventos</span>
+      </a>
+
+      <a href="./empresas-convenio.html" class="claut-nav-link authenticated" data-section="convenios">
+        <i class="fas fa-handshake"></i>
+        <span>Convenios</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="relative h-full transition-all duration-200 ease-in-out rounded-xl overflow-x-hidden"
+    style="margin-top: 80px; margin-left: 0; padding-bottom: 100px; min-height: 100vh;">
+    <!-- Contenido principal con restricción de autenticación -->
+    <div id="mainContent" class="">
+      <!-- Navbar -->
+      <nav
+        class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
+        navbar-main navbar-scroll="false">
+        <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
+          <nav>
+            <!-- breadcrumb -->
+            <ol class="breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+              <li class="text-sm leading-normal">
+                <a class="text-white opacity-50" href="javascript:;">Intranet</a>
+              </li>
+              <li
+                class="text-sm pl-2 capitalize leading-normal text-white before:float-left before:pr-2 before:text-white before:content-['/']"
+                aria-current="page">Comités</li>
+            </ol>
+            <h6 class="breadcrumb-title mb-0 font-bold text-white capitalize">Comités</h6>
+          </nav>
+
+          <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+            <div class="flex items-center md:ml-auto md:pr-4">
+              <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
+                <!-- User Dropdown Menu -->
+                <li class="flex items-center relative">
+                  <div class="relative">
+                    <button
+                      class="flex items-center px-3 py-1 text-sm font-bold text-white transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in border-white/20 bg-white/10 hover:scale-102 hover:border-white/40 active:opacity-85"
+                      onclick="toggleUserMenu()" id="userMenuBtn">
+                      <i class="fas fa-user text-white mr-2"></i>
+                      <span class="hidden sm:inline text-white" id="userDisplayName">Usuario</span>
+                      <i class="fas fa-chevron-down text-white ml-2 text-xs"></i>
+                    </button>
+                    <!-- User Dropdown -->
+                    <div
+                      class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 hidden"
+                      id="userDropdown" style="top: 100%;">
+                      <div class="px-4 py-2 border-b border-gray-200">
+                        <p class="text-sm font-medium text-gray-900" id="dropdownUserName">Usuario</p>
+                        <p class="text-xs text-gray-500" id="dropdownUserRole">Rol</p>
+                      </div>
+                      <a href="profile.html"
+                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-user-circle mr-3 text-gray-400"></i>
+                        Mi Perfil
+                      </a>
+                      <button onclick="handleLogout()"
+                        class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
+                        Cerrar Sesión
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- end Navbar -->
+
+      <!-- Sección de Comités Mejorada -->
+      <div class="container mx-auto px-4 py-8">
+        <!-- Grid de Tarjetas -->
+        <div id="comitesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <!-- Los comités se cargarán dinámicamente desde la BD -->
+          <div class="col-span-full text-center py-8">
+            <i class="fas fa-spinner fa-spin text-2xl text-gray-400 mb-2"></i>
+            <p class="text-gray-500">Cargando comités...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de Registro -->
+      <div id="registroModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold text-gray-800">Registro al Comité</h2>
+              <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+              </button>
+            </div>
+
+            <div id="comiteInfo" class="mb-6 p-4 bg-gray-50 rounded-lg">
+              <!-- Información del comité se carga dinámicamente -->
+            </div>
+
+            <form id="registroForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                <input type="text" id="nombre" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-clúster-red">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+                <input type="email" id="email" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-clúster-red">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cargo</label>
+                <input type="text" id="cargo" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-clúster-red">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Organización</label>
+                <input type="text" id="organizacion" required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-clúster-red">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">¿Quieres formar parte del grupo de WhatsApp
+                  del Comité? Comparte tu número celular</label>
+                <input type="tel" id="telefono" placeholder="Ej: 8112345678"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-clúster-red">
+              </div>
+
+              <div class="flex items-center">
+                <input type="checkbox" id="terminos" required
+                  class="h-4 w-4 text-clúster-red focus:ring-clúster-red border-gray-300 rounded">
+                <label for="terminos" class="ml-2 block text-sm text-gray-700">
+                  Acepto los términos y condiciones de participación
+                </label>
+              </div>
+
+              <div class="flex space-x-3 pt-4">
+                <button type="button" onclick="closeModal()"
+                  class="flex-1 px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
+                  Cancelar
+                </button>
+                <button type="submit"
+                  class="flex-1 px-4 py-2 bg-clúster-red text-white rounded-lg hover:bg-clúster-red-dark transition-colors">
+                  Enviar Solicitud
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const comitesInfo = {
+          seguridad: {
+            nombre: "Comité de Digitalizacion",
+            descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa, eget luctus quam interdum vel. Nullam non nulla pharetra, cursus dui in, ullamcorper augue",
+            empresa: "SIEMENS",
+            responsabilidades: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa"
+          },
+          calidad: {
+            nombre: "Comité de Capital Humano",
+            descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa, eget luctus quam interdum vel. Nullam non nulla pharetra, cursus dui in, ullamcorper augue",
+            empresa: "TECMILENIO",
+            responsabilidades: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa"
+          },
+          innovacion: {
+            nombre: "Comité de Descarbonizacion",
+            descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa, eget luctus quam interdum vel. Nullam non nulla pharetra, cursus dui in, ullamcorper augue",
+            empresa: "ENERGY TO MARKET",
+            responsabilidades: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa"
+          },
+          ambiental: {
+            nombre: "Excelencia Operacional",
+            descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa, eget luctus quam interdum vel. Nullam non nulla pharetra, cursus dui in, ullamcorper augue",
+            empresa: "TECNOLOGICO DE MONTERREY",
+            responsabilidades: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa"
+          },
+          bienestar: {
+            nombre: "Observatorio Laboral",
+            descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa, eget luctus quam interdum vel. Nullam non nulla pharetra, cursus dui in, ullamcorper augue",
+            empresa: "PADF",
+            responsabilidades: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa"
+          },
+          comunicaciones: {
+            nombre: "Desarrollo De Proveedores",
+            descripcion: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa, eget luctus quam interdum vel. Nullam non nulla pharetra, cursus dui in, ullamcorper augue",
+            empresa: "CLÚSSTER AUTOMOTRIZ",
+            responsabilidades: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus magna massa"
+          }
+        };
+
+        function openModal(comiteId) {
+          comiteActual = comiteId; // Guardar el ID del comité seleccionado
+          const modal = document.getElementById('registroModal');
+          const comiteInfoDiv = document.getElementById('comiteInfo');
+
+          // Buscar información del comité por ID
+          const comiteInfo = window.comitesData?.find(c => c.id == comiteId);
+
+          if (comiteInfo) {
+            comiteInfoDiv.innerHTML = `
+            <h3 class="text-lg font-semibold text-clúster-red mb-2">${comiteInfo.nombre}</h3>
+            <p class="text-gray-600 mb-3">${comiteInfo.descripcion || 'Sin descripción'}</p>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <strong class="text-gray-700">Organización:</strong>
+                    <p class="text-gray-600">${comiteInfo.organizacion || 'CLAUT'}</p>
+                </div>
+                <div>
+                    <strong class="text-gray-700">Periodicidad:</strong>
+                    <p class="text-gray-600">${comiteInfo.periodicidad || 'Mensual'}</p>
+                </div>
+                <div>
+                    <strong class="text-gray-700">Objetivo:</strong>
+                    <p class="text-gray-600">${comiteInfo.objetivo || 'Sin objetivo definido'}</p>
+                </div>
+                <div>
+                    <strong class="text-gray-700">Miembros:</strong>
+                    <p class="text-gray-600">${comiteInfo.miembros_activos || 0} activos</p>
+                </div>
+            </div>
+          `;
+          } else {
+            comiteInfoDiv.innerHTML = '<p class="text-red-500">Error: Información del comité no disponible</p>';
+          }
+
+          modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+          const modal = document.getElementById('registroModal');
+          modal.classList.add('hidden');
+          document.getElementById('registroForm').reset();
+        }
+
+        // Variable para almacenar el comité actual seleccionado
+        let comiteActual = '';
+
+        document.getElementById('registroForm').addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          // Obtener datos del usuario desde sesión si existe
+          function getUserData() {
+            try {
+              const userData = localStorage.getItem('userData');
+              return userData ? JSON.parse(userData) : {};
+            } catch {
+              return {};
+            }
+          }
+
+          const userData = getUserData();
+
+          // Obtener y validar datos del formulario
+          const nombreUsuario = document.getElementById('nombre').value.trim();
+          const emailContacto = document.getElementById('email').value.trim();
+          const cargoUsuario = document.getElementById('cargo').value.trim();
+          const organizacionUsuario = userData.empresa || document.getElementById('organizacion').value.trim();
+          const telefonoContacto = document.getElementById('telefono').value.trim();
+
+          // Validación básica
+          if (!nombreUsuario || !emailContacto || !cargoUsuario || !organizacionUsuario) {
+            mostrarNotificacion('Por favor completa todos los campos requeridos', 'error');
+            return;
+          }
+
+          // Validar formato de email
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(emailContacto)) {
+            mostrarNotificacion('Por favor ingresa un email válido', 'error');
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('comite_id', comiteActual);
+          formData.append('nombre_empresa', organizacionUsuario);
+          formData.append('nombre_usuario', nombreUsuario);
+          formData.append('email_contacto', emailContacto);
+          formData.append('telefono_contacto', telefonoContacto);
+          formData.append('cargo', cargoUsuario);
+          formData.append('departamento', userData.departamento || '');
+          formData.append('comentarios', '');
+
+          // Información adicional del usuario loggeado para seguimiento
+          formData.append('usuario_loggeado_id', userData.id || userData.user_id || '');
+          formData.append('usuario_loggeado_nombre', userData.nombre || userData.name || userData.usuario || '');
+          formData.append('usuario_loggeado_email', userData.email || userData.user_email || userData.correo || '');
+          formData.append('usuario_loggeado_empresa', userData.empresa || userData.nombre_empresa || '');
+          formData.append('session_info', JSON.stringify({
+            timestamp: new Date().toISOString(),
+            user_agent: navigator.userAgent,
+            referrer: document.referrer,
+            ip_info: 'captured_by_server'
+          }));
+
+          try {
+            console.log('Enviando solicitud de registro al comité...');
+            console.log('Datos del formulario:', {
+              comite_id: comiteActual,
+              nombre_empresa: organizacionUsuario,
+              nombre_usuario: nombreUsuario,
+              email_contacto: emailContacto,
+              telefono_contacto: telefonoContacto,
+              cargo: cargoUsuario
+            });
+
+            const response = await fetch('./api/comites.php?action=registrar', {
+              method: 'POST',
+              body: formData
+            });
+
+            const result = await response.json();
+            console.log('Respuesta del servidor:', result);
+
+            if (result.success) {
+              mostrarNotificacion('¡Solicitud enviada exitosamente! Está pendiente de aprobación.', 'success');
+              closeModal();
+            } else {
+              mostrarNotificacion(result.message || 'Error al enviar la solicitud', 'error');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            mostrarNotificacion('Error al procesar la solicitud: ' + error.message, 'error');
+          }
+        });
+
+        // localStorage eliminado - todas las solicitudes van a la base de datos
+
+        // Función para mostrar notificaciones
+        function mostrarNotificacion(mensaje, tipo) {
+          const notificacion = document.createElement('div');
+          notificacion.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 transform transition-all duration-300 ${tipo === 'success' ? 'bg-green-500' : tipo === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            }`;
+          notificacion.innerHTML = `
+          <div class="flex items-center">
+            <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : 'info-circle'
+            } mr-2"></i>
+            <span>${mensaje}</span>
+          </div>
+        `;
+          document.body.appendChild(notificacion);
+
+          setTimeout(() => {
+            notificacion.style.opacity = '0';
+            setTimeout(() => notificacion.remove(), 300);
+          }, 3000);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('registroModal').addEventListener('click', function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+
+        // ===== ENHANCED IMAGE HANDLING SYSTEM =====
+
+        // Image retry tracking
+        const imageRetryCount = new Map();
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 1000; // 1 second
+
+        // Simplified image loading function based on empresas-convenio.html pattern
+        function createComiteImageElement(comite) {
+          const img = document.createElement('img');
+          img.className = 'w-full h-56 object-cover rounded-t-xl';
+          img.alt = comite.nombre || 'Comité';
+
+          // Generate dynamic placeholder as fallback (like empresas-convenio.html)
+          const placeholderUrl = `https://via.placeholder.com/300x200/f3f4f6/6b7280?text=${encodeURIComponent(comite.nombre || 'Comité')}`;
+
+          // Determine image URL with priority system
+          let imageUrl = placeholderUrl; // Default fallback
+
+          if (comite.imagen_url && comite.imagen_url.trim()) {
+            // Use imagen_url if available
+            imageUrl = comite.imagen_url;
+          } else if (comite.tiene_imagen && comite.id) {
+            // Use API endpoint if available
+            imageUrl = `./api/comites.php?action=imagen&id=${comite.id}&t=${Date.now()}`;
+          }
+
+          img.src = imageUrl;
+
+          // Handle loading errors with fallback
+          img.onerror = function () {
+            console.log(`Failed to load image for comité: ${comite.nombre}, using placeholder`);
+            this.src = placeholderUrl;
+            this.onerror = null; // Prevent infinite loop
+          };
+
+          return img;
+        }
+
+        // Enhanced fetch with retry mechanism and timeout
+        async function fetchWithRetry(url, options = {}, maxRetries = 3) {
+          const timeout = 10000; // 10 seconds timeout
+
+          for (let i = 0; i <= maxRetries; i++) {
+            try {
+              console.log(`Attempting to fetch: ${url} (attempt ${i + 1})`);
+
+              // Create timeout promise
+              const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Request timeout')), timeout);
+              });
+
+              // Create fetch promise
+              const fetchPromise = fetch(url, {
+                ...options,
+                cache: 'no-cache',
+                headers: {
+                  'Cache-Control': 'no-cache',
+                  'Pragma': 'no-cache',
+                  ...options.headers
+                }
+              });
+
+              // Race between fetch and timeout
+              const response = await Promise.race([fetchPromise, timeoutPromise]);
+
+              if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+              }
+
+              console.log(`✅ Successfully fetched: ${url}`);
+              return response;
+            } catch (error) {
+              console.log(`❌ Fetch attempt ${i + 1} failed:`, error.message);
+              if (i === maxRetries) {
+                throw error;
+              }
+              // Wait before retry (exponential backoff)
+              await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+            }
+          }
+        }
+
+        // Enhanced comites loading with better error handling
+        async function loadComites() {
+          const startTime = Date.now();
+          console.log('🚀 Loading comités with enhanced error handling...');
+
+          // Add loading timeout
+          const loadingTimeout = setTimeout(() => {
+            console.log('⏰ Loading timeout reached, showing error...');
+            showError('La carga está tomando demasiado tiempo. Verifica tu conexión e intenta nuevamente.');
+          }, 15000);
+
+          try {
+            const endpoints = [
+              'https://intranet.clautmetropolitano.mx/build/api/comites.php?action=listar',
+              './api/comites.php?action=listar',
+              '/build/api/comites.php?action=listar'
+            ];
+
+            let lastError = null;
+            let result = null;
+
+            for (const endpoint of endpoints) {
+              try {
+                console.log(`🔄 Trying endpoint: ${endpoint}`);
+                const response = await fetchWithRetry(endpoint, {}, 2); // Reduced retries
+                result = await response.json();
+                console.log(`✅ Successfully loaded from: ${endpoint}`);
+                console.log('📊 Raw API response:', result);
+                break;
+              } catch (error) {
+                console.log(`❌ Endpoint failed: ${endpoint}`, error.message);
+                lastError = error;
+                continue;
+              }
+            }
+
+            // Clear the timeout since we got a response
+            clearTimeout(loadingTimeout);
+
+            if (!result) {
+              throw lastError || new Error('All endpoints failed');
+            }
+
+            // Manejar diferentes formatos de respuesta de la API
+            if (result.success || result.success === undefined) {
+              const comites = result.comites || result.data || result.records || result || [];
+              console.log('📋 Comités extracted:', comites);
+
+              // Asegurar que tenemos un array
+              const comitesArray = Array.isArray(comites) ? comites :
+                (comites && typeof comites === 'object' ? Object.values(comites) : []);
+
+              console.log(`⚡ Loading completed in ${Date.now() - startTime}ms`);
+              renderComitesEnhanced(comitesArray);
+            } else {
+              showError('Error al cargar comités: ' + (result.message || result.error || 'Respuesta inválida'));
+            }
+          } catch (error) {
+            clearTimeout(loadingTimeout);
+            console.error('❌ Error loading comités:', error);
+            showError('Error de conexión: ' + error.message);
+          }
+        }
+
+        function renderComitesEnhanced(comites) {
+          const container = document.getElementById('comitesContainer');
+
+          // Guardar datos de comités para uso en modal
+          window.comitesData = comites;
+
+          if (comites.length === 0) {
+            container.innerHTML = `
+            <div class="col-span-full text-center py-8">
+              <i class="fas fa-exclamation-circle text-4xl text-gray-400 mb-3"></i>
+              <p class="text-gray-500">No hay comités disponibles</p>
+            </div>
+          `;
+            return;
+          }
+
+          let html = '';
+          comites.forEach(comite => {
+            html += `
+            <div class="porsche-card bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 card-hover card-animate" data-comite-id="${comite.id}">
+              <div class="relative w-full h-56 overflow-hidden rounded-2xl shadow-xl group">
+                <!-- Enhanced image container will be inserted here -->
+                <div class="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-[#C7252B]/80 to-transparent z-10"></div>
+                <div class="relative z-20 flex flex-col justify-end h-full p-4">
+                </div>
+              </div>
+              <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">${comite.nombre}</h3>
+                <p class="text-gray-600 text-sm mb-4">${comite.descripcion || 'Sin descripción'}</p>
+                <div class="flex items-center mb-4">
+                  <div class="w-2 h-2 bg-clúster-red rounded-full mr-2"></div>
+                  <span class="text-gray-700 text-sm font-medium">${comite.organizacion || 'CLAUT'}</span>
+                </div>
+                <div class="mb-4">
+                  <span class="inline-block bg-gradient-to-r from-clúster-red to-clúster-red-light text-white px-4 py-2 rounded-full text-sm font-medium">
+                    Periodicidad: ${comite.periodicidad || 'Mensual'}
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm text-gray-500">${comite.miembros_activos || 0} miembros activos</span>
+                  <button onclick="openModal('${comite.id}')"
+                    class="bg-clúster-red hover:bg-clúster-red-dark text-white px-6 py-2 rounded-lg transition transform hover:scale-105 text-sm">
+                    Unirse
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          });
+
+          container.innerHTML = html;
+
+          // Insert enhanced image containers
+          comites.forEach(comite => {
+            const cardElement = container.querySelector(`[data-comite-id="${comite.id}"]`);
+            if (cardElement) {
+              const imageContainer = cardElement.querySelector('.relative.w-full.h-56');
+              if (imageContainer) {
+                const enhancedImageElement = createComiteImageElement(comite);
+                imageContainer.insertBefore(enhancedImageElement, imageContainer.firstChild);
+              }
+            }
+          });
+        }
+
+        function showError(message) {
+          const container = document.getElementById('comitesContainer');
+          container.innerHTML = `
+          <div class="col-span-full text-center py-8">
+            <i class="fas fa-exclamation-triangle text-4xl text-red-400 mb-3"></i>
+            <p class="text-red-500">${message}</p>
+            <button onclick="loadComites()" class="mt-4 bg-clúster-red text-white px-4 py-2 rounded-lg hover:bg-clúster-red-dark">
+              Reintentar
+            </button>
+          </div>
+        `;
+        }
+
+        // JavaScript adicional para animaciones
+        document.addEventListener('DOMContentLoaded', function () {
+          const cards = document.querySelectorAll('.card-animate');
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+              }
+            });
+          }, {
+            threshold: 0.1
+          });
+
+          cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            observer.observe(card);
+          });
+
+          // Efecto de partículas al hacer hover
+          document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+              this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+              this.style.transform = 'translateY(0) scale(1)';
+            });
+          });
+
+          // Cargar comités dinámicamente con sistema mejorado
+          loadComites();
+        });
+
+        // User Menu Functionality
+        function toggleUserMenu() {
+          const dropdown = document.getElementById('userDropdown');
+          dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+          const userMenu = document.getElementById('userMenuBtn');
+          const dropdown = document.getElementById('userDropdown');
+
+          if (userMenu && dropdown && !userMenu.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.add('hidden');
+          }
+        });
+
+        // Logout functionality
+        function handleLogout() {
+          if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+            // Clear user data
+            localStorage.removeItem('userData');
+            localStorage.removeItem('currentUser');
+            sessionStorage.clear();
+
+            // Redirect to login page
+            window.location.href = './index.php';
+          }
+        }
+
+        // User display functionality is now handled by displayUserInfo function
+
+        // displayUserInfo function now handles both sidebar and navbar updates
+      </script>
+    </div>
+
+    <footer class="pt-4">
+      <div class="w-full px-6 mx-auto">
+        <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
+          <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
+            <div class="text-sm leading-normal text-center text-slate-500 lg:text-left">
+              ©
+              <script>
+                document.write(new Date().getFullYear() + ",");
+              </script>
+              Todos Los Derechos Reservados <i class=""></i>
+              <a href="" class="font-semibold text-slate-700 dark:text-white" target="_blank">Clúster</a>
+            </div>
+          </div>
+          <div class="w-full max-w-full px-3 mt-0 shrink-0 lg:w-1/2 lg:flex-none">
+            <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
+              <li class="nav-item">
+                <a href="" class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500"
+                  target="_blank">Clúster Metropolitano</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+    </div>
+    <!-- end cards -->
+    </div>
+    <!-- Overlay de restricción que aparece cuando no hay autenticación -->
+    <div id="restrictedOverlay" class="restricted-overlay hidden">
+      <div class="restricted-message">
+        <div class="mb-4">
+          <i class="fas fa-lock text-4xl text-gray-500 mb-3"></i>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Acceso Restringido</h3>
+          <p class="text-sm text-gray-600 mb-4">
+            Debes iniciar sesión para acceder a este contenido
+          </p>
+          <button onclick="window.location.href='./pages/sign-in.html'"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            Iniciar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- SISTEMA DE AUTENTICACIÓN -->
+  <script>
+    /**
+     * Sistema de autenticación completo basado en sesiones PHP
+     * Funciones principales para manejo de autenticación
+     */
+
+    // URL del endpoint de autenticación
+    const AUTH_ENDPOINT = './api/auth/session.php';
+
+    /**
+     * Detectar y manejar la sesión del usuario
+     */
+    async function detectUserSession() {
+      try {
+        const response = await fetch(`${AUTH_ENDPOINT}?action=check`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          displayUserInfo(result.data);
+          return result.data;
+        } else {
+          showLoginPrompt();
+          return null;
+        }
+      } catch (error) {
+        console.error('Error al verificar sesión:', error);
+        showLoginPrompt();
+        return null;
+      }
+    }
+
+    /**
+     * Mostrar información del usuario en el sidebar y navbar
+     */
+    function displayUserInfo(userData) {
+      console.log('📊 Mostrando información del usuario:', userData);
+
+      // Establecer usuario globalmente
+      window.currentUser = userData;
+
+      // Extraer datos del usuario
+      const nombre = userData.nombre || userData.name || userData.email || 'Usuario';
+      const apellido = userData.apellido || userData.lastname || '';
+      const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
+      const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
+      const email = userData.email || '';
+
+      // Actualizar elementos del navbar (dropdown)
+      const userDisplayName = document.getElementById('userDisplayName');
+      const dropdownUserName = document.getElementById('dropdownUserName');
+      const dropdownUserRole = document.getElementById('dropdownUserRole');
+
+      if (userDisplayName) userDisplayName.textContent = nombreCompleto;
+      if (dropdownUserName) dropdownUserName.textContent = nombreCompleto;
+      if (dropdownUserRole) dropdownUserRole.textContent = empresa;
+
+      // Actualizar elementos del sidebar (si existen)
+      const userSection = document.getElementById('userSection');
+      const loginSection = document.getElementById('loginSection');
+      const userEmail = document.getElementById('userEmail');
+      const userName = document.getElementById('userName');
+      const userCompany = document.getElementById('userCompany');
+
+      if (userSection && loginSection) {
+        // Mostrar datos del usuario
+        if (userEmail) userEmail.textContent = email;
+        if (userName) userName.textContent = nombreCompleto;
+        if (userCompany) userCompany.textContent = empresa;
+
+        userSection.style.display = 'block';
+        loginSection.style.display = 'none';
+      }
+
+      console.log('✅ Interfaz actualizada para usuario autenticado');
+    }
+
+    /**
+     * Mostrar formulario de login
+     */
+    function showLoginPrompt() {
+      const userSection = document.getElementById('userSection');
+      const loginSection = document.getElementById('loginSection');
+
+      if (userSection && loginSection) {
+        userSection.style.display = 'none';
+        loginSection.style.display = 'block';
+      }
+    }
+
+    /**
+     * Realizar login
+     */
+    async function performLogin() {
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      const loginError = document.getElementById('loginError');
+
+      if (!emailInput || !passwordInput) {
+        console.error('Campos de login no encontrados');
+        return;
+      }
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        if (loginError) {
+          loginError.textContent = 'Por favor, completa todos los campos';
+          loginError.style.display = 'block';
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(`${AUTH_ENDPOINT}?action=login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          displayUserInfo(result.data);
+          // Limpiar formulario
+          emailInput.value = '';
+          passwordInput.value = '';
+          if (loginError) loginError.style.display = 'none';
+        } else {
+          if (loginError) {
+            loginError.textContent = result.message || 'Credenciales incorrectas';
+            loginError.style.display = 'block';
+          }
+        }
+      } catch (error) {
+        console.error('Error en login:', error);
+        if (loginError) {
+          loginError.textContent = 'Error de conexión. Intenta nuevamente.';
+          loginError.style.display = 'block';
+        }
+      }
+    }
+
+    /**
+     * Realizar logout
+     */
+    async function performLogout() {
+      try {
+        const response = await fetch(`${AUTH_ENDPOINT}?action=logout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showLoginPrompt();
+        }
+      } catch (error) {
+        console.error('Error en logout:', error);
+      }
+    }
+
+    // Inicializar detección de sesión al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+      detectUserSession();
+
+      // Configurar evento del botón de login
+      const loginBtn = document.getElementById('loginBtn');
+      if (loginBtn) {
+        loginBtn.addEventListener('click', performLogin);
+      }
+
+      // Permitir login con Enter
+      const loginEmail = document.getElementById('loginEmail');
+      const loginPassword = document.getElementById('loginPassword');
+
+      if (loginEmail) {
+        loginEmail.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') performLogin();
+        });
+      }
+
+      if (loginPassword) {
+        loginPassword.addEventListener('keypress', function (e) {
+          if (e.key === 'Enter') performLogin();
+        });
+      }
+    });
+  </script>
+  <script src="./js/auth-session.js"></script>
+  <script>
+    // Configurar eventos para los botones de logout
+    document.addEventListener('DOMContentLoaded', function () {
+      // Botón de logout del sidebar
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          if (window.authSessionManager) {
+            window.authSessionManager.logout();
+          } else if (window.logout) {
+            window.logout();
+          } else {
+            // Fallback manual
+            window.location.href = './pages/sign-in.html';
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- JavaScript for Mobile Responsive Sidebar -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const sidebar = document.querySelector('.porsche-sidebar');
+      const overlay = document.querySelector('.sidenav-overlay');
+      const menuToggle = document.querySelector('[sidenav-trigger]');
+      const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+      let startX = 0;
+      let currentX = 0;
+      let isDragging = false;
+
+      // Prevent body scroll when sidebar is open
+      function preventBodyScroll(prevent) {
+        if (prevent) {
+          document.body.style.overflow = 'hidden';
+          document.body.style.height = '100vh';
+        } else {
+          document.body.style.overflow = '';
+          document.body.style.height = '';
+        }
+      }
+
+      // Show sidebar
+      function showSidebar() {
+        if (sidebar) {
+          sidebar.setAttribute('aria-expanded', 'true');
+          sidebar.classList.add('sidenav-show');
+          preventBodyScroll(true);
+        }
+        if (overlay) {
+          overlay.classList.add('show');
+        }
+      }
+
+      // Hide sidebar
+      function hideSidebar() {
+        if (sidebar) {
+          sidebar.setAttribute('aria-expanded', 'false');
+          sidebar.classList.remove('sidenav-show');
+          preventBodyScroll(false);
+        }
+        if (overlay) {
+          overlay.classList.remove('show');
+        }
+      }
+
+      // Menu toggle button click
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (sidebar && sidebar.classList.contains('sidenav-show')) {
+            hideSidebar();
+          } else {
+            showSidebar();
+          }
+        });
+      }
+
+      // Close button click
+      if (closeSidebarBtn) {
+        closeSidebarBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          hideSidebar();
+        });
+      }
+
+      // Overlay click
+      if (overlay) {
+        overlay.addEventListener('click', function () {
+          hideSidebar();
+        });
+      }
+
+      // Touch events for swipe gestures
+      if (sidebar) {
+        // Touch start
+        sidebar.addEventListener('touchstart', function (e) {
+          startX = e.touches[0].clientX;
+          isDragging = true;
+        }, { passive: true });
+
+        // Touch move
+        sidebar.addEventListener('touchmove', function (e) {
+          if (!isDragging) return;
+          currentX = e.touches[0].clientX;
+          const deltaX = currentX - startX;
+
+          // If swiping left more than 50px, close sidebar
+          if (deltaX < -50) {
+            hideSidebar();
+            isDragging = false;
+          }
+        }, { passive: true });
+
+        // Touch end
+        sidebar.addEventListener('touchend', function () {
+          isDragging = false;
+        }, { passive: true });
+      }
+
+      // Handle window resize
+      function handleResize() {
+        if (window.innerWidth >= 1280) {
+          // Desktop: ensure proper state
+          if (sidebar) {
+            sidebar.classList.remove('sidenav-show');
+            sidebar.setAttribute('aria-expanded', 'false');
+          }
+          if (overlay) {
+            overlay.classList.remove('show');
+          }
+          preventBodyScroll(false);
+        }
+      }
+
+      // Debounced resize handler
+      let resizeTimeout;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleResize, 150);
+      });
+
+      // Close sidebar on escape key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('sidenav-show')) {
+          hideSidebar();
+        }
+      });
+
+      // Initial setup (removed sidebar code)
+    });
+
+    // Navigation JavaScript - Consistent across all pages
+    document.addEventListener('DOMContentLoaded', function () {
+      // Header navigation scroll effect
+      const header = document.querySelector('.claut-header');
+      const headerNav = document.querySelector('.claut-header-nav');
+
+      if (header && headerNav) {
+        let scrollTimer = null;
+
+        window.addEventListener('scroll', function () {
+          const scrollY = window.scrollY;
+
+          if (scrollY > 50) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(function () {
+            header.classList.remove('scrolling');
+          }, 150);
+
+          header.classList.add('scrolling');
+        });
+      }
+
+      // Synchronize header and bottom navigation
+      const headerNavLinks = document.querySelectorAll('.claut-header-nav .claut-nav-item');
+      const bottomNavLinks = document.querySelectorAll('.claut-bottom-nav .claut-nav-link');
+
+      function syncNavigation(targetHref) {
+        // Update header navigation
+        headerNavLinks.forEach(link => {
+          if (link.href.includes(targetHref)) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+
+        // Update bottom navigation
+        bottomNavLinks.forEach(link => {
+          if (link.href.includes(targetHref)) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+
+      // Handle navigation clicks
+      [...headerNavLinks, ...bottomNavLinks].forEach(link => {
+        link.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href && href !== '#') {
+            syncNavigation(href);
+          }
+        });
+      });
+
+      // GSAP animations for navigation entrance
+      if (typeof gsap !== 'undefined') {
+        // Header navigation animation
+        gsap.fromTo('.claut-header-nav .claut-nav-item', {
+          rotationY: -180,
+          scale: 0.5,
+          opacity: 0,
+          y: -30
+        }, {
+          rotationY: 0,
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "back.out(1.7)",
+          delay: 0.2
+        });
+
+      }
+
+      // Bottom navigation touch interactions
+      bottomNavLinks.forEach(link => {
+        link.addEventListener('touchstart', function () {
+          this.style.transform = 'scale(0.95)';
+        });
+
+        link.addEventListener('touchend', function () {
+          this.style.transform = 'scale(1)';
+        });
+      });
+
+      // Handle responsive navigation visibility
+      function handleNavigationVisibility() {
+        const header = document.querySelector('.claut-header');
+        const bottomNav = document.querySelector('.claut-bottom-nav');
+
+        if (window.innerWidth <= 1024) {
+          if (header) header.style.display = 'none';
+          if (bottomNav) bottomNav.style.display = 'block';
+        } else {
+          if (header) header.style.display = 'block';
+          if (bottomNav) bottomNav.style.display = 'none';
+        }
+      }
+
+      // Initial check
+      handleNavigationVisibility();
+
+      // Listen for resize events
+      window.addEventListener('resize', handleNavigationVisibility);
+
+      // Navigation item hover effects (desktop only)
+      if (window.innerWidth > 1024) {
+        headerNavLinks.forEach(item => {
+          item.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-2px)';
+          });
+
+          item.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+      }
+
+      // Configuración del menú móvil
+      function setupMobileMenu() {
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const headerNav = document.querySelector('.claut-header-nav');
+
+        if (mobileMenuBtn && headerNav) {
+          mobileMenuBtn.addEventListener('click', function () {
+            headerNav.classList.toggle('show');
+
+            // Cambiar ícono del botón
+            const icon = this.querySelector('i');
+            if (headerNav.classList.contains('show')) {
+              icon.className = 'fas fa-times';
+            } else {
+              icon.className = 'fas fa-bars';
+            }
+          });
+
+          // Cerrar menú al hacer clic en un enlace
+          const navLinks = headerNav.querySelectorAll('.claut-nav-item');
+          navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+              headerNav.classList.remove('show');
+              const icon = mobileMenuBtn.querySelector('i');
+              icon.className = 'fas fa-bars';
+            });
+          });
+        }
+      }
+
+      // Configuración de botones del header
+      function setupHeaderButtons() {
+        // Botón de mensajes
+        const messagesBtn = document.getElementById('headerMessagesBtn');
+        if (messagesBtn) {
+          messagesBtn.addEventListener('click', function () {
+            // Aquí se podría implementar la lógica del centro de mensajes
+            console.log('Centro de mensajes clicked');
+          });
+        }
+
+        // Botón de usuario
+        const userMenuBtn = document.getElementById('headerUserMenuBtn');
+        if (userMenuBtn) {
+          userMenuBtn.addEventListener('click', function () {
+            // Aquí se podría implementar la lógica del menú de usuario
+            console.log('User menu clicked');
+          });
+        }
+      }
+
+      // Inicializar funciones
+      setupMobileMenu();
+      setupHeaderButtons();
+    });
+
+    // JavaScript para el menú curvo animado
+    document.addEventListener('DOMContentLoaded', function () {
+      const bottomNavLinks = document.querySelectorAll('.claut-bottom-nav .claut-nav-link');
+      const headerNavLinks = document.querySelectorAll('.claut-header-nav .claut-nav-item');
+      const navCurve = document.querySelector('.claut-nav-curve');
+
+      function setActiveNav(activeLink) {
+        // Remover clase active de todos los enlaces del bottom nav
+        bottomNavLinks.forEach(link => link.classList.remove('active'));
+
+        // Agregar clase active al enlace clickeado
+        activeLink.classList.add('active');
+
+        // Posicionar la curva
+        if (navCurve) {
+          const linkIndex = Array.from(bottomNavLinks).indexOf(activeLink);
+          const container = activeLink.closest('.claut-nav-container');
+          const containerWidth = container.offsetWidth;
+          const linkWidth = activeLink.offsetWidth;
+          const leftOffset = (containerWidth / bottomNavLinks.length) * linkIndex + (linkWidth / 2);
+          navCurve.style.left = leftOffset + 'px';
+        }
+      }
+
+      // Event listeners para bottom nav
+      bottomNavLinks.forEach((link, index) => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          // Solo hacer la animación, no navegar
+          setActiveNav(link);
+
+          // Navegar después de un pequeño delay para mostrar la animación
+          setTimeout(() => {
+            window.location.href = link.href;
+          }, 150);
+        });
+
+        // Touch feedback para móviles
+        link.addEventListener('touchstart', function () {
+          link.style.transform = 'translateY(-12px) scale(0.95)';
+        }, { passive: true });
+
+        link.addEventListener('touchend', function () {
+          setTimeout(() => {
+            if (!link.classList.contains('active')) {
+              link.style.transform = '';
+            }
+          }, 150);
+        }, { passive: true });
+      });
+
+      // Event listeners para header nav
+      headerNavLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+          // Remover active de todos
+          headerNavLinks.forEach(item => item.classList.remove('active'));
+
+          // Agregar active al clickeado
+          link.classList.add('active');
+        });
+      });
+
+      // Sincronizar navegación entre header y bottom nav
+      function syncNavigation() {
+        const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+
+        // Remover todas las clases active
+        bottomNavLinks.forEach(link => link.classList.remove('active'));
+        headerNavLinks.forEach(link => link.classList.remove('active'));
+
+        // Determinar cual debe estar activo basado en la página actual
+        let activeBottomLink = null;
+        let activeHeaderLink = null;
+
+        if (currentPage.includes('dashboard')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="inicio"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="dashboard"]');
+        } else if (currentPage.includes('descuentos')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="descuentos"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="descuentos"]');
+        } else if (currentPage.includes('boletines')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="boletines"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="boletines"]');
+        } else if (currentPage.includes('comite')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="comite"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="comite"]');
+        } else if (currentPage.includes('contacto')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="contacto"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="contacto"]');
+        } else if (currentPage.includes('eventos')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="eventos"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="eventos"]');
+        } else if (currentPage.includes('convenio')) {
+          activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="convenios"]');
+          activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="convenio"]');
+        }
+
+        // Activar los enlaces correspondientes
+        if (activeBottomLink) {
+          activeBottomLink.classList.add('active');
+          setActiveNav(activeBottomLink);
+        }
+        if (activeHeaderLink) {
+          activeHeaderLink.classList.add('active');
+        }
+      }
+
+      // Inicializar navegación sincronizada
+      syncNavigation();
+
+      // Animaciones de entrada solo si GSAP está disponible
+      if (typeof gsap !== 'undefined') {
+        // Animación de entrada del menú
+        gsap.fromTo('.claut-bottom-nav', {
+          y: 100,
+          opacity: 0
+        }, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+          delay: 0.5
+        });
+
+        // Animación escalonada de los iconos
+        gsap.fromTo('.claut-bottom-nav .claut-nav-link i', {
+          scale: 0,
+          rotation: -180
+        }, {
+          scale: 1,
+          rotation: 0,
+          duration: 0.6,
+          ease: "back.out(2.5)",
+          stagger: 0.1,
+          delay: 1
+        });
+      }
+    });
+  </script>
+
+  <!-- Sistema de Seguridad de Sesión -->
+  <script src="./js/session-security.js"></script>
+  <script>
+    // Inicializar seguridad de sesión después de que todo esté cargado
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => {
+        window.enableSessionSecurity();
+      }, 1000);
+    });
+  </script>
+
+</body>
+<!-- plugin for charts  -->
+<script src="./assets/js/plugins/chartjs.min.js" async></script>
+<!-- plugin for scrollbar  -->
+<script src="./assets/js/plugins/perfect-scrollbar.min.js" async></script>
+<!-- main script file  -->
+<script src="./assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+
+</html>

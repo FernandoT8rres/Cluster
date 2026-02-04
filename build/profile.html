@@ -1,0 +1,3585 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+    <title>Perfil de Usuario - Clúster Intranet</title>
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Font Awesome Icons - Multiple sources for reliability -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous" defer></script>
+
+    <!-- Porsche-inspired Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Nucleo Icons -->
+    <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
+    <!-- Popper -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <!-- Main Styling -->
+    <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'clúster-red': '#C7252B',
+                        'clúster-red-dark': '#A31E23',
+                        'clúster-red-light': '#E8434A',
+                        'clúster-gray': '#F5F5F7',
+                        'clúster-dark': '#1D1D1F'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+
+    <style>
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c; /* Clúster red for brand consistency */
+
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-font-weight-light: 300;
+            --porsche-font-weight-regular: 400;
+            --porsche-font-weight-medium: 500;
+            --porsche-font-weight-semibold: 600;
+            --porsche-font-weight-bold: 700;
+
+            /* Spacing */
+            --porsche-space-xs: 0.5rem;
+            --porsche-space-sm: 1rem;
+            --porsche-space-md: 1.5rem;
+            --porsche-space-lg: 2rem;
+            --porsche-space-xl: 3rem;
+
+            /* Shadows */
+            --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+            /* Border Radius */
+            --porsche-radius-sm: 4px;
+            --porsche-radius-md: 8px;
+            --porsche-radius-lg: 12px;
+            --porsche-radius-xl: 16px;
+        }
+
+        /* Global Typography Enhancement */
+        * {
+            font-family: var(--porsche-font) !important;
+        }
+
+        body {
+            font-weight: var(--porsche-font-weight-regular);
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%);
+            border-radius: var(--porsche-radius-lg);
+            box-shadow: var(--porsche-shadow-large);
+            margin: var(--porsche-space-sm);
+            backdrop-filter: blur(20px);
+            height: calc(100vh - 2rem);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar for sidebar */
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white);
+            font-weight: var(--porsche-font-weight-bold);
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .porsche-nav-item {
+            font-family: var(--porsche-font);
+            font-weight: var(--porsche-font-weight-medium);
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: var(--porsche-radius-md);
+            margin: 0.125rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .porsche-nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--porsche-accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .porsche-nav-item:hover,
+        .porsche-nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--porsche-white);
+            transform: translateX(2px);
+        }
+
+        .porsche-nav-item:hover::before,
+        .porsche-nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        /* Sidebar visible state */
+        .porsche-sidebar.sidenav-show,
+        .porsche-sidebar[aria-expanded="true"] {
+            transform: translateX(0) !important;
+        }
+
+        /* Desktop sidebar */
+        @media (min-width: 1280px) {
+            .porsche-sidebar {
+                transform: translateX(0) !important;
+                position: fixed !important;
+                z-index: 10 !important;
+            }
+
+            .porsche-main {
+                margin-left: 272px !important;
+            }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 1279px) {
+            .porsche-sidebar {
+                transform: translateX(-100%) !important;
+                z-index: 999 !important;
+                width: 280px !important;
+                max-width: 75vw !important;
+            }
+
+            .porsche-sidebar.sidenav-show,
+            .porsche-sidebar[aria-expanded="true"] {
+                transform: translateX(0) !important;
+            }
+
+            .porsche-main {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+        }
+
+        /* Tablet responsive */
+        @media (max-width: 1023px) {
+            .porsche-sidebar {
+                width: 280px !important;
+                max-width: 70vw !important;
+            }
+
+            .porsche-main {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 767px) {
+            .porsche-sidebar {
+                width: 280px !important;
+                max-width: 80vw !important;
+            }
+
+            .porsche-main {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
+        }
+
+        /* Overlay for mobile */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* FORCE SIDEBAR VISIBLE ALWAYS like dashboard - ONLY ON DESKTOP */
+        @media (min-width: 1280px) {
+            aside.sidebar-enhanced {
+                transform: translateX(0) !important;
+            }
+        }
+
+        /* Override Tailwind classes that might conflict */
+        .porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        @media (max-width: 1279px) {
+            .porsche-sidebar:not(.sidenav-show) {
+                transform: translateX(-100%) !important;
+                left: 0 !important;
+                margin-left: 0 !important;
+            }
+        }
+
+        /* FontAwesome fixes */
+        .fa, .fas, .far, .fal, .fab {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome" !important;
+            font-weight: 900 !important;
+            font-style: normal !important;
+            display: inline-block !important;
+            text-rendering: auto !important;
+            -webkit-font-smoothing: antialiased !important;
+        }
+
+        /* Fallback for specific icons */
+        .fa-home::before { content: "\f015" !important; }
+        .fa-calendar-alt::before { content: "\f073" !important; }
+        .fa-file-alt::before { content: "\f15c" !important; }
+        .fa-newspaper::before { content: "\f1ea" !important; }
+        .fa-users::before { content: "\f0c0" !important; }
+        .fa-headset::before { content: "\f590" !important; }
+        .fa-handshake::before { content: "\f2b5" !important; }
+        .fa-tags::before { content: "\f02c" !important; }
+        .fa-user::before { content: "\f007" !important; }
+        .fa-sign-out-alt::before { content: "\f2f5" !important; }
+
+        /* Navbar improvements */
+        .porsche-navbar {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: var(--porsche-space-sm) var(--porsche-space-lg);
+            border-radius: var(--porsche-radius-lg);
+            margin: var(--porsche-space-sm);
+            z-index: 50;
+            position: relative;
+        }
+
+        /* FUTURISTIC MAIN CONTENT BACKGROUND */
+        .main-content {
+            margin-left: 272px;
+            transition: margin-left 0.3s ease;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            width: calc(100% - 272px);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .main-content::before {
+            display: none !important;
+        }
+
+        @media (max-width: 1279px) {
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        /* Ensure main container doesn't cause horizontal scroll */
+        main {
+            overflow-x: hidden;
+        }
+
+        /* Breadcrumb styling */
+        .breadcrumb {
+            background: transparent !important;
+            padding: var(--porsche-space-sm) 0;
+        }
+
+        .breadcrumb a {
+            color: var(--porsche-white) !important;
+            opacity: 0.8 !important;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1 !important;
+        }
+
+        .breadcrumb li {
+            color: var(--porsche-white) !important;
+            font-weight: var(--porsche-font-weight-medium);
+        }
+
+        .breadcrumb .breadcrumb-title {
+            color: white !important;
+            font-weight: var(--porsche-font-weight-bold);
+            margin-top: var(--porsche-space-xs);
+        }
+
+        /* Navbar content styling */
+        .porsche-navbar .apple-user-info {
+          color: var(--porsche-white);
+        }
+
+        .porsche-navbar .apple-nav-link {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .porsche-navbar .apple-nav-link:hover {
+          color: var(--porsche-white);
+        }
+
+        /* Standardized user dropdown styles - handled by Tailwind classes */
+
+        /* FUTURISTIC LIQUID GLASS DESIGN SYSTEM */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --glass-shadow-hover: 0 30px 60px rgba(0, 0, 0, 0.15);
+            --neon-blue: #00d4ff;
+            --neon-purple: #8b5cf6;
+            --neon-pink: #ec4899;
+            --neon-green: #10b981;
+            --cyber-dark: #0a0a0f;
+            --cyber-darker: #05050a;
+        }
+
+        /* Liquid Glass Card System with Dark Theme - Restored with Better Visibility */
+        .glass-card, .porsche-card {
+            background: linear-gradient(145deg,
+                rgba(0, 0, 0, 0.85) 0%,
+                rgba(20, 20, 20, 0.90) 50%,
+                rgba(10, 10, 10, 0.88) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(199, 37, 43, 0.4);
+            border-radius: 24px;
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(199, 37, 43, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-style: preserve-3d;
+            color: white;
+        }
+
+        .glass-card::before, .porsche-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(199, 37, 43, 0.2),
+                transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+
+        .glass-card:hover::before, .porsche-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover, .porsche-card:hover {
+            transform: translateY(-5px) rotateX(2deg) rotateY(1deg);
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(199, 37, 43, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(199, 37, 43, 0.3);
+            border-color: rgba(199, 37, 43, 0.7);
+        }
+
+        /* 3D Depth Levels - Restored */
+        .depth-1 {
+            transform: translateZ(5px);
+        }
+
+        .depth-2 {
+            transform: translateZ(10px);
+        }
+
+        .depth-3 {
+            transform: translateZ(15px);
+        }
+
+        /* Floating Animation - Subtle */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Neon Glow Effects - Red Theme Restored */
+        .neon-blue, .neon-purple, .neon-pink, .neon-green {
+            box-shadow: 0 0 15px rgba(199, 37, 43, 0.4);
+            border-color: rgba(199, 37, 43, 0.6);
+        }
+
+        .neon-red {
+            box-shadow: 0 0 15px rgba(199, 37, 43, 0.4);
+            border-color: rgba(199, 37, 43, 0.6);
+        }
+
+        /* RESTORED EFFECTS WITH RED THEME */
+
+        /* Holographic Gradient Backgrounds - Red Theme */
+        .holographic {
+            background: linear-gradient(45deg,
+                #C7252B, #8B1A1F, #C7252B, #A01E24, #C7252B);
+            background-size: 300% 300%;
+            animation: holographicShift 8s ease infinite;
+        }
+
+        @keyframes holographicShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Cyber Grid Pattern - Red Theme */
+        .cyber-grid {
+            background-image:
+                linear-gradient(rgba(199, 37, 43, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(199, 37, 43, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 3D Interactive Elements - Restored but Subtle */
+        .interactive-3d {
+            transform-style: preserve-3d;
+            perspective: 800px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .interactive-3d:hover {
+            transform: rotateY(5deg) rotateX(2deg) scale(1.02);
+        }
+
+        /* Liquid Morphing Buttons - Red Theme Restored */
+        .liquid-button {
+            background: linear-gradient(135deg, #C7252B, #8B1A1F);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            color: white;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: pointer;
+        }
+
+        .liquid-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .liquid-button:hover::before {
+            left: 100%;
+        }
+
+        .liquid-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(199, 37, 43, 0.4);
+        }
+
+        /* Particle Animation Background - Red Theme */
+        .particle-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(199, 37, 43, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 26, 31, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(199, 37, 43, 0.1) 0%, transparent 50%);
+            animation: particleFloat 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-15px) rotate(120deg); }
+            66% { transform: translateY(8px) rotate(240deg); }
+        }
+
+        /* Futuristic Typography - Red Theme */
+        .cyber-text {
+            font-family: 'Orbitron', 'Roboto', sans-serif;
+            text-shadow: 0 0 8px rgba(199, 37, 43, 0.6);
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .glitch-text {
+            position: relative;
+            color: white;
+            font-weight: bold;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            animation: glitch 2s infinite linear alternate-reverse;
+            color: #C7252B;
+            z-index: -1;
+        }
+
+        .glitch-text::after {
+            animation: glitch 2s infinite linear alternate-reverse;
+            color: #8B1A1F;
+            z-index: -2;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-1px, 1px); }
+            40% { transform: translate(-1px, -1px); }
+            60% { transform: translate(1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Enhanced Avatar with 3D Effect - Red Theme */
+        .avatar-3d {
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 3px rgba(199, 37, 43, 0.4),
+                0 0 0 6px rgba(199, 37, 43, 0.2),
+                0 15px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-style: preserve-3d;
+        }
+
+        .avatar-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+            box-shadow:
+                0 0 0 3px rgba(199, 37, 43, 0.7),
+                0 0 0 6px rgba(199, 37, 43, 0.3),
+                0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        /* ADDITIONAL FUTURISTIC ELEMENTS */
+
+        /* Make all cards have proper z-index stacking */
+        .glass-card, .porsche-card {
+            z-index: 10;
+        }
+
+        /* Add perspective to container */
+        .w-full.px-6.py-6.mx-auto {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        /* Enhance text readability on glass cards */
+        .glass-card h1, .glass-card h2, .glass-card h3,
+        .glass-card h4, .glass-card h5, .glass-card h6,
+        .porsche-card h1, .porsche-card h2, .porsche-card h3,
+        .porsche-card h4, .porsche-card h5, .porsche-card h6 {
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card p, .glass-card span, .glass-card label,
+        .porsche-card p, .porsche-card span, .porsche-card label {
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Futuristic form inputs - Dark Theme */
+        .glass-card input[type="text"],
+        .glass-card input[type="email"],
+        .glass-card input[type="tel"],
+        .glass-card input[type="date"],
+        .glass-card textarea,
+        .glass-card select,
+        .porsche-card input[type="text"],
+        .porsche-card input[type="email"],
+        .porsche-card input[type="tel"],
+        .porsche-card input[type="date"],
+        .porsche-card textarea,
+        .porsche-card select {
+            background: rgba(0, 0, 0, 0.7) !important;
+            border: 1px solid rgba(199, 37, 43, 0.4) !important;
+            backdrop-filter: blur(10px);
+            color: white !important;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .glass-card input[type="text"]:focus,
+        .glass-card input[type="email"]:focus,
+        .glass-card input[type="tel"]:focus,
+        .glass-card input[type="date"]:focus,
+        .glass-card textarea:focus,
+        .glass-card select:focus,
+        .porsche-card input[type="text"]:focus,
+        .porsche-card input[type="email"]:focus,
+        .porsche-card input[type="tel"]:focus,
+        .porsche-card input[type="date"]:focus,
+        .porsche-card textarea:focus,
+        .porsche-card select:focus {
+            outline: none !important;
+            border-color: #C7252B !important;
+            box-shadow: 0 0 20px rgba(199, 37, 43, 0.6) !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        .glass-card input::placeholder,
+        .glass-card textarea::placeholder,
+        .porsche-card input::placeholder,
+        .porsche-card textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        /* UNIVERSAL TEXT VISIBILITY AND CONTRAST FIXES */
+
+        /* Force all text to be white with proper contrast */
+        .glass-card *, .porsche-card * {
+            color: white !important;
+        }
+
+        /* Specific fixes for different text elements */
+        .glass-card .text-gray-900,
+        .glass-card .text-gray-700,
+        .glass-card .text-gray-600,
+        .glass-card .text-gray-500,
+        .porsche-card .text-gray-900,
+        .porsche-card .text-gray-700,
+        .porsche-card .text-gray-600,
+        .porsche-card .text-gray-500 {
+            color: white !important;
+        }
+
+        /* Make labels and spans more visible */
+        .glass-card label,
+        .glass-card span:not(.text-red-600),
+        .porsche-card label,
+        .porsche-card span:not(.text-red-600) {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+        }
+
+        /* Red accents for important elements */
+        .glass-card .text-red-600,
+        .porsche-card .text-red-600,
+        .glass-card .text-blue-600,
+        .porsche-card .text-blue-600,
+        .glass-card .text-emerald-600,
+        .porsche-card .text-emerald-600,
+        .glass-card .text-purple-600,
+        .porsche-card .text-purple-600 {
+            color: #C7252B !important;
+            font-weight: 600;
+        }
+
+        /* Icons with red theme */
+        .glass-card .fa,
+        .glass-card .fas,
+        .glass-card .far,
+        .porsche-card .fa,
+        .porsche-card .fas,
+        .porsche-card .far {
+            color: #C7252B !important;
+        }
+
+        /* Background fixes for notification areas */
+        .glass-card .bg-yellow-50,
+        .porsche-card .bg-yellow-50 {
+            background: rgba(199, 37, 43, 0.1) !important;
+            border-color: rgba(199, 37, 43, 0.3) !important;
+        }
+
+        /* Button text visibility */
+        .glass-card button,
+        .porsche-card button {
+            color: white !important;
+        }
+
+        /* Badge and tag styling */
+        .glass-card .bg-blue-100,
+        .porsche-card .bg-blue-100 {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: white !important;
+        }
+
+        /* Additional visibility fixes */
+        .w-full.px-6.py-6.mx-auto * {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Tab buttons styling */
+        .tab-btn {
+            background: rgba(199, 37, 43, 0.8) !important;
+            color: white !important;
+            border: 1px solid rgba(199, 37, 43, 0.6) !important;
+        }
+
+        .tab-btn.active {
+            background: #C7252B !important;
+            box-shadow: 0 0 15px rgba(199, 37, 43, 0.5) !important;
+        }
+
+        /* Ensure high contrast for all dark elements */
+        .dark\\:text-white,
+        .dark\\:text-gray-300 {
+            color: white !important;
+        }
+
+        /* Switch and toggle elements */
+        .glass-card input[type="checkbox"],
+        .porsche-card input[type="checkbox"] {
+            accent-color: #C7252B !important;
+        }
+
+        /* SPECIFIC FIXES FOR SETTINGS AND ACTIVITY TABS */
+
+        /* Settings Tab Specific Styles - Unified Background */
+        #settingsTab .glass-card,
+        #settingsTab .porsche-card {
+            background: rgba(0, 0, 0, 0.95) !important;
+        }
+
+        /* Activity Tab Specific Styles - Unified Background */
+        #activityTab .glass-card,
+        #activityTab .porsche-card {
+            background: rgba(0, 0, 0, 0.95) !important;
+        }
+
+        /* Toggle switches in settings */
+        .toggle-switch {
+            background: rgba(100, 100, 100, 0.3) !important;
+            border: 1px solid rgba(199, 37, 43, 0.5) !important;
+        }
+
+        .toggle-switch.active,
+        .toggle-switch:checked {
+            background: linear-gradient(135deg, #C7252B, #8B1A1F) !important;
+            border-color: #C7252B !important;
+        }
+
+        /* Settings options and controls */
+        #settingsTab .flex.items-center.justify-between {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(199, 37, 43, 0.2);
+        }
+
+        #settingsTab .flex.items-center.justify-between:last-child {
+            border-bottom: none;
+        }
+
+        /* Activity charts and stats background - Unified */
+        #activityTab .bg-white {
+            background: rgba(0, 0, 0, 0.95) !important;
+        }
+
+        /* Activity items styling - Unified */
+        #activityTab .bg-gray-50 {
+            background: rgba(0, 0, 0, 0.85) !important;
+        }
+
+        /* Icon backgrounds in settings and activity */
+        #settingsTab .w-10.h-10,
+        #activityTab .w-10.h-10,
+        #settingsTab .w-12.h-12,
+        #activityTab .w-12.h-12 {
+            background: linear-gradient(135deg, #C7252B, #8B1A1F) !important;
+            color: white !important;
+        }
+
+        /* Specific text colors for settings and activity */
+        #settingsTab h3,
+        #settingsTab h4,
+        #settingsTab h5,
+        #activityTab h3,
+        #activityTab h4,
+        #activityTab h5 {
+            color: white !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #settingsTab p,
+        #settingsTab span,
+        #settingsTab label,
+        #activityTab p,
+        #activityTab span,
+        #activityTab label {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        /* Activity timeline items */
+        #activityTab .space-y-3 > div {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 1px solid rgba(199, 37, 43, 0.3) !important;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        /* Additional specific fixes for Settings and Activity */
+
+        /* Settings Tab - Switch/Toggle Elements */
+        #settingsTab input[type="range"] {
+            accent-color: #C7252B !important;
+        }
+
+        #settingsTab .bg-green-100,
+        #settingsTab .bg-blue-100,
+        #settingsTab .bg-purple-100,
+        #settingsTab .bg-orange-100 {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: white !important;
+        }
+
+        /* Activity Tab - Statistics and Charts */
+        #activityTab .text-blue-600,
+        #activityTab .text-green-600,
+        #activityTab .text-purple-600,
+        #activityTab .text-orange-600,
+        #activityTab .text-emerald-600 {
+            color: #C7252B !important;
+            font-weight: 700;
+        }
+
+        /* Progress bars in activity */
+        #activityTab .bg-blue-200,
+        #activityTab .bg-green-200,
+        #activityTab .bg-purple-200 {
+            background: rgba(199, 37, 43, 0.3) !important;
+        }
+
+        #activityTab .bg-blue-500,
+        #activityTab .bg-green-500,
+        #activityTab .bg-purple-500 {
+            background: #C7252B !important;
+        }
+
+        /* Settings form elements */
+        #settingsTab select,
+        #settingsTab option {
+            background: rgba(0, 0, 0, 0.8) !important;
+            color: white !important;
+            border: 1px solid rgba(199, 37, 43, 0.5) !important;
+        }
+
+        /* Activity tab date and time elements */
+        #activityTab .text-xs.text-gray-500,
+        #activityTab .text-sm.text-gray-600 {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        /* Settings notification badges */
+        #settingsTab .relative .absolute {
+            background: #C7252B !important;
+            color: white !important;
+        }
+
+        /* Activity tab cards content */
+        #activityTab .bg-gradient-to-r {
+            background: linear-gradient(135deg, #C7252B, #8B1A1F) !important;
+        }
+
+        /* Ensure all dark mode elements are visible */
+        #settingsTab .dark\\:bg-slate-850,
+        #activityTab .dark\\:bg-slate-850 {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Border fixes for settings and activity */
+        #settingsTab .border-gray-200,
+        #activityTab .border-gray-200 {
+            border-color: rgba(199, 37, 43, 0.3) !important;
+        }
+
+        /* RESTORED LIQUID GLASS AND 3D EFFECTS */
+
+        /* 3D Perspective for main container */
+        body {
+            perspective: 2000px;
+            perspective-origin: center top;
+        }
+
+        /* Enhanced glass morphism for cards */
+        .glass-card, .porsche-card {
+            background: linear-gradient(145deg,
+                rgba(0, 0, 0, 0.85) 0%,
+                rgba(20, 20, 20, 0.90) 30%,
+                rgba(10, 10, 10, 0.88) 70%,
+                rgba(0, 0, 0, 0.92) 100%);
+            backdrop-filter: blur(20px) saturate(1.5);
+            border: 1px solid rgba(199, 37, 43, 0.4);
+            border-radius: 24px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 2px 8px rgba(199, 37, 43, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+                rgba(199, 37, 43, 0.1) 0%,
+                transparent 50%,
+                rgba(199, 37, 43, 0.05) 100%);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) rotateX(5deg) rotateY(2deg);
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.6),
+                0 8px 24px rgba(199, 37, 43, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            border-color: rgba(199, 37, 43, 0.6);
+        }
+
+        /* Floating animation for enhanced effect */
+        .floating-element {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+            50% { transform: translateY(-10px) rotateZ(1deg); }
+        }
+
+        /* Holographic effects */
+        .holographic-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .holographic-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                transparent 30%,
+                rgba(199, 37, 43, 0.1) 50%,
+                transparent 70%);
+            animation: hologram 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes hologram {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(0deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(360deg); }
+        }
+
+        /* Enhanced cyber grid background */
+        .cyber-grid {
+            background-image:
+                linear-gradient(rgba(199, 37, 43, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(199, 37, 43, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 20px; }
+        }
+
+        /* Liquid morphing buttons */
+        .liquid-button {
+            background: linear-gradient(135deg, #C7252B, #8B1A1F);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .liquid-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent);
+            transition: left 0.5s;
+        }
+
+        .liquid-button:hover::before {
+            left: 100%;
+        }
+
+        .liquid-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(199, 37, 43, 0.4);
+        }
+
+        /* 3D Avatar enhancement */
+        .avatar-3d {
+            border-radius: 50%;
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 0 3px rgba(199, 37, 43, 0.3),
+                0 0 0 6px rgba(199, 37, 43, 0.1);
+            transform: translateZ(20px);
+            transition: all 0.4s ease;
+        }
+
+        .avatar-3d:hover {
+            transform: translateZ(40px) rotateY(15deg);
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.7),
+                0 0 0 3px rgba(199, 37, 43, 0.5),
+                0 0 0 6px rgba(199, 37, 43, 0.2);
+        }
+
+        /* Particle effect background */
+        .particle-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(199, 37, 43, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 20%, rgba(199, 37, 43, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 40%, rgba(199, 37, 43, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px, 150px 150px, 80px 80px;
+            animation: particles 15s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes particles {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 100px 100px, -150px 150px, 80px -80px; }
+        }
+
+        /* Glitch text effect */
+        .glitch-text {
+            position: relative;
+            color: white;
+            text-shadow: 0 0 10px rgba(199, 37, 43, 0.5);
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            animation: glitch 2s infinite;
+            color: rgba(199, 37, 43, 0.8);
+            z-index: -1;
+        }
+
+        .glitch-text::after {
+            animation: glitch 2s infinite reverse;
+            color: rgba(255, 255, 255, 0.8);
+            z-index: -2;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
+        /* VISIBILITY FIXES - MAINTAINED FROM PREVIOUS VERSION */
+
+        /* Universal background override for Settings and Activity tabs */
+        #settingsTab *,
+        #activityTab * {
+            background-color: transparent !important;
+        }
+
+        /* PRIMARY BLACK BACKGROUND - SINGLE TONE */
+        #settingsTab .bg-white,
+        #settingsTab .bg-gray-50,
+        #settingsTab .bg-gray-100,
+        #settingsTab .bg-gray-200,
+        #settingsTab .bg-slate-50,
+        #settingsTab .bg-slate-100,
+        #activityTab .bg-white,
+        #activityTab .bg-gray-50,
+        #activityTab .bg-gray-100,
+        #activityTab .bg-gray-200,
+        #activityTab .bg-slate-50,
+        #activityTab .bg-slate-100 {
+            background: rgba(0, 0, 0, 0.9) !important;
+        }
+
+        /* SECONDARY BLACK BACKGROUND - SLIGHTLY LIGHTER */
+        #settingsTab .rounded-lg,
+        #settingsTab .rounded-xl,
+        #settingsTab .rounded-2xl,
+        #activityTab .rounded-lg,
+        #activityTab .rounded-xl,
+        #activityTab .rounded-2xl {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Force black on notification areas */
+        #settingsTab .bg-yellow-50,
+        #settingsTab .bg-blue-50,
+        #settingsTab .bg-green-50,
+        #settingsTab .bg-red-50,
+        #activityTab .bg-yellow-50,
+        #activityTab .bg-blue-50,
+        #activityTab .bg-green-50,
+        #activityTab .bg-red-50 {
+            background: rgba(199, 37, 43, 0.1) !important;
+        }
+
+        /* Force black on any table or list elements */
+        #settingsTab table,
+        #settingsTab tbody,
+        #settingsTab tr,
+        #settingsTab td,
+        #activityTab table,
+        #activityTab tbody,
+        #activityTab tr,
+        #activityTab td {
+            background: transparent !important;
+        }
+
+        /* Force black on modal or popup elements within tabs */
+        #settingsTab .absolute,
+        #settingsTab .fixed,
+        #activityTab .absolute,
+        #activityTab .fixed {
+            background: rgba(0, 0, 0, 0.9) !important;
+        }
+
+        /* Override any inline styles that might set white backgrounds */
+        #settingsTab [style*="background"],
+        #activityTab [style*="background"] {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Force black on progress bars and charts */
+        #activityTab .progress-bar,
+        #activityTab .chart-container,
+        #activityTab .stats-container {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* ULTIMATE BACKGROUND OVERRIDE - CATCH ALL REMAINING WHITE ELEMENTS */
+
+        /* Target specific Tailwind background classes */
+        #settingsTab .bg-white,
+        #settingsTab .bg-gray-50,
+        #settingsTab .bg-gray-100,
+        #settingsTab .bg-gray-200,
+        #settingsTab .bg-gray-300,
+        #settingsTab .bg-slate-50,
+        #settingsTab .bg-slate-100,
+        #settingsTab .bg-slate-200,
+        #settingsTab .bg-neutral-50,
+        #settingsTab .bg-neutral-100,
+        #settingsTab .bg-stone-50,
+        #settingsTab .bg-stone-100,
+        #activityTab .bg-white,
+        #activityTab .bg-gray-50,
+        #activityTab .bg-gray-100,
+        #activityTab .bg-gray-200,
+        #activityTab .bg-gray-300,
+        #activityTab .bg-slate-50,
+        #activityTab .bg-slate-100,
+        #activityTab .bg-slate-200,
+        #activityTab .bg-neutral-50,
+        #activityTab .bg-neutral-100,
+        #activityTab .bg-stone-50,
+        #activityTab .bg-stone-100 {
+            background: rgba(0, 0, 0, 0.85) !important;
+            color: white !important;
+        }
+
+        /* Force black on any element with white in the class name */
+        #settingsTab [class*="white"],
+        #activityTab [class*="white"] {
+            background: rgba(0, 0, 0, 0.8) !important;
+            color: white !important;
+        }
+
+        /* Force black on card backgrounds specifically */
+        #settingsTab .card,
+        #settingsTab .card-body,
+        #settingsTab .card-content,
+        #activityTab .card,
+        #activityTab .card-body,
+        #activityTab .card-content {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Override Bootstrap and other framework whites */
+        #settingsTab .bg-light,
+        #settingsTab .bg-white,
+        #settingsTab .bg-secondary,
+        #activityTab .bg-light,
+        #activityTab .bg-white,
+        #activityTab .bg-secondary {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Force black on form controls that might be white */
+        #settingsTab .form-control,
+        #settingsTab .form-select,
+        #settingsTab .input-group,
+        #activityTab .form-control,
+        #activityTab .form-select,
+        #activityTab .input-group {
+            background: rgba(0, 0, 0, 0.7) !important;
+            color: white !important;
+            border-color: rgba(199, 37, 43, 0.5) !important;
+        }
+
+        /* Ensure dropdowns and menus are black */
+        #settingsTab .dropdown-menu,
+        #settingsTab .menu,
+        #activityTab .dropdown-menu,
+        #activityTab .menu {
+            background: rgba(0, 0, 0, 0.9) !important;
+            color: white !important;
+        }
+
+        /* Force black on any remaining containers */
+        #settingsTab .container,
+        #settingsTab .container-fluid,
+        #settingsTab .row,
+        #settingsTab .col,
+        #activityTab .container,
+        #activityTab .container-fluid,
+        #activityTab .row,
+        #activityTab .col {
+            background: transparent !important;
+        }
+
+        /* Nuclear option: force all divs to have black background if they're white */
+        #settingsTab div:not([class*="neon"]):not([class*="glass"]),
+        #activityTab div:not([class*="neon"]):not([class*="glass"]) {
+            background-color: rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Enhanced Glassmorphism effect with Porsche styling */
+        .legacy-glass-card {
+            background: var(--porsche-white);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--porsche-shadow-large);
+            border-radius: var(--porsche-radius-lg);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--porsche-shadow-large);
+        }
+
+        /* Enhanced tab animations */
+        .tab-content {
+            min-height: 400px;
+        }
+
+        .tab-pane {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .tab-pane.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced tab buttons with glow effect */
+        .tab-btn {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+
+        .tab-btn.active {
+            box-shadow: 0 4px 15px #C7252B;
+        }
+
+        /* Gradient backgrounds */
+        .gradient-blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .gradient-emerald {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        }
+
+        .gradient-purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .gradient-orange {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        /* Loading animation enhanced */
+        .loading-pulse {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Floating effect for stats */
+        .stats-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .stats-card:nth-child(1) { animation-delay: 0s; }
+        .stats-card:nth-child(2) { animation-delay: 1.5s; }
+        .stats-card:nth-child(3) { animation-delay: 3s; }
+        .stats-card:nth-child(4) { animation-delay: 4.5s; }
+
+        /* Form input focus effects */
+        .enhanced-input {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .enhanced-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Activity item animations */
+        .activity-item {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        .activity-item:nth-child(1) { animation-delay: 0.1s; }
+        .activity-item:nth-child(2) { animation-delay: 0.2s; }
+        .activity-item:nth-child(3) { animation-delay: 0.3s; }
+        .activity-item:nth-child(4) { animation-delay: 0.4s; }
+        .activity-item:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Button hover effects */
+        .btn-enhanced {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-enhanced::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-enhanced:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-enhanced:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Icon pulse effect */
+        .icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Card entrance animation */
+        .card-entrance {
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+            animation: cardEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        /* Staggered animation delays */
+        .card-entrance:nth-child(1) { animation-delay: 0.1s; }
+        .card-entrance:nth-child(2) { animation-delay: 0.2s; }
+        .card-entrance:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Success message animation */
+        .success-bounce {
+            animation: successBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes successBounce {
+            0% { transform: scale(0) rotate(180deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* Progress bar animation */
+        .progress-bar {
+            width: 0%;
+            transition: width 1s ease-out;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+            background-size: 200% 100%;
+            animation: gradientMove 2s ease-in-out infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Smooth scroll behavior */
+        * {
+            scroll-behavior: smooth;
+        }
+
+        /* Enhanced shadows and depth */
+        .depth-1 { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+        .depth-2 { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); }
+        .depth-3 { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); }
+
+        /* Responsive enhancements */
+        @media (max-width: 768px) {
+            .glass-card {
+                backdrop-filter: blur(5px);
+            }
+            
+            .stats-card {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default text-slate-500">
+    <div class="absolute w-full bg-gradient-to-br from-porsche-charcoal via-porsche-black to-porsche-accent dark:hidden min-h-75"></div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-blue-500"></div>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+
+    <!-- sidenav -->
+    <aside
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-auto py-6 relative">
+            <!-- Close button for mobile -->
+            <button id="closeSidebarBtn"
+                    class="absolute top-2 right-2 z-50 flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded-full hover:bg-gray-600 transition-colors xl:hidden"
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+            <a class="porsche-logo block px-8 m-0 text-center whitespace-nowrap" href="dashboard.html"
+                target="_blank">
+                <img src="./assets/img/apple-icon.png"
+                    class="block mx-auto h-40 w-40 max-w-full transition-all duration-200 ease-nav-brand mb-3"
+                    alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-bold mb-4">Clúster Intranet</span>
+            </a>
+
+            <hr
+                class="h-px mt-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
+        </div>
+
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0">
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="dashboard.html">
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-home"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100 ease">Inicio</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full ">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="empresas-convenio.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal text-white fas fa-handshake"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100 ease">Socios</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full ">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="boletines.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-newspaper"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100  ease">Boletines</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full ">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="eventos.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-calendar-alt"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100 ease">Eventos</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full ">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="descuentos.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-tags"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100 ease">Descuentos</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full ">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="comites.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-users"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100  ease">Comités</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full ">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="contacto.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-headset"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100  ease">Atención Directa</span>
+                    </a>
+                </li>
+
+                <li class="w-full mt-4">
+                    <h6 class="pl-6 ml-2 text-xs font-bold leading-tight uppercase text-white opacity-60">Cuenta</h6>
+                </li>
+
+                <li class="mt-0.5 w-full " id="profileMenuItem">
+                    <a class="porsche-nav-item active py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="profile.html" >
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-user"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100  ease">Perfil</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full" id="loginNavItem">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="./pages/sign-in.html">
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-sign-in-alt"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100  ease">Iniciar Sesión</span>
+                    </a>
+                </li>
+
+                <li class="mt-0.5 w-full" id="signupNavItem">
+                    <a class="porsche-nav-item py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                        href="./pages/sign-up.html">
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal fas fa-user-plus"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100  ease">Regístrate</span>
+                    </a>
+                </li>
+
+                <!-- Agregar botón de logout para usuarios autenticados -->
+                <li class="mt-0.5 w-full hidden" id="logoutMenuItem">
+                    <button id="logoutBtn"
+                        class="w-full dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors hover:bg-red-50">
+                        <div
+                            class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                            <i class="relative top-0 text-sm leading-normal text-red-500 fas fa-sign-out-alt"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100 text-white ease">Cerrar Sesión</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+    </aside>
+
+    <main class="porsche-main relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68">
+        <!-- Navbar -->
+        <nav
+          class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-1 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
+          navbar-main navbar-scroll="false">
+          <div class="flex items-center justify-between w-full px-4 py-0 mx-auto flex-wrap-inherit">
+            <nav>
+              <!-- breadcrumb -->
+              <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+                <li class="text-sm leading-normal text-white">
+                  <a class="opacity-60" href="javascript:;">Cuenta</a>
+                </li>
+                <li
+                  class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/']"
+                  aria-current="page">Perfil</li>
+              </ol>
+              <!-- Mostrar saludo con usuario logueado -->
+              <div id="welcomeMessage" class="mb-2">
+                <h6 class="porsche-welcome mb-0 capitalize text-white" id="welcomeText">Perfil de Usuario</h6>
+              </div>
+            </nav>
+
+            <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+              <div class="flex items-center md:ml-auto md:pr-4">
+                <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
+                  <!-- Mostrar información del usuario autenticado -->
+                  <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
+                    <div class="flex flex-col">
+                      <span id="userName" class="text-sm font-semibold"></span>
+                      <span id="userRole" class="text-xs opacity-75"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
+                <!-- User Dropdown Menu -->
+                <li class="flex items-center relative">
+                    <div class="relative">
+                        <button class="flex items-center px-3 py-1 text-sm font-bold text-white transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in border-white/20 bg-white/10 hover:scale-102 hover:border-white/40 active:opacity-85"
+                                onclick="toggleUserMenu()"
+                                id="userMenuBtn">
+                            <i class="fas fa-user text-white mr-2"></i>
+                            <span class="hidden sm:inline text-white" id="userDisplayName">Usuario</span>
+                            <i class="fas fa-chevron-down text-white ml-2 text-xs"></i>
+                        </button>
+                        <!-- User Dropdown -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 hidden"
+                             id="userDropdown"
+                             style="top: 100%;">
+                            <div class="px-4 py-2 border-b border-gray-200">
+                                <p class="text-sm font-medium text-gray-900" id="dropdownUserName">Usuario</p>
+                                <p class="text-xs text-gray-500" id="dropdownUserRole">Rol</p>
+                            </div>
+                            <a href="profile.html" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user-circle mr-3 text-gray-400"></i>
+                                Mi Perfil
+                            </a>
+                            <button onclick="handleLogout()" class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
+                                Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                </li>
+                <li class="flex items-center pl-4 xl:hidden">
+                  <a href="javascript:;" class="block p-0 text-sm text-white transition-all ease-nav-brand" sidenav-trigger>
+                    <div class="w-4.5 overflow-hidden">
+                      <i class="ease mb-0.75 relative block h-0.5 rounded-sm bg-white transition-all"></i>
+                      <i class="ease mb-0.75 relative block h-0.5 rounded-sm bg-white transition-all"></i>
+                      <i class="ease relative block h-0.5 rounded-sm bg-white transition-all"></i>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <!-- cards -->
+        <div class="w-full px-6 py-6 mx-auto">
+            <!-- Profile Header Card -->
+            <div class="glass-card porsche-card card-entrance floating-element holographic-effect particle-bg relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid mb-6 depth-3">
+                <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-4">
+                    <!-- Compact Profile Header -->
+                    <div class="flex items-center justify-between mb-4">
+                        <!-- Profile Info Row -->
+                        <div class="flex items-center space-x-3">
+                            <!-- Profile Text -->
+                            <div class="min-w-0">
+                                <h2 id="profileName" class="glitch-text text-lg font-bold text-gray-900 dark:text-white truncate" data-text="Cargando...">Cargando...</h2>
+                                <p id="profilePosition" class="text-sm text-gray-600 dark:text-gray-300 truncate">Cargando...</p>
+                            </div>
+
+                            <!-- Department Badge -->
+                            <div class="hidden sm:block">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                    <i class="fas fa-briefcase text-xs mr-1"></i>
+                                    <span id="profileDepartment">Cargando...</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="hidden lg:flex items-center space-x-4">
+                            <div class="text-center stats-card">
+                                <div class="text-lg font-bold text-blue-600 dark:text-blue-400 icon-pulse" id="statsEvents">-</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-300">Eventos</div>
+                            </div>
+                            <div class="text-center stats-card">
+                                <div class="text-lg font-bold text-emerald-600 dark:text-emerald-400 icon-pulse" id="statsDocuments">-</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-300">Documentos</div>
+                            </div>
+                            <div class="text-center stats-card">
+                                <div class="text-lg font-bold text-purple-600 dark:text-purple-400 icon-pulse" id="statsCommittees">-</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-300">Comités</div>
+                            </div>
+                            <div class="text-center stats-card">
+                                <div class="text-lg font-bold text-orange-600 dark:text-orange-400 icon-pulse" id="statsPoints">-</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-300">Puntos</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation Tabs -->
+                    <div class="flex flex-wrap gap-1">
+                        <button class="tab-btn liquid-button active px-3 py-1.5 bg-clúster-red text-white rounded-lg text-xs font-medium transition-all duration-300 hover:bg-blue-600 flex items-center" data-tab="info">
+                            <i class="fas fa-info-circle mr-1.5"></i>
+                            <span>Información</span>
+                        </button>
+                        <button class="bg-clúster-red tab-btn liquid-button px-3 py-1.5 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium transition-all duration-300 hover:bg-gray-200 dark:hover:bg-slate-600 flex items-center" data-tab="settings">
+                            <i class="fas fa-cog mr-1.5"></i>
+                            <span>Configuración</span>
+                        </button>
+                        <button class="bg-clúster-red tab-btn liquid-button px-3 py-1.5 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium transition-all duration-300 hover:bg-gray-200 dark:hover:bg-slate-600 flex items-center" data-tab="activity">
+                            <i class="fas fa-chart-line mr-1.5"></i>
+                            <span>Actividad</span>
+                        </button>
+                        <button class="bg-clúster-red tab-btn liquid-button px-3 py-1.5 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium transition-all duration-300 hover:bg-gray-200 dark:hover:bg-slate-600 flex items-center" data-tab="security">
+                            <i class="fas fa-shield-alt mr-1.5"></i>
+                            <span>Seguridad</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Information Tab -->
+                <div id="infoTab" class="tab-pane active">
+                    <div class="flex flex-wrap -mx-3">
+                        <!-- Personal Information -->
+                        <div class="w-full max-w-full px-3 lg:w-1/2 lg:flex-none card-entrance">
+                            <div class="glass-card porsche-card floating-element holographic-effect relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid depth-2">
+                                <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-4 pt-4 pb-2">
+                                    <div class="flex items-center mb-4">
+                                        <div class="text-white w-8 h-8 bg-black rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-white text-sm"></i>
+                                        </div>
+                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Información Personal</h3>
+                                    </div>
+                                </div>
+                                <div class="flex-auto p-4 pt-0">
+
+                            <form id="personalInfoForm" class="space-y-4">
+                                <!-- Read-only fields section -->
+                                <div class="glass-card porsche-card floating-element holographic-effect relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid depth-2">
+                                    <div class="flex items-center mb-3">
+                                        <i class="fas fa-lock text-gray-400 text-sm mr-2"></i>
+                                        <span class="text-sm font-medium text-gray-600 text-black>Información no editable</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 text-black mb-1">Nombre</label>
+                                            <input type="text" id="firstName" readonly class="w-full px-3 py-2 text-sm border border-gray-200 bg-gray-100 dark:bg-slate-600 dark:border-slate-500 rounded-lg text-gray-600 dark:text-gray-300 cursor-not-allowed">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 text-black mb-1">Apellidos</label>
+                                            <input type="text" id="lastName" readonly class="w-full px-3 py-2 text-sm border border-gray-200 bg-gray-100 dark:bg-slate-600 dark:border-slate-500 rounded-lg text-gray-600 dark:text-gray-300 cursor-not-allowed">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="block text-sm font-medium text-gray-700 text-black mb-1">Correo Electrónico</label>
+                                        <input type="email" id="email" readonly class="w-full px-3 py-2 text-sm border border-gray-200 bg-gray-100 dark:bg-slate-600 dark:border-slate-500 rounded-lg text-gray-600 dark:text-gray-300 cursor-not-allowed">
+                                    </div>
+                                </div>
+
+                                <!-- Editable fields section -->
+                                <div class="space-y-4">
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Teléfono</label>
+                                            <input type="tel" id="phone" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fecha En Que Se Fundo La Empresa</label>
+                                            <input type="date" id="birthDate" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Departamento</label>
+                                            <select id="department" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                                <option value="">Seleccionar departamento</option>
+                                                <option value="Administración">Administración</option>
+                                                <option value="Recursos Humanos">Recursos Humanos</option>
+                                                <option value="Tecnología">Tecnología</option>
+                                                <option value="Finanzas">Finanzas</option>
+                                                <option value="Marketing">Marketing</option>
+                                                <option value="Ventas">Ventas</option>
+                                                <option value="Operaciones">Operaciones</option>
+                                                <option value="Logística">Logística</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cargo</label>
+                                            <input type="text" id="position" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Biografía</label>
+                                        <textarea id="bio" rows="3" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Cuéntanos un poco sobre ti..."></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="w-full max-w-full px-3 lg:w-1/2 lg:flex-none card-entrance">
+                            <div class="glass-card porsche-card floating-element holographic-effect relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid depth-2">
+                                <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-4 pt-4 pb-2">
+                                    <div class="flex items-center mb-4">
+                                        <div class="text-white w-8 h-8 bg-black rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-address-book text-white text-sm"></i>
+                                        </div>
+                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Información de Contacto</h3>
+                                    </div>
+                                </div>
+                                <div class="flex-auto p-4 pt-0">
+
+                            <div class="space-y-4">
+                                <!-- Address Section -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Dirección</label>
+                                    <textarea id="address" rows="2" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Calle, número, colonia..."></textarea>
+                                </div>
+
+                                <!-- Location Grid -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ciudad</label>
+                                        <input type="text" id="city" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Estado</label>
+                                        <input type="text" id="state" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Código Postal</label>
+                                        <input type="text" id="zipCode" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">País</label>
+                                        <input type="text" id="country" value="México" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                    </div>
+                                </div>
+
+                                <!-- Emergency Contact Section -->
+                                <div class="border-t border-gray-200 dark:border-slate-600 pt-4 mt-6">
+                                    <div class="flex items-center mb-3">
+                                        <i class="fas fa-exclamation-triangle text-orange-500 text-sm mr-2"></i>
+                                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Contacto de Emergencia</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Teléfono de Emergencia</label>
+                                            <input type="tel" id="emergencyPhone" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre del Contacto</label>
+                                            <input type="text" id="emergencyContact" class="enhanced-input w-full px-3 py-2 text-sm border border-gray-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300" placeholder="Ej: María González (Esposa)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="flex flex-wrap -mx-3 mt-6">
+                        <div class="w-full px-3 card-entrance">
+                            <div class="glass-card porsche-card floating-element particle-bg relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid depth-1">
+                                <div class="flex-auto p-6">
+                                    <!-- Important Notice -->
+                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-4">
+                                        <div class="flex items-start">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-info-circle text-yellow-500 text-sm mt-0.5"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">Campos Protegidos</h3>
+                                                <p class="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+                                                    El nombre, apellidos y correo electrónico no pueden modificarse desde el perfil por seguridad.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="flex justify-end space-x-3">
+                                        <button type="button" class="px-4 py-2 text-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-300">
+                                            Cancelar
+                                        </button>
+                                        <button id="saveProfileBtn" type="button" class="liquid-button cyber-text">
+                                            <i class="fas fa-save mr-2"></i>
+                                            Guardar Cambios
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settingsTab" class="tab-pane">
+                    <div class="flex flex-wrap -mx-3">
+                        <!-- Notification Settings -->
+                        <div class="w-full max-w-full px-3 lg:w-1/2 lg:flex-none card-entrance">
+                            <div class="glass-card porsche-card floating-element cyber-grid relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid mb-6 depth-2">
+                                <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
+                                    <div class="flex items-center mb-6">
+                                        <div class="gradient-orange rounded-lg flex items-center justify-center mr-4 icon-pulse">
+                                            <i class="fas fa-bell "></i>
+                                        </div>
+                                        <h3 class="">Notificaciones</h3>
+                                    </div>
+                                </div>
+                                <div class="flex-auto p-4 pt-0">
+
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Eventos Nuevos</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Notificaciones de nuevos eventos</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked>
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Documentos</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Notificar sobre nuevos documentos</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Recordatorios</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Recordatorios de tareas pendientes</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked>
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Email Digest</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Resumen semanal por email</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Privacy Settings -->
+                        <div class="w-full max-w-full px-3 lg:w-1/2 lg:flex-none card-entrance">
+                            <div class="glass-card porsche-card floating-element holographic-effect relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid mb-6 depth-2">
+                                <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
+                                    <div class="flex items-center mb-6">
+                                        <div class="gradient-emerald rounded-lg flex items-center justify-center mr-4 icon-pulse">
+                                            <i class="fas fa-user-shield"></i>
+                                        </div>
+                                        <h3 class="">Privacidad</h3>
+                                    </div>
+                                </div>
+                                <div class="flex-auto p-4 pt-0">
+
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Perfil Público</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Permitir que otros vean tu perfil</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked>
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Estado de Actividad</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Mostrar cuando estás en línea</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                                    <div>
+                                        <h4 class="">Compartir Información</h4>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Permitir compartir con otros departamentos</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked>
+                                        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                    </label>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Tab -->
+                <div id="activityTab" class="tab-pane">
+                    <div class="flex flex-wrap -mx-3">
+                        <!-- Activity Stats -->
+                        <div class="w-full max-w-full px-3 lg:w-2/3 lg:flex-none card-entrance">
+                            <div class="glass-card porsche-card floating-element cyber-grid particle-bg relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid mb-6 depth-3">
+                                <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
+                                    <div class="flex items-center justify-between mb-6">
+                                        <div>
+                                            <h3 class="text-white">Actividad Reciente</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-300">Datos obtenidos de la base de datos real</p>
+                                        </div>
+                                        <div class="flex space-x-1">
+                                            <i class="fas fa-database text-blue-500 text-sm"></i>
+                                            <span class="text-xs text-blue-600 font-medium">En vivo</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-auto p-4 pt-0">
+                                    <div id="recentActivity" class="space-y-3">
+                                        <!-- Activity items will be loaded here -->
+                                        <div class="text-center py-8">
+                                            <div class="loading-pulse">
+                                                <i class="fas fa-spinner text-gray-400 text-2xl mb-2"></i>
+                                                <p class="text-gray-500">Cargando actividad...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real Database Statistics -->
+                        <div class="w-full max-w-full px-3 lg:w-1/3 lg:flex-none card-entrance">
+                            <div class="space-y-4">
+                                <div class="glass-card porsche-card stats-card floating-element relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid text-center depth-1">
+                                    <div class="flex-auto p-6">
+                                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 icon-pulse">
+                                            <i class="fas fa-building text-blue-600"></i>
+                                        </div>
+                                        <h4 class="text-base font-bold text-gray-900 dark:text-white mb-2">Empresas</h4>
+                                        <div id="realStatsCompanies" class="text-2xl font-bold text-blue-600 mb-1">-</div>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Socio</p>
+                                    </div>
+                                </div>
+
+                                <div class="glass-card porsche-card stats-card floating-element relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid text-center depth-1">
+                                    <div class="flex-auto p-6">
+                                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 icon-pulse">
+                                            <i class="fas fa-calendar text-green-600"></i>
+                                        </div>
+                                        <h4 class="text-base font-bold text-gray-900 dark:text-white mb-2">Eventos</h4>
+                                        <div id="realStatsEvents" class="text-2xl font-bold text-green-600 mb-1">-</div>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Registrados</p>
+                                    </div>
+                                </div>
+
+                                <div class="glass-card porsche-card stats-card floating-element relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid text-center depth-1">
+                                    <div class="flex-auto p-6">
+                                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 icon-pulse">
+                                            <i class="fas fa-users text-purple-600"></i>
+                                        </div>
+                                        <h4 class="text-base font-bold text-gray-900 dark:text-white mb-2">Comités</h4>
+                                        <div id="realStatsCommittees" class="text-2xl font-bold text-purple-600 mb-1">-</div>
+                                        <p class="text-xs text-gray-600 dark:text-gray-300">Activos</p>
+                                    </div>
+                                </div>
+
+                                <!-- Comités Registrados -->
+                                <div class="glass-card porsche-card stats-card border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border depth-1 mt-4">
+                                    <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-4 pt-4 pb-0">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+                                                    <i class="fas fa-handshake text-white text-sm"></i>
+                                                </div>
+                                                <h4 class="text-base font-bold text-gray-900 dark:text-white">Mis Comités</h4>
+                                            </div>
+                                            <button onclick="refreshUserComites()" class="text-xs px-2 py-1 rounded" style="background: rgba(199, 37, 43, 0.1); color: #C7252B;">
+                                                <i class="fas fa-sync-alt mr-1"></i>Actualizar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex-auto p-4 pt-0">
+                                        <div id="userComitesContainer" class="space-y-2">
+                                            <!-- Los comités del usuario se cargarán aquí -->
+                                            <div class="text-center py-4">
+                                                <div class="loading-pulse">
+                                                    <i class="fas fa-spinner fa-spin text-gray-400 text-lg mb-2" style="color: #C7252B;"></i>
+                                                    <p class="text-gray-500 text-sm">Cargando comités...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Estado vacío -->
+                                        <div id="emptyUserComites" class="hidden text-center py-4">
+                                            <i class="fas fa-users text-3xl text-gray-400 mb-2"></i>
+                                            <p class="text-gray-500 text-sm">No estás registrado en ningún comité</p>
+                                            <a href="comites.html" class="text-xs mt-2 inline-block px-3 py-1 rounded text-white" style="background: #C7252B;">
+                                                Ver Comités Disponibles
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="securityTab" class="tab-pane">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Password Settings -->
+                        <div class="glass-effect rounded-2xl p-6 shadow-lg">
+                            <div class="flex items-center mb-6">
+                                <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-lock text-white"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900">Cambiar Contraseña</h3>
+                            </div>
+
+                            <form class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña Actual</label>
+                                    <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña</label>
+                                    <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar Nueva Contraseña</label>
+                                    <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300">
+                                </div>
+
+                                <button type="submit" class="w-full px-6 py-3 profile-gradient text-white rounded-lg font-medium hover:opacity-90 transition-all duration-300">
+                                    Cambiar Contraseña
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Security Settings -->
+                        <div class="glass-effect rounded-2xl p-6 shadow-lg">
+                            <div class="flex items-center mb-6">
+                                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-shield-alt text-white"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900">Configuración de Seguridad</h3>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <h4 class="font-medium text-gray-900">Autenticación de Dos Factores</h4>
+                                        <p class="text-sm text-gray-600">Añade una capa extra de seguridad</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+                                    </label>
+                                </div>
+
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-medium text-gray-900 mb-2">Dispositivos Conectados</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between text-sm">
+                                            <span class="text-gray-600">Chrome en Windows</span>
+                                            <span class="text-green-600">Activo ahora</span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-sm">
+                                            <span class="text-gray-600">Safari en iPhone</span>
+                                            <span class="text-gray-500">Hace 2 días</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all duration-300">
+                                    Cerrar Sesión en Todos los Dispositivos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // Profile Manager Class
+        class ProfileManager {
+            constructor() {
+                this.userData = null;
+                this.init();
+            }
+
+            async init() {
+                // Determine correct API URL like in admin-empresas.js
+                this.determineApiUrl();
+                
+                await this.loadUserProfile();
+                this.setupEventListeners();
+                this.setupTabs();
+                this.setupSidebar();
+                this.hideLoadingScreen();
+                this.loadActivity();
+            }
+            
+            determineApiUrl() {
+                // Use the same URL detection logic as the working admin-empresas.js
+                if (window.location.hostname === 'intranet.clústermetropolitano.mx' || 
+                    window.location.hostname === 'clústermetropolitano.mx') {
+                    this.apiUrl = 'https://intranet.clústermetropolitano.mx/build/api/profile.php';
+                } else {
+                    this.apiUrl = './api/profile.php';
+                }
+                
+                console.log('Profile API URL determined:', this.apiUrl);
+            }
+
+            async loadUserProfile() {
+                try {
+                    console.log('Loading user profile from:', this.apiUrl);
+                    
+                    // Try to load from real API first
+                    const response = await fetch(this.apiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include' // Include cookies for session
+                    });
+                    
+                    console.log('API Response status:', response.status, response.statusText);
+                    console.log('API Response URL:', response.url);
+                    
+                    if (response.ok) {
+                        const responseText = await response.text();
+                        console.log('API Response text:', responseText);
+                        
+                        try {
+                            const data = JSON.parse(responseText);
+                            console.log('API Response data:', data);
+                            
+                            if (data.success) {
+                                this.userData = data.data;
+                                this.populateProfile(this.userData);
+                                this.updateStats(this.userData.stats || this.getDefaultStats());
+                                console.log('Profile loaded successfully from API');
+                                console.log('Source tables:', data.source_tables);
+                                return;
+                            } else {
+                                console.error('API returned error:', data.message);
+                                
+                                // Si requiere login, mostrar mensaje específico
+                                if (data.requires_login) {
+                                    this.showMessage('Debe iniciar sesión para ver su perfil', 'warning');
+                                    this.showLoginRequired();
+                                    return;
+                                }
+                                
+                                throw new Error(data.message || 'API returned error');
+                            }
+                        } catch (parseError) {
+                            console.error('Failed to parse API response as JSON:', parseError);
+                            console.error('Raw response:', responseText);
+                            throw new Error('Invalid API response format');
+                        }
+                    } else {
+                        const errorText = await response.text();
+                        console.error('API HTTP Error:', response.status, errorText);
+                        throw new Error(`API HTTP ${response.status}: ${errorText}`);
+                    }
+                    
+                } catch (error) {
+                    console.error('API Error details:', error);
+                    console.log('Using demo data - API not available:', error.message);
+                    
+                    // Show error message to user
+                    this.showMessage('No se pudo conectar a la base de datos. Mostrando datos de demostración temporal.', 'warning');
+                    
+                    // Load demo data as fallback
+                    this.userData = this.getDemoData();
+                    this.populateProfile(this.userData);
+                    this.updateStats(this.userData.stats);
+                }
+            }
+
+            getDemoData() {
+                return {
+                    id: 1,
+                    firstName: 'Juan Carlos',
+                    lastName: 'Pérez González',
+                    email: 'juan.perez@clústermetropolitano.mx',
+                    phone: '+52 555 123 4567',
+                    birthDate: '1985-03-15',
+                    department: 'Logística',
+                    position: 'Director de Logística',
+                    bio: 'Profesional con más de 10 años de experiencia en gestión logística y cadena de suministro.',
+                    address: 'Av. Insurgentes Sur 1234',
+                    city: 'Ciudad de México',
+                    state: 'CDMX',
+                    zipCode: '03100',
+                    country: 'México',
+                    emergencyPhone: '+52 555 987 6543',
+                    emergencyContact: 'María González (Esposa)',
+                    avatar: './assets/img/team-2.jpg',
+                    stats: {
+                        events: 12,
+                        documents: 24,
+                        committees: 3,
+                        points: 1247
+                    },
+                    joinDate: '2020-01-15',
+                    lastActivity: new Date().toISOString()
+                };
+            }
+
+            getDefaultStats() {
+                return {
+                    events: 0,
+                    documents: 0,
+                    committees: 0,
+                    points: 0
+                };
+            }
+
+            populateProfile(data) {
+                // Update profile header
+                document.getElementById('profileName').textContent = `${data.firstName} ${data.lastName}`;
+                document.getElementById('profilePosition').textContent = data.position;
+                document.getElementById('profileDepartment').textContent = data.department;
+
+                // Populate form fields
+                document.getElementById('firstName').value = data.firstName;
+                document.getElementById('lastName').value = data.lastName;
+                document.getElementById('email').value = data.email;
+                document.getElementById('phone').value = data.phone;
+                document.getElementById('birthDate').value = data.birthDate;
+                document.getElementById('department').value = data.department;
+                document.getElementById('position').value = data.position;
+                document.getElementById('bio').value = data.bio || '';
+                document.getElementById('address').value = data.address || '';
+                document.getElementById('city').value = data.city || '';
+                document.getElementById('state').value = data.state || '';
+                document.getElementById('zipCode').value = data.zipCode || '';
+                document.getElementById('country').value = data.country || 'México';
+                document.getElementById('emergencyPhone').value = data.emergencyPhone || '';
+                document.getElementById('emergencyContact').value = data.emergencyContact || '';
+            }
+
+            updateStats(stats) {
+                document.getElementById('statsEvents').textContent = stats.events;
+                document.getElementById('statsDocuments').textContent = stats.documents;
+                document.getElementById('statsCommittees').textContent = stats.committees;
+                document.getElementById('statsPoints').textContent = stats.points.toLocaleString();
+            }
+
+            async loadActivity() {
+                const container = document.getElementById('recentActivity');
+                
+                try {
+                    // Load real activity from database API
+                    const response = await fetch(`${this.apiUrl}?action=get_activity`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success && result.data) {
+                            const activities = result.data;
+                            
+                            const activityHtml = activities.map((activity, index) => `
+                                <div class="activity-item flex items-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-600 transition-all duration-300 hover:transform hover:scale-105">
+                                    <div class="w-10 h-10 gradient-blue rounded-lg flex items-center justify-center mr-4 icon-pulse">
+                                        <i class="fas ${activity.icon} text-white"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-900 dark:text-white">${activity.text}</p>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">${activity.time}</p>
+                                    </div>
+                                </div>
+                            `).join('');
+
+                            container.innerHTML = activityHtml;
+                            console.log('Real activity loaded from database:', activities.length, 'items');
+                            return;
+                        }
+                    }
+                    
+                    throw new Error('API activity load failed');
+                    
+                } catch (error) {
+                    console.log('Failed to load real activity, using fallback:', error.message);
+                    
+                    // Fallback to show database connection message
+                    const fallbackHtml = `
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-database text-yellow-600 text-xl"></i>
+                            </div>
+                            <h4 class="text-lg font-medium text-gray-900 mb-2">Actividad Desde Base de Datos</h4>
+                            <p class="text-gray-600 mb-4">La actividad se obtiene directamente de las tablas reales:</p>
+                            <div class="text-sm text-gray-500 space-y-1">
+                                <p>• Empresas convenio registradas</p>
+                                <p>• Eventos creados en el sistema</p>
+                                <p>• Comités formados</p>
+                                <p>• Descuentos agregados</p>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-4">
+                                Conecte con la base de datos para ver la actividad real
+                            </p>
+                        </div>
+                    `;
+                    
+                    container.innerHTML = fallbackHtml;
+                }
+                
+                // Also load real statistics for the activity tab
+                this.loadRealStatistics();
+
+                // Load user committees
+                this.loadUserComites();
+            }
+
+            async loadRealStatistics() {
+                try {
+                    const response = await fetch(`${this.apiUrl}?action=get_stats`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success && result.data) {
+                            const stats = result.data;
+                            
+                            // Update real statistics in activity tab
+                            const companiesEl = document.getElementById('realStatsCompanies');
+                            const eventsEl = document.getElementById('realStatsEvents');
+                            const committeesEl = document.getElementById('realStatsCommittees');
+                            
+                            if (companiesEl) companiesEl.textContent = (stats.documents - stats.events) || 0; // Empresas = documents - events
+                            if (eventsEl) eventsEl.textContent = stats.events || 0;
+                            if (committeesEl) committeesEl.textContent = stats.committees || 0;
+                            
+                            console.log('Real statistics loaded from database:', stats);
+                            return;
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.log('Failed to load real statistics:', error.message);
+                    
+                    // Set fallback values for statistics
+                    const companiesEl = document.getElementById('realStatsCompanies');
+                    const eventsEl = document.getElementById('realStatsEvents');
+                    const committeesEl = document.getElementById('realStatsCommittees');
+                    
+                    if (companiesEl) companiesEl.textContent = '0';
+                    if (eventsEl) eventsEl.textContent = '0';
+                    if (committeesEl) committeesEl.textContent = '0';
+                }
+            }
+
+            // Función para cargar los comités del usuario
+            async loadUserComites() {
+                try {
+                    const userData = this.getUserData();
+                    if (!userData || !userData.email) {
+                        console.log('No hay datos de usuario para cargar comités');
+                        this.showEmptyUserComites();
+                        return;
+                    }
+
+                    console.log('🔄 Cargando comités del usuario:', userData.email);
+
+                    const response = await fetch(`./api/comites.php?action=usuario_comites&email=${encodeURIComponent(userData.email)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('✅ Comités del usuario:', result);
+
+                    if (result.success && result.comites && result.comites.length > 0) {
+                        this.renderUserComites(result.comites);
+
+                        // Actualizar estadística de comités
+                        const committeesEl = document.getElementById('realStatsCommittees');
+                        if (committeesEl) {
+                            committeesEl.textContent = result.comites.length;
+                        }
+                    } else {
+                        this.showEmptyUserComites();
+                    }
+
+                } catch (error) {
+                    console.error('❌ Error al cargar comités del usuario:', error);
+                    this.showErrorUserComites();
+                }
+            }
+
+            // Renderizar comités del usuario
+            renderUserComites(comites) {
+                const container = document.getElementById('userComitesContainer');
+                const emptyState = document.getElementById('emptyUserComites');
+
+                emptyState.classList.add('hidden');
+
+                container.innerHTML = comites.map(comite => this.createUserComiteCard(comite)).join('');
+                console.log('✅ Comités del usuario renderizados:', comites.length);
+            }
+
+            // Crear tarjeta de comité del usuario
+            createUserComiteCard(comite) {
+                const estadoColors = {
+                    'pendiente': { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-200' },
+                    'aprobado': { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-200' },
+                    'rechazado': { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-200' }
+                };
+
+                const estado = estadoColors[comite.estado_registro] || estadoColors['pendiente'];
+                const fechaRegistro = new Date(comite.fecha_registro).toLocaleDateString('es-ES');
+                const fechaAprobacion = comite.fecha_aprobacion ? new Date(comite.fecha_aprobacion).toLocaleDateString('es-ES') : null;
+
+                return `
+                    <div class="border-2 rounded-xl p-4 hover:shadow-lg transition-all duration-300 ${estado.border} bg-gradient-to-r from-white to-gray-50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+                                        <i class="fas fa-users text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-lg font-bold text-gray-900">
+                                            ${comite.comite_nombre || 'Comité sin nombre'}
+                                        </h5>
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${estado.bg} ${estado.text}">
+                                            <i class="fas fa-circle text-xs mr-2"></i>${comite.estado_registro.toUpperCase()}
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3 leading-relaxed">
+                                    <strong>Objetivo:</strong> ${comite.comite_objetivo || 'Sin objetivo definido'}
+                                </p>
+                                <p class="text-sm text-gray-500 mb-3">
+                                    ${comite.comite_descripcion || 'Sin descripción disponible'}
+                                </p>
+                                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <span><i class="fas fa-calendar-plus mr-1 text-blue-500"></i>Registrado: ${fechaRegistro}</span>
+                                    ${fechaAprobacion ? `<span><i class="fas fa-check-circle mr-1 text-green-500"></i>Aprobado: ${fechaAprobacion}</span>` : ''}
+                                </div>
+                                ${comite.estado_registro === 'aprobado' ? `
+                                    <div class="mt-3 p-2 bg-green-50 border border-green-200 rounded-lg">
+                                        <p class="text-sm text-green-700 font-medium">
+                                            <i class="fas fa-check-circle mr-2"></i>¡Eres miembro activo de este comité!
+                                        </p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="flex-shrink-0 ml-4">
+                                <div class="text-center">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center mb-2" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+                                        <i class="fas fa-handshake text-white"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-500 text-center">Miembro</p>
+                                </div>
+                            </div>
+                        </div>
+                        ${comite.estado_registro === 'aprobado' ? `
+                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                <div class="flex space-x-2">
+                                    <button onclick="window.open('comites.html', '_blank')" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition text-sm">
+                                        <i class="fas fa-external-link-alt mr-2"></i>Ver Comités
+                                    </button>
+                                    <button onclick="window.open('dashboard.html', '_blank')" class="flex-1 px-4 py-2 text-white rounded-lg transition text-sm" style="background: #C7252B;">
+                                        <i class="fas fa-envelope mr-2"></i>Mensajería
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Mostrar estado vacío para comités del usuario
+            showEmptyUserComites() {
+                const container = document.getElementById('userComitesContainer');
+                const emptyState = document.getElementById('emptyUserComites');
+
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            }
+
+            // Mostrar error al cargar comités del usuario
+            showErrorUserComites() {
+                const container = document.getElementById('userComitesContainer');
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-exclamation-triangle text-2xl text-red-400 mb-2"></i>
+                        <p class="text-red-600 text-sm mb-2">Error al cargar comités</p>
+                        <button onclick="profileManager.loadUserComites()" class="text-xs px-3 py-1 rounded text-white" style="background: #C7252B;">
+                            Reintentar
+                        </button>
+                    </div>
+                `;
+            }
+
+            setupEventListeners() {
+                // Save profile button
+                document.getElementById('saveProfileBtn').addEventListener('click', () => {
+                    this.saveProfile();
+                });
+
+                // Profile image functionality removed since using real database images
+            }
+
+            setupTabs() {
+                const tabButtons = document.querySelectorAll('.tab-btn');
+                const tabPanes = document.querySelectorAll('.tab-pane');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const targetTab = button.getAttribute('data-tab');
+
+                        // Update button states
+                        tabButtons.forEach(btn => {
+                            btn.classList.remove('active', 'bg-blue-500', 'text-white');
+                            btn.classList.add('bg-gray-100', 'dark:bg-slate-700', 'text-gray-700', 'dark:text-gray-300');
+                        });
+                        button.classList.remove('bg-gray-100', 'dark:bg-slate-700', 'text-gray-700', 'dark:text-gray-300');
+                        button.classList.add('active', 'bg-blue-500', 'text-white');
+
+                        // Update tab content
+                        tabPanes.forEach(pane => {
+                            pane.classList.remove('active');
+                        });
+                        document.getElementById(targetTab + 'Tab').classList.add('active');
+                    });
+                });
+            }
+
+            setupSidebar() {
+                // The dashboard sidebar functionality will be handled by argon-dashboard-tailwind.js
+                // No additional setup needed here
+                console.log('Sidebar setup delegated to argon dashboard');
+            }
+
+            async saveProfile() {
+                const button = document.getElementById('saveProfileBtn');
+                const originalText = button.innerHTML;
+                
+                // Show loading state
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
+                button.disabled = true;
+
+                try {
+                    // Collect form data (excluding read-only fields: firstName, lastName, and email)
+                    const profileData = {
+                        // firstName, lastName, and email are read-only, so we don't include them
+                        phone: document.getElementById('phone').value,
+                        birthDate: document.getElementById('birthDate').value,
+                        department: document.getElementById('department').value,
+                        position: document.getElementById('position').value,
+                        bio: document.getElementById('bio').value,
+                        address: document.getElementById('address').value,
+                        city: document.getElementById('city').value,
+                        state: document.getElementById('state').value,
+                        zipCode: document.getElementById('zipCode').value,
+                        country: document.getElementById('country').value,
+                        emergencyPhone: document.getElementById('emergencyPhone').value,
+                        emergencyContact: document.getElementById('emergencyContact').value
+                    };
+
+                    // Try to save via API
+                    try {
+                        console.log('Saving profile to:', this.apiUrl);
+                        console.log('Profile data to save:', profileData);
+                        
+                        const response = await fetch(this.apiUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include', // Include cookies for session
+                            body: JSON.stringify({
+                                action: 'update',
+                                ...profileData
+                            })
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            if (result.success) {
+                                // Update userData
+                                this.userData = { ...this.userData, ...profileData };
+                                
+                                // Update profile display (keep existing firstName and lastName from userData)
+                                document.getElementById('profileName').textContent = `${this.userData.firstName} ${this.userData.lastName}`;
+                                document.getElementById('profilePosition').textContent = profileData.position;
+                                document.getElementById('profileDepartment').textContent = profileData.department;
+
+                                this.showMessage('Solicitudes de cambio enviadas para revisión', 'success');
+                                return;
+                            }
+                        }
+                        
+                        throw new Error('API save failed');
+                        
+                    } catch (apiError) {
+                        console.log('API save failed, using local update:', apiError.message);
+                        
+                        // Simulate local save
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                        // Update userData locally
+                        this.userData = { ...this.userData, ...profileData };
+                        
+                        // Update profile display (keep existing firstName and lastName from userData)
+                        document.getElementById('profileName').textContent = `${this.userData.firstName} ${this.userData.lastName}`;
+                        document.getElementById('profilePosition').textContent = profileData.position;
+                        document.getElementById('profileDepartment').textContent = profileData.department;
+
+                        this.showMessage('Perfil actualizado localmente (modo demo)', 'success');
+                    }
+
+                } catch (error) {
+                    console.error('Error saving profile:', error);
+                    this.showMessage('Error al guardar el perfil', 'error');
+                } finally {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            }
+
+
+            showMessage(message, type = 'info') {
+                const container = document.getElementById('messageContainer');
+                const messageEl = document.createElement('div');
+                
+                const colors = {
+                    success: 'gradient-emerald',
+                    error: 'gradient-orange', 
+                    warning: 'bg-yellow-500',
+                    info: 'gradient-blue'
+                };
+
+                messageEl.className = `${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 transform translate-x-full transition-all duration-500 depth-3`;
+                messageEl.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle ${type === 'success' ? 'icon-pulse' : ''}"></i>
+                    <span class="font-medium">${message}</span>
+                `;
+
+                container.appendChild(messageEl);
+
+                // Animate in
+                setTimeout(() => {
+                    messageEl.classList.remove('translate-x-full');
+                    if (type === 'success') {
+                        messageEl.classList.add('success-bounce');
+                    }
+                }, 100);
+
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    messageEl.classList.add('translate-x-full');
+                    setTimeout(() => messageEl.remove(), 500);
+                }, 5000);
+            }
+
+            showLoginRequired() {
+                // Ocultar el contenido normal y mostrar mensaje de login
+                document.querySelector('.main-content').innerHTML = `
+                    <div class="min-h-screen flex items-center justify-center bg-gray-50">
+                        <div class="max-w-md w-full space-y-8 p-8">
+                            <div class="text-center">
+                                <div class="mx-auto h-24 w-24 bg-primary-100 rounded-full flex items-center justify-center mb-6">
+                                    <i class="fas fa-user-lock text-primary-600 text-3xl"></i>
+                                </div>
+                                <h2 class="text-3xl font-bold text-gray-900 mb-4">Acceso Requerido</h2>
+                                <p class="text-lg text-gray-600 mb-8">
+                                    Debe iniciar sesión para acceder a su perfil de usuario.
+                                </p>
+                                <div class="space-y-4">
+                                    <a href="./pages/sign-in.html" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white profile-gradient hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-300">
+                                        <i class="fas fa-sign-in-alt mr-2"></i>
+                                        Iniciar Sesión
+                                    </a>
+                                    <a href="dashboard.html" class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-300">
+                                        <i class="fas fa-home mr-2"></i>
+                                        Volver al Inicio
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            hideLoadingScreen() {
+                setTimeout(() => {
+                    const loadingEl = document.getElementById('loadingScreen');
+                    if (loadingEl) {
+                        loadingEl.classList.add('hidden');
+                    }
+                }, 800);
+            }
+        }
+
+        // Global function for refreshing user committees
+        function refreshUserComites() {
+            if (window.profileManager && window.profileManager.loadUserComites) {
+                window.profileManager.loadUserComites();
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            window.profileManager = new ProfileManager();
+        });
+    </script>
+
+    <!-- NAVBAR FUNCTIONALITY FROM DASHBOARD -->
+    <script>
+    // Configurar eventos para los botones de logout y navbar
+    document.addEventListener('DOMContentLoaded', function() {
+      // Botón de logout del sidebar
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          if (window.authSessionManager) {
+            window.authSessionManager.logout();
+          } else if (window.logout) {
+            window.logout();
+          }
+        });
+      }
+
+      // User dropdown functionality has been standardized - see functions at end of script
+    });
+    </script>
+
+    <!-- USER DETECTION AND AUTHENTICATION FROM DASHBOARD -->
+    <script>
+    // DETECCIÓN DE SESIÓN Y USUARIO LOGGEADO
+    function detectUserSession() {
+        console.log('🔍 Iniciando detección de sesión...');
+
+        // Verificar múltiples fuentes de datos de sesión
+        const sessionSources = [
+            localStorage.getItem('userData'),
+            localStorage.getItem('currentUser'),
+            sessionStorage.getItem('userSession'),
+            localStorage.getItem('userInfo'),
+            sessionStorage.getItem('loginData')
+        ];
+
+        // Buscar datos válidos en alguna fuente
+        let userData = null;
+        for (const source of sessionSources) {
+            if (source) {
+                try {
+                    userData = JSON.parse(source);
+                    if (userData && (userData.nombre || userData.name || userData.email)) {
+                        console.log('👤 Usuario detectado desde storage:', userData);
+                        break;
+                    }
+                } catch (e) {
+                    // Si no es JSON, podría ser un string simple
+                    if (source.length > 0) {
+                        userData = { nombre: source };
+                        console.log('👤 Usuario detectado como string:', source);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Si no hay datos en storage, verificar si hay sesión PHP activa
+        if (!userData) {
+            checkPHPSession();
+        } else {
+            displayUserInfo(userData);
+        }
+    }
+
+    async function checkPHPSession() {
+        try {
+            console.log('🔍 Verificando sesión PHP...');
+
+            // Probar múltiples endpoints para verificar sesión
+            const sessionEndpoints = [
+                './assets/conexion/check-session.php',
+                './api/auth/session.php?action=check',
+                './login/check-session.php'
+            ];
+
+            let sessionFound = false;
+            let userData = null;
+
+            for (const endpoint of sessionEndpoints) {
+                try {
+                    console.log(`📡 Probando endpoint: ${endpoint}`);
+                    const response = await fetch(endpoint, {
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success && data.data) {
+                            console.log('✅ Sesión PHP activa:', data.data);
+                            userData = data.data;
+                            sessionFound = true;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    console.log(`❌ Error en ${endpoint}: ${e.message}`);
+                }
+            }
+
+            if (sessionFound && userData) {
+                displayUserInfo(userData);
+            } else {
+                console.log('❌ No se encontró sesión activa');
+                showLoginPrompt();
+            }
+
+        } catch (error) {
+            console.log('❌ Error verificando sesión PHP:', error);
+            showLoginPrompt();
+        }
+    }
+
+    function displayUserInfo(userData) {
+        console.log('📱 Mostrando información del usuario:', userData);
+
+        // Normalizar los datos del usuario
+        const nombre = userData.nombre || userData.name || userData.firstName || 'Usuario';
+        const apellido = userData.apellidos || userData.lastName || '';
+        const nombreCompleto = `${nombre} ${apellido}`.trim();
+        const rol = userData.rol || userData.role || userData.position || 'Usuario';
+        const email = userData.email || '';
+
+        // Actualizar elementos de UI
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userInfo = document.getElementById('userInfo');
+        const welcomeText = document.getElementById('welcomeText');
+
+        if (userName) userName.textContent = nombreCompleto;
+        if (userRole) userRole.textContent = rol;
+        if (userInfo) userInfo.classList.remove('hidden');
+        if (welcomeText) welcomeText.textContent = `Bienvenido, ${nombre}`;
+
+        // Mostrar elementos de usuario autenticado
+        const loginMenuItem = document.getElementById('loginMenuItem');
+        const userMenuDropdown = document.getElementById('userMenuDropdown');
+        const messageCenterButton = document.getElementById('messageCenterButton');
+        const logoutMenuItem = document.getElementById('logoutMenuItem');
+
+        // Elementos del sidebar
+        const loginNavItem = document.getElementById('loginNavItem');
+        const signupNavItem = document.getElementById('signupNavItem');
+
+        if (loginMenuItem) loginMenuItem.style.display = 'none';
+        if (userMenuDropdown) userMenuDropdown.classList.remove('hidden');
+        if (messageCenterButton) messageCenterButton.classList.remove('hidden');
+        if (logoutMenuItem) logoutMenuItem.classList.remove('hidden');
+
+        // Ocultar elementos de no autenticado en sidebar
+        if (loginNavItem) loginNavItem.classList.add('hidden');
+        if (signupNavItem) signupNavItem.classList.add('hidden');
+
+        // Guardar datos globalmente
+        window.currentUser = userData;
+
+        console.log('✅ UI actualizada para usuario autenticado');
+    }
+
+    function showLoginPrompt() {
+        console.log('🔒 Mostrando estado no autenticado');
+
+        // Ocultar elementos de usuario autenticado
+        const userInfo = document.getElementById('userInfo');
+        const userMenuDropdown = document.getElementById('userMenuDropdown');
+        const messageCenterButton = document.getElementById('messageCenterButton');
+        const logoutMenuItem = document.getElementById('logoutMenuItem');
+
+        // Mostrar elementos de login
+        const loginMenuItem = document.getElementById('loginMenuItem');
+
+        // Elementos del sidebar
+        const loginNavItem = document.getElementById('loginNavItem');
+        const signupNavItem = document.getElementById('signupNavItem');
+
+        if (userInfo) userInfo.classList.add('hidden');
+        if (userMenuDropdown) userMenuDropdown.classList.add('hidden');
+        if (messageCenterButton) messageCenterButton.classList.add('hidden');
+        if (logoutMenuItem) logoutMenuItem.classList.add('hidden');
+        if (loginMenuItem) loginMenuItem.style.display = 'block';
+
+        // Mostrar elementos de no autenticado en sidebar
+        if (loginNavItem) loginNavItem.classList.remove('hidden');
+        if (signupNavItem) signupNavItem.classList.remove('hidden');
+    }
+
+    // Funciones globales
+    window.detectUserSession = detectUserSession;
+    window.displayUserInfo = displayUserInfo;
+    window.showLoginPrompt = showLoginPrompt;
+
+    // Ejecutar detección de sesión al cargar
+    setTimeout(detectUserSession, 300);
+    </script>
+
+    <!-- Core -->
+    <script src="./assets/js/core/popper.min.js"></script>
+    <script src="./assets/js/core/bootstrap.min.js"></script>
+    <script src="./assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="./assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <!-- Kanban scripts -->
+    <script src="./assets/js/plugins/dragula/dragula.min.js"></script>
+    <script src="./assets/js/plugins/jkanban/jkanban.js"></script>
+    <script src="./assets/js/plugins/chartjs.min.js"></script>
+    <!-- Control Center for Soft Dashboard -->
+    <script src="./assets/js/argon-dashboard-tailwind.js?v=1.0.1"></script>
+
+    <!-- Message Center and User Management Scripts -->
+    <script>
+     
+
+        // User Menu Functionality
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenuBtn');
+            const dropdown = document.getElementById('userDropdown');
+
+            if (!userMenu.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Logout functionality
+        function handleLogout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                // Clear user data
+                localStorage.removeItem('userData');
+                localStorage.removeItem('currentUser');
+                sessionStorage.clear();
+
+                // Redirect to login page
+                window.location.href = './index.php';
+            }
+        }
+
+        // Update user display info when user data is available
+        function updateUserDisplay(userData) {
+            const userDisplayName = document.getElementById('userDisplayName');
+            const dropdownUserName = document.getElementById('dropdownUserName');
+            const dropdownUserRole = document.getElementById('dropdownUserRole');
+
+            const nombre = userData.nombre || userData.name || 'Usuario';
+            const rol = userData.rol || userData.role || 'Empleado';
+
+            if (userDisplayName) userDisplayName.textContent = nombre;
+            if (dropdownUserName) dropdownUserName.textContent = nombre;
+            if (dropdownUserRole) dropdownUserRole.textContent = rol;
+
+            // Also update the existing user info elements if they exist
+            const userName = document.getElementById('userName');
+            const userRole = document.getElementById('userRole');
+            if (userName) userName.textContent = nombre;
+            if (userRole) userRole.textContent = rol;
+        }
+
+        // User Menu Functionality
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenuBtn');
+            const dropdown = document.getElementById('userDropdown');
+
+            if (userMenu && dropdown && !userMenu.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Override the displayUserInfo function to also update navbar
+        const originalDisplayUserInfo = window.displayUserInfo;
+        window.displayUserInfo = function(userData) {
+            if (originalDisplayUserInfo) {
+                originalDisplayUserInfo(userData);
+            }
+            updateUserDisplay(userData);
+        };
+
+        // User session detection functionality
+        function detectUserSession() {
+            console.log('🔍 Iniciando detección de sesión...');
+
+            // Check multiple session sources
+            const sessionSources = [
+                localStorage.getItem('userData'),
+                localStorage.getItem('currentUser'),
+                sessionStorage.getItem('userSession'),
+                localStorage.getItem('userInfo'),
+                sessionStorage.getItem('loginData')
+            ];
+
+            // Find valid data in any source
+            let userData = null;
+            for (const source of sessionSources) {
+                if (source) {
+                    try {
+                        userData = JSON.parse(source);
+                        if (userData && (userData.nombre || userData.name || userData.email)) {
+                            console.log('👤 Usuario detectado desde storage:', userData);
+                            break;
+                        }
+                    } catch (e) {
+                        // If not JSON, could be simple string
+                        if (source.length > 0) {
+                            userData = { nombre: source };
+                            console.log('👤 Usuario detectado como string:', source);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (userData) {
+                updateUserDisplay(userData);
+                console.log('✅ Usuario autenticado correctamente');
+            } else {
+                console.log('ℹ️ No hay sesión de usuario detectada');
+            }
+        }
+
+        // Initialize user session detection on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(detectUserSession, 500);
+        });
+    </script>
+
+    <!-- JavaScript for Mobile Responsive Sidebar -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.querySelector('.porsche-sidebar');
+        const overlay = document.querySelector('.sidenav-overlay');
+        const menuToggle = document.querySelector('[sidenav-trigger]');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+        console.log('🔧 Profile Sidebar Debug:', { sidebar, overlay, menuToggle, closeSidebarBtn });
+
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        // Prevent body scroll when sidebar is open
+        function preventBodyScroll(prevent) {
+            if (prevent) {
+                document.body.style.overflow = 'hidden';
+                document.body.style.height = '100vh';
+            } else {
+                document.body.style.overflow = '';
+                document.body.style.height = '';
+            }
+        }
+
+        // Show sidebar
+        function showSidebar() {
+            console.log('📱 Showing sidebar');
+            if (sidebar) {
+                sidebar.setAttribute('aria-expanded', 'true');
+                sidebar.classList.add('sidenav-show');
+                preventBodyScroll(true);
+            }
+            if (overlay) {
+                overlay.classList.add('show');
+            }
+        }
+
+        // Hide sidebar
+        function hideSidebar() {
+            console.log('📱 Hiding sidebar');
+            if (sidebar) {
+                sidebar.setAttribute('aria-expanded', 'false');
+                sidebar.classList.remove('sidenav-show');
+                preventBodyScroll(false);
+            }
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        }
+
+        // Menu toggle button click
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (sidebar && sidebar.classList.contains('sidenav-show')) {
+                    hideSidebar();
+                } else {
+                    showSidebar();
+                }
+            });
+        }
+
+        // Close button click
+        if (closeSidebarBtn) {
+            closeSidebarBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                hideSidebar();
+            });
+        }
+
+        // Overlay click
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                hideSidebar();
+            });
+        }
+
+        // Touch events for swipe gestures
+        if (sidebar) {
+            // Touch start
+            sidebar.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            }, { passive: true });
+
+            // Touch move
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+                const deltaX = currentX - startX;
+
+                // If swiping left more than 50px, close sidebar
+                if (deltaX < -50) {
+                    hideSidebar();
+                    isDragging = false;
+                }
+            }, { passive: true });
+
+            // Touch end
+            sidebar.addEventListener('touchend', function() {
+                isDragging = false;
+            }, { passive: true });
+        }
+
+        // Handle window resize
+        function handleResize() {
+            if (window.innerWidth >= 1280) {
+                // Desktop: ensure proper state
+                if (sidebar) {
+                    sidebar.classList.remove('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'false');
+                }
+                if (overlay) {
+                    overlay.classList.remove('show');
+                }
+                preventBodyScroll(false);
+            }
+        }
+
+        // Debounced resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(handleResize, 150);
+        });
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar && sidebar.classList.contains('sidenav-show')) {
+                hideSidebar();
+            }
+        });
+
+        // Initial setup
+        handleResize();
+    });
+    </script>
+
+<!-- Sistema de Seguridad de Sesión -->
+<script src="./js/session-security.js"></script>
+<script>
+  // Inicializar seguridad de sesión después de que todo esté cargado
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+      window.enableSessionSecurity();
+    }, 1000);
+  });
+</script>
+
+</body>
+</html>

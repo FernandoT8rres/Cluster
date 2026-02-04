@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Documentación - Portal Visitante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --claut-red: #C7252B;
+            --claut-dark: #1e293b;
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--porsche-font);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--claut-red) 0%, #A01E24 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(199, 37, 43, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .visitor-notice {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            color: var(--claut-red);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .categorias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .categoria-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .categoria-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            border-left-color: var(--claut-red);
+        }
+
+        .categoria-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .categoria-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--claut-red), #A01E24);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .categoria-info h3 {
+            color: var(--claut-dark);
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .categoria-info p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .documentos-lista {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .documento-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .documento-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .documento-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .documento-info i {
+            color: var(--claut-red);
+            margin-right: 0.75rem;
+            width: 16px;
+        }
+
+        .documento-nombre {
+            font-weight: 500;
+            color: var(--claut-dark);
+            font-size: 0.9rem;
+        }
+
+        .documento-restriccion {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+        }
+
+        .documento-restriccion i {
+            margin-right: 0.3rem;
+        }
+
+        .acceso-notice {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+            color: #92400e;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--claut-red);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--claut-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #A01E24;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .categorias-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categoria-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .categoria-icon {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-file-alt"></i> Centro de Documentación</h1>
+            <p>Índice público de documentos disponibles</p>
+            <div class="visitor-notice">
+                <i class="fas fa-info-circle"></i>
+                <strong>Acceso de visitante:</strong> Solo índice disponible.
+                Para descargas y contenido completo,
+                <a href="./pages/sign-up.html" style="color: #fef3c7; text-decoration: underline;">regístrate aquí</a>.
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="acceso-notice">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Acceso limitado:</strong> Los visitantes solo pueden consultar el índice de documentos.
+            El acceso completo y descargas requieren autenticación.
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <h3 id="totalDocumentos">0</h3>
+                <p>Documentos</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="documentosPublicos">0</h3>
+                <p>Públicos</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="categorias">0</h3>
+                <p>Categorías</p>
+            </div>
+        </div>
+
+        <div id="documentosContainer" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Cargando documentos desde la base de datos...</p>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="./visitante.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Volver al Portal
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let documentosData = [];
+
+        // Cargar documentos al inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 Cargando documentos desde la base de datos...');
+            loadDocumentos();
+        });
+
+        async function loadDocumentos() {
+            const container = document.getElementById('documentosContainer');
+
+            try {
+                // Intentar múltiples endpoints de la API
+                const endpoints = [
+                    './api/documentos.php',
+                    './api/boletines_simple.php' // Fallback a boletines como documentos
+                ];
+
+                let response = null;
+                let data = null;
+
+                for (const endpoint of endpoints) {
+                    try {
+                        console.log(`🔄 Intentando endpoint: ${endpoint}`);
+                        response = await fetch(endpoint);
+
+                        if (response.ok) {
+                            const text = await response.text();
+                            console.log(`✅ Respuesta del servidor (${endpoint}):`, text.substring(0, 200));
+
+                            try {
+                                data = JSON.parse(text);
+                                console.log(`✅ Datos parseados exitosamente desde: ${endpoint}`);
+                                break;
+                            } catch (parseError) {
+                                console.log(`❌ Error al parsear JSON desde ${endpoint}:`, parseError);
+                                continue;
+                            }
+                        }
+                    } catch (fetchError) {
+                        console.log(`❌ Error de conexión con ${endpoint}:`, fetchError);
+                        continue;
+                    }
+                }
+
+                if (!data) {
+                    throw new Error('No se pudo conectar con ningún endpoint de la API');
+                }
+
+                // Procesar datos según el formato
+                let documentos = [];
+
+                if (data.success && data.data) {
+                    documentos = data.data;
+                } else if (data.success && data.documentos) {
+                    documentos = data.documentos;
+                } else if (Array.isArray(data)) {
+                    documentos = data;
+                } else if (data.documentos && Array.isArray(data.documentos)) {
+                    documentos = data.documentos;
+                } else {
+                    console.log('⚠️ Formato de datos inesperado:', data);
+                    documentos = [];
+                }
+
+                // Si no hay documentos específicos, usar boletines como base
+                if (documentos.length === 0 && data.success && data.data) {
+                    documentos = data.data.map(item => ({
+                        id: item.id,
+                        titulo: item.titulo || item.nombre || 'Documento',
+                        categoria: 'Boletines',
+                        tipo: 'boletin',
+                        fecha_creacion: item.fecha_creacion || item.created_at,
+                        visibilidad: 'publico',
+                        archivo_adjunto: item.archivo_adjunto || null
+                    }));
+                }
+
+                console.log(`📊 Total de documentos: ${documentos.length}`);
+
+                if (documentos.length > 0) {
+                    documentosData = documentos;
+                    renderDocumentos(documentos);
+                    updateStats(documentos);
+                } else {
+                    showNoData();
+                }
+
+            } catch (error) {
+                console.error('❌ Error al cargar documentos:', error);
+                showError(error.message);
+            }
+        }
+
+        function renderDocumentos(documentos) {
+            const container = document.getElementById('documentosContainer');
+
+            if (!documentos || documentos.length === 0) {
+                showNoData();
+                return;
+            }
+
+            // Agrupar documentos por categoría
+            const categorias = agruparPorCategoria(documentos);
+            const html = Object.keys(categorias).map(categoria =>
+                createCategoriaCard(categoria, categorias[categoria])
+            ).join('');
+
+            container.innerHTML = `<div class="categorias-grid">${html}</div>`;
+        }
+
+        function agruparPorCategoria(documentos) {
+            const grupos = {};
+
+            documentos.forEach(doc => {
+                const categoria = doc.categoria || doc.tipo || 'General';
+                if (!grupos[categoria]) {
+                    grupos[categoria] = [];
+                }
+                grupos[categoria].push(doc);
+            });
+
+            return grupos;
+        }
+
+        function createCategoriaCard(categoria, documentos) {
+            const icono = getCategoriaIcon(categoria);
+            const descripcion = getCategoriaDescripcion(categoria);
+
+            const documentosHtml = documentos.slice(0, 5).map(doc => createDocumentoItem(doc)).join('');
+            const masDocumentos = documentos.length > 5 ?
+                `<div class="documento-item" style="border: 2px dashed #e2e8f0; background: #f8fafc;">
+                    <div class="documento-info">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span class="documento-nombre" style="color: #64748b; font-style: italic;">
+                            +${documentos.length - 5} documentos más (acceso restringido)
+                        </span>
+                    </div>
+                </div>` : '';
+
+            return `
+                <div class="categoria-card">
+                    <div class="categoria-header">
+                        <div class="categoria-icon">
+                            <i class="fas fa-${icono}"></i>
+                        </div>
+                        <div class="categoria-info">
+                            <h3>${categoria}</h3>
+                            <p>${descripcion}</p>
+                        </div>
+                    </div>
+
+                    <ul class="documentos-lista">
+                        ${documentosHtml}
+                        ${masDocumentos}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function createDocumentoItem(documento) {
+            const titulo = documento.titulo || documento.nombre || documento.title || 'Documento sin título';
+            const tipoArchivo = documento.archivo_adjunto ?
+                documento.archivo_adjunto.split('.').pop().toUpperCase() : 'DOC';
+            const esPublico = documento.visibilidad === 'publico' || documento.estado === 'publicado';
+
+            return `
+                <li class="documento-item">
+                    <div class="documento-info">
+                        <i class="fas fa-${getDocumentoIcon(tipoArchivo)}"></i>
+                        <span class="documento-nombre">${titulo}</span>
+                    </div>
+                    <div class="documento-restriccion">
+                        <i class="fas fa-${esPublico ? 'lock' : 'lock'}"></i>
+                        ${esPublico ? 'Restringido' : 'Privado'}
+                    </div>
+                </li>
+            `;
+        }
+
+        function getCategoriaIcon(categoria) {
+            const iconMap = {
+                'Políticas': 'shield-alt',
+                'Procedimientos': 'cogs',
+                'Manuales': 'book',
+                'Reglamentos': 'gavel',
+                'Formularios': 'file-contract',
+                'Boletines': 'newspaper',
+                'Informes': 'chart-bar',
+                'General': 'folder',
+                'Documentos': 'file-alt'
+            };
+
+            return iconMap[categoria] || 'file-alt';
+        }
+
+        function getCategoriaDescripcion(categoria) {
+            const descripcionMap = {
+                'Políticas': 'Políticas organizacionales y normativas',
+                'Procedimientos': 'Procedimientos operativos y administrativos',
+                'Manuales': 'Manuales de usuario y operación',
+                'Reglamentos': 'Reglamentos internos y externos',
+                'Formularios': 'Formularios y formatos institucionales',
+                'Boletines': 'Boletines informativos y comunicados',
+                'Informes': 'Informes y reportes institucionales',
+                'General': 'Documentos de categoría general',
+                'Documentos': 'Documentos varios del sistema'
+            };
+
+            return descripcionMap[categoria] || 'Documentos de la categoría';
+        }
+
+        function getDocumentoIcon(tipo) {
+            const iconMap = {
+                'PDF': 'file-pdf',
+                'DOC': 'file-word',
+                'DOCX': 'file-word',
+                'XLS': 'file-excel',
+                'XLSX': 'file-excel',
+                'PPT': 'file-powerpoint',
+                'PPTX': 'file-powerpoint',
+                'TXT': 'file-alt',
+                'JPG': 'file-image',
+                'PNG': 'file-image',
+                'MP4': 'file-video'
+            };
+
+            return iconMap[tipo] || 'file';
+        }
+
+        function updateStats(documentos) {
+            const publicosCount = documentos.filter(doc =>
+                doc.visibilidad === 'publico' || doc.estado === 'publicado'
+            ).length;
+
+            const categoriasUnicas = new Set(documentos.map(doc =>
+                doc.categoria || doc.tipo || 'General'
+            )).size;
+
+            document.getElementById('totalDocumentos').textContent = documentos.length;
+            document.getElementById('documentosPublicos').textContent = publicosCount;
+            document.getElementById('categorias').textContent = categoriasUnicas;
+        }
+
+        function showNoData() {
+            const container = document.getElementById('documentosContainer');
+            container.innerHTML = `
+                <div class="error-message" style="background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;">
+                    <i class="fas fa-folder-open" style="font-size: 3rem; margin-bottom: 1rem; color: #94a3b8;"></i>
+                    <h3>No hay documentos disponibles</h3>
+                    <p>Actualmente no hay documentos en el sistema de documentación.</p>
+                </div>
+            `;
+            document.getElementById('totalDocumentos').textContent = '0';
+            document.getElementById('documentosPublicos').textContent = '0';
+            document.getElementById('categorias').textContent = '0';
+        }
+
+        function showError(message) {
+            const container = document.getElementById('documentosContainer');
+            container.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3>Error al cargar documentos</h3>
+                    <p>${message}</p>
+                    <button onclick="loadDocumentos()" class="back-link" style="margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Intentar de nuevo
+                    </button>
+                </div>
+            `;
+            document.getElementById('totalDocumentos').textContent = '0';
+            document.getElementById('documentosPublicos').textContent = '0';
+            document.getElementById('categorias').textContent = '0';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Gestión de Gráficos - Clúster Intranet</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Porsche-inspired Design System */
+        :root {
+            /* Primary Colors - Inspired by Porsche */
+            --porsche-black: #1a1a1a;
+            --porsche-charcoal: #2d2d2d;
+            --porsche-silver: #8a8a8a;
+            --porsche-white: #ffffff;
+            --porsche-light-gray: #f5f5f5;
+            --porsche-accent: #c9302c;
+            /* Typography */
+            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --porsche-radius-lg: 12px;
+        }
+
+        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+
+        /* Porsche-inspired Sidebar */
+        .porsche-sidebar {
+            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
+            border-radius: var(--porsche-radius-lg) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+            height: calc(100vh - 2rem) !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            font-family: var(--porsche-font) !important;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .porsche-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .porsche-sidebar .porsche-logo {
+            color: var(--porsche-white) !important;
+            font-weight: 700 !important;
+            font-size: 1.5rem !important;
+        }
+
+        .porsche-nav-item {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 500 !important;
+        }
+
+        .porsche-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: var(--porsche-white) !important;
+            transform: translateX(4px) !important;
+        }
+
+        .porsche-nav-item.active {
+            background: rgba(199, 37, 43, 0.2) !important;
+            color: var(--porsche-white) !important;
+            border-left: 3px solid #C7252B !important;
+        }
+
+        /* Sidebar Overlay */
+        .sidenav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+            backdrop-filter: blur(4px);
+        }
+
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            z-index: 998;
+        }
+
+        /* Close button styling */
+        #sidebarCloseBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #sidebarCloseBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Sidebar always retractable - All screens */
+        .porsche-sidebar {
+            transform: translateX(-100%) !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            border-radius: 0 !important;
+            width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            position: fixed !important;
+            display: block !important;
+        }
+
+        .porsche-sidebar.sidenav-show {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content always without sidebar margin */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .container {
+            margin-left: 0 !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 1280px) {
+            .container {
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Force sidebar behavior on all screens - Override any conflicting styles */
+        .porsche-sidebar.sidebar-enhanced {
+            transform: translateX(-100%) !important;
+        }
+
+        .porsche-sidebar.sidebar-enhanced.sidenav-show {
+            transform: translateX(0) !important;
+        }
+
+        /* Override any Tailwind classes that might interfere */
+        aside.porsche-sidebar {
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Ensure hamburger button works on all screens */
+        @media (min-width: 1280px) {
+            [sidenav-trigger] {
+                display: block !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Hamburger button styling */
+        .hamburger-btn {
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .modal-backdrop { backdrop-filter: blur(5px); }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .config-panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .config-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .config-section:last-child {
+            border-bottom: none;
+        }
+        .preview-panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 1rem 0;
+        }
+        .chart-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 0.5rem;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            background-color: white;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #C7252B;
+            box-shadow: 0 0 0 3px rgba(199, 37, 43, 0.1);
+        }
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+        select.form-control option {
+            padding: 0.5rem;
+            background-color: white;
+            color: #374151;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .radio-item, .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .color-picker-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .color-input {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .color-presets {
+            display: flex;
+            gap: 0.25rem;
+        }
+        .color-preset {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px #d1d5db;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+    <!-- Porsche Sidebar -->
+    <aside id="porscheSidebar"
+        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990"
+        aria-expanded="false">
+        <div class="h-48 py-6 relative mb-4">
+            <!-- Botón de cerrar para todas las pantallas -->
+            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                    id="sidebarCloseBtn"
+                    sidenav-close
+                    aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
+            <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
+              target="_blank">
+                <img src="../assets/img/apple-icon.png"
+                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                  alt="main_logo" />
+                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+            </a>
+        </div>
+        <hr class="h-px mt-4 mb-4 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+            <ul class="flex flex-col pl-0 mb-0 pt-4">
+                <!-- Dashboard -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="dashboard.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
+                    </a>
+                </li>
+                <!-- admin panel -->
+                <li class="mt-2 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin-panel.html?login=success">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                    </a>
+                </li>
+                <!-- Usuarios -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="gestionar_usuarios.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-green-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
+                    </a>
+                </li>
+                <!-- Empresas -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_empresas.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-building text-purple-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
+                    </a>
+                </li>
+                <!-- Descuentos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_descuentos.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-tags text-red-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
+                    </a>
+                </li>
+                <!-- Comités -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_comite.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-users text-blue-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Comités</span>
+                    </a>
+                </li>
+                <!-- Eventos -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_evento.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-calendar text-orange-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
+                    </a>
+                </li>
+                <!-- Gestión Gráfico - ACTIVE -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item active py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_gestion_grafico.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-chart-bar text-teal-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Gestión Gráfico</span>
+                    </a>
+                </li>
+                <!-- Visitantes -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="demo_visitante.html">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-eye text-cyan-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Visitantes</span>
+                    </a>
+                </li>
+                <!-- Banners -->
+                <li class="mt-0.5 w-full">
+                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
+                        href="admin/banner-admin-mejorado.php">
+                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                            <i class="fas fa-images text-pink-500"></i>
+                        </div>
+                        <span class="ml-1 duration-300 opacity-100">Banners</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-content">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <button class="hamburger-btn bg-white/10 hover:bg-white/20 p-3 rounded-lg mr-4"
+                            sidenav-trigger
+                            id="hamburgerBtn"
+                            aria-label="Abrir menú">
+                        <i class="fas fa-bars text-white"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-bold">📊 Gestión de Gráficos</h1>
+                        <p class="text-red-200 mt-1">Sistema Avanzado de Visualización de Datos</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="location.href='dashboard.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </button>
+                <div class="flex items-center space-x-3">
+                    <!-- Indicador de estado -->
+                    <div id="statusIndicator" class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-sm text-red-200">Sistema Activo</span>
+                    </div>
+
+                    <!-- Controles principales -->
+                    <button id="cargarDatosReales" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors" style="background-color: #C7252B;">
+                        <i class="fas fa-database mr-2"></i>Cargar Datos
+                    </button>
+                    <button id="previsualizarGrafico" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-eye mr-2"></i>Previsualizar
+                    </button>
+                    <button id="guardarConfig" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>Guardar Config
+                    </button>
+                    
+                    <!-- Menú de acciones -->
+                    <div class="relative">
+                        <button id="menuAcciones" class="bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded-lg transition-colors flex items-center" title="Más opciones">
+                            <i class="fas fa-ellipsis-v text-lg"></i>
+                            <span class="ml-2 hidden sm:inline">Opciones</span>
+                        </button>
+                        <div id="menuAccionesDropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border-2 border-gray-200 hidden z-50">
+                            <div class="py-2">
+                                <a href="#" id="exportarJSON" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <i class="fas fa-file-export mr-3 text-blue-500"></i>
+                                    <span>Exportar JSON</span>
+                                </a>
+                                <a href="#" id="importarJSON" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <i class="fas fa-file-import mr-3 text-green-500"></i>
+                                    <span>Importar JSON</span>
+                                </a>
+                                <a href="#" id="verConfiguraciones" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <i class="fas fa-folder-open mr-3 text-purple-500"></i>
+                                    <span>Ver Guardadas</span>
+                                </a>
+                                <hr class="my-2">
+                                <a href="#" id="resetearConfig" class="flex items-center px-4 py-3 text-gray-700 hover:bg-red-50 transition-colors">
+                                    <i class="fas fa-refresh mr-3 text-red-500"></i>
+                                    <span>Resetear Todo</span>
+                                </a>
+                                <a href="#" id="ayudaGestion" class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 transition-colors">
+                                    <i class="fas fa-question-circle mr-3 text-blue-500"></i>
+                                    <span>Ayuda</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Estadísticas -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Gráficos Activos</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalGraficos">0</p>
+                    </div>
+                    <i class="fas fa-chart-line text-3xl" style="color: #C7252B;"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Fuentes de Datos</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalFuentes">5</p>
+                    </div>
+                    <i class="fas fa-database text-3xl text-blue-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Configuraciones</p>
+                        <p class="text-2xl font-bold text-gray-800" id="totalConfigs">0</p>
+                    </div>
+                    <i class="fas fa-cog text-3xl text-purple-500"></i>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Última Act.</p>
+                        <p class="text-sm font-medium text-gray-800" id="ultimaActualizacion">Ahora</p>
+                    </div>
+                    <i class="fas fa-clock text-3xl text-green-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles principales -->
+        <div class="flex justify-center space-x-4 mb-6">
+            <button onclick="exportarGraficos()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition flex items-center">
+                <i class="fas fa-download mr-2"></i>Exportar Gráficos
+            </button>
+            <button onclick="nuevaConfiguracion()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
+                <i class="fas fa-plus mr-2"></i>Nueva Configuración
+            </button>
+            <button onclick="resetearTodo()" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition flex items-center">
+                <i class="fas fa-refresh mr-2"></i>Resetear Todo
+            </button>
+        </div>
+
+    <div class="container mx-auto px-4">
+        <!-- Notifications -->
+        <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            
+            <!-- Panel de Configuración -->
+            <div class="xl:col-span-1">
+                <div class="config-panel">
+                    <div class="config-header">
+                        <h2><i class="fas fa-cog mr-2"></i>Configuración del Gráfico</h2>
+                    </div>
+                    
+                    <!-- Tipo de Gráfico -->
+                    <div class="config-section">
+                        <h3>📈 Tipo de Gráfico</h3>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="chartType" value="line" checked>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <i class="fas fa-chart-line mr-2"></i>Líneas
+                                </span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="chartType" value="bar">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <i class="fas fa-chart-bar mr-2"></i>Barras
+                                </span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="chartType" value="area">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <i class="fas fa-chart-area mr-2"></i>Área
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Fuente de Datos -->
+                    <div class="config-section">
+                        <h3>🗄️ Fuente de Datos</h3>
+                        
+                        <!-- Selector de origen -->
+                        <div class="form-group">
+                            <label for="dataSource">Origen de Datos:</label>
+                            <select id="dataSource" class="form-control">
+                                <option value="empresas" selected>📈 Empresas Registradas</option>
+                                <option value="usuarios">👥 Usuarios Nuevos</option>
+                                <option value="eventos">📅 Eventos Programados</option>
+                                <option value="comites">🏛️ Miembros de Comités</option>
+                                <option value="descuentos">💰 Descuentos Activos</option>
+                                <option value="custom">🔧 Datos Personalizados</option>
+                            </select>
+                            
+                            <!-- Descripción del tipo de dato seleccionado -->
+                            <div id="descripcionTipoDato" class="mt-2 p-3 bg-blue-50 rounded border border-blue-200">
+                                <div class="text-sm text-blue-800">
+                                    <div class="font-medium mb-1">📈 Empresas Registradas</div>
+                                    <div class="text-blue-600">Muestra la evolución histórica de empresas registradas en la plataforma, incluyendo nuevas incorporaciones y estado actual.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acción rápida -->
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <button id="cargarDatosRapido" class="flex-1 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded transition-colors text-sm">
+                                <i class="fas fa-sync-alt mr-2"></i>Recargar BD
+                            </button>
+                            <button id="verDetallesDatos" class="flex-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors text-sm">
+                                <i class="fas fa-info-circle mr-2"></i>Ver Detalles
+                            </button>
+                        </div>
+                        
+                        <!-- Configuración de período -->
+                        <div class="form-group">
+                            <label for="periodRange">Período de Tiempo:</label>
+                            <div class="flex space-x-2">
+                                <select id="periodRange" class="form-control flex-1">
+                                    <option value="3">Últimos 3 meses</option>
+                                    <option value="6" selected>Últimos 6 meses</option>
+                                    <option value="12">Últimos 12 meses</option>
+                                    <option value="24">Últimos 2 años</option>
+                                    <option value="custom">Personalizado</option>
+                                </select>
+                                <button id="configurarPeriodo" class="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded border" title="Configurar período personalizado">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Panel de configuración de fechas (oculto por defecto) -->
+                        <div id="customPeriodPanel" class="mt-3 p-3 bg-gray-50 rounded border" style="display: none;">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-xs text-gray-600">Fecha Inicio:</label>
+                                    <input type="date" id="fechaInicio" class="form-control text-sm">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-600">Fecha Fin:</label>
+                                    <input type="date" id="fechaFin" class="form-control text-sm">
+                                </div>
+                            </div>
+                            <button id="aplicarFechas" class="mt-2 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
+                                Aplicar Fechas
+                            </button>
+                        </div>
+                        
+                        <!-- Estado de datos -->
+                        <div class="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <div id="dataStatusIcon" class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <span id="dataStatusText" class="text-sm text-blue-700">Datos listos</span>
+                                </div>
+                                <button id="actualizarDatos" class="text-blue-600 hover:text-blue-800 text-sm">
+                                    <i class="fas fa-sync-alt mr-1"></i>Actualizar
+                                </button>
+                            </div>
+                            
+                            <!-- Información adicional -->
+                            <div id="dataInfo" class="mt-2 text-xs text-gray-600">
+                                <div>Registros encontrados: <span id="recordCount">--</span></div>
+                                <div>Última actualización: <span id="lastDataUpdate">--</span></div>
+                                <div>Fuente de datos: <span id="dataSourceDisplay">--</span></div>
+                                <div>Período: <span id="timePeriod">--</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botón para editar datos manualmente -->
+                        <div class="mt-3">
+                            <button id="editarDatosManualmente" class="w-full px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded transition-colors">
+                                <i class="fas fa-edit mr-2"></i>Editar Datos Manualmente
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Personalización Visual -->
+                    <div class="config-section">
+                        <h3>🎨 Personalización Visual</h3>
+                        
+                        <div class="form-group">
+                            <label for="chartTitle">Título del Gráfico:</label>
+                            <input type="text" id="chartTitle" class="form-control" 
+                                   value="Empresas Registradas" placeholder="Título personalizado">
+                            <div class="mt-1 text-xs text-gray-500">
+                                💡 El título se actualiza automáticamente según el tipo de datos seleccionado
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="primaryColor">Color Principal:</label>
+                            <div class="color-picker-group">
+                                <input type="color" id="primaryColor" value="#C7252B" class="color-input">
+                                <div class="color-presets">
+                                    <button class="color-preset" data-color="#C7252B" style="background: #C7252B" title="Rojo Clúster"></button>
+                                    <button class="color-preset" data-color="#3B82F6" style="background: #3B82F6" title="Azul"></button>
+                                    <button class="color-preset" data-color="#10B981" style="background: #10B981" title="Verde"></button>
+                                    <button class="color-preset" data-color="#F59E0B" style="background: #F59E0B" title="Naranja"></button>
+                                    <button class="color-preset" data-color="#8B5CF6" style="background: #8B5CF6" title="Morado"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showAnimation" checked>
+                                <span class="checkbox-custom"></span>
+                                <span>Animaciones</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showGrid" checked>
+                                <span class="checkbox-custom"></span>
+                                <span>Mostrar Grilla</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showTooltips" checked>
+                                <span class="checkbox-custom"></span>
+                                <span>Tooltips Informativos</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showLegend">
+                                <span class="checkbox-custom"></span>
+                                <span>Mostrar Leyenda</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Filtros Avanzados -->
+                    <div class="config-section">
+                        <h3>🔍 Filtros Avanzados</h3>
+                        
+                        <div id="filtrosContainer">
+                            <!-- Los filtros se generarán dinámicamente -->
+                        </div>
+                        
+                        <button id="agregarFiltro" class="btn-outline">
+                            <i class="fas fa-plus mr-2"></i>Agregar Filtro
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Previsualización -->
+            <div class="xl:col-span-2">
+                <div class="preview-panel">
+                    <div class="preview-header">
+                        <h2><i class="fas fa-chart-line mr-2"></i>Previsualización en Tiempo Real</h2>
+                        <div class="preview-actions">
+                            <button id="fullscreenPreview" class="btn-icon" title="Pantalla Completa">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button id="downloadChart" class="btn-icon" title="Descargar Gráfico">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button id="refreshData" class="btn-icon" title="Actualizar Datos">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="previewChart"></canvas>
+                        <div id="chartLoading" class="chart-loading">
+                            <div class="loading-spinner"></div>
+                            <p>Cargando datos del gráfico...</p>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas del Gráfico -->
+                    <div class="chart-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Total de Puntos</div>
+                            <div class="stat-value" id="totalDataPoints">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Último Valor</div>
+                            <div class="stat-value" id="lastValue">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Tendencia</div>
+                            <div class="stat-value" id="trendIndicator">--</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Actualizado</div>
+                            <div class="stat-value" id="lastUpdate">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Datos Personalizados (oculto inicialmente) -->
+        <div id="customDataPanel" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+            <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-hidden">
+                <div class="panel-header bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-800">
+                        <i class="fas fa-database mr-2 text-blue-500"></i>Editor de Datos Personalizados
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button id="guardarDatosPersonalizados" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+                            <i class="fas fa-save mr-2"></i>Guardar
+                        </button>
+                        <button id="cerrarCustomData" class="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="panel-content p-6 overflow-y-auto max-h-[70vh]">
+                    <!-- Pestañas del editor -->
+                    <div class="mb-6">
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-8">
+                                <button id="tab-editor" class="tab-button active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">
+                                    <i class="fas fa-code mr-2"></i>Editor JSON
+                                </button>
+                                <button id="tab-table" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-table mr-2"></i>Tabla Interactiva
+                                </button>
+                                <button id="tab-import" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-file-import mr-2"></i>Importar CSV
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenido del Editor JSON -->
+                    <div id="content-editor" class="tab-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-semibold text-gray-700">
+                                        <i class="fas fa-edit mr-2"></i>Editor de Datos JSON
+                                    </h4>
+                                    <div class="flex space-x-2">
+                                        <button id="formatearJSON" class="text-blue-600 hover:text-blue-800 text-sm">
+                                            <i class="fas fa-magic mr-1"></i>Formatear
+                                        </button>
+                                        <button id="limpiarEditor" class="text-red-600 hover:text-red-800 text-sm">
+                                            <i class="fas fa-trash mr-1"></i>Limpiar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <textarea id="customDataEditor" class="w-full h-64 p-3 border border-gray-300 rounded-lg font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                          placeholder="Ingresa datos en formato JSON:\n[\n  {\"mes\": \"Ene\", \"valor\": 10, \"categoria\": \"A\"},\n  {\"mes\": \"Feb\", \"valor\": 15, \"categoria\": \"B\"},\n  {\"mes\": \"Mar\", \"valor\": 12, \"categoria\": \"A\"}\n]"></textarea>
+                                
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <button id="validarDatos" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                                        <i class="fas fa-check mr-2"></i>Validar JSON
+                                    </button>
+                                    <button id="cargarEjemplo" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                                        <i class="fas fa-file-import mr-2"></i>Cargar Ejemplo
+                                    </button>
+                                    <button id="generarAleatorio" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors">
+                                        <i class="fas fa-random mr-2"></i>Generar Aleatorio
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-semibold text-gray-700">
+                                        <i class="fas fa-chart-line mr-2"></i>Vista Previa del Gráfico
+                                    </h4>
+                                    <button id="actualizarPreview" class="text-green-600 hover:text-green-800 text-sm">
+                                        <i class="fas fa-sync-alt mr-1"></i>Actualizar
+                                    </button>
+                                </div>
+                                
+                                <div id="dataPreview" class="border border-gray-300 rounded-lg p-4 bg-gray-50 h-64 overflow-auto">
+                                    <p class="text-gray-500 text-center mt-20">La vista previa aparecerá aquí cuando valides los datos</p>
+                                </div>
+                                
+                                <!-- Estadísticas de los datos -->
+                                <div id="dataStats" class="mt-3 p-3 bg-blue-50 rounded border border-blue-200" style="display: none;">
+                                    <div class="text-sm text-blue-800">
+                                        <div class="flex justify-between">
+                                            <span>Registros:</span>
+                                            <span id="statsRecords">0</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Campos:</span>
+                                            <span id="statsFields">0</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Rango valores:</span>
+                                            <span id="statsRange">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenido de Tabla Interactiva -->
+                    <div id="content-table" class="tab-content hidden">
+                        <div class="mb-4 flex justify-between items-center">
+                            <h4 class="font-semibold text-gray-700">
+                                <i class="fas fa-table mr-2"></i>Editor de Tabla
+                            </h4>
+                            <div class="flex space-x-2">
+                                <button id="agregarFilaTabla" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+                                    <i class="fas fa-plus mr-1"></i>Agregar Fila
+                                </button>
+                                <button id="exportarTablaJSON" class="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                                    <i class="fas fa-download mr-1"></i>Exportar JSON
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table id="dataTable" class="min-w-full bg-white border border-gray-300">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-2 border border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Etiqueta (Mes/Período)
+                                        </th>
+                                        <th class="px-4 py-2 border border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Valor
+                                        </th>
+                                        <th class="px-4 py-2 border border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Categoría (Opcional)
+                                        </th>
+                                        <th class="px-4 py-2 border border-gray-300 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTableBody">
+                                    <!-- Las filas se generarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenido de Importar CSV -->
+                    <div id="content-import" class="tab-content hidden">
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-3">
+                                    <i class="fas fa-file-csv mr-2"></i>Importar desde CSV
+                                </h4>
+                                
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                                    <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+                                    <button id="selectCsvFile" class="w-full h-full focus:outline-none">
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                        <p class="text-gray-600">Haz clic para seleccionar un archivo CSV</p>
+                                        <p class="text-gray-400 text-sm mt-1">o arrastra y suelta aquí</p>
+                                    </button>
+                                </div>
+                                
+                                <div id="csvPreview" class="mt-4" style="display: none;">
+                                    <h5 class="font-medium text-gray-700 mb-2">Vista previa del CSV:</h5>
+                                    <div class="overflow-x-auto max-h-40 border rounded">
+                                        <table id="csvPreviewTable" class="min-w-full text-sm">
+                                            <!-- Contenido dinámico -->
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="mt-3 flex space-x-2">
+                                        <button id="importarCSV" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                            <i class="fas fa-check mr-2"></i>Importar Datos
+                                        </button>
+                                        <button id="cancelarCSV" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                                            <i class="fas fa-times mr-2"></i>Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuraciones Guardadas -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-bookmark mr-2" style="color: #C7252B;"></i>Configuraciones Guardadas</h2>
+                <button onclick="nuevaConfiguracion()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition" style="background-color: #C7252B;">
+                    <i class="fas fa-plus mr-2"></i>Nueva Configuración
+                </button>
+            </div>
+
+            <div id="configList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Las configuraciones guardadas se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Modales -->
+    
+    <!-- Modal de Confirmación -->
+    <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full slide-in">
+                <div class="p-6 border-b">
+                    <div class="flex items-center justify-between">
+                        <h3 id="confirmTitle" class="text-xl font-bold text-gray-800">Confirmar Acción</h3>
+                        <button onclick="cerrarModal('confirmModal')" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <p id="confirmMessage" class="text-gray-600">¿Estás seguro de realizar esta acción?</p>
+                </div>
+                <div class="p-6 border-t flex justify-end space-x-3">
+                    <button id="confirmCancel" onclick="cerrarModal('confirmModal')" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                        <i class="fas fa-times mr-2"></i>Cancelar
+                    </button>
+                    <button id="confirmAccept" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition" style="background-color: #C7252B;">
+                        <i class="fas fa-check mr-2"></i>Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuración Avanzada -->
+    <div id="advancedConfigModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 modal-backdrop">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-4xl w-full slide-in max-h-[90vh] overflow-hidden">
+                <div class="p-6 border-b">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800">⚙️ Configuración Avanzada</h3>
+                        <button onclick="cerrarModal('advancedConfigModal')" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-y-auto max-h-[70vh]">
+                    <div class="mb-6">
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-8">
+                                <button class="tab-btn py-2 px-1 border-b-2 border-red-500 font-medium text-sm text-red-600" data-tab="ejes" style="border-color: #C7252B; color: #C7252B;">Ejes</button>
+                                <button class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="animaciones">Animaciones</button>
+                                <button class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="responsive">Responsive</button>
+                                <button class="tab-btn py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" data-tab="export">Exportación</button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="tab-content">
+                        <div id="tab-ejes" class="tab-pane">
+                            <p class="text-gray-600">Configuración de ejes del gráfico...</p>
+                        </div>
+                        <div id="tab-animaciones" class="tab-pane hidden">
+                            <p class="text-gray-600">Configuración de animaciones...</p>
+                        </div>
+                        <div id="tab-responsive" class="tab-pane hidden">
+                            <p class="text-gray-600">Configuración responsive...</p>
+                        </div>
+                        <div id="tab-export" class="tab-pane hidden">
+                            <p class="text-gray-600">Configuración de exportación...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 border-t flex justify-end space-x-3">
+                    <button onclick="cerrarModal('advancedConfigModal')" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                        <i class="fas fa-times mr-2"></i>Cancelar
+                    </button>
+                    <button id="saveAdvancedConfig" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition" style="background-color: #C7252B;">
+                        <i class="fas fa-save mr-2"></i>Aplicar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./assets/js/plugins/chartjs.min.js"></script>
+    <script src="./js/diagnostico-simple.js"></script>
+    <script src="./js/gestor-datos-reales.js"></script>
+    <script src="./js/controlador-tipos-datos.js"></script>
+    <script src="./js/emergencia.js"></script>
+    <script src="./js/guardado-edicion.js"></script>
+    <script src="./js/solucionador.js"></script>
+    <script src="./js/test-tres-puntos.js"></script>
+    <script src="./js/gestion-graficos-mejorado.js"></script>
+
+    <script>
+        // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
+        function initializeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            const hamburgerBtn = document.querySelector('[sidenav-trigger]');
+            const closeBtn = document.getElementById('sidebarCloseBtn');
+
+            console.log('Sidebar elements:', {
+                sidebar: !!sidebar,
+                overlay: !!overlay,
+                hamburgerBtn: !!hamburgerBtn,
+                closeBtn: !!closeBtn,
+                screenWidth: window.innerWidth,
+                isDesktop: window.innerWidth >= 1280
+            });
+
+            // Log computed styles for debugging
+            if (sidebar) {
+                const styles = window.getComputedStyle(sidebar);
+                console.log('Sidebar computed styles:', {
+                    display: styles.display,
+                    transform: styles.transform,
+                    left: styles.left,
+                    position: styles.position,
+                    zIndex: styles.zIndex
+                });
+            }
+
+            if (!sidebar || !overlay || !hamburgerBtn) {
+                console.error('Sidebar elements not found:', {
+                    sidebar: !!sidebar,
+                    overlay: !!overlay,
+                    hamburgerBtn: !!hamburgerBtn
+                });
+                return;
+            }
+
+            // Toggle sidebar function
+            function toggleSidebar(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                const isVisible = sidebar.classList.contains('sidenav-show');
+                console.log('Toggle sidebar - currently visible:', isVisible);
+                if (!isVisible) {
+                    // Open sidebar
+                    console.log('Opening sidebar');
+                    sidebar.classList.add('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'true');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                    // Focus management for accessibility
+                    const firstLink = sidebar.querySelector('.porsche-nav-item');
+                    if (firstLink) {
+                        setTimeout(() => firstLink.focus(), 100);
+                    }
+                } else {
+                    // Close sidebar
+                    console.log('Closing sidebar');
+                    closeSidebarInternal();
+                }
+            }
+
+            // Close sidebar function
+            function closeSidebarInternal() {
+                console.log('Executing closeSidebarInternal');
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+                // Return focus to hamburger button
+                if (hamburgerBtn) {
+                    hamburgerBtn.focus();
+                }
+            }
+
+            // Event listeners
+            console.log('Adding click event to hamburger button');
+            hamburgerBtn.addEventListener('click', toggleSidebar);
+            hamburgerBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleSidebar(e);
+            }, { passive: false });
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebarInternal);
+                overlay.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeSidebarInternal();
+                }, { passive: false });
+            }
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+            });
+
+            // Handle window resize - Keep sidebar closed on all screen sizes
+            window.addEventListener('resize', function() {
+                // Optional: could add logic here if needed
+            });
+
+            // Swipe to close functionality
+            let touchStartX = 0;
+            let touchStartY = 0;
+            sidebar.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            sidebar.addEventListener('touchmove', function(e) {
+                if (!touchStartX) return;
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+                const diffX = touchStartX - currentX;
+                const diffY = Math.abs(touchStartY - currentY);
+
+                // Swipe left to close
+                if (diffX > 50 && diffY < 100) {
+                    closeSidebarInternal();
+                    touchStartX = 0;
+                    touchStartY = 0;
+                }
+            }, { passive: true });
+
+            // Keyboard navigation in sidebar
+            sidebar.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebarInternal();
+                }
+                // Arrow navigation
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
+                    const currentIndex = navItems.indexOf(document.activeElement);
+                    if (e.key === 'ArrowDown') {
+                        const nextIndex = (currentIndex + 1) % navItems.length;
+                        navItems[nextIndex].focus();
+                    } else {
+                        const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
+                        navItems[prevIndex].focus();
+                    }
+                }
+            });
+
+            console.log('✅ Sidebar functionality initialized successfully');
+        }
+
+        // Legacy function compatibility
+        function closeSidebar() {
+            const sidebar = document.querySelector('.porsche-sidebar');
+            const overlay = document.getElementById('sidenavOverlay');
+            if (sidebar && overlay) {
+                sidebar.classList.remove('sidenav-show');
+                sidebar.setAttribute('aria-expanded', 'false');
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Initialize sidebar when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initializeSidebar, 100);
+        });
+    </script>
+
+    <script>
+        // Funciones principales
+        function exportarGraficos() {
+            console.log('Exportando gráficos...');
+            alert('Función de exportación en desarrollo');
+        }
+
+        function nuevaConfiguracion() {
+            console.log('Creando nueva configuración...');
+            alert('Creando nueva configuración...');
+        }
+
+        function resetearTodo() {
+            console.log('Reseteando configuración...');
+            if(confirm('¿Estás seguro de resetear toda la configuración?')) {
+                alert('Configuración reseteada');
+            }
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            document.getElementById('totalGraficos').textContent = '3';
+            document.getElementById('totalFuentes').textContent = '5';
+            document.getElementById('totalConfigs').textContent = '2';
+            document.getElementById('ultimaActualizacion').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Sistema de Gestión de Gráficos inicializado');
+            actualizarEstadisticas();
+
+            // Simular carga de configuraciones
+            setTimeout(() => {
+                const configList = document.getElementById('configList');
+                if (configList) {
+                    configList.innerHTML = `
+                        <div class="bg-gray-50 p-4 rounded-lg border">
+                            <h4 class="font-semibold text-gray-800 mb-2">Gráfico de Empresas</h4>
+                            <p class="text-sm text-gray-600 mb-3">Evolución mensual de empresas registradas</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">Cargar</button>
+                                <button class="px-3 py-1 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">Editar</button>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg border">
+                            <h4 class="font-semibold text-gray-800 mb-2">Usuarios Nuevos</h4>
+                            <p class="text-sm text-gray-600 mb-3">Registro semanal de nuevos usuarios</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">Cargar</button>
+                                <button class="px-3 py-1 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">Editar</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }, 1000);
+        });
+    </script>
+
+    <!-- Scripts adicionales solo si existen -->
+    <script>
+        // Cargar scripts opcionales de forma segura
+        const scriptsOpcionales = [
+            './gestion-graficos/js/gestion-graficos-core.js',
+            './gestion-graficos/js/gestion-graficos-ui.js', 
+            './gestion-graficos/js/gestion-graficos-data.js',
+            './gestion-graficos/js/gestion-graficos-main.js'
+        ];
+        
+        scriptsOpcionales.forEach(src => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onerror = () => console.log(`⚠️ Script opcional no encontrado: ${src}`);
+            document.head.appendChild(script);
+        });
+    </script>
+    
+    <!-- Script de prueba inmediata -->
+    <script>
+        // Prueba inmediata de funcionalidades
+        setTimeout(function() {
+            console.log('🧪 Ejecutando prueba de funcionalidades...');
+            
+            // Verificar que las funciones existen
+            const funciones = [
+                'verConfiguracionesGuardadas',
+                'abrirEditorMejorado', 
+                'validarDatosEditor',
+                'cargarEjemploEditor'
+            ];
+            
+            funciones.forEach(func => {
+                if (typeof window[func] === 'function') {
+                    console.log(`✅ ${func} disponible`);
+                } else {
+                    console.log(`❌ ${func} NO disponible`);
+                }
+            });
+            
+            // Verificar controles de color
+            const colorInput = document.getElementById('primaryColor');
+            if (colorInput) {
+                console.log('✅ Control de color encontrado');
+                
+                // Agregar evento de prueba
+                colorInput.addEventListener('change', function() {
+                    console.log('🎨 Color cambiado a:', this.value);
+                });
+            } else {
+                console.log('❌ Control de color NO encontrado');
+            }
+            
+            // Verificar botones de presets
+            const presets = document.querySelectorAll('.color-preset');
+            console.log(`🎨 ${presets.length} presets de color encontrados`);
+            
+            // Mostrar estado final
+            console.log('📊 Estado final del sistema:');
+            console.log('- sistemaEmergencia:', typeof window.sistemaEmergencia);
+            console.log('- Chart.js:', typeof Chart);
+            console.log('- Funciones de editor:', typeof window.abrirEditorMejorado);
+            console.log('- Configuraciones:', typeof window.verConfiguracionesGuardadas);
+            
+            console.log('✅ Prueba completada. Sistema listo para usar.');
+            
+        }, 3000);
+    </script>
+
+    <!-- Auth Session Script -->
+    <script src="./js/auth-session.js"></script>
+</body>
+</html>

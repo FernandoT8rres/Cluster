@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos - CLAUT Metropolitano</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === STACKED CARDS EFFECT === */
+        .cards-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .card-stack {
+            position: relative;
+            height: 600px; /* Altura fija para el contenedor */
+        }
+
+        .event-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(199, 37, 43, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        /* Posicionamiento inicial apilado */
+        .event-card:nth-child(1) {
+            z-index: 4;
+            transform: translateY(0px) scale(1);
+        }
+
+        .event-card:nth-child(2) {
+            z-index: 3;
+            transform: translateY(12px) scale(0.97);
+        }
+
+        .event-card:nth-child(3) {
+            z-index: 2;
+            transform: translateY(24px) scale(0.94);
+        }
+
+        .event-card:nth-child(4) {
+            z-index: 1;
+            transform: translateY(36px) scale(0.91);
+        }
+
+        /* Hover effect */
+        .event-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 25px 50px rgba(199, 37, 43, 0.25) !important;
+            z-index: 10 !important;
+        }
+
+        /* Separación con scroll */
+        .card-stack.scrolled .event-card {
+            position: relative;
+            margin-bottom: 40px;
+            transform: scale(1) !important;
+        }
+
+        .card-stack.scrolled .event-card:nth-child(n) {
+            z-index: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .cards-container {
+                padding: 10px;
+            }
+
+            .event-card:nth-child(2) {
+                transform: translateY(8px) scale(0.98);
+            }
+
+            .event-card:nth-child(3) {
+                transform: translateY(16px) scale(0.96);
+            }
+
+            .event-card:nth-child(4) {
+                transform: translateY(24px) scale(0.94);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header Simple -->
+    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+        <div class="container mx-auto px-4 py-6 text-center">
+            <h1 class="text-3xl font-bold">🎯 Eventos CLAUT</h1>
+            <p class="text-red-200 mt-1">Próximos eventos y registros</p>
+        </div>
+    </header>
+
+    <!-- Cards Container -->
+    <div class="cards-container">
+        <div class="card-stack" id="cardStack">
+            <!-- Las tarjetas se cargarán aquí -->
+        </div>
+
+        <!-- Botón para cambiar vista -->
+        <div class="text-center mt-8">
+            <button onclick="toggleView()" id="toggleBtn" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">
+                <i class="fas fa-layer-group mr-2"></i>Ver Lista Separada
+            </button>
+        </div>
+
+        <!-- Loading/Empty states -->
+        <div id="loadingState" class="text-center py-12">
+            <i class="fas fa-spinner fa-spin text-4xl text-red-600 mb-4"></i>
+            <p class="text-gray-600">Cargando eventos...</p>
+        </div>
+
+        <div id="emptyState" class="hidden text-center py-12">
+            <i class="fas fa-calendar-times text-6xl text-gray-400 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-700 mb-2">No hay eventos disponibles</h3>
+            <p class="text-gray-500">Los eventos aparecerán aquí cuando estén disponibles.</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <script>
+        // Gestión simple de eventos
+        class SimpleEventsManager {
+            constructor() {
+                this.eventos = [];
+                this.isScrolled = false;
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 Iniciando Simple Events Manager...');
+                await this.loadEvents();
+                this.setupScrollDetection();
+            }
+
+            async loadEvents() {
+                const loadingState = document.getElementById('loadingState');
+                const emptyState = document.getElementById('emptyState');
+                const cardStack = document.getElementById('cardStack');
+
+                try {
+                    const response = await fetch('./get_eventos.php');
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        throw new Error(data.message || 'Error cargando eventos');
+                    }
+
+                    this.eventos = data.data.eventos || [];
+                    console.log(`📅 Cargados ${this.eventos.length} eventos`);
+
+                    this.renderCards();
+
+                } catch (error) {
+                    console.error('❌ Error:', error);
+                    emptyState.classList.remove('hidden');
+                } finally {
+                    loadingState.style.display = 'none';
+                }
+            }
+
+            renderCards() {
+                const cardStack = document.getElementById('cardStack');
+                const emptyState = document.getElementById('emptyState');
+
+                if (this.eventos.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+
+                cardStack.innerHTML = '';
+
+                this.eventos.slice(0, 4).forEach((evento, index) => {
+                    const card = this.createCard(evento, index);
+                    cardStack.appendChild(card);
+                });
+            }
+
+            createCard(evento, index) {
+                const card = document.createElement('div');
+                card.className = 'event-card overflow-hidden';
+
+                card.innerHTML = `
+                    <div class="relative h-48 bg-gradient-to-r from-red-500 to-red-600 overflow-hidden">
+                        <img src="${evento.imagen || './assets/img/evento-default.jpg'}"
+                             alt="${evento.titulo}"
+                             class="w-full h-full object-cover"
+                             onerror="this.src='./assets/img/evento-default.jpg'">
+                        <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+
+                        <!-- Badge de precio -->
+                        <div class="absolute bottom-3 left-3">
+                            <span class="bg-white bg-opacity-90 px-3 py-1 text-sm font-bold rounded-full text-gray-800">
+                                ${evento.precio_formateado || (evento.precio > 0 ? '$' + evento.precio : 'Gratuito')}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                            ${evento.titulo}
+                        </h3>
+
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                            ${evento.descripcion_corta || evento.descripcion || ''}
+                        </p>
+
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-calendar-alt mr-2" style="color: #C7252B;"></i>
+                                <span>${evento.fecha_corta || new Date(evento.fecha_inicio).toLocaleDateString('es-ES')}</span>
+                            </div>
+
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt mr-2" style="color: #C7252B;"></i>
+                                <span>${evento.ubicacion}</span>
+                            </div>
+
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-users mr-2" style="color: #C7252B;"></i>
+                                <span>${evento.capacidad_actual || 0}/${evento.capacidad_maxima || 100} registrados</span>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <button onclick="registrarseEvento(${evento.id})"
+                                    class="flex-1 text-white py-2 px-4 rounded-lg font-semibold transition-colors duration-200 text-sm hover:opacity-90"
+                                    style="background-color: #C7252B;">
+                                <i class="fas fa-user-plus mr-1"></i>Registrarse
+                            </button>
+
+                            <button onclick="verMasEvento(${evento.id}, '${evento.titulo.replace(/'/g, "\\'")}')"
+                                    class="flex-1 border-2 border-gray-300 hover:border-red-500 text-gray-700 hover:text-red-600 py-2 px-4 rounded-lg font-semibold transition-colors duration-200 text-sm">
+                                <i class="fas fa-eye mr-1"></i>Ver más
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            setupScrollDetection() {
+                let lastScrollY = 0;
+                const cardStack = document.getElementById('cardStack');
+                const toggleBtn = document.getElementById('toggleBtn');
+
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+
+                    if (scrollY > 200 && !this.isScrolled) {
+                        this.isScrolled = true;
+                        cardStack.classList.add('scrolled');
+                        toggleBtn.innerHTML = '<i class="fas fa-layer-group mr-2"></i>Ver Apiladas';
+                    } else if (scrollY <= 200 && this.isScrolled) {
+                        this.isScrolled = false;
+                        cardStack.classList.remove('scrolled');
+                        toggleBtn.innerHTML = '<i class="fas fa-layer-group mr-2"></i>Ver Lista Separada';
+                    }
+
+                    lastScrollY = scrollY;
+                });
+            }
+        }
+
+        // Funciones globales
+        function toggleView() {
+            const cardStack = document.getElementById('cardStack');
+            const toggleBtn = document.getElementById('toggleBtn');
+
+            cardStack.classList.toggle('scrolled');
+
+            if (cardStack.classList.contains('scrolled')) {
+                toggleBtn.innerHTML = '<i class="fas fa-layer-group mr-2"></i>Ver Apiladas';
+                window.eventsManager.isScrolled = true;
+            } else {
+                toggleBtn.innerHTML = '<i class="fas fa-layer-group mr-2"></i>Ver Lista Separada';
+                window.eventsManager.isScrolled = false;
+            }
+        }
+
+        function registrarseEvento(eventoId) {
+            alert(`Registro al evento ${eventoId} - Funcionalidad pendiente`);
+        }
+
+        function verMasEvento(eventoId, titulo) {
+            window.open(`demo_evento.html?id=${eventoId}`, '_blank');
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            window.eventsManager = new SimpleEventsManager();
+        });
+
+        // Utility CSS en línea
+        const utilityCSS = `
+            .line-clamp-2 {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+            .line-clamp-3 {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+            }
+        `;
+
+        const style = document.createElement('style');
+        style.textContent = utilityCSS;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Auth Session Script -->
+    <script src="./js/auth-session.js"></script>
+</body>
+</html>
