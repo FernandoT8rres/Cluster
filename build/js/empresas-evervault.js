@@ -53,16 +53,33 @@ class EmpresaCardStreamController {
 
             const data = await response.json();
             console.log('📦 Datos recibidos de API:', data);
+            console.log('📊 Tipo de datos:', typeof data);
+            console.log('📊 Es array?:', Array.isArray(data));
+            console.log('📊 Keys del objeto:', Object.keys(data));
 
             // Verificar diferentes estructuras de respuesta
             if (data.success && Array.isArray(data.empresas)) {
-                // Filtrar solo empresas activas
+                // Estructura: {success: true, empresas: [...]}
                 this.empresas = data.empresas.filter(e => e.estado === 'activo');
                 console.log(`✅ Cargadas ${this.empresas.length} empresas activas de ${data.empresas.length} totales`);
             } else if (Array.isArray(data)) {
-                // Si la respuesta es directamente un array
+                // Respuesta directa como array
                 this.empresas = data.filter(e => e.estado === 'activo');
                 console.log(`✅ Cargadas ${this.empresas.length} empresas activas de ${data.length} totales`);
+            } else if (data.empresas && Array.isArray(data.empresas)) {
+                // Estructura: {empresas: [...]} sin success
+                this.empresas = data.empresas.filter(e => e.estado === 'activo');
+                console.log(`✅ Cargadas ${this.empresas.length} empresas activas de ${data.empresas.length} totales`);
+            } else if (typeof data === 'object' && data !== null) {
+                // Intentar encontrar un array en el objeto
+                const possibleArrays = Object.values(data).filter(val => Array.isArray(val));
+                if (possibleArrays.length > 0) {
+                    this.empresas = possibleArrays[0].filter(e => e && e.estado === 'activo');
+                    console.log(`✅ Cargadas ${this.empresas.length} empresas activas`);
+                } else {
+                    console.error('❌ No se encontró array de empresas en:', data);
+                    this.empresas = [];
+                }
             } else {
                 console.error('❌ Estructura de datos inesperada:', data);
                 this.empresas = [];
