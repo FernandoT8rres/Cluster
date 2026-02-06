@@ -58,7 +58,11 @@ class EmpresaCardStreamController {
             console.log('📊 Keys del objeto:', Object.keys(data));
 
             // Verificar diferentes estructuras de respuesta
-            if (data.success && Array.isArray(data.empresas)) {
+            if (data.success && Array.isArray(data.data)) {
+                // Estructura: {success: true, data: [...]} ← ESTRUCTURA REAL DE LA API
+                this.empresas = data.data.filter(e => e.estado === 'activo');
+                console.log(`✅ Cargadas ${this.empresas.length} empresas activas de ${data.data.length} totales`);
+            } else if (data.success && Array.isArray(data.empresas)) {
                 // Estructura: {success: true, empresas: [...]}
                 this.empresas = data.empresas.filter(e => e.estado === 'activo');
                 console.log(`✅ Cargadas ${this.empresas.length} empresas activas de ${data.empresas.length} totales`);
