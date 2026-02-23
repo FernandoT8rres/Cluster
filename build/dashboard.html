@@ -119,64 +119,67 @@
     }
   </style>
   <style>
-    /* Tema Oscuro Premium con Rojo Claut como Principal */
+    /* Tema Profesional Slate Premium con Rojo Claut */
     :root {
-      /* Paleta oscura premium */
-      --claut-bg-main: #0a0a0a;
-      /* Fondo principal negro profundo */
-      --claut-bg-surface: #1a1a1a;
-      /* Cards/tarjetas gris muy oscuro */
-      --claut-bg-secondary: #242424;
+      /* Paleta Rojo Oscuro Premium — calidez, elegancia y potencia */
+      --claut-bg-main: #110608;
+      /* Fondo principal: rojo-negro profundo */
+      --claut-bg-surface: #1e0d10;
+      /* Cards/tarjetas: carmesí muy oscuro */
+      --claut-bg-secondary: #2a1215;
       /* Superficie secundaria */
-      --claut-bg-header: rgba(26, 26, 26, 0.95);
+      --claut-bg-tertiary: #371a1f;
+      /* Superficie hover */
+      --claut-bg-header: rgba(17, 6, 8, 0.96);
       /* Header oscuro con blur */
-      --claut-bg-nav: rgba(36, 36, 36, 0.98);
+      --claut-bg-nav: rgba(22, 8, 11, 0.99);
       /* Nav superior con blur */
 
-      /* Colores de texto - alta legibilidad en oscuro */
-      --claut-text-primary: #ffffff;
-      /* Texto principal blanco puro */
-      --claut-text-secondary: #e5e5e7;
-      /* Texto secundario gris claro */
-      --claut-text-tertiary: #a1a1a6;
-      /* Texto terciario gris medio */
-      --claut-text-muted: #6e6e73;
+      /* Colores de texto - alta legibilidad */
+      --claut-text-primary: #fff0f0;
+      /* Texto principal: blanco cálido */
+      --claut-text-secondary: #d4b8bb;
+      /* Texto secundario rosado suave */
+      --claut-text-tertiary: #9a7880;
+      /* Texto terciario rojo-gris */
+      --claut-text-muted: #6a5055;
       /* Texto deshabilitado */
-      --claut-text-inverse: #1a1a1a;
+      --claut-text-inverse: #110608;
       /* Texto sobre fondos claros */
 
       /* Color principal Claut oficial */
       --claut-red: #C7252B;
       /* Rojo Claut oficial */
-      --claut-red-hover: #E8353B;
+      --claut-red-hover: #e02d33;
       /* Rojo hover más brillante */
-      --claut-red-light: rgba(199, 37, 43, 0.2);
+      --claut-red-light: rgba(199, 37, 43, 0.22);
       /* Rojo con transparencia */
       --claut-red-dark: #A01E23;
       /* Rojo más oscuro */
+      --claut-red-rgb: 199, 37, 43;
 
       /* Colores de acento complementarios */
-      --claut-accent-secondary: #28a745;
-      /* Verde para success */
-      --claut-accent-warning: #ffc107;
-      /* Amarillo para warnings */
-      --claut-accent-info: #17a2b8;
-      /* Cyan para información */
+      --claut-accent-secondary: #22c55e;
+      /* Verde éxito vibrante */
+      --claut-accent-warning: #f59e0b;
+      /* Ámbar para warnings */
+      --claut-accent-info: #f87171;
+      /* Rosa-rojo para información (en lugar de azul) */
 
-      /* Bordes y separadores oscuros */
-      --claut-border-light: rgba(255, 255, 255, 0.1);
-      /* Bordes sutiles blancos */
-      --claut-border-medium: rgba(255, 255, 255, 0.2);
+      /* Bordes: sutiles rojizos */
+      --claut-border-light: rgba(220, 80, 90, 0.15);
+      /* Bordes sutiles */
+      --claut-border-medium: rgba(220, 80, 90, 0.28);
       /* Bordes más visibles */
-      --claut-divider: rgba(255, 255, 255, 0.08);
+      --claut-divider: rgba(220, 80, 90, 0.08);
       /* Líneas divisorias */
 
-      /* Sombras premium para tema oscuro */
+      /* Sombras cálidas */
       --claut-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-      --claut-shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
-      --claut-shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.4);
-      --claut-shadow-large: 0 16px 48px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.5);
-      --claut-shadow-red: 0 4px 20px rgba(199, 37, 43, 0.3);
+      --claut-shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+      --claut-shadow-medium: 0 8px 28px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.25);
+      --claut-shadow-large: 0 16px 48px rgba(0, 0, 0, 0.45), 0 8px 16px rgba(0, 0, 0, 0.3);
+      --claut-shadow-red: 0 4px 20px rgba(199, 37, 43, 0.4);
       /* Sombra roja para elementos destacados */
 
       /* Sistema tipográfico */
@@ -247,9 +250,12 @@
       line-height: 1.47;
       letter-spacing: -0.022em;
       background: var(--claut-bg-main);
-      /* Fondo negro profundo */
+      background-image:
+        radial-gradient(ellipse at 60% 0%, rgba(199, 37, 43, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 80%, rgba(160, 30, 35, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 90%, rgba(100, 10, 15, 0.1) 0%, transparent 45%);
+      background-attachment: fixed;
       color: var(--claut-text-primary);
-      /* Texto blanco */
       margin: 0;
       padding: 0;
       overflow-x: hidden;
@@ -400,10 +406,10 @@
       left: 0;
       right: 0;
       height: var(--header-height);
-      background: rgba(26, 26, 26, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(17, 6, 8, 0.96);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid rgba(220, 80, 90, 0.18);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -411,22 +417,20 @@
       padding: 0 var(--space-6);
       transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
       box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.3),
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        0 1px 0 rgba(220, 80, 90, 0.1),
+        0 4px 20px rgba(0, 0, 0, 0.3);
       will-change: transform, backdrop-filter;
       transform: translateY(0px) !important;
     }
 
     /* Header scroll effects */
     .claut-header.scrolled {
-      background: rgba(26, 26, 26, 0.98) !important;
+      background: rgba(13, 4, 5, 0.99) !important;
       box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.4),
-        0 8px 24px rgba(0, 0, 0, 0.25),
-        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
+        0 1px 0 rgba(220, 80, 90, 0.12),
+        0 8px 32px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
       transform: translateY(0px) !important;
       position: fixed !important;
       top: 0 !important;
@@ -754,11 +758,11 @@
       }
     }
 
-    /* Sistema de Cards Premium para Tema Oscuro */
+    /* Sistema de Cards Premium — Slate Professional */
     .claut-card {
-      background: var(--claut-bg-surface);
+      background: linear-gradient(145deg, var(--claut-bg-surface), rgba(34, 45, 66, 0.85));
       border-radius: var(--radius-xl);
-      box-shadow: var(--claut-shadow-soft);
+      box-shadow: var(--claut-shadow-soft), 0 0 0 1px rgba(148, 168, 210, 0.06) inset;
       border: 1px solid var(--claut-border-light);
       transition: all var(--transition-slow);
       position: relative;
@@ -774,15 +778,16 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--claut-red), transparent);
+      background: linear-gradient(90deg, var(--claut-red), rgba(199, 37, 43, 0.3), transparent);
       opacity: 0;
       transition: opacity var(--transition-normal);
     }
 
     .claut-card:hover {
       transform: translateY(-4px) scale(1.01);
-      box-shadow: var(--claut-shadow-medium);
+      box-shadow: var(--claut-shadow-medium), 0 0 0 1px rgba(148, 168, 210, 0.12) inset;
       border-color: var(--claut-border-medium);
+      background: linear-gradient(145deg, var(--claut-bg-tertiary), rgba(42, 53, 80, 0.9));
     }
 
     .claut-card:hover::before {
@@ -793,9 +798,9 @@
       padding: var(--space-8);
     }
 
-    /* Cards de estadísticas con tema oscuro */
+    /* Cards de estadísticas — Slate Professional */
     .claut-stat-card {
-      background: var(--claut-bg-surface);
+      background: linear-gradient(145deg, var(--claut-bg-surface), rgba(34, 45, 66, 0.8));
       border-radius: var(--radius-xl);
       border: 1px solid var(--claut-border-light);
       box-shadow: var(--claut-shadow-soft);
@@ -830,13 +835,13 @@
 
     /* Actualizaciones de compatibilidad para elementos existentes */
     .apple-card {
-      background: var(--claut-bg-surface) !important;
+      background: linear-gradient(145deg, var(--claut-bg-surface), rgba(34, 45, 66, 0.85)) !important;
       border: 1px solid var(--claut-border-light) !important;
-      box-shadow: var(--claut-shadow-soft) !important;
+      box-shadow: var(--claut-shadow-soft), 0 0 0 1px rgba(148, 168, 210, 0.06) inset !important;
     }
 
     .apple-stat-card {
-      background: var(--claut-bg-surface) !important;
+      background: linear-gradient(145deg, var(--claut-bg-surface), rgba(34, 45, 66, 0.8)) !important;
       border: 1px solid var(--claut-border-light) !important;
       box-shadow: var(--claut-shadow-soft) !important;
     }
@@ -847,7 +852,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, var(--apple-background) 0%, var(--apple-background-secondary) 100%);
+      background: linear-gradient(135deg, var(--claut-bg-main) 0%, var(--claut-bg-surface) 100%);
       position: relative;
       overflow: hidden;
     }
@@ -3843,25 +3848,30 @@
 
           <!-- Section Header -->
           <div class="text-center mb-8">
-            <div class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-red-50 via-red-100 to-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6 shadow-sm">
+            <div
+              class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-red-50 via-red-100 to-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6 shadow-sm">
               <i class="fas fa-bullhorn mr-2 text-red-600"></i>
               PROMOCIONES & CAMPAÑAS ACTIVAS
             </div>
-            <h2 class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
+            <h2
+              class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
               Centro de <span class="text-red-600">Promociones</span>
             </h2>
             <div class="max-w-4xl mx-auto">
               <p class="text-xl md:text-2xl text-gray-600 leading-relaxed mb-4">
-                Descubre las <span class="text-red-600 font-semibold">últimas campañas promocionales</span> y ofertas exclusivas del Clúster Metropolitano
+                Descubre las <span class="text-red-600 font-semibold">últimas campañas promocionales</span> y ofertas
+                exclusivas del Clúster Metropolitano
               </p>
               <p class="text-base text-gray-500 leading-relaxed">
-                Contenido publicitario oficial • Promociones verificadas • <span class="text-red-600 font-medium">Actualizado en tiempo real</span>
+                Contenido publicitario oficial • Promociones verificadas • <span
+                  class="text-red-600 font-medium">Actualizado en tiempo real</span>
               </p>
             </div>
           </div>
 
           <!-- Expanding Cards Banner Showcase -->
-          <div class="bg-gradient-to-br from-white via-gray-50 to-white shadow-2xl h-[700px] lg:h-[750px] relative overflow-hidden rounded-3xl border border-gray-200"
+          <div
+            class="bg-gradient-to-br from-white via-gray-50 to-white shadow-2xl h-[700px] lg:h-[750px] relative overflow-hidden rounded-3xl border border-gray-200"
             style="transform: none !important; will-change: auto !important;">
             <!-- Header with Enhanced Effects -->
             <div class="flex items-center justify-between p-6 pb-3 group">
@@ -3873,190 +3883,190 @@
               <div class="text-sm text-gray-500 font-medium">Haz doble click en cualquier imagen para ampliarla</div>
             </div>
 
-                <!-- Expanding Cards Container with Enhanced Scroll Effects -->
-                <div class="expanding-options px-6 pb-6 h-full scroll-smooth">
-                  <div id="expandingCardsContainer" class="options-container transform transition-all duration-500"
-                    style="margin: var(--space-8) var(--space-6);">
-                    <!-- Loading state with improved styling -->
-                    <div id="cardsLoading" class="flex items-center justify-center h-full">
-                      <div class="text-center transform transition-all duration-500">
-                        <div class="relative mb-4">
-                          <div class="w-16 h-16 border-4 border-gray-300 rounded-full"></div>
-                          <div
-                            class="absolute top-0 w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin">
-                          </div>
-                        </div>
-                        <p class="text-gray-600 text-lg font-medium mb-2">Cargando galería...</p>
-                        <p class="text-gray-400 text-sm">Preparando contenido visual</p>
+            <!-- Expanding Cards Container with Enhanced Scroll Effects -->
+            <div class="expanding-options px-6 pb-6 h-full scroll-smooth">
+              <div id="expandingCardsContainer" class="options-container transform transition-all duration-500"
+                style="margin: var(--space-8) var(--space-6);">
+                <!-- Loading state with improved styling -->
+                <div id="cardsLoading" class="flex items-center justify-center h-full">
+                  <div class="text-center transform transition-all duration-500">
+                    <div class="relative mb-4">
+                      <div class="w-16 h-16 border-4 border-gray-300 rounded-full"></div>
+                      <div
+                        class="absolute top-0 w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin">
                       </div>
                     </div>
-                    <!-- Cards will be loaded dynamically here -->
+                    <p class="text-gray-600 text-lg font-medium mb-2">Cargando galería...</p>
+                    <p class="text-gray-400 text-sm">Preparando contenido visual</p>
                   </div>
                 </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Image Expansion Modal -->
-        <div id="imageExpansionModal" class="image-modal-overlay">
-          <div class="image-modal-container">
-            <div class="image-modal-header">
-              <h3 id="modalImageTitle" class="image-modal-title">Imagen</h3>
-              <button onclick="closeImageModal()" class="image-modal-close">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-            <div class="image-modal-content">
-              <img id="modalImage" src="" alt="Imagen ampliada" class="image-modal-img">
-              <div class="image-modal-controls">
-                <button onclick="downloadModalImage()" class="image-modal-btn download-btn">
-                  <i class="fas fa-download"></i>
-                  Descargar
-                </button>
-                <button onclick="shareModalImage()" class="image-modal-btn share-btn">
-                  <i class="fas fa-share"></i>
-                  Compartir
-                </button>
+                <!-- Cards will be loaded dynamically here -->
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Script de carrusel usando lógica de sign-in.html -->
-        <script>
-          // Sistema de Carrusel de Banners (copiado de sign-in.html)
-          let currentSlide = 0;
-          let banners = [];
-          let carouselInterval = null;
+      <!-- Image Expansion Modal -->
+      <div id="imageExpansionModal" class="image-modal-overlay">
+        <div class="image-modal-container">
+          <div class="image-modal-header">
+            <h3 id="modalImageTitle" class="image-modal-title">Imagen</h3>
+            <button onclick="closeImageModal()" class="image-modal-close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="image-modal-content">
+            <img id="modalImage" src="" alt="Imagen ampliada" class="image-modal-img">
+            <div class="image-modal-controls">
+              <button onclick="downloadModalImage()" class="image-modal-btn download-btn">
+                <i class="fas fa-download"></i>
+                Descargar
+              </button>
+              <button onclick="shareModalImage()" class="image-modal-btn share-btn">
+                <i class="fas fa-share"></i>
+                Compartir
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          async function cargarBannerCarrusel() {
-            try {
-              console.log('Iniciando carga de banners...');
-              // Agregar timestamp para evitar caché
-              const timestamp = Date.now();
-              const response = await fetch(`./api/banners.php?action=active&t=${timestamp}`, {
-                cache: 'no-cache',
-                headers: {
-                  'Cache-Control': 'no-cache',
-                  'Pragma': 'no-cache'
-                }
-              });
+      <!-- Script de carrusel usando lógica de sign-in.html -->
+      <script>
+        // Sistema de Carrusel de Banners (copiado de sign-in.html)
+        let currentSlide = 0;
+        let banners = [];
+        let carouselInterval = null;
 
-              // Verificar si la respuesta es OK
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+        async function cargarBannerCarrusel() {
+          try {
+            console.log('Iniciando carga de banners...');
+            // Agregar timestamp para evitar caché
+            const timestamp = Date.now();
+            const response = await fetch(`./api/banners.php?action=active&t=${timestamp}`, {
+              cache: 'no-cache',
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
               }
+            });
 
-              // Obtener el texto primero para verificar si hay warnings
-              const responseText = await response.text();
-              console.log('Respuesta raw del servidor:', responseText);
+            // Verificar si la respuesta es OK
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-              // Limpiar warnings de PHP si existen (empiezan con <br />)
-              let cleanedResponse = responseText;
-              if (responseText.includes('<br />')) {
-                // Encontrar donde empieza el JSON (buscar el primer {)
-                const jsonStart = responseText.indexOf('{');
-                if (jsonStart !== -1) {
-                  cleanedResponse = responseText.substring(jsonStart);
-                }
+            // Obtener el texto primero para verificar si hay warnings
+            const responseText = await response.text();
+            console.log('Respuesta raw del servidor:', responseText);
+
+            // Limpiar warnings de PHP si existen (empiezan con <br />)
+            let cleanedResponse = responseText;
+            if (responseText.includes('<br />')) {
+              // Encontrar donde empieza el JSON (buscar el primer {)
+              const jsonStart = responseText.indexOf('{');
+              if (jsonStart !== -1) {
+                cleanedResponse = responseText.substring(jsonStart);
               }
+            }
 
-              // Parsear el JSON limpio
-              const result = JSON.parse(cleanedResponse);
-              console.log('Datos parseados:', result);
+            // Parsear el JSON limpio
+            const result = JSON.parse(cleanedResponse);
+            console.log('Datos parseados:', result);
 
-              if (result.success && result.data && result.data.length > 0) {
-                // Usar banners de la base de datos
-                banners = result.data;
-                console.log(`✅ Cargados ${banners.length} banners de la base de datos:`, banners);
-                inicializarCarruselDashboard();
-                // Ocultar loading cuando hay banners
-                const sliderLoading = document.getElementById('sliderLoading');
-                if (sliderLoading) {
-                  sliderLoading.style.display = 'none';
-                }
-              } else {
-                console.warn('❌ No hay banners activos en la base de datos');
-                console.log('Respuesta completa:', result);
-                // En lugar de mostrar mensaje, usar banners de demostración
-                usarBannersDemo();
+            if (result.success && result.data && result.data.length > 0) {
+              // Usar banners de la base de datos
+              banners = result.data;
+              console.log(`✅ Cargados ${banners.length} banners de la base de datos:`, banners);
+              inicializarCarruselDashboard();
+              // Ocultar loading cuando hay banners
+              const sliderLoading = document.getElementById('sliderLoading');
+              if (sliderLoading) {
+                sliderLoading.style.display = 'none';
               }
-            } catch (error) {
-              console.error('❌ Error al cargar banners:', error);
-              console.error('Error completo:', error.message);
-              // En caso de error, usar banners de demostración
+            } else {
+              console.warn('❌ No hay banners activos en la base de datos');
+              console.log('Respuesta completa:', result);
+              // En lugar de mostrar mensaje, usar banners de demostración
               usarBannersDemo();
             }
+          } catch (error) {
+            console.error('❌ Error al cargar banners:', error);
+            console.error('Error completo:', error.message);
+            // En caso de error, usar banners de demostración
+            usarBannersDemo();
+          }
+        }
+
+        function usarBannersDemo() {
+          console.log('🎨 Usando banners de demostración...');
+          banners = [
+            {
+              titulo: 'Bienvenido a Clúster Intranet',
+              descripcion: 'Tu plataforma de gestión empresarial',
+              imagen_url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
+            },
+            {
+              titulo: 'Nuevas Funcionalidades',
+              descripcion: 'Descubre las últimas características de la plataforma',
+              imagen_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
+            },
+            {
+              titulo: 'Empresas Destacadas',
+              descripcion: 'Explora las empresas que forman parte de nuestro clúster',
+              imagen_url: 'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
+            }
+          ];
+
+          inicializarCarruselDashboard();
+          document.getElementById('sliderLoading').style.display = 'none';
+        }
+
+        function inicializarCarruselDashboard() {
+          const slidesContainer = document.getElementById('slidesContainer');
+          const sliderLoading = document.getElementById('sliderLoading');
+
+          if (!slidesContainer) {
+            console.error('❌ Container slidesContainer no encontrado');
+            return;
           }
 
-          function usarBannersDemo() {
-            console.log('🎨 Usando banners de demostración...');
-            banners = [
-              {
-                titulo: 'Bienvenido a Clúster Intranet',
-                descripcion: 'Tu plataforma de gestión empresarial',
-                imagen_url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
-              },
-              {
-                titulo: 'Nuevas Funcionalidades',
-                descripcion: 'Descubre las últimas características de la plataforma',
-                imagen_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
-              },
-              {
-                titulo: 'Empresas Destacadas',
-                descripcion: 'Explora las empresas que forman parte de nuestro clúster',
-                imagen_url: 'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
-              }
-            ];
+          console.log('Inicializando carrusel con banners:', banners);
 
-            inicializarCarruselDashboard();
-            document.getElementById('sliderLoading').style.display = 'none';
+          // Ocultar loading
+          if (sliderLoading) {
+            sliderLoading.style.display = 'none';
           }
 
-          function inicializarCarruselDashboard() {
-            const slidesContainer = document.getElementById('slidesContainer');
-            const sliderLoading = document.getElementById('sliderLoading');
+          // Crear slides usando la estructura del dashboard
+          console.log('🖼️ Creando slides con banners:', banners);
 
-            if (!slidesContainer) {
-              console.error('❌ Container slidesContainer no encontrado');
-              return;
-            }
+          // Limpiar completamente el contenedor
+          slidesContainer.innerHTML = '';
 
-            console.log('Inicializando carrusel con banners:', banners);
+          if (banners.length === 0) {
+            console.warn('⚠️ No hay banners para mostrar');
+            mostrarMensajeSinBanners();
+            return;
+          }
 
-            // Ocultar loading
-            if (sliderLoading) {
-              sliderLoading.style.display = 'none';
-            }
+          banners.forEach((banner, index) => {
+            const imagenUrl = banner.imagen_url || banner.imagen || '';
+            console.log(`🎨 Banner ${index + 1}:`, {
+              titulo: banner.titulo,
+              descripcion: banner.descripcion,
+              imagen_url: imagenUrl,
+              index: index
+            });
 
-            // Crear slides usando la estructura del dashboard
-            console.log('🖼️ Creando slides con banners:', banners);
+            // Crear elemento directamente con JavaScript
+            const slideElement = document.createElement('div');
+            slideElement.className = `absolute inset-0 transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
+            slideElement.setAttribute('data-slide-index', index);
 
-            // Limpiar completamente el contenedor
-            slidesContainer.innerHTML = '';
-
-            if (banners.length === 0) {
-              console.warn('⚠️ No hay banners para mostrar');
-              mostrarMensajeSinBanners();
-              return;
-            }
-
-            banners.forEach((banner, index) => {
-              const imagenUrl = banner.imagen_url || banner.imagen || '';
-              console.log(`🎨 Banner ${index + 1}:`, {
-                titulo: banner.titulo,
-                descripcion: banner.descripcion,
-                imagen_url: imagenUrl,
-                index: index
-              });
-
-              // Crear elemento directamente con JavaScript
-              const slideElement = document.createElement('div');
-              slideElement.className = `absolute inset-0 transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
-              slideElement.setAttribute('data-slide-index', index);
-
-              // Aplicar estilos directamente
-              slideElement.style.cssText = `
+            // Aplicar estilos directamente
+            slideElement.style.cssText = `
                   background-image: url('${imagenUrl}');
                   background-size: cover;
                   background-position: center;
@@ -4071,7 +4081,7 @@
                   bottom: 0;
               `;
 
-              slideElement.innerHTML = `
+            slideElement.innerHTML = `
                   <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-2xl"></div>
                   <div class="absolute bottom-8 left-8 text-white z-10" style="z-index: 20; max-width: 80%;">
                       <h3 class="text-2xl font-bold mb-2 drop-shadow-lg text-white">
@@ -4083,61 +4093,61 @@
                   </div>
               `;
 
-              slidesContainer.appendChild(slideElement);
-              console.log(`✅ Slide ${index + 1} creado y agregado al DOM`);
+            slidesContainer.appendChild(slideElement);
+            console.log(`✅ Slide ${index + 1} creado y agregado al DOM`);
 
-              // Test de carga de imagen
-              const img = new Image();
-              img.onload = () => {
-                console.log(`🖼️ Imagen ${index + 1} cargada correctamente: ${imagenUrl}`);
-              };
-              img.onerror = () => {
-                console.error(`❌ Error cargando imagen ${index + 1}: ${imagenUrl}`);
-              };
-              img.src = imagenUrl;
-            });
+            // Test de carga de imagen
+            const img = new Image();
+            img.onload = () => {
+              console.log(`🖼️ Imagen ${index + 1} cargada correctamente: ${imagenUrl}`);
+            };
+            img.onerror = () => {
+              console.error(`❌ Error cargando imagen ${index + 1}: ${imagenUrl}`);
+            };
+            img.src = imagenUrl;
+          });
 
-            console.log(`🏁 Total slides creados: ${slidesContainer.children.length}`);
+          console.log(`🏁 Total slides creados: ${slidesContainer.children.length}`);
 
-            // Crear indicadores (dots)
-            crearIndicadores();
+          // Crear indicadores (dots)
+          crearIndicadores();
 
-            // Iniciar autoplay si hay más de un banner
-            if (banners.length > 1) {
-              console.log('Iniciando autoplay para', banners.length, 'banners');
-              iniciarAutoplay();
-            } else {
-              console.log('Solo hay un banner, no se activa autoplay');
-            }
+          // Iniciar autoplay si hay más de un banner
+          if (banners.length > 1) {
+            console.log('Iniciando autoplay para', banners.length, 'banners');
+            iniciarAutoplay();
+          } else {
+            console.log('Solo hay un banner, no se activa autoplay');
+          }
+        }
+
+        function crearIndicadores() {
+          const indicatorsContainer = document.getElementById('sliderIndicators');
+          if (!indicatorsContainer) return;
+
+          indicatorsContainer.innerHTML = '';
+
+          banners.forEach((_, index) => {
+            const dot = document.createElement('button');
+            dot.className = `slider-dot w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white w-8' : 'bg-white/50'
+              }`;
+            dot.setAttribute('data-index', index);
+            dot.addEventListener('click', () => cambiarSlide(index));
+            indicatorsContainer.appendChild(dot);
+          });
+        }
+
+        function mostrarMensajeSinBanners() {
+          const slidesContainer = document.getElementById('slidesContainer');
+          const loadingContainer = document.getElementById('sliderLoading');
+
+          // Ocultar el loading spinner
+          if (loadingContainer) {
+            loadingContainer.style.display = 'none';
           }
 
-          function crearIndicadores() {
-            const indicatorsContainer = document.getElementById('sliderIndicators');
-            if (!indicatorsContainer) return;
-
-            indicatorsContainer.innerHTML = '';
-
-            banners.forEach((_, index) => {
-              const dot = document.createElement('button');
-              dot.className = `slider-dot w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white w-8' : 'bg-white/50'
-                }`;
-              dot.setAttribute('data-index', index);
-              dot.addEventListener('click', () => cambiarSlide(index));
-              indicatorsContainer.appendChild(dot);
-            });
-          }
-
-          function mostrarMensajeSinBanners() {
-            const slidesContainer = document.getElementById('slidesContainer');
-            const loadingContainer = document.getElementById('sliderLoading');
-
-            // Ocultar el loading spinner
-            if (loadingContainer) {
-              loadingContainer.style.display = 'none';
-            }
-
-            // Mostrar mensaje informativo sin imagen de fondo
-            slidesContainer.innerHTML = `
+          // Mostrar mensaje informativo sin imagen de fondo
+          slidesContainer.innerHTML = `
               <div class="absolute inset-0 flex items-center justify-center rounded-2xl"
                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                   <div class="text-center p-8">
@@ -4151,206 +4161,206 @@
                   </div>
               </div>
           `;
+        }
+
+        function cambiarSlide(index) {
+          if (index === currentSlide) return;
+
+          // Cambiar slide activo
+          const slides = document.querySelectorAll('#slidesContainer > div');
+          if (slides.length === 0) return;
+
+          slides[currentSlide].classList.remove('opacity-100');
+          slides[currentSlide].classList.add('opacity-0');
+
+          currentSlide = index;
+
+          slides[currentSlide].classList.remove('opacity-0');
+          slides[currentSlide].classList.add('opacity-100');
+
+          // Actualizar indicadores
+          actualizarIndicadores();
+
+          // Reiniciar autoplay
+          if (carouselInterval) {
+            clearInterval(carouselInterval);
+            iniciarAutoplay();
           }
+        }
 
-          function cambiarSlide(index) {
-            if (index === currentSlide) return;
-
-            // Cambiar slide activo
-            const slides = document.querySelectorAll('#slidesContainer > div');
-            if (slides.length === 0) return;
-
-            slides[currentSlide].classList.remove('opacity-100');
-            slides[currentSlide].classList.add('opacity-0');
-
-            currentSlide = index;
-
-            slides[currentSlide].classList.remove('opacity-0');
-            slides[currentSlide].classList.add('opacity-100');
-
-            // Actualizar indicadores
-            actualizarIndicadores();
-
-            // Reiniciar autoplay
-            if (carouselInterval) {
-              clearInterval(carouselInterval);
-              iniciarAutoplay();
+        function actualizarIndicadores() {
+          const dots = document.querySelectorAll('.slider-dot');
+          dots.forEach((dot, index) => {
+            if (index === currentSlide) {
+              dot.classList.remove('bg-white/50', 'w-2');
+              dot.classList.add('bg-white', 'w-8');
+            } else {
+              dot.classList.remove('bg-white', 'w-8');
+              dot.classList.add('bg-white/50', 'w-2');
             }
+          });
+        }
+
+        function siguienteSlide() {
+          const nextIndex = (currentSlide + 1) % banners.length;
+          console.log(`Cambiando de slide ${currentSlide} a ${nextIndex}`);
+          cambiarSlide(nextIndex);
+        }
+
+        function iniciarAutoplay() {
+          // Limpiar intervalo anterior si existe
+          if (carouselInterval) {
+            clearInterval(carouselInterval);
           }
 
-          function actualizarIndicadores() {
-            const dots = document.querySelectorAll('.slider-dot');
-            dots.forEach((dot, index) => {
-              if (index === currentSlide) {
-                dot.classList.remove('bg-white/50', 'w-2');
-                dot.classList.add('bg-white', 'w-8');
-              } else {
-                dot.classList.remove('bg-white', 'w-8');
-                dot.classList.add('bg-white/50', 'w-2');
-              }
+          if (banners.length > 1) {
+            console.log('Autoplay activado: cambio cada 5 segundos');
+            carouselInterval = setInterval(siguienteSlide, 5000); // Cambiar cada 5 segundos
+          }
+        }
+
+        function detenerAutoplay() {
+          if (carouselInterval) {
+            clearInterval(carouselInterval);
+            carouselInterval = null;
+          }
+        }
+
+        // Pausar autoplay cuando el usuario interactúa
+        document.getElementById('bannersSlider')?.addEventListener('mouseenter', detenerAutoplay);
+        document.getElementById('bannersSlider')?.addEventListener('mouseleave', iniciarAutoplay);
+
+        // Configurar botones de navegación
+        function configurarBotonesNavegacion() {
+          const btnNext = document.getElementById('sliderBtnNext');
+          const btnPrev = document.getElementById('sliderBtnPrev');
+
+          if (btnNext) {
+            btnNext.addEventListener('click', () => {
+              const nextIndex = (currentSlide + 1) % banners.length;
+              cambiarSlide(nextIndex);
             });
           }
 
-          function siguienteSlide() {
-            const nextIndex = (currentSlide + 1) % banners.length;
-            console.log(`Cambiando de slide ${currentSlide} a ${nextIndex}`);
-            cambiarSlide(nextIndex);
+          if (btnPrev) {
+            btnPrev.addEventListener('click', () => {
+              const prevIndex = (currentSlide - 1 + banners.length) % banners.length;
+              cambiarSlide(prevIndex);
+            });
           }
 
-          function iniciarAutoplay() {
-            // Limpiar intervalo anterior si existe
-            if (carouselInterval) {
-              clearInterval(carouselInterval);
-            }
+          console.log('✅ Botones de navegación configurados');
+        }
 
-            if (banners.length > 1) {
-              console.log('Autoplay activado: cambio cada 5 segundos');
-              carouselInterval = setInterval(siguienteSlide, 5000); // Cambiar cada 5 segundos
-            }
-          }
+        // Cargar banners cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function () {
+          setTimeout(() => {
+            cargarBannerCarrusel();
+            configurarBotonesNavegacion();
+          }, 1000);
+        });
 
-          function detenerAutoplay() {
-            if (carouselInterval) {
-              clearInterval(carouselInterval);
-              carouselInterval = null;
-            }
-          }
+        // También cargar después de que se cargue completamente
+        window.addEventListener('load', function () {
+          setTimeout(() => {
+            cargarBannerCarrusel();
+            configurarBotonesNavegacion();
+          }, 2000);
+        });
 
-          // Pausar autoplay cuando el usuario interactúa
-          document.getElementById('bannersSlider')?.addEventListener('mouseenter', detenerAutoplay);
-          document.getElementById('bannersSlider')?.addEventListener('mouseleave', iniciarAutoplay);
+        // Función global para debug
+        window.loadBannersForcefully = cargarBannerCarrusel;
+      </script>
 
-          // Configurar botones de navegación
-          function configurarBotonesNavegacion() {
-            const btnNext = document.getElementById('sliderBtnNext');
-            const btnPrev = document.getElementById('sliderBtnPrev');
-
-            if (btnNext) {
-              btnNext.addEventListener('click', () => {
-                const nextIndex = (currentSlide + 1) % banners.length;
-                cambiarSlide(nextIndex);
-              });
-            }
-
-            if (btnPrev) {
-              btnPrev.addEventListener('click', () => {
-                const prevIndex = (currentSlide - 1 + banners.length) % banners.length;
-                cambiarSlide(prevIndex);
-              });
-            }
-
-            console.log('✅ Botones de navegación configurados');
-          }
-
-          // Cargar banners cuando el DOM esté listo
-          document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(() => {
-              cargarBannerCarrusel();
-              configurarBotonesNavegacion();
-            }, 1000);
-          });
-
-          // También cargar después de que se cargue completamente
-          window.addEventListener('load', function () {
-            setTimeout(() => {
-              cargarBannerCarrusel();
-              configurarBotonesNavegacion();
-            }, 2000);
-          });
-
-          // Función global para debug
-          window.loadBannersForcefully = cargarBannerCarrusel;
-        </script>
-
-        <!-- cards row 3 - TABLA DE EMPRESAS DINÁMICAS -->
-        <div class="flex flex-wrap mt-12 -mx-3 max-w-7xl mx-auto px-6 lg:px-8">
-          <div class="w-full max-w-full px-3 mt-0 mb-8 lg:mb-0 lg:w-7/12 lg:flex-none"
-            style="transform: none !important;">
-            <div
-              class="relative flex flex-col min-w-0 break-words bg-white border-0 border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl dark:bg-gray-950 border-black-125 rounded-2xl bg-clip-border">
-              <div class="p-4 pb-0 mb-0 rounded-t-4">
-                <div class="flex justify-between">
-                  <h6 class="mb-2 dark:text-white">Empresas En Convenio Recientes</h6>
-                </div>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="items-center w-full mb-4 align-top border-collapse border-gray-200 dark:border-white/40"
-                  id="companiesTable">
-                  <thead>
-                    <tr>
-                      <th
-                        class="px-4 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                        Empresa
-                      </th>
-                      <th
-                        class="px-4 py-3 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                        Sitio Web
-                      </th>
-                      <th
-                        class="px-4 py-3 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                        Acciones
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="companiesTableBody">
-                    <!-- Las empresas se cargarán dinámicamente desde la base de datos -->
-                    <tr class="skeleton-row">
-                      <td colspan="3" class="p-4 text-center">
-                        <div class="flex justify-center">
-                          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
-                        </div>
-                        <p class="text-sm text-gray-300 mt-2">Cargando empresas destacadas...</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div id="noCompaniesMessage" class="hidden p-8 text-center">
-                  <i class="fas fa-building text-4xl text-gray-300 mb-4"></i>
-                  <p class="text-gray-300 mb-4">No hay empresas destacadas registradas en la base de datos</p>
-                  <div class="space-y-2">
-                    <a href="demo_empresas.html"
-                      class="inline-block px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mr-2">
-                      <i class="fas fa-plus mr-2"></i>Gestionar Empresas
-                    </a>
-                  </div>
-                </div>
+      <!-- cards row 3 - TABLA DE EMPRESAS DINÁMICAS -->
+      <div class="flex flex-wrap mt-12 -mx-3 max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="w-full max-w-full px-3 mt-0 mb-8 lg:mb-0 lg:w-7/12 lg:flex-none"
+          style="transform: none !important;">
+          <div
+            class="relative flex flex-col min-w-0 break-words bg-white border-0 border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl dark:bg-gray-950 border-black-125 rounded-2xl bg-clip-border">
+            <div class="p-4 pb-0 mb-0 rounded-t-4">
+              <div class="flex justify-between">
+                <h6 class="mb-2 dark:text-white">Empresas En Convenio Recientes</h6>
               </div>
             </div>
-          </div>
-
-          <div class="w-full max-w-full px-3 mt-0 mb-8 lg:w-5/12 lg:flex-none" style="transform: none !important;">
-            <div
-              class="border-black/12.5 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl relative flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
-              <div class="p-4 pb-0 rounded-t-4">
-                <div class="flex justify-between items-center">
-                  <h6 class="mb-0 dark:text-white">Nuestros Boletines</h6>
-                </div>
-              </div>
-              <div class="flex-auto p-4">
-                <ul class="flex flex-col pl-0 mb-0 rounded-lg" id="announcementsList">
-                  <!-- Loading skeleton -->
-                  <li
-                    class="relative flex justify-between py-2 pr-4 mb-2 border-0 rounded-t-lg rounded-xl text-inherit skeleton-announcement">
-                    <div class="flex items-center">
-                      <div class="flex flex-col">
-                        <div class="animate-pulse bg-gray-200 rounded h-4 w-32 mb-2"></div>
-                        <div class="animate-pulse bg-gray-200 rounded h-3 w-40"></div>
+            <div class="overflow-x-auto">
+              <table class="items-center w-full mb-4 align-top border-collapse border-gray-200 dark:border-white/40"
+                id="companiesTable">
+                <thead>
+                  <tr>
+                    <th
+                      class="px-4 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                      Empresa
+                    </th>
+                    <th
+                      class="px-4 py-3 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                      Sitio Web
+                    </th>
+                    <th
+                      class="px-4 py-3 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none text-xs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="companiesTableBody">
+                  <!-- Las empresas se cargarán dinámicamente desde la base de datos -->
+                  <tr class="skeleton-row">
+                    <td colspan="3" class="p-4 text-center">
+                      <div class="flex justify-center">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
                       </div>
-                    </div>
-                    <div class="flex">
-                      <div class="animate-pulse bg-gray-200 rounded-full h-6 w-6"></div>
-                    </div>
-                  </li>
-                  <!-- Los anuncios reales se cargarán aquí -->
-                </ul>
+                      <p class="text-sm text-gray-300 mt-2">Cargando empresas destacadas...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="noCompaniesMessage" class="hidden p-8 text-center">
+                <i class="fas fa-building text-4xl text-gray-300 mb-4"></i>
+                <p class="text-gray-300 mb-4">No hay empresas destacadas registradas en la base de datos</p>
+                <div class="space-y-2">
+                  <a href="demo_empresas.html"
+                    class="inline-block px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mr-2">
+                    <i class="fas fa-plus mr-2"></i>Gestionar Empresas
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-
+        <div class="w-full max-w-full px-3 mt-0 mb-8 lg:w-5/12 lg:flex-none" style="transform: none !important;">
+          <div
+            class="border-black/12.5 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl relative flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
+            <div class="p-4 pb-0 rounded-t-4">
+              <div class="flex justify-between items-center">
+                <h6 class="mb-0 dark:text-white">Nuestros Boletines</h6>
+              </div>
+            </div>
+            <div class="flex-auto p-4">
+              <ul class="flex flex-col pl-0 mb-0 rounded-lg" id="announcementsList">
+                <!-- Loading skeleton -->
+                <li
+                  class="relative flex justify-between py-2 pr-4 mb-2 border-0 rounded-t-lg rounded-xl text-inherit skeleton-announcement">
+                  <div class="flex items-center">
+                    <div class="flex flex-col">
+                      <div class="animate-pulse bg-gray-200 rounded h-4 w-32 mb-2"></div>
+                      <div class="animate-pulse bg-gray-200 rounded h-3 w-40"></div>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <div class="animate-pulse bg-gray-200 rounded-full h-6 w-6"></div>
+                  </div>
+                </li>
+                <!-- Los anuncios reales se cargarán aquí -->
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- end cards -->
+
+
+    </div>
+    <!-- end cards -->
     </div> <!-- end unified-gradient-container -->
     </div> <!-- end main-content-wrapper -->
   </main>
@@ -7236,9 +7246,9 @@
     .main-content-wrapper {
       position: relative;
       z-index: 10;
-      background: rgba(10, 10, 10, 0.4);
-      /* Más transparente para ver scroll effect */
-      backdrop-filter: blur(1px);
+      background: rgba(15, 22, 35, 0.45);
+      /* Slate-azul para ver el efecto de scroll */
+      backdrop-filter: blur(2px);
     }
 
     .main-particles-overlay {
@@ -8952,7 +8962,8 @@
       }
 
       .flex.items-center.space-x-3 {
-        display: none !important; /* Hide decorative dots on small mobile */
+        display: none !important;
+        /* Hide decorative dots on small mobile */
       }
 
       .text-sm.text-gray-500 {
@@ -9006,7 +9017,8 @@
     }
 
     /* High DPI displays */
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @media (-webkit-min-device-pixel-ratio: 2),
+    (min-resolution: 192dpi) {
       .expanding-card {
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
@@ -9035,6 +9047,7 @@
 
     /* Print styles */
     @media print {
+
       .image-modal-overlay,
       .expanding-card::before,
       .expanding-card::after {
@@ -9049,6 +9062,7 @@
 
     /* Reduced motion preferences */
     @media (prefers-reduced-motion: reduce) {
+
       .expanding-card,
       .image-modal-container,
       .image-modal-overlay {
@@ -12832,7 +12846,7 @@
         document.body.style.overflow = 'hidden';
 
         // Add click outside to close
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', function (e) {
           if (e.target === modal) {
             closeImageModal();
           }
