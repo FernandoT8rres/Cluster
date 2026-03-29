@@ -4331,13 +4331,13 @@
 
     /* --- NOTION STYLE CALENDAR: DASHBOARD PREVIEW --- */
     #dashboard-preview-calendar {
-        --fc-border-color: rgba(255, 255, 255, 0.05);
+        --fc-border-color: rgba(255, 255, 255, 0.15); /* Aumentado a 0.15 para que la cuadrícula sea visible! */
         --fc-page-bg-color: transparent;
-        --fc-neutral-bg-color: rgba(255, 255, 255, 0.02);
-        --fc-today-bg-color: rgba(199, 37, 43, 0.08);
-        width: 100%;
+        --fc-neutral-bg-color: rgba(255, 255, 255, 0.05); /* Ligeramente más visible el header */
+        --fc-today-bg-color: rgba(199, 37, 43, 0.08); /* Rojo suave para el día de hoy */
     }
 
+    /* Eventos estilo Notion */
     #dashboard-preview-calendar .fc-event {
         border: none !important;
         border-radius: 4px !important;
@@ -4355,11 +4355,10 @@
         line-height: 1.2 !important;
     }
 
+    /* Columnas de los días de la semana */
     #dashboard-preview-calendar .fc-col-header-cell {
-        padding: 0.75rem 0 !important;
         background: rgba(255, 255, 255, 0.02) !important;
-        border: none !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        /* IMPORTANTE: No modificar padding o border globales del <th> aquí o Tailwind colapsará la sincronía de anchura de columnas! */
     }
 
     #dashboard-preview-calendar .fc-col-header-cell-cushion {
@@ -4369,31 +4368,19 @@
         font-weight: 800 !important;
         letter-spacing: 0.05em !important;
         text-decoration: none !important;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: inline-block;
     }
 
+    /* Números de los días (1 al 31) */
     #dashboard-preview-calendar .fc-daygrid-day-number {
         color: #cbd5e1 !important;
-        padding: 4px 8px !important;
         font-size: 0.8rem;
         text-decoration: none !important;
     }
 
-    #dashboard-preview-calendar .fc-scrollgrid {
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    /* FIX: Prevención de Colapso por Tailwind Preflight sobre FullCalendar */
-    #dashboard-preview-calendar table,
-    #dashboard-preview-calendar th, 
-    #dashboard-preview-calendar td,
-    #dashboard-preview-calendar .fc-scrollgrid {
-        border-width: 1px !important;
-        border-style: solid !important;
-        border-collapse: collapse !important;
-        border-color: rgba(255, 255, 255, 0.05) !important;
-    }
+    /* END PREVIEW CALENDAR OVERRIDES */
   </style>
 </head>
 
@@ -14815,7 +14802,9 @@
             initialView: 'dayGridMonth',
             locale: 'es',
             headerToolbar: false,
-            firstDay: 1,
+            firstDay: 1, // La semana empieza en Lunes
+            fixedWeekCount: false, // Oculte semanas extras, hace que el grid varíe entre 4, 5 o 6 semanas (dependiendo del mes)
+            showNonCurrentDates: false, // Ocultar días grises para mostrar estrictamente días del mes 1 en adelante
             height: 'auto',
             contentHeight: 'auto',
             editable: false,

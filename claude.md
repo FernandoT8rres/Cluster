@@ -316,7 +316,10 @@ openssl rand -hex 32
 358. **[CALENDARIO] Inyección de Estilos Críticos**: Los estilos de FullCalendar (transparencias, Notion style) DEBEN estar definidos en un bloque `<style>` en el `<head>` del HTML. La inyección vía JS (`applyStyles`) es insuficiente para anular el parpadeo blanco inicial.
 359. **[CALENDARIO] Nuclear Header Reset**: Para eliminar recuadros blancos en calendarios oscuros, usar siempre: `.fc-col-header, .fc-col-header-cell { background: transparent !important; }`.
 360. **[CALENDARIO] Altura del Visor**: Asegurar siempre un `min-height: 850px !important` para que la cuadrícula mensual de 30 días sea plenamente visible sin recortes.
-361. **[TAILWIND PREFLIGHT] Prevención de Colapso en Tablas Internas**: Cuando se usan librerías externas que generen tablas internas para calcular áreas de renderizado (e.g. FullCalendar GRID), Tailwind siempre eliminará los bordes. Esto rompe la matriz de elementos flex. SIEMPRE aplicar CSS local forzando: `border-width: 1px !important; border-collapse: collapse !important;` al wrapper de la tabla (ej. `#id .fc-scrollgrid`).
+361. **[TAILWIND VS FULLCALENDAR] Prevención de Desfases en el Grid**: 
+    - **NUNCA** utilices selectores CSS forzados como `#calendar th { border: none !important; }` o `#calendar td { padding: 4px !important; }` para estilar la cabecera geométrica de FullCalendar. Hacerlo causa un desbalance entre las dimensiones calculadas por JS para el `<colgroup>` del head y el body, desplazando las columnas hacia la derecha en colisión con el Tailwind Preflight.
+    - **LA FORMA CORRECTA**: Utilizar exclusivamente las variables CSS nativas (`--fc-border-color`, `--fc-page-bg-color`) o añadir padding a los componentes internos usando sus wrappers (`.fc-col-header-cell-cushion`).
+362. **[CALENDARIO] Vista Mensual Estricta**: Al configurar `dayGridMonth`, añade `showNonCurrentDates: false` y `fixedWeekCount: false` en tu JS para evitar que la semana inicial inicie con días "huérfanos" (ej. 23, 24 del mes anterior), previniendo confusión al usuario sobre el "orden del 1 al 30".
 
 ### 🐛 Errores Externos Reportados (Fuera de Workspace)
 

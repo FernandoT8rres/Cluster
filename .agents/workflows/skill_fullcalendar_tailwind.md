@@ -2,49 +2,56 @@
 description: Skill reutilizable — Estabilización de FullCalendar v6 dentro de entornos Tailwind CSS
 ---
 
-# Skill: Integración de FullCalendar con Tailwind CSS (Preflight Fix)
+# Skill: Integración de FullCalendar con Tailwind CSS (Prevención de Desfases)
 
 Este skill es obligatorio cuando se requiere implementar o debuggear la librería **FullCalendar v6** en un proyecto que utilice **Tailwind CSS**.
 
 ## El Problema Fundamental
-Tailwind CSS incluye un reseteo de navegador llamado **Preflight** que aplica por defecto las siguientes reglas globales:
+Tailwind CSS incluye un reseteo de navegador llamado **Preflight**. Comúnmente se cree que la falta de bordes (`border-width: 0`) rompe FullCalendar, pero **FullCalendar v6 maneja Preflight correctamente a través de sus propias inyecciones de CSS**. 
+
+El VERDADERO error ocurre cuando los programadores intentan sobrescribir el CSS del calendario forzando estilos (`padding`, `border`, `border-collapse`) usando `!important` sobre selectores de tabla específicos como `.fc-col-header-cell` o `th`. 
+Esto causa una **desincronización matemática** entre el `<colgroup>` de las cabeceras (LUN, MAR) y las celdas del cuerpo del calendario. Como resultado, **la cuadrícula interna hace flex-wrap, se descuadra hacia la derecha, o deja grandes espacios vacíos en la tabla.**
+
+## La Regla de Oro Quirúrgica
+**NUNCA** uses selectores nucleares como `#calendar th { border: none !important; padding: 0 !important; }`.
+La arquitectura de FullCalendar depende simétricamente de que los anchos concuerden entre head y body.
+
+### 1. Variables CSS Locales (El Estándar Correcto)
+Para modificar colores, márgenes o fondos, limítate EXCLUSIVAMENTE al contenedor padre y sus variables nativas provistas por la librería:
+
 ```css
-*, ::before, ::after { border-width: 0; border-style: solid; border-color: theme('borderColor.DEFAULT', currentColor); }
-table { border-collapse: collapse; }
-```
-
-**FullCalendar v6** utiliza una arquitectura interna compleja (flexbox + grid + HTML tables) para calcular el tamaño de los días, ubicar eventos y renderizar la cuadrícula (`.fc-scrollgrid`).
-Al recibir `border-width: 0`, las celdas de FullCalendar colapsan, los anchos se calculan mal (`NaN` o `0px`) y **la cuadrícula mensual se desglosa hacia la derecha o desaparece**.
-
-## La Solución Quirúrgica
-NUNCA uses selectores nucleares como `.fc * { border-width: 1px }`. Eso destruye barras de scroll invisibles y wrappers internos.
-La solución exacta es **restaurar el borde SOLO en las etiquetas estructurales nativas** usadas por FullCalendar, preferiblemente escudadas dentro de un ID específico (ej. `#calendar-container`):
-
-### 1. CSS a inyectar en el `<head>` o hoja global:
-```css
-/* Escudo protector contra Tailwind Preflight */
-#ID_DEL_CONTENEDOR_CALENDARIO table,
-#ID_DEL_CONTENEDOR_CALENDARIO th, 
-#ID_DEL_CONTENEDOR_CALENDARIO td,
-#ID_DEL_CONTENEDOR_CALENDARIO .fc-scrollgrid {
-    border-width: 1px !important;
-    border-style: solid !important;
-    border-collapse: collapse !important;
-    /* Define tu propio color para recuperar las líneas divisorias */
-    border-color: rgba(255, 255, 255, 0.05) !important;
+/* CORRECTO: Customización vía Variables de FullCalendar */
+#dashboard-preview-calendar {
+    --fc-border-color: rgba(255, 255, 255, 0.15); /* Aumentar para hacer visible el grid */
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: rgba(255, 255, 255, 0.05); /* Cabeceras */
+    width: 100%;
 }
 ```
 
-### 2. Altura de Renderizado
-FullCalendar v6 necesita espacio. Si la cuadrícula se recorta, usa:
+### 2. Espaciados Internos Seguros
+Si necesitas padding o tipografía custom en las cabeceras (ej. Días LUN, MAR), aplica estilo SIEMPRE al `.fc-col-header-cell-cushion` (el span interno que envuelve el texto), **nunca** a la celda `<th class=".fc-col-header-cell">` que maneja el esqueleto de la tabla:
+
 ```css
-#ID_DEL_CONTENEDOR_CALENDARIO {
-    min-height: 850px;
+/* CORRECTO: Estilizar el Cushion interno en vez de la celda */
+#dashboard-preview-calendar .fc-col-header-cell-cushion {
+    color: #94a3b8 !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
 }
 ```
-O en la configuración JS: `{ height: 'auto', contentHeight: 'auto' }`.
 
-## ¿Cómo verificar si funcionó?
-1. Inspecciona en Chrome y busca elementos `.fc-daygrid-day-frame`.
-2. Revisa que tengan dimensiones correctas (ej. `122.5px x 140px`).
-3. Comprueba que las columnas (LUN, MAR, MIÉ...) no excedan el contenedor padre.
+### 3. Evitando la confusión "Días Huérfanos" (Del 1 al 31)
+En la `dayGridMonth` clásica, FullCalendar renderiza días finales del mes pasado y días iniciales del próximo para llenar el cuadro. Si el cliente o diseñador se queja de un "orden que no va del 1 al 30", oculta estos días grises en JS:
+
+```javascript
+const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    firstDay: 1, // Lunes
+    fixedWeekCount: false, // Permite que el mes tenga 4, 5 o 6 semanas flexibles
+    showNonCurrentDates: false, // ESTA ES LA CLAVE: esconde 23, 24 del mes pasado
+    // ...
+});
+```
+Con esto, la cuadrícula mostrará estrictamente bloques numéricos iniciando desde el número 1 del mes actual hacia adelante.
