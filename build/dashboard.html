@@ -4335,6 +4335,16 @@
         --fc-page-bg-color: transparent;
         --fc-neutral-bg-color: rgba(255, 255, 255, 0.05); /* Ligeramente más visible el header */
         --fc-today-bg-color: rgba(199, 37, 43, 0.08); /* Rojo suave para el día de hoy */
+        width: 100%;
+        display: block;
+    }
+
+    /* FIX DEFINITIVO GEOMETRIA: Evita que el Preflight colapse la tabla o ensanche columnas vacías */
+    #dashboard-preview-calendar .fc-scrollgrid,
+    #dashboard-preview-calendar table {
+        width: 100% !important;
+        table-layout: fixed !important; 
+        margin: 0 !important;
     }
 
     /* Eventos estilo Notion */

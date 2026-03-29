@@ -20,12 +20,21 @@ La arquitectura de FullCalendar depende simétricamente de que los anchos concue
 Para modificar colores, márgenes o fondos, limítate EXCLUSIVAMENTE al contenedor padre y sus variables nativas provistas por la librería:
 
 ```css
-/* CORRECTO: Customización vía Variables de FullCalendar */
+/* CORRECTO: Customización vía Variables de FullCalendar y Prevención Layout */
 #dashboard-preview-calendar {
     --fc-border-color: rgba(255, 255, 255, 0.15); /* Aumentar para hacer visible el grid */
     --fc-page-bg-color: transparent;
     --fc-neutral-bg-color: rgba(255, 255, 255, 0.05); /* Cabeceras */
     width: 100%;
+    display: block;
+}
+
+/* FIX CRÍTICO: Anular contracción Flex/AutoLayout de Tailwind sobre tablas hijas */
+#dashboard-preview-calendar .fc-scrollgrid,
+#dashboard-preview-calendar table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
 }
 ```
 
