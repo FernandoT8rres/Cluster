@@ -20,36 +20,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/js/all.min.js"></script>
     <!-- CSS local para iconos como último recurso -->
     <style>
-        .fa,
-        .fas,
-        .far,
-        .fal,
-        .fad,
-        .fab {
-            font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", FontAwesome !important;
-        }
-
-        /* Fallback con Unicode para iconos principales */
-        .fa-info-circle:before {
-            content: "ℹ";
-        }
-
-        .fa-globe:before {
-            content: "🌐";
-        }
-
-        .fa-external-link-alt:before {
-            content: "↗";
-        }
-
-        .fa-times:before {
-            content: "✕";
-        }
-
-        .fa-building:before {
-            content: "🏢";
-        }
-
         /* Fix para prevenir scroll horizontal */
         html {
             overflow-x: hidden !important;
@@ -69,50 +39,6 @@
             padding-left: 1rem !important;
             padding-right: 1rem !important;
         }
-
-        .fa-home:before {
-            content: "🏠";
-        }
-
-        .fa-calendar-alt:before {
-            content: "📅";
-        }
-
-        .fa-file-alt:before {
-            content: "📄";
-        }
-
-        .fa-newspaper:before {
-            content: "📰";
-        }
-
-        .fa-users:before {
-            content: "👥";
-        }
-
-        .fa-headset:before {
-            content: "🎧";
-        }
-
-        .fa-handshake:before {
-            content: "🤝";
-        }
-
-        .fa-user:before {
-            content: "👤";
-        }
-
-        .fa-user-circle:before {
-            content: "👤";
-        }
-
-        .fa-chevron-down:before {
-            content: "▼";
-        }
-
-        .fa-sign-out-alt:before {
-            content: "⏎";
-        }
     </style>
 
     <!-- Nucleo Icons -->
@@ -131,6 +57,12 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <!-- Main Styling -->
     <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+
+    <!-- Porsche-inspired header-navbar CSS -->
+    <link rel="stylesheet" href="./assets/css/layout/header-navbar.css">
+
+    <!-- Estilos específicos de empresas -->
+    <link rel="stylesheet" href="./css/estilos-empresas.css">
 
     <style>
         /* Porsche-inspired Design System */
@@ -240,12 +172,14 @@
             border-color: var(--porsche-accent);
         }
 
-        /* Rainbow Border Animation */
+        /* Rainbow Border Animation - DISABLED */
         .empresa-card {
             position: relative;
             container-type: inline-size;
         }
 
+        /* Removed rainbow border effect for cleaner appearance */
+        /*
         .empresa-card::before {
             content: '';
             position: absolute;
@@ -278,6 +212,7 @@
                 transform: rotate(360deg);
             }
         }
+        */
 
         .empresa-card::after {
             content: '';
@@ -323,10 +258,13 @@
             border-radius: 12px;
             transition: all 0.3s ease;
             filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
-            background: rgba(255, 255, 255, 0.9);
+            background: #ffffff !important;
+            /* Solid white - no transparency */
             padding: 8px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            /* REMOVED: backdrop-filter that caused transparency */
+            border: 1px solid rgba(200, 200, 200, 0.3);
+            opacity: 1 !important;
+            /* Force 100% opacity */
         }
 
         .empresa-card:hover .empresa-logo {
@@ -446,6 +384,7 @@
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
         }
 
@@ -725,7 +664,8 @@
         .empresa-card-wrapper {
             position: relative;
             width: 400px;
-            height: 250px;
+            height: 350px;
+            /* Increased for better logo visibility */
             flex-shrink: 0;
         }
 
@@ -734,13 +674,16 @@
             top: 0;
             left: 0;
             width: 400px;
-            height: 250px;
+            height: 350px;
+            /* Increased for better logo visibility */
             border-radius: 15px;
             overflow: hidden;
         }
 
         .empresa-card-normal {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
@@ -750,9 +693,9 @@
             z-index: 2;
             position: relative;
             overflow: hidden;
-            clip-path: inset(0 0 0 var(--clip-right, 0%));
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
         }
 
         .empresa-card-normal:hover {
@@ -762,15 +705,20 @@
         .empresa-card-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 15px;
-            transition: all 0.3s ease;
-            filter: brightness(1.1) contrast(1.1);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); /* Resalta el logo en fondos oscuros */
+            background: transparent; /* Fondo transparente para mostrar el efecto glass behind */
+            padding: 15px; /* Menor padding para maximizar visibilidad del logo */
+            opacity: 1;
+            z-index: 1;
         }
 
         .empresa-card-image:hover {
-            filter: brightness(1.2) contrast(1.2);
+            /* Removed filter for clean logo display */
+            transform: scale(1.05);
+            /* Slight zoom on hover */
         }
 
         .empresa-card-overlay {
@@ -778,9 +726,12 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+            /* Overlay only at bottom 30% with minimal opacity */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 30%, transparent 50%);
             padding: 20px;
             z-index: 3;
+            /* Limit height to bottom portion only */
+            max-height: 35%;
         }
 
         .empresa-card-title {
@@ -1692,9 +1643,20 @@
 
         .image-motion picture img {
             width: 100%;
-            height: 100%;
             object-fit: cover;
             background-color: white;
+        }
+
+        /* DISABLED - ASCII card no longer used */
+        .empresa-card-ascii {
+            display: none !important;
+            /* Completely hidden */
+            pointer-events: none !important;
+            /* No click blocking */
+        }
+
+        .ascii-content {
+            display: none !important;
         }
 
         .scroll-down {
@@ -1994,64 +1956,114 @@
 </head>
 
 <body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default text-slate-500">
-    <div
-        class="absolute w-full bg-gradient-to-br from-porsche-charcoal via-porsche-black to-porsche-accent dark:hidden min-h-75">
+
+    <!-- Loading Screen -->
+    <div class="loading-container" id="loadingScreen">
+        <div class="loading-ring"></div>
+        <div class="loading-ring"></div>
+        <div class="loading-ring"></div>
+        <img class="loading-logo" src="./assets/img/logo-claut-blanco.png" alt="Clúster">
+        <p class="loading-text">CLAUT INTRANET</p>
     </div>
-    <!-- Mobile Sidebar Overlay -->
-    <!-- Header Horizontal Premium con Menú Integrado -->
+
     <header class="claut-header">
-        <!-- Logo area con logo existente -->
+
         <a href="#" class="claut-header-logo">
-            <img src="./assets/img/apple-icon.png" alt="Clúster Logo" />
+            <img src="./assets/img/logo-claut-blanco.png" alt="Clúster Logo" class="h-8 w-auto object-contain">
         </a>
 
-        <!-- Navegación horizontal principal -->
         <nav class="claut-header-nav" id="clautMainNav">
             <a href="dashboard.html" class="claut-nav-item">
-                <i class="fas fa-home text-white"></i>
-                <span class="text-white">Inicio</span>
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
             </a>
             <a href="./descuentos.html" class="claut-nav-item">
-                <i class="fas fa-tags text-white"></i>
-                <span class="text-white">Descuentos</span>
+                <i class="fas fa-tag"></i>
+                <span>Descuentos</span>
             </a>
             <a href="./boletines.html" class="claut-nav-item">
-                <i class="fas fa-newspaper text-white"></i>
-                <span class="text-white">Boletines</span>
+                <i class="fas fa-newspaper"></i>
+                <span>Boletines</span>
             </a>
-            <a href="./comites.html" class="claut-nav-item ">
-                <i class="fas fa-users text-white"></i>
-                <span class="text-white">Comites</span>
+            <a href="./comites.html" class="claut-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Comités</span>
             </a>
             <a href="./contacto.html" class="claut-nav-item">
-                <i class="fas fa-headset text-white"></i>
-                <span class="text-white">Contacto</span>
+                <i class="fas fa-headset"></i>
+                <span>Contacto</span>
             </a>
             <a href="./eventos.html" class="claut-nav-item">
-                <i class="fas fa-calendar-alt text-white"></i>
-                <span class="text-white">Eventos</span>
+                <i class="fas fa-calendar-alt"></i>
+                <span>Eventos</span>
             </a>
             <a href="./empresas-convenio.html" class="claut-nav-item active">
-                <i class="fas fa-handshake text-white"></i>
-                <span class="text-white">Socios</span>
+                <i class="fas fa-handshake"></i>
+                <span>Socios</span>
+            </a>
+            <a href="./admin-panel.html" class="claut-nav-item" id="adminNavItem" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>Admin</span>
             </a>
         </nav>
 
         <!-- Actions area -->
         <div class="claut-header-actions">
 
+            <!-- Botón mensajes -->
+            <button class="claut-header-btn" id="headerMessagesBtn" title="Centro de Mensajes">
+                <i class="fas fa-envelope"></i>
+                <span id="headerMessageCount"
+                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+            </button>
 
             <!-- Menú usuario -->
             <div class="relative">
-                <a href="./profile.html" class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
+                <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
                     <i class="fas fa-user-circle text-lg"></i>
-                </a>
+                </button>
             </div>
 
+            <!-- Botón toggle menú móvil -->
+            <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
-    <!-- Bottom Navigation (Mobile/Tablet ≤1024px) -->
+    <!-- Breadcrumb / Porsche Navbar section -->
+    <div class="porsche-navbar relative flex flex-wrap items-center justify-between transition-all ease-in duration-250 lg:flex-nowrap lg:justify-start w-full" navbar-main>
+        <div class="w-full max-w-full px-6 py-0 mx-auto flex-wrap-inherit flex items-center justify-between py-1 lg:py-2">
+            <nav>
+                <!-- breadcrumb -->
+                <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+                    <li class="text-sm leading-normal">
+                        <a class="opacity-60 text-white" href="javascript:;">Intranet</a>
+                    </li>
+                    <li class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/'] text-white" aria-current="page">Socios</li>
+                </ol>
+                <!-- Mostrar saludo con usuario logueado -->
+                <div id="welcomeMessage" class="mb-2">
+                    <h6 class="porsche-welcome mb-0 capitalize text-white" id="welcomeText">Bienvenido a Clúster Intranet</h6>
+                </div>
+            </nav>
+            <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+                <div class="flex items-center md:ml-auto md:pr-4">
+                    <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
+                        <!-- Mostrar información del usuario autenticado -->
+                        <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
+                            <div class="flex flex-col">
+                                <span id="userName" class="text-sm font-semibold"></span>
+                                <span id="userRole" class="text-xs opacity-75"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation (Mobile/Tablet ≤768px) -->
     <nav class="claut-bottom-nav">
         <div class="claut-nav-container">
             <div class="claut-nav-curve"></div>
@@ -2060,7 +2072,7 @@
                 <span>Inicio</span>
             </a>
             <a href="./descuentos.html" class="claut-nav-link authenticated" data-section="descuentos">
-                <i class="fas fa-tags"></i>
+                <i class="fas fa-tag"></i>
                 <span>Descuentos</span>
             </a>
             <a href="./boletines.html" class="claut-nav-link authenticated" data-section="boletines">
@@ -2069,7 +2081,7 @@
             </a>
             <a href="./comites.html" class="claut-nav-link authenticated" data-section="comite">
                 <i class="fas fa-users"></i>
-                <span>Comité</span>
+                <span>Comités</span>
             </a>
             <a href="./contacto.html" class="claut-nav-link authenticated" data-section="contacto">
                 <i class="fas fa-headset"></i>
@@ -2079,75 +2091,21 @@
                 <i class="fas fa-calendar-alt"></i>
                 <span>Eventos</span>
             </a>
-            <a href="./empresas-convenio.html" class="claut-nav-link authenticated active" data-section="convenios">
+            <a href="./empresas-convenio.html" class="claut-nav-link authenticated" data-section="convenios">
                 <i class="fas fa-handshake"></i>
-                <span>Convenios</span>
+                <span>Socios</span>
+            </a>
+            <a href="./admin-panel.html" class="claut-nav-link authenticated" data-section="admin" id="adminNavItemBottom" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <span>Admin</span>
             </a>
         </div>
     </nav>
 
     <!-- Main Content -->
     <main class="claut-main relative transition-all duration-200 ease-in-out">
-        <!-- End Navbar -->
         <!-- Contenido principal con restricción de autenticación -->
         <div id="mainContent" class="main-content">
-            <!-- Navbar -->
-            <nav class="bg-black flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
-                navbar-main navbar-scroll="false">
-                <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
-                    <nav>
-                        <ol class="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
-                            <li class="text-sm leading-normal">
-                                <a class="text-white opacity-50" href="index.php">Intranet</a>
-                            </li>
-                            <li class="text-sm pl-2 capitalize leading-normal text-white before:float-left before:pr-2 before:text-black before:content-['/']"
-                                aria-current="page">
-                                Socios
-                            </li>
-                        </ol>
-                        <h6 class="mb-0 font-bold text-white capitalize">Gestión de Socios</h6>
-                    </nav>
-
-                    <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
-                        <div class="flex items-center md:ml-auto md:pr-4">
-                            <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
-                                <!-- User Dropdown Menu -->
-                                <li class="flex items-center relative">
-                                    <div class="relative">
-                                        <button
-                                            class="flex items-center px-3 py-1 text-sm font-bold text-white transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in border-white/20 bg-white/10 hover:scale-102 hover:border-white/40 active:opacity-85"
-                                            onclick="toggleUserMenu()" id="userMenuBtn">
-                                            <i class="fas fa-user text-white mr-2"></i>
-                                            <span class="hidden sm:inline text-white"
-                                                id="userDisplayName">Usuario</span>
-                                            <i class="fas fa-chevron-down text-white ml-2 text-xs"></i>
-                                        </button>
-                                        <!-- User Dropdown -->
-                                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 hidden"
-                                            id="userDropdown" style="top: 100%;">
-                                            <div class="px-4 py-2 border-b border-gray-200">
-                                                <p class="text-sm font-medium text-gray-900" id="dropdownUserName">
-                                                    Usuario</p>
-                                                <p class="text-xs text-gray-500" id="dropdownUserRole">Rol</p>
-                                            </div>
-                                            <a href="profile.html"
-                                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                <i class="fas fa-user-circle mr-3 text-gray-400"></i>
-                                                Mi Perfil
-                                            </a>
-                                            <button onclick="handleLogout()"
-                                                class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
-                                                Cerrar Sesión
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </nav>
 
             <!-- Content -->
             <div class="w-full">
@@ -2358,7 +2316,24 @@
                         </div>
                     </div>
 
-                    <div class="text-center pb-0">
+                    <!-- Carrusel de logos de empresas socias -->
+                    <div id="carouselTrack" class="carousel-track">
+                        <p class="loading-message" style="color:#64748b; text-align:center; padding:2rem;">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>Cargando empresas...
+                        </p>
+                    </div>
+
+                    <!-- Navegación del carrusel -->
+                    <div style="display:flex; justify-content:center; gap:12px; margin-top:1.5rem; position:relative; z-index:10;">
+                        <button class="carousel-nav-btn prev" onclick="navegarCarrusel(-1)" title="Anterior">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-nav-btn next" onclick="navegarCarrusel(1)" title="Siguiente">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-center pb-0" style="margin-top:1.5rem;">
                         <div
                             class="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-gray-700 text-sm font-medium shadow-lg hover:bg-white/20 transition-all duration-300 cursor-pointer">
                             <i class="fas fa-building mr-2 text-red-500"></i>
@@ -2382,20 +2357,6 @@
                 <section class="evervault-carousel-section"
                     style="background: #000000; min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
 
-                    <!-- Controles -->
-                    <div class="evervault-controls"
-                        style="position: absolute; top: 20px; left: 20px; display: flex; gap: 10px; z-index: 100;">
-                        <button class="evervault-control-btn" onclick="toggleAnimation()"
-                            style="padding: 10px 20px; background: rgba(255, 255, 255, 0.2); border: none; border-radius: 25px; color: white; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s ease; font-size: 14px;">⏸️
-                            Pause</button>
-                        <button class="evervault-control-btn" onclick="resetPosition()"
-                            style="padding: 10px 20px; background: rgba(255, 255, 255, 0.2); border: none; border-radius: 25px; color: white; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s ease; font-size: 14px;">🔄
-                            Reset</button>
-                        <button class="evervault-control-btn" onclick="changeDirection()"
-                            style="padding: 10px 20px; background: rgba(255, 255, 255, 0.2); border: none; border-radius: 25px; color: white; font-weight: bold; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s ease; font-size: 14px;">↔️
-                            Direction</button>
-                    </div>
-
                     <!-- Indicador de velocidad -->
                     <div class="evervault-speed-indicator"
                         style="position: absolute; top: 20px; right: 20px; color: white; font-size: 16px; background: rgba(0, 0, 0, 0.3); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(5px); z-index: 100;">
@@ -2409,9 +2370,9 @@
                         <canvas id="empresaParticleCanvas"
                             style="position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100vw; height: 250px; z-index: 0; pointer-events: none;"></canvas>
 
-                        <!-- Canvas de scanner -->
+                        <!-- Canvas de scanner - HIDDEN -->
                         <canvas id="empresaScannerCanvas"
-                            style="position: absolute; top: 50%; left: -3px; transform: translateY(-50%); width: 100vw; height: 300px; z-index: 15; pointer-events: none;"></canvas>
+                            style="position: absolute; top: 50%; left: -3px; transform: translateY(-50%); width: 100vw; height: 300px; z-index: 15; pointer-events: none; display: none;"></canvas>
 
                         <!-- Stream de tarjetas -->
                         <div class="empresa-card-stream" id="empresaCardStream"
@@ -2481,28 +2442,57 @@
                 this.showModal(titulo, descripcion, logoUrl, descuentoBadge, sectorBadge);
             },
 
-            showModal: function (titulo, descripcion, logoUrl, descuento, sector) {
+            showModal: function (empresaOrTitulo, descripcion, logoUrl, descuento, sector) {
+                // Soporte para ambos formatos: objeto empresa completo o parámetros individuales
+                let empresa;
+                if (typeof empresaOrTitulo === 'object') {
+                    // Nuevo formato: objeto empresa completo
+                    empresa = empresaOrTitulo;
+                } else {
+                    // Formato antiguo: parámetros individuales (para compatibilidad)
+                    empresa = {
+                        nombre: empresaOrTitulo,
+                        descripcion: descripcion,
+                        logo_url: logoUrl,
+                        descuento_porcentaje: descuento?.replace('% de descuento', ''),
+                        sector: sector
+                    };
+                }
+
+                console.log('🎭 showModal called with empresa completa:', empresa);
+
                 // Eliminar modal anterior
                 if (this.currentModal) {
                     this.currentModal.remove();
                 }
 
-                // Crear modal
+                // Crear modal con estilos inline para garantizar visibilidad
                 const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
-                modal.style.backdropFilter = 'blur(4px)';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(4px);
+                `;
                 modal.onclick = (e) => {
                     if (e.target === modal) this.closeModal();
                 };
 
                 modal.innerHTML = `
-                    <div class="modal-content max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
+                    <div class="modal-content bg-white rounded-2xl shadow-2xl overflow-y-auto" style="width: calc(100vw - 200px); max-height: calc(100vh - 200px);">
                         <!-- Header -->
                         <div class="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-6 rounded-t-2xl">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <i class="fas fa-building text-2xl text-blue-300"></i>
-                                    <h2 class="text-2xl font-bold">${titulo}</h2>
+                                    <h2 class="text-2xl font-bold">${empresa.nombre || 'Empresa'}</h2>
                                 </div>
                                 <button onclick="modalHandler.closeModal()" 
                                         class="text-white/70 hover:text-white hover:bg-white/20 rounded-lg p-2 transition-all">
@@ -2512,86 +2502,145 @@
                         </div>
                         
                         <!-- Content -->
-                        <div class="p-8">
-                            <div class="grid md:grid-cols-3 gap-8">
-                                <!-- Logo y badges -->
-                                <div class="md:col-span-1">
-                                    <div class="text-center mb-6">
-                                        <img src="${logoUrl}" 
-                                             alt="Logo de ${titulo}"
-                                             class="mx-auto w-48 h-32 object-contain rounded-lg shadow-lg border-2 border-gray-200 bg-white p-3"
-                                             onerror="this.src='https://via.placeholder.com/192x128/6366f1/ffffff?text=${encodeURIComponent(titulo)}'">
-                                    </div>
-                                    
-                                    ${sector ? `
-                                        <div class="mb-4 text-center">
-                                            <span class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                                                <i class="fas fa-industry mr-2"></i>${sector}
-                                            </span>
-                                        </div>
-                                    ` : ''}
-                                    
-                                    ${descuento ? `
-                                        <div class="text-center">
-                                            <div class="bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-xl p-4 shadow-lg">
-                                                <i class="fas fa-percentage text-2xl mb-2"></i>
-                                                <div class="font-bold text-lg">${descuento}</div>
-                                                <div class="text-sm opacity-90">DESCUENTO ESPECIAL</div>
-                                            </div>
-                                        </div>
-                                    ` : ''}
-                                </div>
+                        <div class="p-6">
+                            <!-- Logo centrado -->
+                            ${empresa.logo_url ? `
+                            <div class="text-center mb-4">
+                                <img src="${empresa.logo_url}" 
+                                     alt="Logo de ${empresa.nombre}"
+                                     class="mx-auto w-32 h-24 object-contain rounded-lg shadow-md border border-gray-200 bg-white p-2"
+                                     onerror="this.src='https://via.placeholder.com/128x96/1e293b/ffffff?text=${encodeURIComponent(empresa.nombre || 'Logo')}'">
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Badges en línea -->
+                            <div class="flex flex-wrap gap-2 justify-center mb-4">
+                                ${empresa.sector ? `
+                                    <span class="inline-block bg-gradient-to-r from-slate-700 to-slate-800 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        <i class="fas fa-industry mr-1"></i>${empresa.sector}
+                                    </span>
+                                ` : ''}
                                 
-                                <!-- Información principal -->
-                                <div class="md:col-span-2">
-                                    <div class="mb-6">
-                                        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                            <i class="fas fa-info-circle text-blue-600"></i>
-                                            Información de la empresa
-                                        </h3>
-                                        <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-6 border border-gray-200">
-                                            <p class="text-gray-700 leading-relaxed text-justify">${descripcion}</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-                                        <h4 class="font-semibold text-green-800 mb-3 flex items-center gap-2">
-                                            <i class="fas fa-handshake text-green-600"></i>
-                                            Beneficios de Socio
-                                        </h4>
-                                        <ul class="text-green-700 space-y-2">
-                                            <li class="flex items-center gap-2">
-                                                <i class="fas fa-check-circle text-green-500"></i>
-                                                Descuentos especiales para empleados
-                                            </li>
-                                            <li class="flex items-center gap-2">
-                                                <i class="fas fa-check-circle text-green-500"></i>
-                                                Atención preferencial
-                                            </li>
-                                            <li class="flex items-center gap-2">
-                                                <i class="fas fa-check-circle text-green-500"></i>
-                                                Promociones exclusivas
-                                            </li>
-                                        </ul>
-                                    </div>
+                                ${empresa.descuento_porcentaje && parseFloat(empresa.descuento_porcentaje) > 0 ? `
+                                    <span class="inline-block bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        <i class="fas fa-tag mr-1"></i>${empresa.descuento_porcentaje}% de descuento
+                                    </span>
+                                ` : ''}
+                                
+                                ${empresa.estado ? `
+                                    <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                        <i class="fas fa-check-circle mr-1"></i>${empresa.estado}
+                                    </span>
+                                ` : ''}
+                            </div>
+                            
+                            <!-- Descripción -->
+                            ${empresa.descripcion ? `
+                            <div class="mb-4">
+                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-info-circle text-blue-600"></i>
+                                    Información de la empresa
+                                </h3>
+                                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                    <p class="text-slate-700 leading-relaxed text-sm">${empresa.descripcion}</p>
                                 </div>
                             </div>
+                            ` : ''}
+                            
+                            <!-- Información de Contacto -->
+                            ${empresa.contacto_persona || empresa.contacto_telefono || empresa.contacto_email || empresa.telefono || empresa.email || empresa.sitio_web || empresa.direccion ? `
+                            <div class="mb-4">
+                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-address-card text-blue-600"></i>
+                                    Información de Contacto
+                                </h3>
+                                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200 space-y-2">
+                                    ${empresa.contacto_persona ? `
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <i class="fas fa-user text-slate-600 w-4"></i>
+                                            <span class="text-slate-700"><strong>Contacto:</strong> ${empresa.contacto_persona}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${empresa.contacto_telefono ? `
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <i class="fas fa-phone text-slate-600 w-4"></i>
+                                            <a href="tel:${empresa.contacto_telefono}" class="text-blue-600 hover:underline">${empresa.contacto_telefono}</a>
+                                        </div>
+                                    ` : empresa.telefono ? `
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <i class="fas fa-phone text-slate-600 w-4"></i>
+                                            <a href="tel:${empresa.telefono}" class="text-blue-600 hover:underline">${empresa.telefono}</a>
+                                        </div>
+                                    ` : ''}
+                                    ${empresa.contacto_email ? `
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <i class="fas fa-envelope text-slate-600 w-4"></i>
+                                            <a href="mailto:${empresa.contacto_email}" class="text-blue-600 hover:underline">${empresa.contacto_email}</a>
+                                        </div>
+                                    ` : empresa.email ? `
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <i class="fas fa-envelope text-slate-600 w-4"></i>
+                                            <a href="mailto:${empresa.email}" class="text-blue-600 hover:underline">${empresa.email}</a>
+                                        </div>
+                                    ` : ''}
+                                    ${empresa.sitio_web ? `
+                                        <div class="flex items-center gap-2 text-sm">
+                                            <i class="fas fa-globe text-slate-600 w-4"></i>
+                                            <a href="${empresa.sitio_web}" target="_blank" class="text-blue-600 hover:underline">${empresa.sitio_web}</a>
+                                        </div>
+                                    ` : ''}
+                                    ${empresa.direccion ? `
+                                        <div class="flex items-start gap-2 text-sm">
+                                            <i class="fas fa-map-marker-alt text-slate-600 w-4 mt-1"></i>
+                                            <span class="text-slate-700">${empresa.direccion}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Beneficios -->
+                            ${empresa.beneficios ? `
+                            <div class="mb-4">
+                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-gift text-blue-600"></i>
+                                    Beneficios de Socio
+                                </h3>
+                                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                                    <p class="text-slate-700 text-sm whitespace-pre-line">${empresa.beneficios}</p>
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Condiciones -->
+                            ${empresa.condiciones ? `
+                            <div class="mb-4">
+                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                                    <i class="fas fa-file-contract text-blue-600"></i>
+                                    Términos y Condiciones
+                                </h3>
+                                <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                                    <p class="text-slate-700 text-sm whitespace-pre-line">${empresa.condiciones}</p>
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Fecha de Convenio -->
+                            ${empresa.fecha_convenio ? `
+                            <div class="text-center text-sm text-slate-600">
+                                <i class="fas fa-calendar-check mr-1"></i>
+                                Convenio desde: ${new Date(empresa.fecha_convenio).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </div>
+                            ` : ''}
                         </div>
                         
                         <!-- Footer -->
-                        <div class="bg-gray-50 px-8 py-6 rounded-b-2xl border-t">
-                            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                                <button onclick="modalHandler.closeModal()" 
-                                        class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2">
-                                    <i class="fas fa-times"></i>
-                                    Cerrar
-                                </button>
-                                <button onclick="window.open('tel:', '_self')" 
-                                        class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2">
-                                    <i class="fas fa-phone"></i>
-                                    Contactar
-                                </button>
-                            </div>
+                        <div class="bg-slate-50 px-6 py-4 rounded-b-2xl border-t border-slate-200">
+                            <button onclick="modalHandler.closeModal()" 
+                                    class="w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white py-2.5 px-6 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg text-sm">
+                                <i class="fas fa-times-circle mr-2"></i>
+                                Cerrar
+                            </button>
                         </div>
                     </div>
                 `;
@@ -2600,7 +2649,7 @@
                 document.body.style.overflow = 'hidden';
                 this.currentModal = modal;
 
-                console.log('✅ Modal mostrado correctamente');
+                console.log('✅ Modal mostrado correctamente con todos los campos de BD');
             },
 
             closeModal: function () {
@@ -4646,77 +4695,138 @@
         window.showLoginPrompt = showLoginPrompt;
 
     </script>
-    <!-- Message Center and User Management Scripts -->
+    <!-- Header Integration Scripts -->
     <script>
 
-        // User Menu Functionality
-        function toggleUserMenu() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('hidden');
-        }
+        // Header user dropdown toggle
+        (function () {
+            document.addEventListener('DOMContentLoaded', function () {
+                const headerUserMenuBtn = document.getElementById('headerUserMenuBtn');
+                const headerUserDropdown = document.getElementById('headerUserDropdown');
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const userMenu = document.getElementById('userMenuBtn');
-            const dropdown = document.getElementById('userDropdown');
+                if (headerUserMenuBtn && headerUserDropdown) {
+                    headerUserMenuBtn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        const isVisible = headerUserDropdown.style.display !== 'none';
+                        headerUserDropdown.style.display = isVisible ? 'none' : 'block';
+                    });
 
-            if (!userMenu.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
+                    document.addEventListener('click', function (e) {
+                        if (!headerUserMenuBtn.contains(e.target) && !headerUserDropdown.contains(e.target)) {
+                            headerUserDropdown.style.display = 'none';
+                        }
+                    });
+                }
 
-        // Logout functionality
-        function handleLogout() {
-            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                // Clear user data
-                localStorage.removeItem('userData');
-                localStorage.removeItem('currentUser');
-                sessionStorage.clear();
-
-                // Redirect to login page
-                window.location.href = './index.php';
-            }
-        }
+                const headerLogoutBtn = document.getElementById('headerLogoutBtn');
+                if (headerLogoutBtn) {
+                    headerLogoutBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        if (window.authSessionManager) {
+                            window.authSessionManager.logout();
+                        } else {
+                            localStorage.removeItem('userData');
+                            localStorage.removeItem('currentUser');
+                            sessionStorage.clear();
+                            window.location.href = './index.php';
+                        }
+                    });
+                }
+            });
+        })();
 
         // Update user display info when user data is available
         function updateUserDisplay(userData) {
-            const userDisplayName = document.getElementById('userDisplayName');
-            const dropdownUserName = document.getElementById('dropdownUserName');
-            const dropdownUserRole = document.getElementById('dropdownUserRole');
-
             const nombre = userData.nombre || userData.name || 'Usuario';
             const rol = userData.rol || userData.role || 'Empleado';
 
-            if (userDisplayName) userDisplayName.textContent = nombre;
-            if (dropdownUserName) dropdownUserName.textContent = nombre;
-            if (dropdownUserRole) dropdownUserRole.textContent = rol;
+            const headerUserName = document.getElementById('headerUserName');
+            const headerUserRole = document.getElementById('headerUserRole');
+            const userNameTopBar = document.getElementById('userNameTopBar');
+
+            if (headerUserName) headerUserName.textContent = nombre;
+            if (headerUserRole) headerUserRole.textContent = rol;
+            if (userNameTopBar) userNameTopBar.textContent = nombre;
         }
 
-        // Override the displayUserInfo function to also update navbar
         const originalDisplayUserInfo = window.displayUserInfo;
         window.displayUserInfo = function (userData) {
-            if (originalDisplayUserInfo) {
-                originalDisplayUserInfo(userData);
-            }
+            if (originalDisplayUserInfo) originalDisplayUserInfo(userData);
             updateUserDisplay(userData);
         };
     </script>
 
     <!-- Claut Navigation JavaScript -->
     <script>
+        // ========== NAVIGATION JAVASCRIPT FROM DASHBOARD ==========
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('🚀 Initializing Claut Navigation System');
+            let lastScrollY = window.scrollY;
+            let ticking = false;
 
-            // Synchronize header and bottom navigation
-            const headerNavLinks = document.querySelectorAll('.claut-header-nav .claut-nav-item');
+            function updateHeaderState() {
+                const header = document.querySelector('.claut-header');
+                const currentScrollY = window.scrollY;
+
+                // Add scrolled class for enhanced styling
+                if (currentScrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+
+                // Keep header always visible and fixed at top
+                header.style.transform = 'translateY(0)';
+                header.style.position = 'fixed';
+                header.style.top = '0';
+
+                lastScrollY = currentScrollY;
+                ticking = false;
+            }
+
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(updateHeaderState);
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            // Setup mobile menu toggle
+            function setupMobileMenu() {
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                const headerNav = document.querySelector('.claut-header-nav');
+
+                if (mobileMenuBtn && headerNav) {
+                    mobileMenuBtn.addEventListener('click', function () {
+                        headerNav.classList.toggle('show');
+                    });
+
+                    // Close menu when clicking outside
+                    document.addEventListener('click', function (e) {
+                        if (!mobileMenuBtn.contains(e.target) && !headerNav.contains(e.target)) {
+                            headerNav.classList.remove('show');
+                        }
+                    });
+                }
+            }
+
+            setupMobileMenu();
+        });
+
+        // JavaScript para el menú curvo animado
+        document.addEventListener('DOMContentLoaded', function () {
             const bottomNavLinks = document.querySelectorAll('.claut-bottom-nav .claut-nav-link');
+            const headerNavLinks = document.querySelectorAll('.claut-header-nav .claut-nav-item');
             const navCurve = document.querySelector('.claut-nav-curve');
 
             function setActiveNav(activeLink) {
                 // Remover clase active de todos los enlaces del bottom nav
                 bottomNavLinks.forEach(link => link.classList.remove('active'));
+
                 // Agregar clase active al enlace clickeado
                 activeLink.classList.add('active');
+
                 // Posicionar la curva
                 if (navCurve) {
                     const linkIndex = Array.from(bottomNavLinks).indexOf(activeLink);
@@ -4732,26 +4842,54 @@
             bottomNavLinks.forEach((link, index) => {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
+
                     // Solo hacer la animación, no navegar
                     setActiveNav(link);
+
                     // Navegar después de un pequeño delay para mostrar la animación
                     setTimeout(() => {
-                        const href = this.getAttribute('href');
-                        if (href && href !== '#') {
-                            window.location.href = href;
+                        window.location.href = link.href;
+                    }, 150);
+                });
+
+                // Touch feedback para móviles
+                link.addEventListener('touchstart', function () {
+                    link.style.transform = 'translateY(-12px) scale(0.95)';
+                }, { passive: true });
+
+                link.addEventListener('touchend', function () {
+                    setTimeout(() => {
+                        if (!link.classList.contains('active')) {
+                            link.style.transform = '';
                         }
-                    }, 200);
+                    }, 150);
+                }, { passive: true });
+            });
+
+            // Event listeners para header nav
+            headerNavLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    // Remover active de todos
+                    headerNavLinks.forEach(item => item.classList.remove('active'));
+
+                    // Agregar active al clickeado
+                    link.classList.add('active');
                 });
             });
 
-            // Función para sincronizar navegación al cargar la página
-            function syncNavigationOnLoad() {
-                const currentPage = window.location.pathname;
+            // Sincronizar navegación entre header y bottom nav
+            function syncNavigation() {
+                const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+
+                // Remover todas las clases active
+                bottomNavLinks.forEach(link => link.classList.remove('active'));
+                headerNavLinks.forEach(link => link.classList.remove('active'));
+
+                // Determinar cual debe estar activo basado en la página actual
                 let activeBottomLink = null;
                 let activeHeaderLink = null;
 
-                // Determinar qué enlace debe estar activo basado en la página actual
-                if (currentPage.includes('dashboard') || currentPage === '/' || currentPage.includes('index')) {
+                if (currentPage.includes('dashboard')) {
                     activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="inicio"]');
                     activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="dashboard"]');
                 } else if (currentPage.includes('descuentos')) {
@@ -4761,17 +4899,14 @@
                     activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="boletines"]');
                     activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="boletines"]');
                 } else if (currentPage.includes('comite')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="comite"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="comite"]');
+                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="comites"]');
+                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="comites"]');
                 } else if (currentPage.includes('contacto')) {
                     activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="contacto"]');
                     activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="contacto"]');
                 } else if (currentPage.includes('eventos')) {
                     activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="eventos"]');
                     activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="eventos"]');
-                } else if (currentPage.includes('convenio')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="convenios"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="convenio"]');
                 }
 
                 // Activar los enlaces correspondientes
@@ -4785,223 +4920,33 @@
             }
 
             // Inicializar navegación sincronizada
-            syncNavigationOnLoad();
-
-            // Header and bottom navigation sync
-            function syncNavigation() {
-                const headerNavItems = document.querySelectorAll('.claut-header-nav a');
-                const bottomNavItems = document.querySelectorAll('.claut-bottom-nav a');
-
-                function setActiveState(href) {
-                    // Update header navigation
-                    headerNavItems.forEach(item => {
-                        if (item.getAttribute('href') === href) {
-                            item.classList.add('active');
-                        } else {
-                            item.classList.remove('active');
-                        }
-                    });
-
-                    // Update bottom navigation
-                    bottomNavItems.forEach(item => {
-                        if (item.getAttribute('href') === href) {
-                            item.classList.add('active');
-                        } else {
-                            item.classList.remove('active');
-                        }
-                    });
-                }
-
-                // Set initial active state for empresas-convenio
-                setActiveState('./empresas-convenio.html');
-
-                // Add click handlers for header navigation sync only
-                headerNavItems.forEach(item => {
-                    item.addEventListener('click', function (e) {
-                        const href = this.getAttribute('href');
-                        if (href && href !== '#' && !href.startsWith('javascript:')) {
-                            setActiveState(href);
-                        }
-                    });
-                });
-            }
-
-            // Header scroll effect
-            function initHeaderScrollEffect() {
-                const header = document.querySelector('.claut-header-nav');
-                if (!header) return;
-
-                let lastScrollY = window.scrollY;
-
-                function updateHeader() {
-                    const currentScrollY = window.scrollY;
-
-                    if (currentScrollY > 100) {
-                        header.classList.add('claut-nav-scrolled');
-                    } else {
-                        header.classList.remove('claut-nav-scrolled');
-                    }
-
-                    lastScrollY = currentScrollY;
-                }
-
-                window.addEventListener('scroll', updateHeader, { passive: true });
-            }
-
-            // Bottom navigation touch handling
-            function initBottomNavTouchHandling() {
-                const bottomNav = document.querySelector('.claut-bottom-nav');
-                if (!bottomNav) return;
-
-                bottomNav.addEventListener('touchstart', function (e) {
-                    e.target.classList.add('touching');
-                }, { passive: true });
-
-                bottomNav.addEventListener('touchend', function (e) {
-                    setTimeout(() => {
-                        e.target.classList.remove('touching');
-                    }, 150);
-                }, { passive: true });
-            }
-
-            // Responsive navigation visibility
-            function handleResponsiveNavigation() {
-                const headerNav = document.querySelector('.claut-header-nav');
-                const bottomNav = document.querySelector('.claut-bottom-nav');
-
-                function updateNavVisibility() {
-                    const isMobile = window.innerWidth <= 1024;
-
-                    if (headerNav) {
-                        headerNav.style.display = isMobile ? 'none' : 'flex';
-                    }
-
-                    if (bottomNav) {
-                        bottomNav.style.display = isMobile ? 'flex' : 'none';
-                    }
-                }
-
-                updateNavVisibility();
-                window.addEventListener('resize', updateNavVisibility);
-            }
-
-            // GSAP entrance animations
-            function initNavigationAnimations() {
-                if (typeof gsap !== 'undefined') {
-                    // Header navigation animation
-                    gsap.fromTo('.claut-header-nav .claut-nav-item', {
-                        rotationY: -180,
-                        scale: 0.5,
-                        opacity: 0,
-                        y: -30
-                    }, {
-                        rotationY: 0,
-                        scale: 1,
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.8,
-                        stagger: 0.1,
-                        ease: "back.out(1.7)",
-                        delay: 0.2
-                    });
-
-                    // Bottom navigation animation
-                    gsap.fromTo('.claut-bottom-nav', {
-                        y: 100,
-                        opacity: 0
-                    }, {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.8,
-                        ease: "back.out(1.7)",
-                        delay: 0.5
-                    });
-                    // Animación escalonada de los iconos
-                    gsap.fromTo('.claut-bottom-nav .claut-nav-link i', {
-                        scale: 0,
-                        rotation: -180
-                    }, {
-                        scale: 1,
-                        rotation: 0,
-                        duration: 0.6,
-                        ease: "back.out(2.5)",
-                        stagger: 0.1,
-                        delay: 1
-                    });
-                }
-            }
-
-            // Bottom navigation touch interactions
-            bottomNavLinks.forEach(link => {
-                link.addEventListener('touchstart', function () {
-                    this.style.transform = 'scale(0.95)';
-                });
-                link.addEventListener('touchend', function () {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-
-            // Configuración del menú móvil
-            function setupMobileMenu() {
-                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-                const headerNav = document.querySelector('.claut-header-nav');
-
-                if (mobileMenuBtn && headerNav) {
-                    mobileMenuBtn.addEventListener('click', function () {
-                        headerNav.classList.toggle('show');
-
-                        // Cambiar ícono del botón
-                        const icon = this.querySelector('i');
-                        if (headerNav.classList.contains('show')) {
-                            icon.className = 'fas fa-times';
-                        } else {
-                            icon.className = 'fas fa-bars';
-                        }
-                    });
-
-                    // Cerrar menú al hacer clic en un enlace
-                    const navLinks = headerNav.querySelectorAll('.claut-nav-item');
-                    navLinks.forEach(link => {
-                        link.addEventListener('click', () => {
-                            headerNav.classList.remove('show');
-                            const icon = mobileMenuBtn.querySelector('i');
-                            icon.className = 'fas fa-bars';
-                        });
-                    });
-                }
-            }
-
-            // Configuración de botones del header
-            function setupHeaderButtons() {
-                // Botón de mensajes
-                const messagesBtn = document.getElementById('headerMessagesBtn');
-                if (messagesBtn) {
-                    messagesBtn.addEventListener('click', function () {
-                        // Aquí se podría implementar la lógica del centro de mensajes
-                        console.log('Centro de mensajes clicked');
-                    });
-                }
-
-                // Botón de usuario
-                const userMenuBtn = document.getElementById('headerUserMenuBtn');
-                if (userMenuBtn) {
-                    userMenuBtn.addEventListener('click', function () {
-                        // Aquí se podría implementar la lógica del menú de usuario
-                        console.log('User menu clicked');
-                    });
-                }
-            }
-
-            // Initialize all navigation functionality
             syncNavigation();
-            initHeaderScrollEffect();
-            initBottomNavTouchHandling();
-            handleResponsiveNavigation();
-            initNavigationAnimations();
-            setupMobileMenu();
-            setupHeaderButtons();
 
-            console.log('✅ Claut Navigation System initialized successfully');
+            // Animaciones de entrada solo si GSAP está disponible
+            if (typeof gsap !== 'undefined') {
+                gsap.fromTo('.claut-bottom-nav', {
+                    y: 100,
+                    opacity: 0
+                }, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "back.out(1.7)",
+                    delay: 0.5
+                });
+
+                gsap.fromTo('.claut-bottom-nav .claut-nav-link i', {
+                    scale: 0,
+                    rotation: -180
+                }, {
+                    scale: 1,
+                    rotation: 0,
+                    duration: 0.6,
+                    ease: "back.out(2.5)",
+                    stagger: 0.1,
+                    delay: 1
+                });
+            }
         });
     </script>
 
@@ -5018,6 +4963,8 @@
 
     <!-- Auth Session Script -->
     <script src="./js/auth-session.js"></script>
+    <script src="assets/js/loading-screen.js"></script>
+    <script src="./assets/js/layout/header-navbar.js"></script>
 </body>
 
 </html>

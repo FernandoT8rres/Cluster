@@ -285,6 +285,7 @@ openssl rand -hex 32
 - **UI Dinámica Vanilla**: Usar `<template>` tags o constructores DOM para inyectar filas. Manipular `innerHTML` solo cuando sea aséptico (`textContent` es mejor).
 - **SweetAlert2** para confirmaciones (ej. Borrar usuario, timeout de sesión).
 - **Glassmorphism Premium**: Todo panel principal (Banners, Calendarios, Widgets) debe usar `.glass-card` con bordes transparentes (`border-0` o `border-white/10`) en lugar de `bg-white` o gradientes estáticos, asegurando integración total con el fondo oscuro `.porsche-layout`.
+- **Carruseles Externos (Ejs. Evervault/Three.js)**: Al integrar librerías que generan contenedores DOM nativamente, nunca dejar sus tarjetas hijas (`.empresa-card-normal`, `.empresa-card-image`) con fondos `bg-white` y `padding` pesados nativos, pues asfixian el layout oscuro. Convertirlas a *glass cards* de transparencia dinámica y remover color de fondo de la imagen (`background: transparent; filter: drop-shadow`).
 
 ### Sesión Marzo 2026 — Depuración Crítica UI/UX (Actual)
 
