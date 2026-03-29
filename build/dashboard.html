@@ -4336,10 +4336,9 @@
         display: block;
     }
 
-    /* FIX DEFINITIVO GEOMETRIA: Evita vacíos enormes limitando el ancho máximo de la tabla para que encaje proporcionalmente */
+    /* FIX DEFINITIVO GEOMETRIA: Evita vacíos enormes permitiendo que tome el ancho nativo full 100% de esquina a esquina en la tarjeta */
     #dashboard-preview-calendar {
-        max-width: 1050px;
-        margin-left: 0; /* Alinear a la izquierda bajo el título */
+        margin-left: 0;
     }
 
     #dashboard-preview-calendar .fc-scrollgrid {
@@ -14820,8 +14819,8 @@
             weekNumbers: false, // Asegurar que no dibuje columnas invisibles extra a la izquierda
             eventDisplay: 'block', // Forza los Post-its como bloques completos (no dots)
             displayEventTime: true,
-            height: 'auto',
-            contentHeight: 'auto',
+            aspectRatio: 2, // Hace el calendario más ancho que alto (achata filas) para evitar que se salga hacia abajo
+            contentHeight: 520, // Disminuye drásticamente el alto de cada día para encajar 30 días sin "spill out"
             editable: false,
             selectable: false,
             droppable: false,
