@@ -4341,8 +4341,8 @@
 
     /* FIX DEFINITIVO GEOMETRIA: Evita vacíos enormes limitando el ancho máximo de la tabla para que encaje proporcionalmente */
     #dashboard-preview-calendar {
-        max-width: 1000px;
-        margin: 0 auto; /* Centrar la cuadrícula */
+        max-width: 1050px;
+        margin-left: 0; /* Alinear a la izquierda bajo el título */
     }
 
     #dashboard-preview-calendar .fc-scrollgrid,
@@ -4352,15 +4352,12 @@
         margin: 0 !important;
     }
 
-    /* Eventos estilo Notion (Post-it blocks forzados por JS) */
+    /* Eventos estilo Notion (Dejar que FC maneje el display/margin interno de postits) */
     #dashboard-preview-calendar .fc-event {
-        border-radius: 4px !important;
-        padding: 3px 6px !important;
-        margin: 2px !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-        cursor: default !important;
-        border: none !important;
-        display: block !important;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        cursor: default;
+        border: none;
     }
 
     #dashboard-preview-calendar .fc-event-main {
@@ -4368,6 +4365,7 @@
         font-weight: 700 !important;
         font-size: 0.70rem !important;
         line-height: 1.2 !important;
+        padding: 2px 4px;
     }
 
     /* Columnas de los días de la semana */
