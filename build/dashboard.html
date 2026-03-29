@@ -101,9 +101,8 @@
     }
 
     /* PROTECCIÓN CONTRA SCRIPTS CONFLICTIVOS */
-    .max-w-7xl.mx-auto,
-    .max-w-7xl.mx-auto * {
-      /* Estos valores NO pueden ser sobrescritos por JavaScript posterior */
+    .max-w-7xl.mx-auto {
+      /* Estos valores limitan el ancho del contenedor principal */
       margin-left: auto !important;
       margin-right: auto !important;
       padding-left: 1.5rem !important;
@@ -113,9 +112,7 @@
     }
 
     @media (min-width: 1024px) {
-
-      .max-w-7xl.mx-auto,
-      .max-w-7xl.mx-auto * {
+      .max-w-7xl.mx-auto {
         padding-left: 2rem !important;
         padding-right: 1rem !important;
         padding-top: 10px;
