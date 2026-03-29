@@ -279,9 +279,12 @@ openssl rand -hex 32
 ### 65. Restauración de Funcionalidad y Módulos "Premium Porsche"
 - **Admin Panel**: Reintegración de los módulos de Gestión de Descuentos, Comités, Gráficos y Estadísticas Dinámicas que se habían omitido durante la consolidación inicial. Se mantiene el diseño Porsche pero con el 100% de la funcionalidad original.
 - **Sign-In**: Corrección de error estructural en el carrusel de banners (div de apertura faltante) y verificación de enlaces de recuperación/visitante.
-- **Sign-Up**: Restauración de más de 10 campos originales de información extendida (Ubicación, Contactos de Emergencia, Biografía) y el modal completo de registro de nuevas empresas.
+- **Sign-Up**: Restauración de más de 10 campos originales (Ubicación, Contactos de Emergencia, Biografía) y el modal completo de registro de nuevas empresas.
 - **GSAP**: Las animaciones se mantuvieron y optimizaron para no interferir con el acceso a los campos del formulario.
 - **Diseño Senior**: El formulario de registro se organizó en secciones lógicas (Datos Personales, Ubicación, Adicionales, Seguridad) para una presentación más profesional y legible.
+- **UI Dinámica Vanilla**: Usar `<template>` tags o constructores DOM para inyectar filas. Manipular `innerHTML` solo cuando sea aséptico (`textContent` es mejor).
+- **SweetAlert2** para confirmaciones (ej. Borrar usuario, timeout de sesión).
+- **Glassmorphism Premium**: Todo panel principal (Banners, Calendarios, Widgets) debe usar `.glass-card` con bordes transparentes (`border-0` o `border-white/10`) en lugar de `bg-white` o gradientes estáticos, asegurando integración total con el fondo oscuro `.porsche-layout`.
 
 ### Sesión Marzo 2026 — Depuración Crítica UI/UX (Actual)
 
@@ -322,6 +325,8 @@ openssl rand -hex 32
 362. **[CALENDARIO] Vista Mensual Estricta**: Al configurar `dayGridMonth`, añade `showNonCurrentDates: false`, `weekNumbers: false` y `fixedWeekCount: false` en tu JS para evitar que la semana inicial inicie con días "huérfanos" (ej. 23, 24 del mes anterior), previniendo confusión al usuario sobre el "orden del 1 al 30".
 363. **[CALENDARIO] Geometría Flex y Contención Visual**: Tailwind resetea las tablas perdiendo su `width 100%`. SIEMPRE aplica `table-layout: fixed !important; width: 100% !important; margin: 0 !important;` tanto a `.fc-scrollgrid` como a `table`. Además, en pantallas ultrawide (ej. max-w-7xl), el calendario puede parecer vacío con "LUN" flotando lejos. Aplícale un `max-width` (ej. 1000px) y centralo (`margin: 0 auto`) para acotar el widget.
 364. **[CALENDARIO] Post-its vs Dots**: En vista Mensual (`dayGridMonth`), FullCalendar por defecto dibuja eventos Timed (con hora) como pequeños puntos o diminutos bloques ilegibles. Para forzar que TODO se vea como "Post-It" sólido configurado desde tu JS, usa la propiedad `eventDisplay: 'block'` global.
+365. **[DOM DESTRUCTIVO] El Selector Comodín (\*) es Reactivo y Venenoso**: NUNCA apliques reglas como `.max-w-7xl * { padding-left: 2rem !important; }` intentando hacer "responsive fixing" a contenedores principales. Esto inyecta 2rem de padding RECURSIVO a cada elemento descendiente. Un widget con un DOM de 7 niveles (`<table class="fc"> <thead> <tr> <th> <div> <table_inner> <tr> <th>`) sumará +160px de padding interno, desplazando por completo los días de la semana hacia la derecha y rompiendo irreparablemente la cuadrícula.
+366. **[CALENDARIO] Multi-Day Layout Intacto**: NUNCA sobreescribas el `display`, `margin` ni el `overflow` nativo del bloque `.fc-event` de FullCalendar en vista mensual para "imitar" notion. Esto estrella el cálculo matemático interno del JS que hace que un evento abarque 3 días unificadamente (Ej. "Miércoles a Viernes"), provocando que el texto se desconecte ("flote") y el cuadro se dibuje roto. Modifica SOLAMENTE la superficie óptica (`border-radius`, `box-shadow`) y gestiona el color desde JS en `eventDidMount`.
 
 ### 🐛 Errores Externos Reportados (Fuera de Workspace)
 

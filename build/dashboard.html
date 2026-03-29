@@ -4328,67 +4328,71 @@
 
     /* --- NOTION STYLE CALENDAR: DASHBOARD PREVIEW --- */
     #dashboard-preview-calendar {
-        --fc-border-color: rgba(255, 255, 255, 0.15); /* Aumentado a 0.15 para que la cuadrícula sea visible! */
-        --fc-page-bg-color: transparent;
-        --fc-neutral-bg-color: rgba(255, 255, 255, 0.05); /* Ligeramente más visible el header */
-        --fc-today-bg-color: rgba(199, 37, 43, 0.08); /* Rojo suave para el día de hoy */
-        width: 100%;
-        display: block;
+      --fc-border-color: rgba(255, 255, 255, 0.15);
+      /* Aumentado a 0.15 para que la cuadrícula sea visible! */
+      --fc-page-bg-color: transparent;
+      --fc-neutral-bg-color: rgba(255, 255, 255, 0.05);
+      /* Ligeramente más visible el header */
+      --fc-today-bg-color: rgba(199, 37, 43, 0.08);
+      /* Rojo suave para el día de hoy */
+      width: 100%;
+      display: block;
     }
 
     /* FIX DEFINITIVO GEOMETRIA: Evita vacíos enormes permitiendo que tome el ancho nativo full 100% de esquina a esquina en la tarjeta */
     #dashboard-preview-calendar {
-        margin-left: 0;
+      margin-left: 0;
     }
 
     #dashboard-preview-calendar .fc-scrollgrid {
-        width: 100% !important;
-        border-collapse: collapse !important;
+      width: 100% !important;
+      border-collapse: collapse !important;
     }
 
     /* Eventos estilo Notion (Dejar que FC maneje el display/margin interno de postits) */
     #dashboard-preview-calendar .fc-event {
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-        cursor: default;
-        border: none;
-        overflow: hidden !important; /* Previene spill over a otras celdas */
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      cursor: default;
+      border: none;
+      overflow: hidden !important;
+      /* Previene spill over a otras celdas */
     }
 
     #dashboard-preview-calendar .fc-event-main {
-        color: #fff !important;
-        font-weight: 700 !important;
-        font-size: 0.70rem !important;
-        line-height: 1.2 !important;
-        padding: 2px 4px;
-        white-space: nowrap !important;
-        text-overflow: ellipsis !important;
-        overflow: hidden !important;
+      color: #fff !important;
+      font-weight: 700 !important;
+      font-size: 0.70rem !important;
+      line-height: 1.2 !important;
+      padding: 2px 4px;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
+      overflow: hidden !important;
     }
 
     /* Columnas de los días de la semana */
     #dashboard-preview-calendar .fc-col-header-cell {
-        background: rgba(255, 255, 255, 0.02) !important;
-        /* IMPORTANTE: No modificar padding o border globales del <th> aquí o Tailwind colapsará la sincronía de anchura de columnas! */
+      background: rgba(255, 255, 255, 0.02) !important;
+      /* IMPORTANTE: No modificar padding o border globales del <th> aquí o Tailwind colapsará la sincronía de anchura de columnas! */
     }
 
     #dashboard-preview-calendar .fc-col-header-cell-cushion {
-        color: #94a3b8 !important;
-        text-transform: uppercase !important;
-        font-size: 0.65rem !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.05em !important;
-        text-decoration: none !important;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        display: inline-block;
+      color: #94a3b8 !important;
+      text-transform: uppercase !important;
+      font-size: 0.65rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.05em !important;
+      text-decoration: none !important;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      display: inline-block;
     }
 
     /* Números de los días (1 al 31) */
     #dashboard-preview-calendar .fc-daygrid-day-number {
-        color: #cbd5e1 !important;
-        font-size: 0.8rem;
-        text-decoration: none !important;
+      color: #cbd5e1 !important;
+      font-size: 0.8rem;
+      text-decoration: none !important;
     }
 
     /* END PREVIEW CALENDAR OVERRIDES */
@@ -4806,17 +4810,17 @@
           <!-- Section Header -->
           <div class="text-center mb-8">
             <div
-              class="inline-flex items-center px-5 py-2 bg-gradient-to-r from-red-50 via-red-100 to-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6 shadow-sm">
-              <i class="fas fa-bullhorn mr-2 text-red-600"></i>
+              class="inline-flex items-center px-6 py-2 bg-white/[0.03] border border-white/5 rounded-full text-zinc-300 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-md shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse mr-3"></span>
               Conoce los servicios y productos que tenemos para ti
             </div>
             <h2
-              class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
-              Centro de <span class="text-red-600">INFORMACIÓN, EVENTOS Y PROMOCIONES</span>
+              class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight tracking-tighter uppercase drop-shadow-md">
+              Centro de <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">INFORMACIÓN, EVENTOS Y PROMOCIONES</span>
             </h2>
             <div class="max-w-4xl mx-auto">
-              <p class="text-xl md:text-2xl text-gray-600 leading-relaxed mb-4">
-                Servicio exclusivo para socios miembros activos de <span class="text-red-600 font-semibold">Clúster
+              <p class="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed mb-4">
+                Servicio exclusivo para socios miembros activos de <span class="text-white font-bold">Clúster
                   Automotriz Metropolitano </span>
               </p>
             </div>
@@ -4824,9 +4828,8 @@
 
           <!-- Expanding Cards Banner Showcase -->
           <div
-            class="bg-gradient-to-br from-white via-gray-50 to-white shadow-2xl h-[700px] lg:h-[750px] relative overflow-hidden rounded-3xl border border-gray-200"
+            class="glass-card shadow-2xl h-[700px] lg:h-[750px] relative overflow-hidden rounded-3xl border-0"
             style="transform: none !important; will-change: auto !important;">
-
 
             <!-- Expanding Cards Container with Enhanced Scroll Effects -->
             <div class="expanding-options px-6 pb-6 h-full scroll-smooth">
@@ -4835,14 +4838,14 @@
                 <!-- Loading state with improved styling -->
                 <div id="cardsLoading" class="flex items-center justify-center h-full">
                   <div class="text-center transform transition-all duration-500">
-                    <div class="relative mb-4">
-                      <div class="w-16 h-16 border-4 border-gray-300 rounded-full"></div>
+                    <div class="relative mb-4 mx-auto w-16 h-16">
+                      <div class="w-16 h-16 border-4 border-white/10 rounded-full"></div>
                       <div
-                        class="absolute top-0 w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin">
+                        class="absolute top-0 w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin">
                       </div>
                     </div>
-                    <p class="text-gray-600 text-lg font-medium mb-2">Cargando galería...</p>
-                    <p class="text-gray-400 text-sm">Preparando contenido visual</p>
+                    <p class="text-white text-lg font-bold uppercase tracking-widest mb-2">Cargando galería...</p>
+                    <p class="text-zinc-500 text-sm font-medium">Preparando contenido visual</p>
                   </div>
                 </div>
                 <!-- Cards will be loaded dynamically here -->
@@ -5220,31 +5223,34 @@
       <!-- CALENDARIO PREVIEW (SOLO LECTURA) -->
       <div class="flex flex-wrap mt-12 -mx-3 max-w-7xl mx-auto px-6 lg:px-8 max-w-full">
         <div class="w-full max-w-full px-3 mt-0 mb-8 lg:mb-0 lg:w-full lg:flex-none">
-          <div class="relative flex flex-col min-w-0 break-words glass-card border-0 border-solid shadow-xl rounded-2xl bg-clip-border overflow-hidden p-6">
-              <div class="flex justify-between items-center mb-6">
-                <div>
-                  <h2 class="text-2xl font-black text-white tracking-tighter uppercase leading-none">Agenda Master Corporativa</h2>
-                  <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Vista Previa (Solo Lectura)</p>
-                </div>
-                <div class="flex items-center gap-4 bg-white/[0.03] px-6 py-2 rounded-2xl border border-white/5 backdrop-blur-md">
-                   <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span> <span class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Eventos Activos</span></div>
+          <div
+            class="relative flex flex-col min-w-0 break-words glass-card border-0 border-solid shadow-xl rounded-2xl bg-clip-border overflow-hidden p-6">
+            <div class="flex justify-between items-center mb-6">
+              <div>
+                <h2 class="text-2xl font-black text-white tracking-tighter uppercase leading-none">Agenda</h2>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-white/[0.03] px-6 py-2 rounded-2xl border border-white/5 backdrop-blur-md">
+                <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                  <span class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">Eventos Activos</span>
                 </div>
               </div>
-              <div id="dashboard-preview-calendar" class="w-full mt-4"></div>
+            </div>
+            <div id="dashboard-preview-calendar" class="w-full mt-4"></div>
           </div>
         </div>
       </div>
 
-    <!-- end cards -->
+      <!-- end cards -->
     </div> <!-- end unified-gradient-container -->
     </div> <!-- end main-content-wrapper -->
   </main>
 
 
-    </div>
-    <!-- end cards -->
-    </div> <!-- end unified-gradient-container -->
-    </div> <!-- end main-content-wrapper -->
+  </div>
+  <!-- end cards -->
+  </div> <!-- end unified-gradient-container -->
+  </div> <!-- end main-content-wrapper -->
   </main>
 
   <!-- Notificaciones Toast -->
@@ -14806,65 +14812,65 @@
   <!-- CALENDARIO PREVIEW JS -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('dashboard-preview-calendar');
-        if (!calendarEl) return;
-    
-        const previewCalendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es',
-            headerToolbar: false,
-            firstDay: 1, // La semana empieza en Lunes
-            fixedWeekCount: false, // Oculte semanas extras
-            showNonCurrentDates: false, // Mostrar estrictamente días del mes 1 en adelante
-            weekNumbers: false, // Asegurar que no dibuje columnas invisibles extra a la izquierda
-            eventDisplay: 'block', // Forza los Post-its como bloques completos (no dots)
-            displayEventTime: true,
-            aspectRatio: 2, // Hace el calendario más ancho que alto (achata filas) para evitar que se salga hacia abajo
-            contentHeight: 520, // Disminuye drásticamente el alto de cada día para encajar 30 días sin "spill out"
-            editable: false,
-            selectable: false,
-            droppable: false,
-            eventClick: function(info) {
-                info.jsEvent.preventDefault();
-            },
-            eventDidMount: function(info) {
-                const type = info.event.extendedProps.tipo || 'Evento';
-                let color = '#475569'; /* Slate más brillante para eventos Otros */
-                let bgOpacity = '80'; /* 50% opacity para mejor visibilidad en fondos oscuros */
-                
-                switch(type) {
-                    case 'Asamblea': color = '#C7252B'; bgOpacity = '40'; break;
-                    case 'Networking': color = '#3B82F6'; bgOpacity = '40'; break;
-                    case 'Capacitación': color = '#10B981'; bgOpacity = '40'; break;
-                    case 'Comunicado': color = '#F59E0B'; bgOpacity = '40'; break;
-                }
-                
-                /* Si es gris (default), damos más opacidad o usamos un tono sólido con transparencia segura */
-                info.el.style.backgroundColor = `${color}${bgOpacity}`;
-                info.el.style.borderLeft = `3px solid ${color}`;
-            },
-            events: async function(info, successCallback, failureCallback) {
-                try {
-                    const response = await fetch('./api/eventos.php?action=listar');
-                    const data = await response.json();
-                    if (data.success) {
-                        const events = data.eventos.map(e => ({
-                            id: e.id,
-                            title: e.titulo,
-                            start: e.fecha_inicio,
-                            end: e.fecha_fin || e.fecha_inicio,
-                            extendedProps: { ...e }
-                        }));
-                        successCallback(events);
-                    }
-                } catch (error) {
-                    console.error('Error fetching preview events:', error);
-                    failureCallback(error);
-                }
+      const calendarEl = document.getElementById('dashboard-preview-calendar');
+      if (!calendarEl) return;
+
+      const previewCalendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        headerToolbar: false,
+        firstDay: 1, // La semana empieza en Lunes
+        fixedWeekCount: false, // Oculte semanas extras
+        showNonCurrentDates: false, // Mostrar estrictamente días del mes 1 en adelante
+        weekNumbers: false, // Asegurar que no dibuje columnas invisibles extra a la izquierda
+        eventDisplay: 'block', // Forza los Post-its como bloques completos (no dots)
+        displayEventTime: true,
+        aspectRatio: 2, // Hace el calendario más ancho que alto (achata filas) para evitar que se salga hacia abajo
+        contentHeight: 520, // Disminuye drásticamente el alto de cada día para encajar 30 días sin "spill out"
+        editable: false,
+        selectable: false,
+        droppable: false,
+        eventClick: function (info) {
+          info.jsEvent.preventDefault();
+        },
+        eventDidMount: function (info) {
+          const type = info.event.extendedProps.tipo || 'Evento';
+          let color = '#475569'; /* Slate más brillante para eventos Otros */
+          let bgOpacity = '80'; /* 50% opacity para mejor visibilidad en fondos oscuros */
+
+          switch (type) {
+            case 'Asamblea': color = '#C7252B'; bgOpacity = '40'; break;
+            case 'Networking': color = '#3B82F6'; bgOpacity = '40'; break;
+            case 'Capacitación': color = '#10B981'; bgOpacity = '40'; break;
+            case 'Comunicado': color = '#F59E0B'; bgOpacity = '40'; break;
+          }
+
+          /* Si es gris (default), damos más opacidad o usamos un tono sólido con transparencia segura */
+          info.el.style.backgroundColor = `${color}${bgOpacity}`;
+          info.el.style.borderLeft = `3px solid ${color}`;
+        },
+        events: async function (info, successCallback, failureCallback) {
+          try {
+            const response = await fetch('./api/eventos.php?action=listar');
+            const data = await response.json();
+            if (data.success) {
+              const events = data.eventos.map(e => ({
+                id: e.id,
+                title: e.titulo,
+                start: e.fecha_inicio,
+                end: e.fecha_fin || e.fecha_inicio,
+                extendedProps: { ...e }
+              }));
+              successCallback(events);
             }
-        });
-    
-        previewCalendar.render();
+          } catch (error) {
+            console.error('Error fetching preview events:', error);
+            failureCallback(error);
+          }
+        }
+      });
+
+      previewCalendar.render();
     });
   </script>
 
