@@ -319,7 +319,9 @@ openssl rand -hex 32
 361. **[TAILWIND VS FULLCALENDAR] Prevención de Desfases en el Grid**: 
     - **NUNCA** utilices selectores CSS forzados como `#calendar th { border: none !important; }` o `#calendar td { padding: 4px !important; }` para estilar la cabecera geométrica de FullCalendar. Hacerlo causa un desbalance entre las dimensiones calculadas por JS para el `<colgroup>` del head y el body, desplazando las columnas hacia la derecha en colisión con el Tailwind Preflight.
     - **LA FORMA CORRECTA**: Utilizar exclusivamente las variables CSS nativas (`--fc-border-color`, `--fc-page-bg-color`) o añadir padding a los componentes internos usando sus wrappers (`.fc-col-header-cell-cushion`).
-362. **[CALENDARIO] Vista Mensual Estricta**: Al configurar `dayGridMonth`, añade `showNonCurrentDates: false` y `fixedWeekCount: false` en tu JS para evitar que la semana inicial inicie con días "huérfanos" (ej. 23, 24 del mes anterior), previniendo confusión al usuario sobre el "orden del 1 al 30".
+362. **[CALENDARIO] Vista Mensual Estricta**: Al configurar `dayGridMonth`, añade `showNonCurrentDates: false`, `weekNumbers: false` y `fixedWeekCount: false` en tu JS para evitar que la semana inicial inicie con días "huérfanos" (ej. 23, 24 del mes anterior), previniendo confusión al usuario sobre el "orden del 1 al 30".
+363. **[CALENDARIO] Geometría Flex y Contención Visual**: Tailwind resetea las tablas perdiendo su `width 100%`. SIEMPRE aplica `table-layout: fixed !important; width: 100% !important; margin: 0 !important;` tanto a `.fc-scrollgrid` como a `table`. Además, en pantallas ultrawide (ej. max-w-7xl), el calendario puede parecer vacío con "LUN" flotando lejos. Aplícale un `max-width` (ej. 1000px) y centralo (`margin: 0 auto`) para acotar el widget.
+364. **[CALENDARIO] Post-its vs Dots**: En vista Mensual (`dayGridMonth`), FullCalendar por defecto dibuja eventos Timed (con hora) como pequeños puntos o diminutos bloques ilegibles. Para forzar que TODO se vea como "Post-It" sólido configurado desde tu JS, usa la propiedad `eventDisplay: 'block'` global.
 
 ### 🐛 Errores Externos Reportados (Fuera de Workspace)
 

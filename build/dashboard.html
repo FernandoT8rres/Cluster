@@ -4339,7 +4339,12 @@
         display: block;
     }
 
-    /* FIX DEFINITIVO GEOMETRIA: Evita que el Preflight colapse la tabla o ensanche columnas vacías */
+    /* FIX DEFINITIVO GEOMETRIA: Evita vacíos enormes limitando el ancho máximo de la tabla para que encaje proporcionalmente */
+    #dashboard-preview-calendar {
+        max-width: 1000px;
+        margin: 0 auto; /* Centrar la cuadrícula */
+    }
+
     #dashboard-preview-calendar .fc-scrollgrid,
     #dashboard-preview-calendar table {
         width: 100% !important;
@@ -4347,15 +4352,15 @@
         margin: 0 !important;
     }
 
-    /* Eventos estilo Notion */
+    /* Eventos estilo Notion (Post-it blocks forzados por JS) */
     #dashboard-preview-calendar .fc-event {
-        border: none !important;
         border-radius: 4px !important;
-        padding: 2px 4px !important;
-        margin: 1px 0 !important;
+        padding: 3px 6px !important;
+        margin: 2px !important;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
         cursor: default !important;
-        overflow: hidden;
+        border: none !important;
+        display: block !important;
     }
 
     #dashboard-preview-calendar .fc-event-main {
@@ -14813,8 +14818,11 @@
             locale: 'es',
             headerToolbar: false,
             firstDay: 1, // La semana empieza en Lunes
-            fixedWeekCount: false, // Oculte semanas extras, hace que el grid varíe entre 4, 5 o 6 semanas (dependiendo del mes)
-            showNonCurrentDates: false, // Ocultar días grises para mostrar estrictamente días del mes 1 en adelante
+            fixedWeekCount: false, // Oculte semanas extras
+            showNonCurrentDates: false, // Mostrar estrictamente días del mes 1 en adelante
+            weekNumbers: false, // Asegurar que no dibuje columnas invisibles extra a la izquierda
+            eventDisplay: 'block', // Forza los Post-its como bloques completos (no dots)
+            displayEventTime: true,
             height: 'auto',
             contentHeight: 'auto',
             editable: false,
