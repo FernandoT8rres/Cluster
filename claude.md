@@ -401,10 +401,13 @@ El proyecto se sube a producción manualmente vía **FileZilla** (cliente FTP).
 - **Estándar de Modal Dividido**: Usar arquitectura de doble columna (Izquierda: Identidad/Badges, Derecha: Detalles con Scroll). Aplicar `padding-top` para evitar colisión con `claut-header`.
 
 ### Seguridad
-- NUNCA hardcodear credenciales en ningún archivo `.php` ni `.md` — solo en `.env`.
-- NUNCA usar `FILTER_SANITIZE_STRING` — deprecado PHP 8.1, usar `htmlspecialchars()`.
-- NUNCA exponer `$_SESSION` completo en respuestas JSON.
-- SIEMPRE usar soft delete (`activo = 0`) — nunca `DELETE` físico en tablas de entidades.
+- **NUNCA** hardcodear credenciales en ningún archivo `.php` ni `.md` — solo en `.env`.
+- **NUNCA** usar `FILTER_SANITIZE_STRING` — deprecado PHP 8.1, usar `htmlspecialchars()`.
+- **NUNCA** exponer `$_SESSION` completo en respuestas JSON — `login-compatible.php` tenía `debug_session => $_SESSION` activo, exponiendo roles, tokens y datos de sesión a cualquier cliente. **CORREGIDO 2026-04-01**.
+- **NUNCA** incluir `session_id()` en respuestas JSON de APIs — permite secuestro de sesión.
+- **NUNCA** dejar páginas `demo_*.html` sin `auth-session.js` en producción — son accesibles sin login. Patrón correcto: incluir `<script src="./js/auth-session.js"></script>` antes de `</body>`.
+- **SIEMPRE** usar soft delete (`activo = 0`) — nunca `DELETE` físico en tablas de entidades.
+- **Patrón auth guard en páginas HTML**: Solo incluir `./js/auth-session.js`. El script verifica sesión con el servidor y redirige a `./pages/sign-in.html` automáticamente si no hay sesión válida.
 
 ### UI/UX
 - Usar siempre el `claut-header` horizontal como header maestro.
@@ -438,6 +441,15 @@ El proyecto se sube a producción manualmente vía **FileZilla** (cliente FTP).
 | Output Sanitizer | `utils/output-sanitizer.php` | ✅ Implementado |
 | Security Headers | `middleware/security-headers.php` | ✅ Implementado |
 | `.env` credentials | `build/.env` | ✅ En `.gitignore` |
+| Auth Guard demo pages | `demo_*.html` | ✅ Corregido 2026-04-01 |
+| Session exposure | `api/auth/login-compatible.php` | ✅ Corregido 2026-04-01 |
+
+**Vulnerabilidades pendientes (no introducir nuevas):**
+| Archivo | Problema | Prioridad |
+|---------|---------|-----------|
+| `middleware/security-headers.php` | CSP con `unsafe-inline`/`unsafe-eval` | MEDIA |
+| `.htaccess` | CORS abierto a `*` | MEDIA |
+| `config/database.php` | Usuarios de prueba hardcodeados en `insertSampleData()` | BAJA |
 
 **JWT duplicado**: Hay 3 implementaciones JWT (`jwt_helper.php`, `jwt_helper_fixed.php`, `middleware/jwt-validator.php`). La fuente de verdad es `middleware/jwt-validator.php` — las otras son legacy.
 
@@ -533,17 +545,39 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
     - [x] Tabla `email_notification_config` — 4 tipos configurables
     - [x] Migración `20260401_email_notification_config.sql`
     - [x] Sección "Correos" en `admin-panel.html` con toggle switches glassmorphism
-- [ ] Consolidar 3 APIs de empresas en una sola (`empresas-simple.php` es la activa)
+- [x] Consolidar 3 APIs de empresas en una sola (`empresas-simple.php` es la activa)
+    - ⚠️ **No consolidar aún** — rompe el sistema. `empresas.php` y `empresas-convenio.php` aún son referenciadas por algunas páginas. Pendiente de auditoría completa de dependencias antes de eliminar.
+- [x] **Eliminar exposición de `$_SESSION`** en `login-compatible.php` L38 — **CORREGIDO 2026-04-01**
+    - Era `debug_session => $_SESSION` — exponía toda la sesión (rol, tokens, email) a cualquier cliente
+- [x] **Añadir auth guard** a páginas `demo_*.html` sin protección — **CORREGIDO 2026-04-01**
+    - Añadido `auth-session.js` a: `demo_comite`, `demo_documentos`, `demo_estadisticasdinamicas`, `demo_evento`, `demo_visitante`
 - [ ] Consolidar 3 implementaciones JWT en `middleware/jwt-validator.php`
-- [ ] Eliminar exposición de `$_SESSION` en `login-compatible.php` (L38)
-- [ ] Añadir autenticación a páginas `demo_*.html` o eliminarlas de producción
+    - ⚠️ **Alta complejidad** — muchos archivos dependen de las implementaciones legacy. Requiere auditoría completa antes de eliminar.
 
 ### Media Prioridad
-- [ ] Minificar archivos HTML grandes (`dashboard.html` 437KB, `admin-panel.html` 149KB)
+- [ ] Minificar archivos HTML grandes (`admin-panel.html` ~149KB, `dashboard.html` ~437KB)
 - [ ] Unificar función `responderJSON` / `jsonResponse` (firmas distintas en diferentes archivos)
 - [ ] Eliminar fallback SQLite de `config/database.php`
+- [ ] Restringir CORS de `*` a dominio específico en `.htaccess`
+- [ ] Eliminar usuarios de prueba hardcodeados en `config/database.php::insertSampleData()`
 
 ### Baja Prioridad
 - [ ] Implementar MVC + autoloading PSR-4 (Fase 4)
 - [ ] Tests unitarios con PHPUnit (Fase 5)
 - [ ] CI/CD con GitHub Actions (Fase 5)
+- [ ] CSP sin `unsafe-inline`/`unsafe-eval` en `middleware/security-headers.php`
+
+---
+
+## 🚀 Estado de Deploy — Producción
+
+**Método**: FileZilla FTP → `intranet.clautmetropolitano.mx`
+**Rama Git activa**: `main`
+**Último commit relevante**: `4e0854b` — security fixes (2026-04-01)
+
+### Archivos pendientes de subir a producción (después de cada sesión de trabajo)
+Después de cada commit, subir por FileZilla los archivos modificados. Ver log con:
+```bash
+git log --oneline -5
+git show --stat HEAD
+```
