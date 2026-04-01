@@ -86,6 +86,7 @@ openssl rand -hex 32
 ### UI/UX — Tema "Premium Porsche" (Glassmorphism)
 - **Color primario**: `#C7252B` (rojo Claut)
 - **Fondo**: oscuro con `backdrop-filter: blur` y transparencias
+- **Modales Premium Glassmorphism**: Usar fondos de cristal oscuro (`bg-slate-900/40`), grids organizados para datos complejos (ej. modales de empresa), y desenfoques acentuados (`backdrop-blur-xl`) en lugar de fondos blancos convencionales para garantizar legibilidad e integración dinámica.
 - **Fuentes**: Inter / sistema
 - **Animaciones**: GSAP — fluidas, no intrusivas
 - **Loading**: `loading-screen.js` con anillos expansivos y color `#C7252B`
@@ -297,6 +298,8 @@ openssl rand -hex 32
     - **Decisión**: Estándar para Login/Registro es ahora fondos claro `#f8fafc`, tarjetas blancas puras y acentos Porsche Red para máxima legibilidad.
 70. **[DISEÑO] Pérdida de Campos en Refactorización**: El primer intento de rediseño de `sign-up.html` simplificó demasiado el formulario, eliminando campos de base de datos críticos.
     - **Corrección**: Restaurados todos los campos originales (Ubicación, Emergencia, Bio) bajo el nuevo sistema visual Porsche.
+71. **[CRÍTICO] Tarjetas de socios no hacían nada al hacer clic**: Se detectó una función `setupModalFallback()` en `empresas-convenio.html` que sobrescribía accidentalmente y de manera destructiva el controlador maestro `window.modalHandler`, dejándolo sin el método `showModal`. Fix: `setupModalFallback()` eliminada por completo.
+72. **[UX/PERFORMANCE] Duplicidad de carruseles**: Había dos carruseles renderizando al mismo tiempo (`#carouselTrack` legado y `Evervault`). Fix: El carrusel clásico de logos fue eliminado para dar prioridad de rendimiento y estética al *Carrusel de Empresas con Animación Evervault*.
 
 ### Sesión Marzo 2026 — Modernización Dashboard y Gestión de Eventos (Actual)
 
@@ -312,6 +315,9 @@ openssl rand -hex 32
 313. **[DISEÑO] Post-it Aesthetics**: Implementado un sistema de renderizado de eventos en el Dashboard y en la Consola Master que utiliza 'Post-its' estéticos: bloques con sombras profundas, bordes de cristal (glassmorphism) y codificación de colores Porsche Claut.
 314. **[SISTEMA] Sincronización 360°**: El Dashboard ahora utiliza `timeGridWeek` para proporcionar una visión visual de la semana, sincronizando todos los cambios de planificación realizados en la Consola Master de forma instantánea.
 315. **[ADMIN] Dashboard Hub**: Modificado `admin-panel.html` para incluir el acceso directo a la Consola Master Calendar como módulo prioritario de gestión.
+321. **[UI/UX] Modal Premium Split-Panel (Marzo 2026)**: Rediseño integral del modal de empresas en `empresas-convenio.html`. Implementada una arquitectura de doble columna (Izquierda: Identidad y Badges; Derecha: Detalles con Scroll). Se resolvió el error de colisión con el `claut-header` aplicando un `padding-top` estratégico y ajustando el `max-height`.
+322. **[SISTEMA] Botones de Acción Directa**: Integrados botones de llamada (`tel:`), correo (`mailto:`) y sitio web en el perfil de socios, eliminando la navegación pasiva y fomentando el contacto comercial inmediato entre socios del Clúster.
+323. **[FIX] Blindaje de modalHandler**: Eliminadas funciones legacy (`setupModalFallback`) que sobrescribían destructivamente el controlador maestro de modales, asegurando la estabilidad del sistema de visualización de empresas.
 310. **[SISTEMA] Calendario Visual Administrativo**: Implementada una vista de cuadrícula mensual (1-30 días, Lunes-Domingo) en `admin-panel.html` utilizando FullCalendar v6. Esta vista permite a los administradores gestionar la agenda mediante interacción directa (clic en día para crear, clic en evento para editar), sincronizándose automáticamente con la API de eventos.
 311. **[UI/UX] Switcher de Gestión**: Añadido un selector de vista (Tabla/Calendario) en el panel administrativo con transiciones GSAP, permitiendo una alternancia fluida entre la gestión de datos masivos y la planificación visual estratégica.
 311. **[ARQUITECTURA] Master Calendar UI/UX (Notion Style)**: Refactorización integral del visor de agenda en el Dashboard. Se eliminó la dependencia de inyección de estilos vía JS, trasladando la arquitectura visual directamente al `<head>` para garantizar el renderizado inmediato de transparencias y eliminar el 'bloque blanco' discordante.
@@ -350,6 +356,7 @@ openssl rand -hex 32
 - NUNCA añadir inputs al modal HTML sin `name=""` — sin él `FormData` no captura el campo.
 - Los campos `DATE` de MySQL DEBEN recibir `null` (no `""`) cuando están vacíos.
 - El campo HTML `contacto_persona` mapea a `contacto_nombre` en BD — mantener ese mapeo.
+- **Estándar de Modal Dividido**: Usar arquitectura de doble columna (Izquierda: Identidad/Badges, Derecha: Detalles con Scroll). Aplicar `padding-top` para evitar colisión con `claut-header`.
 
 ### Seguridad
 - NUNCA hardcodear credenciales en ningún archivo `.php` ni `.md` — solo en `.env`.
@@ -372,7 +379,7 @@ openssl rand -hex 32
 - **SIEMPRE linkear `header-navbar.css` y `estilos-empresas.css`** en el `<head>` al homologar una vista de empresas.
 - **El label del link a `empresas-convenio.html` en bottom nav debe ser "Socios"** — no "Convenios".
 - **SIEMPRE incluir el `loading-container` div** al inicio del body (después de `<body>`) con los tres `.loading-ring` y el logo.
-- **SIEMPRE incluir la sección `porsche-navbar`** (breadcrumb bar) después del `</header>`.
+- **SIEMPRE incluir la sección `porsche-navbar`** (breadcrumb bar) después de `</header>`.
 
 ---
 
@@ -391,6 +398,47 @@ openssl rand -hex 32
 | `.env` credentials | `build/.env` | ✅ En `.gitignore` |
 
 **JWT duplicado**: Hay 3 implementaciones JWT (`jwt_helper.php`, `jwt_helper_fixed.php`, `middleware/jwt-validator.php`). La fuente de verdad es `middleware/jwt-validator.php` — las otras son legacy.
+
+---
+
+## 📧 Sistema de Correo SMTP — Implementado 2026-04-01
+
+### Cuenta institucional
+- **Email**: `auxsistemas@clautmetropolitano.mx`
+- **Servidor**: `smtp.hostinger.com:465` (SSL)
+- **Password**: En `build/.env` como `MAIL_PASS` — obtener desde hPanel Hostinger → Emails → Accounts
+- **Documentación completa**: `build/EMAIL_SETUP.md`
+
+### Archivos Creados
+| Archivo | Propósito |
+|---------|----------|
+| `build/services/EmailService.php` | Motor central — métodos por tipo de correo |
+| `build/services/phpmailer/` | PHPMailer v6 standalone (sin Composer) |
+| `build/api/auth/forgot-password.php` | POST: solicitar reset de contraseña |
+| `build/api/auth/reset-password.php` | GET: validar token / POST: nueva contraseña |
+| `build/api/auth/verify-account.php` | GET: confirmar email / POST: reenviar |
+| `build/api/auth/notify-approval.php` | POST (admin): notificar aprobación/rechazo |
+| `build/setup/migrations/20260401_email_tokens.sql` | Tabla `email_tokens` |
+| `build/EMAIL_SETUP.md` | Guía SMTP para operaciones |
+
+### Tabla `email_tokens`
+- Tokens de 64 chars hex (`bin2hex(random_bytes(32))`)
+- Tipos: `password_reset` (expira 1h) y `account_verify` (expira 24h)
+- Rate limit: máximo 3/hora por email en reset, 2/hora en verify
+- Columna `usado = 1` post-uso (tokens de un solo uso)
+- `usuarios_perfil` tiene nueva columna `email_verificado TINYINT(1)`
+
+### Flujo Modal en Sign-In
+- El link "¿Olvidaste?" abre `#modalForgot` en `sign-in.html` (no navega a otra página)
+- Si la URL tiene `?reset_token=xxx`, se auto-valida y abre `#modalReset`
+- Si la URL tiene `?verify=success|used|expired|invalid`, banner contextual aparece
+- Post-reset: token se limpia de URL con `history.replaceState()`
+
+### Errores a NO repetir en Email
+- **NUNCA** borrar el `try/catch` del hook de correo en `register.php` — si falla el email, el registro ya ocurrió y es exitoso
+- **NUNCA** exponer si un email existe o no en forgot-password (respuesta siempre genérica)
+- **NUNCA** usar `mail()` nativo de PHP en producción — siempre PHPMailer con SMTP auth para evitar spam
+- **NUNCA** dejar `MAIL_PASS` en `.env.example` con valores reales — solo placeholders
 
 ---
 
@@ -415,6 +463,25 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
 ## 📋 Deuda Técnica Conocida (Priorizada)
 
 ### Alta Prioridad
+- [x] Modernización del Modal de Empresas (`empresas-convenio.html`)
+    - [x] Reestructurar el contenedor principal con el nuevo diseño de panel dividido (Side-by-Side).
+    - [x] Ajustar dimensiones y posicionamiento para evitar el navbar del clúster.
+    - [x] Implementar botones de acción (Llamada, Correo, Sitio Web) con diseño Porsche.
+    - [x] Estilizar la columna derecha con scroll independiente y tipografía mejorada.
+- [x] Documentación y Estándares
+    - [x] Actualizar `claude.md` con el nuevo estándar de modales divididos.
+    - [x] Registrar errores evitados (colisión de navbar y sobrescritura de modalHandler).
+- [x] Verificación Final
+    - [x] Validar responsividad (apilado vertical en móviles).
+    - [x] Comprobar legibilidad con textos largos.
+- [x] **Sistema de Correo SMTP** — 2026-04-01
+    - [x] EmailService.php con PHPMailer standalone
+    - [x] Endpoints: forgot-password, reset-password, verify-account, notify-approval
+    - [x] Modal "¿Olvidaste?" en sign-in.html
+    - [x] Tabla email_tokens con rate limiting
+    - [x] Hook de correo de bienvenida en register.php
+    - [ ] **PENDIENTE**: Configurar `MAIL_PASS` en `.env` (obtener desde hPanel Hostinger)
+    - [ ] **PENDIENTE**: Ejecutar migración `20260401_email_tokens.sql` en producción
 - [ ] Consolidar 3 APIs de empresas en una sola (`empresas-simple.php` es la activa)
 - [ ] Consolidar 3 implementaciones JWT en `middleware/jwt-validator.php`
 - [ ] Eliminar exposición de `$_SESSION` en `login-compatible.php` (L38)

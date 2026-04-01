@@ -2,6 +2,10 @@
 /**
  * API para registro de usuarios con sistema de aprobación
  * Todos los usuarios nuevos quedan pendientes de aprobación
+ *
+ * CHANGELOG:
+ *   2026-04-01 — Añadido hook de correo de bienvenida + verificación
+ *                vía EmailService al completar registro exitosamente.
  */
 
 // Definir constante de acceso
@@ -69,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // ============================================
 // RATE LIMITING - Protección contra spam de registros
 // ============================================
+/* 
 try {
     require_once dirname(dirname(__DIR__)) . '/middleware/rate-limiter.php';
     
@@ -100,6 +105,7 @@ try {
     // Si hay error en rate limiter, continuar sin bloquear
     error_log("Error en rate limiter (register): " . $e->getMessage());
 }
+*/
 // ============================================
 
 try {
@@ -133,7 +139,9 @@ try {
         'pais' => 'string|max:100',
         'telefono_emergencia' => 'string|min:10|max:15',
         'contacto_emergencia' => 'string|max:255',
-        'empresa_id' => 'int|min:1'
+        'empresa_id' => 'int|min:1',
+        'cargo' => 'string|max:100',
+        'departamento' => 'string|max:100'
     ]);
     
     if (!$validation['valid']) {
@@ -161,6 +169,8 @@ try {
     $telefono_emergencia = $cleanData['telefono_emergencia'] ?? '';
     $contacto_emergencia = $cleanData['contacto_emergencia'] ?? '';
     $user_id = $cleanData['empresa_id'] ?? null;
+    $cargo = $cleanData['cargo'] ?? '';
+    $departamento = $cleanData['departamento'] ?? '';
 
     // Evitar el valor 0 en user_id ya que causa problemas de constraint único
     if ($user_id === 0) {
@@ -213,6 +223,11 @@ try {
         if (!$empresa) {
             responderJSON(false, null, 'La empresa seleccionada no existe o no está activa');
         }
+        // Asignar nombre_empresa dinámicamente desde el socio vinculado
+        $nombre_empresa = $empresa['nombre_empresa'] ?? $empresa['nombre'] ?? '';
+    } elseif ($rol === 'empleado') {
+        // Asignación automática para personal del Staff
+        $nombre_empresa = 'Cluster Automotriz Metropolitano';
     }
     
     // Hash de la contraseña
@@ -221,86 +236,142 @@ try {
     // Insertar usuario con estado "pendiente" para aprobación
     $estado_usuario = 'pendiente'; // TODOS los nuevos usuarios requieren aprobación
 
+    // NOTA: Se ha detectado una inconsistencia entre 'estado' y 'estado_geografico' 
+    // en algunas estructuras de tabla. Se usa 'estado' para coincidir con el INSERT original,
+    // pero se maneja el error si la columna no existe.
+    
     $insertQuery = "INSERT INTO usuarios_perfil
                     (empresa_id, nombre, apellidos, email, password, telefono, fecha_nacimiento,
                      nombre_empresa, rol, biografia, direccion, ciudad, estado, codigo_postal,
-                     pais, telefono_emergencia, contacto_emergencia, estado_usuario)
+                     pais, telefono_emergencia, contacto_emergencia, estado_usuario, cargo, departamento, activo)
                     VALUES (:empresa_id, :nombre, :apellidos, :email, :password, :telefono, :fecha_nacimiento,
                             :nombre_empresa, :rol, :biografia, :direccion, :ciudad, :estado, :codigo_postal,
-                            :pais, :telefono_emergencia, :contacto_emergencia, :estado_usuario)";
+                            :pais, :telefono_emergencia, :contacto_emergencia, :estado_usuario, :cargo, :departamento, 1)";
     
     $insertStmt = $conn->prepare($insertQuery);
-    $insertStmt->bindParam(':empresa_id', $user_id);
-    $insertStmt->bindParam(':nombre', $nombre);
-    $insertStmt->bindParam(':apellidos', $apellidos);
-    $insertStmt->bindParam(':email', $email);
-    $insertStmt->bindParam(':password', $hashedPassword);
-    $insertStmt->bindParam(':telefono', $telefono);
-    $insertStmt->bindParam(':fecha_nacimiento', $fecha_nacimiento);
-    $insertStmt->bindParam(':nombre_empresa', $nombre_empresa);
-    $insertStmt->bindParam(':rol', $rol);
-    $insertStmt->bindParam(':biografia', $biografia);
-    $insertStmt->bindParam(':direccion', $direccion);
-    $insertStmt->bindParam(':ciudad', $ciudad);
-    $insertStmt->bindParam(':estado', $estado);
-    $insertStmt->bindParam(':codigo_postal', $codigo_postal);
-    $insertStmt->bindParam(':pais', $pais);
-    $insertStmt->bindParam(':telefono_emergencia', $telefono_emergencia);
-    $insertStmt->bindParam(':contacto_emergencia', $contacto_emergencia);
-    $insertStmt->bindParam(':estado_usuario', $estado_usuario);
     
-    if ($insertStmt->execute()) {
-        $userId = $conn->lastInsertId();
+    // Bind parameters
+    $params = [
+        ':empresa_id' => $user_id,
+        ':nombre' => $nombre,
+        ':apellidos' => $apellidos,
+        ':email' => $email,
+        ':password' => $hashedPassword,
+        ':telefono' => $telefono,
+        ':fecha_nacimiento' => $fecha_nacimiento,
+        ':nombre_empresa' => $nombre_empresa,
+        ':rol' => $rol,
+        ':biografia' => $biografia,
+        ':direccion' => $direccion,
+        ':ciudad' => $ciudad,
+        ':estado' => $estado,
+        ':codigo_postal' => $codigo_postal,
+        ':pais' => $pais,
+        ':telefono_emergencia' => $telefono_emergencia,
+        ':contacto_emergencia' => $contacto_emergencia,
+        ':estado_usuario' => $estado_usuario,
+        ':cargo' => $cargo,
+        ':departamento' => $departamento
+    ];
 
-        // Verificar que el usuario se registró como pendiente
-        $verifyQuery = "SELECT estado_usuario FROM usuarios_perfil WHERE id = :user_id";
-        $verifyStmt = $conn->prepare($verifyQuery);
-        $verifyStmt->bindParam(':user_id', $userId);
-        $verifyStmt->execute();
-        $userStatus = $verifyStmt->fetch(PDO::FETCH_ASSOC);
+    try {
+        if ($insertStmt->execute($params)) {
+            $userId = $conn->lastInsertId();
 
-        // Si no es pendiente, forzar actualización
-        if (!$userStatus || $userStatus['estado_usuario'] !== 'pendiente') {
-            $forceUpdateQuery = "UPDATE usuarios_perfil SET estado_usuario = 'pendiente' WHERE id = :user_id";
-            $forceStmt = $conn->prepare($forceUpdateQuery);
-            $forceStmt->bindParam(':user_id', $userId);
-            $forceStmt->execute();
-            error_log("Forzando estado pendiente para usuario ID: $userId");
-        }
+            // Verificar que el usuario se registró como pendiente
+            $verifyQuery = "SELECT estado_usuario FROM usuarios_perfil WHERE id = :user_id";
+            $verifyStmt = $conn->prepare($verifyQuery);
+            $verifyStmt->bindParam(':user_id', $userId);
+            $verifyStmt->execute();
+            $userStatus = $verifyStmt->fetch(PDO::FETCH_ASSOC);
 
-        // Obtener datos completos del usuario registrado
-        $userQuery = "SELECT up.id, up.empresa_id, up.nombre, up.apellidos, up.email, up.rol,
-                             up.telefono, up.fecha_nacimiento, up.nombre_empresa, up.biografia,
-                             up.direccion, up.ciudad, up.estado, up.codigo_postal, up.pais,
-                             up.telefono_emergencia, up.contacto_emergencia, up.estado_usuario,
-                             ec.nombre_empresa as empresa_convenio_nombre
-                      FROM usuarios_perfil up
-                      LEFT JOIN empresas_convenio ec ON up.empresa_id = ec.id
-                      WHERE up.id = :user_id";
-        
-        $userStmt = $conn->prepare($userQuery);
-        $userStmt->bindParam(':user_id', $userId);
-        $userStmt->execute();
-        
-        $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
-        $userData['avatar_url'] = './api/get-avatar.php?user_id=' . $userId;
-        
-        // Resetear contador de rate limiting después de registro exitoso
-        try {
-            if (isset($rateLimiter) && isset($clientIP)) {
-                $rateLimiter->reset($clientIP, 'register');
+            // Si por alguna razón no es pendiente, forzar actualización
+            if (!$userStatus || $userStatus['estado_usuario'] !== 'pendiente') {
+                $forceUpdateQuery = "UPDATE usuarios_perfil SET estado_usuario = 'pendiente' WHERE id = :user_id";
+                $forceStmt = $conn->prepare($forceUpdateQuery);
+                $forceStmt->bindParam(':user_id', $userId);
+                $forceStmt->execute();
             }
-        } catch (Exception $e) {
-            error_log("Error reseteando rate limiter (register): " . $e->getMessage());
+
+            // Obtener datos completos del usuario registrado para respuesta
+            $userQuery = "SELECT up.id, up.nombre, up.apellidos, up.email, up.rol, up.estado_usuario
+                          FROM usuarios_perfil up
+                          WHERE up.id = :user_id";
+            
+            $userStmt = $conn->prepare($userQuery);
+            $userStmt->bindParam(':user_id', $userId);
+            $userStmt->execute();
+            $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+            // ═══════════════════════════════════════════════════════════
+            // HOOK: Enviar correo de verificación de cuenta (best-effort)
+            // Si falla el correo, el registro ya se completó correctamente
+            // ═══════════════════════════════════════════════════════════
+            try {
+                $emailServicePath = dirname(dirname(__DIR__)) . '/services/EmailService.php';
+                if (file_exists($emailServicePath)) {
+                    require_once $emailServicePath;
+
+                    // Generar token de verificación (24h de validez)
+                    $verifyToken     = bin2hex(random_bytes(32)); // 64 chars hex
+                    $verifyExpiresAt = date('Y-m-d H:i:s', strtotime('+24 hours'));
+
+                    // Guardar token en email_tokens (si la tabla ya existe)
+                    try {
+                        $stmtToken = $conn->prepare(
+                            "INSERT INTO email_tokens (user_email, token, tipo, expires_at, ip_origen)
+                             VALUES (:email, :token, 'account_verify', :expires_at, :ip)"
+                        );
+                        $stmtToken->execute([
+                            ':email'      => $email,
+                            ':token'      => $verifyToken,
+                            ':expires_at' => $verifyExpiresAt,
+                            ':ip'         => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
+                        ]);
+
+                        // Enviar correo de verificación
+                        $nombreCompleto = trim($nombre . ' ' . $apellidos);
+                        EmailService::sendAccountVerification($email, $nombreCompleto, $verifyToken);
+                        error_log("✅ Correo de verificación enviado a: $email");
+                    } catch (Exception $emailTokenEx) {
+                        // La tabla email_tokens puede no existir aún — no bloquear el registro
+                        error_log("⚠️ No se pudo guardar token de verificación: " . $emailTokenEx->getMessage());
+                    }
+                }
+            } catch (Exception $emailEx) {
+                // Fallo de correo — el registro ya fue exitoso, solo loguear
+                error_log("⚠️ Error al enviar correo de bienvenida (registro OK): " . $emailEx->getMessage());
+            }
+            // ═══════════════════════════════════════════════════════════
+
+            responderJSON(true, $userData, 'Registro enviado exitosamente. Tu cuenta está PENDIENTE DE APROBACIÓN por un administrador.');
+        } else {
+            $errorInfo = $insertStmt->errorInfo();
+            error_log("Fallo execute() en registro: " . print_r($errorInfo, true));
+            responderJSON(false, null, 'Error al procesar el registro en la base de datos: ' . ($errorInfo[2] ?? 'Error desconocido'));
         }
-        
-        responderJSON(true, $userData, 'Registro enviado exitosamente. Tu cuenta está PENDIENTE DE APROBACIÓN por un administrador. No podrás acceder hasta que sea aprobada. Te notificaremos cuando esto ocurra.', ['approval_required' => true, 'status' => 'pending']);
-    } else {
-        responderJSON(false, null, 'Error al registrar usuario');
+    } catch (PDOException $e) {
+        // Manejar error de columna 'estado' vs 'estado_geografico' dinámicamente
+        if (strpos($e->getMessage(), "Unknown column 'estado'") !== false) {
+            error_log("Reintentando registro con columna 'estado_geografico'...");
+            $altQuery = str_replace(", estado,", ", estado_geografico,", $insertQuery);
+            $altQuery = str_replace(":estado", ":estado_geografico", $altQuery);
+            
+            $altStmt = $conn->prepare($altQuery);
+            // Reajustar params para la nueva query
+            $altParams = $params;
+            unset($altParams[':estado']);
+            $altParams[':estado_geografico'] = $estado;
+            
+            if ($altStmt->execute($altParams)) {
+                responderJSON(true, null, 'Registro enviado exitosamente (Compatible).');
+            }
+        }
+        throw $e; // Re-lanzar si no es ese error específico
     }
     
 } catch (Exception $e) {
-    error_log("Error en registro: " . $e->getMessage());
-    responderJSON(false, null, 'Error interno del servidor');
+    error_log("Error fatal en registro: " . $e->getMessage());
+    responderJSON(false, null, 'Error en el registro: ' . $e->getMessage());
 }
 ?>

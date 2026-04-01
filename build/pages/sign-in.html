@@ -8,788 +8,804 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
     <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
     <title>Clúster Intranet - Iniciar Sesión</title>
-    <!-- Fonts and icons -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <!-- Font Awesome Icons -->
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        crossorigin="anonymous" />
-    <!-- Nucleo Icons -->
-    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- Main Styling -->
-    <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
-    <!-- Responsive Sign-in Styles -->
-    <link href="../assets/css/responsive-signin.css" rel="stylesheet" />
-    <!-- Los estilos CSS ahora están en responsive-signin.css -->
+    <meta name="description" content="Acceso seguro a la Intranet del Clúster Automotriz Metropolitano. Gestión estratégica automotriz.">
 
-    <!-- Sidebar Styles -->
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        /* Porsche-inspired Design System Variables */
         :root {
-            /* Primary Colors - Inspired by Porsche */
-            --porsche-black: #1a1a1a;
-            --porsche-charcoal: #2d2d2d;
-            --porsche-silver: #8a8a8a;
-            --porsche-white: #ffffff;
-            --porsche-light-gray: #f5f5f5;
-            --porsche-accent: #c9302c;
-            /* Clúster red for brand consistency */
-
-            /* Typography */
-            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --porsche-font-weight-light: 300;
-            --porsche-font-weight-regular: 400;
-            --porsche-font-weight-medium: 500;
-            --porsche-font-weight-semibold: 600;
-            --porsche-font-weight-bold: 700;
-
-            /* Spacing */
-            --porsche-space-xs: 0.5rem;
-            --porsche-space-sm: 1rem;
-            --porsche-space-md: 1.5rem;
-            --porsche-space-lg: 2rem;
-            --porsche-space-xl: 3rem;
-
-            /* Shadows */
-            --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
-
-            /* Border Radius */
-            --porsche-radius-sm: 4px;
-            --porsche-radius-md: 8px;
-            --porsche-radius-lg: 12px;
-            --porsche-radius-xl: 16px;
+            --porsche-accent: #C7252B;
+            --porsche-accent-hover: #E53E3E;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
         }
 
-        /* Porsche-inspired Sidebar */
-        .porsche-sidebar {
-            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%);
-            border-radius: var(--porsche-radius-lg);
-            box-shadow: var(--porsche-shadow-large);
-            z-index: 999 !important;
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            height: 100vh !important;
-            width: 256px !important;
-            max-width: 256px !important;
-            transform: translateX(-100%) !important;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            margin: 1rem !important;
-            height: calc(100vh - 2rem) !important;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            height: 100vh;
         }
 
-        /* Sidebar visible state */
-        .porsche-sidebar.sidenav-show,
-        .porsche-sidebar[aria-expanded="true"] {
-            transform: translateX(0) !important;
-        }
-
-        /* Desktop sidebar */
-        @media (min-width: 1280px) {
-            .porsche-sidebar {
-                transform: translateX(0) !important;
-                position: fixed !important;
-                z-index: 10 !important;
-            }
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 1279px) {
-            .porsche-sidebar {
-                transform: translateX(-100%) !important;
-                z-index: 999 !important;
-            }
-        }
-
-        /* Overlay for mobile */
-        .sidenav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Split Screen Layout */
+        .split-container {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Left Panel - Glassmorphism */
+        .left-panel {
+            width: 40%;
+            background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 3rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Right Panel - Banner System */
+        .right-panel {
+            width: 60%;
+            background: #f8fafc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(193, 75, 75, 0.8), transparent, rgba(255, 255, 255, 0.2));
+            z-index: 2;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
             opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            transition: opacity 1.5s ease;
+            z-index: 1;
         }
 
-        .sidenav-overlay.show {
+        .carousel-slide.active {
             opacity: 1;
-            visibility: visible;
         }
 
-        .porsche-sidebar .porsche-logo {
-            color: var(--porsche-white);
-            font-weight: var(--porsche-font-weight-bold);
-            font-size: 1.5rem;
-            letter-spacing: -0.02em;
+        .carousel-content {
+            position: absolute;
+            bottom: 6rem;
+            left: 5rem;
+            max-width: 600px;
+            z-index: 10;
+            color: #1e293b;
         }
 
-        .porsche-nav-item {
-            color: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            border-radius: var(--porsche-radius-md);
-            margin: var(--porsche-space-xs) 0;
-        }
-
-        .porsche-nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--porsche-white);
-            transform: translateX(4px);
-        }
-
-        .porsche-nav-item.active {
-            background: var(--porsche-accent);
-            color: var(--porsche-white);
-        }
-
-        /* Mobile toggle button */
-        .mobile-toggle {
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 1000;
-            background: var(--porsche-black);
-            color: var(--porsche-white);
-            border: none;
-            border-radius: var(--porsche-radius-md);
-            padding: 0.75rem;
-            cursor: pointer;
+        /* Form Controls */
+        .porsche-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            font-size: 0.875rem;
             transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
         }
 
-        .mobile-toggle:hover {
-            background: var(--porsche-charcoal);
+        .porsche-input:focus {
+            background: white;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
-        @media (min-width: 1280px) {
-            .mobile-toggle {
-                display: none;
-            }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--porsche-accent) 0%, #a51d22 100%);
+            color: white;
+            font-weight: 700;
+            padding: 1rem;
+            border-radius: 14px;
+            width: 100%;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 15px -3px rgba(199, 37, 43, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 20px 25px -5px rgba(199, 37, 43, 0.4);
+        }
+
+        .btn-visitor {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #1e293b;
+            font-weight: 700;
+            padding: 0.875rem;
+            border-radius: 14px;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .btn-visitor:hover {
+            background: rgba(199, 37, 43, 0.1);
+            border-color: var(--porsche-accent);
+            color: var(--porsche-accent);
+        }
+
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Loading Spinner */
+        #bannerLoading {
+            position: absolute;
+            inset: 0;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        /* ═══════════════════════════════════════════════
+           MODAL — RECUPERACIÓN DE CONTRASEÑA
+           ═══════════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            margin: 1rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Strength bar */
+        .strength-bar-container {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            width: 0%;
+            transition: width 0.4s ease, background-color 0.4s ease;
+        }
+
+        /* Link "¿Olvidaste?" */
+        .forgot-link {
+            font-size: 9px;
+            font-weight: 800;
+            color: #C7252B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .forgot-link:hover { opacity: 0.7; }
+
+        /* Verificación URL params */
+        .verify-banner {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .right-panel { display: none; }
+            .left-panel  { width: 100%; }
         }
     </style>
 </head>
 
-<body class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
-    <!-- Mobile Sidebar Overlay -->
-    <div class="sidenav-overlay" id="sidenavOverlay"></div>
+<body>
+    <div class="split-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="glass-card">
+                <div class="text-center mb-10 reveal-up">
+                    <img src="../assets/img/logo-ct-dark.png" alt="Logo Claut" class="w-44 mx-auto mb-6">
+                    <h1 class="text-3xl font-black text-slate-800 tracking-tightest">Intranet</h1>
+                    <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest mt-1">Gestión
+                        Estratégica Automotriz</p>
+                </div>
 
-    <!-- Mobile Toggle Button -->
-    <button class="mobile-toggle" id="mobileToggle">
-        <i class="fas fa-bars"></i>
-    </button>
+                <!-- Banner de verificación de cuenta -->
+                <div id="verify-banner" class="verify-banner"></div>
 
-    <div class="container sticky top-0 z-sticky">
-        <div class="flex flex-wrap -mx-3">
-            <div class="w-full max-w-full px-3 flex-0">
+                <div id="message-container" class="mb-4"></div>
+
+                <form id="loginForm" class="space-y-6">
+                    <div class="space-y-1 reveal-up">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-ultra ml-1">Email de
+                            Acceso</label>
+                        <div class="relative group">
+                            <i
+                                class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within:text-red-500"></i>
+                            <input type="email" id="email" name="email" placeholder="usuario@claut.com" required
+                                class="porsche-input">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 reveal-up">
+                        <div class="flex justify-between items-center ml-1">
+                            <label
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-ultra">Contraseña</label>
+                            <!-- NUEVO: Link que abre modal en lugar de navegar a otra página -->
+                            <a id="forgotPasswordLink" role="button" class="forgot-link">¿Olvidaste?</a>
+                        </div>
+                        <div class="relative group">
+                            <i
+                                class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within:text-red-500"></i>
+                            <input type="password" id="password" name="password" placeholder="••••••••" required class="porsche-input">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 reveal-up">
+                        <button type="submit" id="loginBtn" class="btn-primary">
+                            <span id="btnText">Acceder al Sistema</span>
+                            <i class="fas fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-8 pt-8 border-t border-slate-200 space-y-4">
+                    <button onclick="accederComoVisitante()" class="btn-visitor reveal-up">
+                        <i class="fas fa-eye text-xs"></i>
+                        <span>Ingresar como Visitante</span>
+                    </button>
+
+                    <p class="text-[10px] text-center text-slate-400 font-bold reveal-up">
+                        ¿SIN CUENTA?
+                        <a href="sign-up.html"
+                            class="text-slate-800 hover:text-[#C7252B] transition-colors ml-1 uppercase">Solicitar
+                            Registro</a>
+                    </p>
+                </div>
             </div>
         </div>
-        <main class="mt-0 transition-all duration-200 ease-in-out">
-            <section class="login-section">
-                <!-- LADO IZQUIERDO: Formulario -->
-                <div class="login-form-container">
-                    <div class="login-form-content">
-                        <div class="text-center mb-6 logo-container">
-                            <img src="../assets/img/apple-icon.png" alt="Logo" class="mx-auto mb-4">
-                            <h4 class="font-bold text-lg login-title">Iniciar Sesión</h4>
-                            <p class="text-sm text-slate-600 login-subtitle">Ingresa tus datos de Clúster</p>
-                        </div>
 
-                        <!-- Mensajes de error/éxito -->
-                        <div id="message-container"></div>
+        <!-- Right Panel (Banner Carrusel) -->
+        <div class="right-panel">
+            <div id="bannerLoading">
+                <div class="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            </div>
 
-                        <form id="loginForm" action="../login/login.php" method="POST">
-                            <div class="mb-4">
-                                <input type="email" name="email" id="email" placeholder="Email" required
-                                    class="form-input" />
-                                <div class="error-field" id="email-error"></div>
-                            </div>
-                            <div class="mb-4">
-                                <input type="password" name="password" id="password" placeholder="Contraseña" required
-                                    class="form-input" />
-                                <div class="error-field" id="password-error"></div>
-                            </div>
-                            <div class="text-center">
-                                <button type="submit" id="loginBtn" class="form-button">
-                                    <span id="btnText">Iniciar Sesión</span>
-                                    <span id="btnSpinner" class="spinner hidden"></span>
-                                </button>
-                            </div>
-                        </form>
+            <div class="carousel-overlay"></div>
+            <div id="carouselSlides" class="relative w-full h-full">
+                <!-- Los banners se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+    </div>
 
-                        <!-- Botón de Acceso Visitante -->
-                        <div class="text-center mt-4">
-                            <button type="button" id="visitanteBtn" onclick="accederComoVisitante()"
-                                class="w-full bg-gray-600 text-white p-3 rounded-lg hover:bg-gray-700 transition duration-200 flex items-center justify-center">
-                                <i class="fas fa-eye mr-2"></i>
-                                <span>Acceder como Visitante</span>
-                            </button>
-                        </div>
+    <!-- ═══════════════════════════════════════════════════════
+         MODAL 1: SOLICITAR RECUPERACIÓN DE CONTRASEÑA
+         ═══════════════════════════════════════════════════════ -->
+    <div id="modalForgot" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalForgotTitle">
+        <div class="modal-card">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                         style="background: linear-gradient(135deg, #C7252B, #a51d22);">
+                        <i class="fas fa-key text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <h2 id="modalForgotTitle" class="text-lg font-black text-slate-800">Recuperar Contraseña</h2>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Intranet Clúster</p>
+                    </div>
+                </div>
+                <button id="closeModalForgot" class="text-slate-400 hover:text-slate-600 transition-colors" aria-label="Cerrar">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
 
-                        <div class="text-center mt-4">
-                            <a href="forgot-password.php" class="text-sm text-blue-500 hover:text-blue-600">¿Olvidaste
-                                tu contraseña?</a>
-                        </div>
-                        <p class="text-sm mt-4 text-center">¿No tienes una cuenta?
-                            <a href="sign-up.html" class="text-blue-500 font-semibold hover:text-blue-600">Crear
-                                Cuenta</a>
-                        </p>
+            <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                Ingresa tu correo institucional y te enviaremos un enlace seguro para restablecer tu contraseña.
+                El enlace será válido por <strong>1 hora</strong>.
+            </p>
+
+            <div id="forgotMessage" class="mb-4"></div>
+
+            <form id="forgotForm" class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-ultra ml-1">
+                        Correo Institucional
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                        <input type="email" id="forgotEmail" name="forgotEmail"
+                               placeholder="tu@correo.com" required
+                               class="porsche-input">
                     </div>
                 </div>
 
-                <!-- LADO DERECHO: Carrusel de Banners -->
-                <div class="banner-container" id="bannerCarousel">
-                    <div class="absolute inset-0 bg-gradient-to-tl from-blue-500 to-violet-500 opacity-40 z-10"></div>
+                <button type="submit" id="forgotBtn" class="btn-primary mt-2">
+                    <span id="forgotBtnText">
+                        <i class="fas fa-paper-plane mr-2"></i>Enviar Enlace
+                    </span>
+                </button>
+            </form>
 
-                    <!-- Slides del carrusel -->
-                    <div class="carousel-container relative w-full h-full" id="carouselSlides">
-                        <!-- Los banners se cargan dinámicamente -->
-                    </div>
+            <p class="text-center text-xs text-slate-400 mt-4">
+                <button id="backToLogin" class="text-[#C7252B] font-bold hover:underline">
+                    ← Volver al inicio de sesión
+                </button>
+            </p>
+        </div>
+    </div>
 
-
-                    <!-- Loading state -->
-                    <div class="absolute inset-0 bg-gradient-to-tl from-blue-500 to-violet-500 opacity-60 z-10 flex items-center justify-center"
-                        id="bannerLoading">
-                        <div class="text-center px-10">
-                            <div class="spinner-border text-white mb-4" role="status">
-                                <span class="sr-only">Cargando...</span>
-                            </div>
-                            <h4 class="font-bold text-white text-xl mb-4">"Bienvenido a Clúster"</h4>
-                            <p class="text-white">Conectando con la comunidad automotriz de México</p>
-                        </div>
-                    </div>
+    <!-- ═══════════════════════════════════════════════════════
+         MODAL 2: RESTABLECER CONTRASEÑA (cuando hay ?reset_token=)
+         ═══════════════════════════════════════════════════════ -->
+    <div id="modalReset" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalResetTitle">
+        <div class="modal-card">
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                     style="background: linear-gradient(135deg, #C7252B, #a51d22);">
+                    <i class="fas fa-shield-alt text-white text-sm"></i>
                 </div>
-            </section>
-
-        </main>
-
-        <footer class="py-12">
-            <div class="container">
-                <div class="flex flex-wrap -mx-3">
-                    <div class="w-8/12 max-w-full px-3 mx-auto mt-1 text-center flex-0">
-                        <p class="mb-0 text-slate-400">
-                            Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
-                            Clúster.
-                        </p>
-                    </div>
+                <div>
+                    <h2 id="modalResetTitle" class="text-lg font-black text-slate-800">Nueva Contraseña</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Intranet Clúster</p>
                 </div>
             </div>
-        </footer>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const loginForm = document.getElementById('loginForm');
-                const loginBtn = document.getElementById('loginBtn');
-                const btnText = document.getElementById('btnText');
-                const btnSpinner = document.getElementById('btnSpinner');
-                const messageContainer = document.getElementById('message-container');
+            <div id="resetMessage" class="mb-4"></div>
 
-                // Verificar si hay mensajes en la URL
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('error') === '1') {
-                    checkForMessages();
-                }
-                if (urlParams.get('success') === '1') {
-                    showMessage('Cuenta creada exitosamente. Ahora puedes iniciar sesión.', 'success');
-                }
-                if (urlParams.get('logout') === '1') {
-                    showMessage('Sesión cerrada exitosamente.', 'success');
-                }
+            <form id="resetForm" class="space-y-4">
+                <input type="hidden" id="resetToken" name="resetToken">
 
-                // Manejar envío del formulario
-                loginForm.addEventListener('submit', function (e) {
-                    e.preventDefault();
-
-                    // Limpiar errores previos
-                    clearErrors();
-
-                    // Validar formulario
-                    const email = document.getElementById('email').value.trim();
-                    const password = document.getElementById('password').value;
-
-                    if (!validateForm(email, password)) {
-                        return;
-                    }
-
-                    // Mostrar estado de carga
-                    setLoadingState(true);
-
-                    // Crear FormData
-                    const formData = new FormData();
-                    formData.append('email', email);
-                    formData.append('password', password);
-
-                    // Usar la API de login
-                    loginWithAPI(email, password);
-                });
-
-                function validateForm(email, password) {
-                    let isValid = true;
-
-                    // Validar email
-                    if (!email) {
-                        showFieldError('email', 'El email es requerido.');
-                        isValid = false;
-                    } else if (!isValidEmail(email)) {
-                        showFieldError('email', 'Por favor, ingresa un email válido.');
-                        isValid = false;
-                    }
-
-                    // Validar contraseña
-                    if (!password) {
-                        showFieldError('password', 'La contraseña es requerida.');
-                        isValid = false;
-                    }
-
-                    return isValid;
-                }
-
-                function isValidEmail(email) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    return emailRegex.test(email);
-                }
-
-                function showFieldError(fieldId, message) {
-                    const errorDiv = document.getElementById(fieldId + '-error');
-                    errorDiv.textContent = message;
-                    errorDiv.style.color = '#dc2626';
-                    errorDiv.style.fontSize = '0.875rem';
-                    errorDiv.style.marginTop = '0.25rem';
-
-                    const field = document.getElementById(fieldId);
-                    field.classList.add('border-red-500');
-                }
-
-                function clearErrors() {
-                    const errorFields = document.querySelectorAll('.error-field');
-                    errorFields.forEach(field => {
-                        field.textContent = '';
-                    });
-
-                    const inputs = document.querySelectorAll('input');
-                    inputs.forEach(input => {
-                        input.classList.remove('border-red-500');
-                    });
-
-                    messageContainer.innerHTML = '';
-                }
-
-                function showMessage(message, type) {
-                    const messageClass = type === 'error' ? 'error-message' : 'success-message';
-                    messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
-                }
-
-                function setLoadingState(loading) {
-                    if (loading) {
-                        loginBtn.classList.add('loading');
-                        btnText.classList.add('hidden');
-                        btnSpinner.classList.remove('hidden');
-                    } else {
-                        loginBtn.classList.remove('loading');
-                        btnText.classList.remove('hidden');
-                        btnSpinner.classList.add('hidden');
-                    }
-                }
-
-                async function loginWithAPI(email, password) {
-                    try {
-                        console.log('🚀 Iniciando login con API');
-
-                        // Usar el endpoint compatible con sesiones CLAUT_SESSION
-                        const endpoint = '../api/auth/login-compatible.php?action=login';
-
-                        console.log(`🔍 Usando endpoint: ${endpoint}`);
-
-                        const response = await fetch(endpoint, {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({ email, password })
-                        });
-
-                        const result = await response.json();
-                        console.log(`📄 Response data:`, result);
-
-                        // Verificar rate limiting (HTTP 429)
-                        if (response.status === 429) {
-                            const retryMinutes = result.retry_after ? Math.ceil(result.retry_after / 60) : 5;
-                            throw new Error(`Demasiados intentos de login. Intenta de nuevo en ${retryMinutes} minutos.`);
-                        }
-
-                        if (!response.ok) {
-                            throw new Error(result.message || `HTTP ${response.status}: ${response.statusText}`);
-                        }
-
-                        if (!result.success) {
-                            throw new Error(result.message || 'Login fallido');
-                        }
-
-                        // Login exitoso
-                        const userData = result.data || result.user;
-                        console.log(`✅ Login exitoso`);
-
-                        // ============================================
-                        // NUEVO: Guardar tokens JWT si existen
-                        // ============================================
-                        if (result.token && result.refresh_token && window.jwtManager) {
-                            window.jwtManager.saveTokens(
-                                result.token,
-                                result.refresh_token,
-                                result.expires_in || 900
-                            );
-                            window.jwtManager.saveUserData(userData);
-                            console.log('✅ Tokens JWT guardados en localStorage');
-
-                            // Iniciar worker de renovación automática
-                            if (window.tokenRefreshWorker) {
-                                window.tokenRefreshWorker.start();
-                                console.log('🔄 Worker de renovación iniciado');
-                            }
-                        } else {
-                            console.log('⚠️ No se recibieron tokens JWT (modo sesión solamente)');
-                        }
-                        // ============================================
-
-                        // Marcar flag de login exitoso para el dashboard
-                        sessionStorage.setItem('recentLogin', 'true');
-
-                        // Guardar datos del usuario para el dashboard
-                        if (userData) {
-                            console.log('💾 Guardando datos del usuario:', userData);
-                            localStorage.setItem('userData', JSON.stringify(userData));
-                            sessionStorage.setItem('userSession', JSON.stringify(userData));
-                        } else {
-                            // Si no hay userData específica, crear datos básicos
-                            const basicUserData = {
-                                nombre: 'Usuario',
-                                apellido: 'Loggeado',
-                                email: email,
-                                rol: 'usuario',
-                                login_time: new Date().toISOString()
-                            };
-                            console.log('💾 Guardando datos básicos del usuario:', basicUserData);
-                            localStorage.setItem('userData', JSON.stringify(basicUserData));
-                            sessionStorage.setItem('userSession', JSON.stringify(basicUserData));
-                        }
-
-                        // Verificar si es admin para redirigir al panel correspondiente
-                        if (userData && userData.rol === 'admin') {
-                            showMessage('¡Bienvenido Administrador! Redirigiendo al panel de admin...', 'success');
-
-                            console.log('👑 Admin detectado, redirigiendo a admin-panel...');
-
-                            setTimeout(() => {
-                                window.location.href = '../admin-panel.html?login=success';
-                            }, 1500);
-                        } else {
-                            showMessage('Inicio de sesión exitoso. Bienvenido!', 'success');
-
-                            console.log('👤 Usuario normal, redirigiendo al dashboard...');
-
-                            setTimeout(() => {
-                                window.location.href = '../dashboard.html?login=success';
-                            }, 1500);
-                        }
-
-                    } catch (error) {
-                        console.error('💥 Error en login:', error);
-                        showMessage(`Error de autenticación: ${error.message}`, 'error');
-                    } finally {
-                        setLoadingState(false);
-                    }
-                }
-
-                function checkForMessages() {
-                    // Verificar mensajes en la URL
-                    const urlParams = new URLSearchParams(window.location.search);
-                    if (urlParams.get('message')) {
-                        const message = decodeURIComponent(urlParams.get('message'));
-                        const type = urlParams.get('type') || 'info';
-                        showMessage(message, type);
-
-                        // Limpiar la URL
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }
-                }
-
-                // Cargar e inicializar el carrusel de banners
-                cargarBannerCarrusel();
-
-                // Initialize sidebar functionality
-                initializeSidebar();
-            });
-
-            // Sistema de Carrusel de Banners
-            let currentSlide = 0;
-            let banners = [];
-            let carouselInterval = null;
-
-            async function cargarBannerCarrusel() {
-                try {
-                    console.log('Iniciando carga de banners...');
-                    // Agregar timestamp para evitar caché
-                    const timestamp = Date.now();
-                    const response = await fetch(`/build/api/banners.php?action=active&t=${timestamp}`, {
-                        cache: 'no-cache',
-                        headers: {
-                            'Cache-Control': 'no-cache',
-                            'Pragma': 'no-cache'
-                        }
-                    });
-
-                    // Verificar si la respuesta es OK
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    // Obtener el texto primero para verificar si hay warnings
-                    const responseText = await response.text();
-                    console.log('Respuesta raw del servidor:', responseText);
-
-                    // Limpiar warnings de PHP si existen (empiezan con <br />)
-                    let cleanedResponse = responseText;
-                    if (responseText.includes('<br />')) {
-                        // Encontrar donde empieza el JSON (buscar el primer {)
-                        const jsonStart = responseText.indexOf('{');
-                        if (jsonStart !== -1) {
-                            cleanedResponse = responseText.substring(jsonStart);
-                            console.warn('Se detectaron warnings de PHP, limpiando respuesta...');
-                        }
-                    }
-
-                    // Parsear el JSON limpio
-                    const result = JSON.parse(cleanedResponse);
-                    console.log('Datos parseados:', result);
-
-                    if (result.success && result.data && result.data.length > 0) {
-                        banners = result.data;
-                        console.log(`✅ Cargados ${banners.length} banners de la base de datos:`, banners);
-                        inicializarCarrusel();
-                        // Ocultar loading cuando hay banners
-                        document.getElementById('bannerLoading').style.display = 'none';
-                    } else {
-                        // NO mostrar banner por defecto, solo mostrar mensaje
-                        console.warn('❌ No hay banners activos en la base de datos');
-                        console.log('Respuesta completa:', result);
-                        mostrarMensajeSinBanners();
-                    }
-                } catch (error) {
-                    console.error('❌ Error al cargar banners:', error);
-                    console.error('Error completo:', error.message);
-                    mostrarMensajeSinBanners();
-                }
-            }
-
-            function inicializarCarrusel() {
-                const slidesContainer = document.getElementById('carouselSlides');
-
-                console.log('Inicializando carrusel con banners:', banners);
-
-                // Crear slides
-                slidesContainer.innerHTML = banners.map((banner, index) => {
-                    // La API ya devuelve URLs absolutas correctas
-                    const imagenUrl = banner.imagen_url || banner.imagen || '';
-                    console.log(`Banner ${index + 1}: ${banner.titulo} - Imagen: ${imagenUrl}`);
-
-                    return `
-                        <div class="carousel-slide ${index === 0 ? 'active' : ''}" 
-                             data-slide-index="${index}"
-                             style="background-image: url('${imagenUrl}');">
-                            <div class="carousel-content">
-                                <h4 class="font-bold text-white text-xl mb-4 drop-shadow-lg">
-                                    ${banner.titulo || 'Banner ' + (index + 1)}
-                                </h4>
-                                <p class="text-white drop-shadow-md">
-                                    ${banner.descripcion || ''}
-                                </p>
-                                ${banner.enlace ? `<a href="${banner.enlace}" class="inline-block mt-4 px-6 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors">Ver más</a>` : ''}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                // Iniciar autoplay si hay más de un banner
-                if (banners.length > 1) {
-                    console.log('Iniciando autoplay para', banners.length, 'banners');
-                    iniciarAutoplay();
-                } else {
-                    console.log('Solo hay un banner, no se activa autoplay');
-                }
-            }
-
-            function mostrarMensajeSinBanners() {
-                const slidesContainer = document.getElementById('carouselSlides');
-                const loadingContainer = document.getElementById('bannerLoading');
-
-                // Ocultar el loading spinner
-                if (loadingContainer) {
-                    loadingContainer.style.display = 'none';
-                }
-
-                // Mostrar mensaje informativo sin imagen de fondo
-                slidesContainer.innerHTML = `
-                    <div class="carousel-slide active" 
-                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <div class="carousel-content">
-                            <div class="text-center">
-                                <i class="fas fa-image text-white text-5xl mb-4 opacity-50"></i>
-                                <h4 class="font-bold text-white text-xl mb-2">
-                                    Sin banners disponibles
-                                </h4>
-                                <p class="text-white text-sm opacity-80">
-                                    Los banners del carrusel se cargarán cuando estén configurados en el sistema
-                                </p>
-                            </div>
-                        </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-ultra ml-1">
+                        Nueva Contraseña
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="••••••••" required
+                               minlength="8" class="porsche-input">
                     </div>
-                `;
+                    <!-- Medidor de fortaleza -->
+                    <div class="strength-bar-container">
+                        <div id="strengthBar" class="strength-bar-fill"></div>
+                    </div>
+                    <p id="strengthLabel" class="text-[10px] text-slate-400 ml-1 mt-1"></p>
+                </div>
 
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-ultra ml-1">
+                        Confirmar Contraseña
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required
+                               class="porsche-input">
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-3 text-[11px] text-slate-500 leading-relaxed">
+                    <strong>Requisitos:</strong> mínimo 8 caracteres, una mayúscula, una minúscula y un número.
+                </div>
+
+                <button type="submit" id="resetBtn" class="btn-primary mt-2">
+                    <span id="resetBtnText">
+                        <i class="fas fa-check mr-2"></i>Guardar Nueva Contraseña
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // ── Animaciones iniciales ─────────────────────────────────────────
+        const tl = gsap.timeline();
+        tl.to(".reveal-up", {
+            opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power2.out"
+        });
+
+        // ── Banners ───────────────────────────────────────────────────────
+        let currentSlide = 0, banners = [], carouselInterval = null;
+
+        async function cargarBanners() {
+            try {
+                const response = await fetch('../api/banners.php?action=active');
+                const result   = await response.json();
+                if (result.success && result.data.length > 0) {
+                    banners = result.data;
+                    renderBanners();
+                    document.getElementById('bannerLoading').style.opacity = '0';
+                    setTimeout(() => document.getElementById('bannerLoading').remove(), 500);
+                    iniciarCarrusel();
+                } else {
+                    mostrarBannerDefault();
+                }
+            } catch (err) {
+                console.error('Error banners:', err);
+                mostrarBannerDefault();
             }
+        }
 
-            function cambiarSlide(index) {
-                if (index === currentSlide) return;
+        function renderBanners() {
+            const container = document.getElementById('carouselSlides');
+            container.innerHTML = banners.map((banner, i) => `
+                <div class="carousel-slide ${i === 0 ? 'active' : ''}" style="background-image: url('${banner.imagen_url}')">
+                    <div class="carousel-content">
+                        <h2 class="text-5xl font-black mb-4 leading-tight text-slate-800">${banner.titulo}</h2>
+                        <p class="text-slate-500 text-lg max-w-md font-medium">${banner.descripcion || ''}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-                // Cambiar slide activo
+        function mostrarBannerDefault() {
+            document.getElementById('carouselSlides').innerHTML = `
+                <div class="carousel-slide active" style="background-image: url('../assets/img/banner-login-premium.png')">
+                    <div class="carousel-content">
+                        <h2 class="text-5xl font-black mb-4 leading-tight">Gestión Estratégica Automotriz</h2>
+                        <p class="text-slate-300 text-lg">Plataforma central del Clúster Metropolitano.</p>
+                    </div>
+                </div>`;
+            const bl = document.getElementById('bannerLoading');
+            if (bl) bl.remove();
+        }
+
+        function iniciarCarrusel() {
+            if (banners.length <= 1) return;
+            clearInterval(carouselInterval);
+            carouselInterval = setInterval(() => {
                 const slides = document.querySelectorAll('.carousel-slide');
-
                 slides[currentSlide].classList.remove('active');
-
-                currentSlide = index;
-
+                currentSlide = (currentSlide + 1) % banners.length;
                 slides[currentSlide].classList.add('active');
+            }, 6000);
+        }
 
-                // Reiniciar autoplay
-                if (carouselInterval) {
-                    clearInterval(carouselInterval);
-                    iniciarAutoplay();
+        cargarBanners();
+
+        // ── Verificar parámetros de URL ───────────────────────────────────
+        const urlParams   = new URLSearchParams(window.location.search);
+        const verifyParam = urlParams.get('verify');
+        const resetToken  = urlParams.get('reset_token');
+
+        // Mensajes de verificación de cuenta
+        const verifyBanner   = document.getElementById('verify-banner');
+        const verifyMessages = {
+            success: '✅ ¡Correo verificado! Tu cuenta está pendiente de aprobación por un administrador.',
+            used:    '⚠️ Este enlace de verificación ya fue utilizado.',
+            expired: '⚠️ El enlace de verificación expiró. Inicia sesión para solicitar uno nuevo.',
+            invalid: '❌ Enlace de verificación inválido.'
+        };
+
+        if (verifyParam && verifyMessages[verifyParam]) {
+            verifyBanner.textContent = verifyMessages[verifyParam];
+            verifyBanner.style.display = 'block';
+            if (verifyParam !== 'success') {
+                verifyBanner.style.background = '#fef2f2';
+                verifyBanner.style.borderColor = '#fca5a5';
+                verifyBanner.style.color = '#dc2626';
+            }
+        }
+
+        // Si hay reset_token en URL → abrir modal de nueva contraseña
+        if (resetToken) {
+            validarTokenReset(resetToken);
+        }
+
+        // ── LOGIN Form ────────────────────────────────────────────────────
+        const loginForm        = document.getElementById('loginForm');
+        const messageContainer = document.getElementById('message-container');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnText    = document.getElementById('btnText');
+            const loginBtn   = document.getElementById('loginBtn');
+            const origHtml   = btnText.innerHTML;
+
+            loginBtn.disabled  = true;
+            btnText.innerHTML  = '<i class="fas fa-circle-notch fa-spin"></i> Validando...';
+            messageContainer.innerHTML = '';
+
+            const email    = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('../api/auth/login-compatible.php?action=login', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const user = result.data || result.user;
+                    btnText.innerHTML = '<i class="fas fa-check"></i> ¡Bienvenido!';
+                    setTimeout(() => {
+                        window.location.href = user.rol === 'admin'
+                            ? '../admin-panel.html?login=success'
+                            : '../dashboard.html?login=success';
+                    }, 500);
+                } else {
+                    showMessage(messageContainer, result.message || 'Credenciales incorrectas', 'error');
+                    loginBtn.disabled = false;
+                    btnText.innerHTML = origHtml;
                 }
+            } catch (err) {
+                console.error('Error login:', err);
+                showMessage(messageContainer, 'Error de conexión. Intenta nuevamente.', 'error');
+                loginBtn.disabled = false;
+                btnText.innerHTML = origHtml;
+            }
+        });
+
+        window.accederComoVisitante = () => { window.location.href = '../visitante.html'; };
+
+        // ════════════════════════════════════════════════════════════════
+        // MODAL — RECUPERACIÓN DE CONTRASEÑA
+        // ════════════════════════════════════════════════════════════════
+        const modalForgot     = document.getElementById('modalForgot');
+        const modalReset      = document.getElementById('modalReset');
+        const forgotLink      = document.getElementById('forgotPasswordLink');
+        const closeModalForgot = document.getElementById('closeModalForgot');
+        const backToLogin     = document.getElementById('backToLogin');
+
+        function openModal(modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        forgotLink.addEventListener('click', () => {
+            document.getElementById('forgotMessage').innerHTML = '';
+            document.getElementById('forgotEmail').value = '';
+            document.getElementById('forgotForm').style.display = '';
+            openModal(modalForgot);
+        });
+
+        closeModalForgot.addEventListener('click', () => closeModal(modalForgot));
+        backToLogin.addEventListener('click',     () => closeModal(modalForgot));
+
+        // Cerrar al hacer clic fuera del card
+        modalForgot.addEventListener('click', (e) => {
+            if (e.target === modalForgot) closeModal(modalForgot);
+        });
+        modalReset.addEventListener('click',  (e) => {
+            if (e.target === modalReset) closeModal(modalReset);
+        });
+
+        // Tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal(modalForgot);
+                closeModal(modalReset);
+            }
+        });
+
+        // ── Formulario: Solicitar Reset ───────────────────────────────────
+        document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const forgotBtn    = document.getElementById('forgotBtn');
+            const forgotBtnTxt = document.getElementById('forgotBtnText');
+            const msgEl        = document.getElementById('forgotMessage');
+            const email        = document.getElementById('forgotEmail').value.trim();
+
+            forgotBtn.disabled = true;
+            forgotBtnTxt.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i>Enviando...';
+            msgEl.innerHTML = '';
+
+            try {
+                const res  = await fetch('../api/auth/forgot-password.php', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ email })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showMessage(msgEl,
+                        '✅ Si el correo está registrado, recibirás las instrucciones en breve. Revisa tu bandeja (y la carpeta de spam).',
+                        'success'
+                    );
+                    // Ocultar el form para evitar reenvíos
+                    document.getElementById('forgotForm').style.display = 'none';
+                } else {
+                    showMessage(msgEl, data.message || 'Ocurrió un error. Intenta nuevamente.', 'error');
+                }
+            } catch (err) {
+                console.error('Error forgot-password:', err);
+                showMessage(msgEl, 'Error de conexión. Intenta nuevamente.', 'error');
+            } finally {
+                forgotBtn.disabled = false;
+                forgotBtnTxt.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Enviar Enlace';
+            }
+        });
+
+        // ── Validar token de reset (desde URL) ────────────────────────────
+        async function validarTokenReset(token) {
+            try {
+                const res  = await fetch(`../api/auth/reset-password.php?token=${encodeURIComponent(token)}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    document.getElementById('resetToken').value = token;
+                    openModal(modalReset);
+                    // Limpiar el token de la URL para evitar reuso accidental
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    showMessage(messageContainer,
+                        '❌ El enlace de recuperación no es válido o ha expirado. Solicita uno nuevo.',
+                        'error'
+                    );
+                }
+            } catch (err) {
+                console.error('Error validando token:', err);
+            }
+        }
+
+        // ── Formulario: Nueva Contraseña ──────────────────────────────────
+        const newPasswordInput = document.getElementById('newPassword');
+        newPasswordInput.addEventListener('input', () => updateStrength(newPasswordInput.value));
+
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const resetBtn    = document.getElementById('resetBtn');
+            const resetBtnTxt = document.getElementById('resetBtnText');
+            const msgEl       = document.getElementById('resetMessage');
+            const token       = document.getElementById('resetToken').value;
+            const password    = document.getElementById('newPassword').value;
+            const confirm     = document.getElementById('confirmPassword').value;
+
+            if (password !== confirm) {
+                showMessage(msgEl, '❌ Las contraseñas no coinciden.', 'error');
+                return;
             }
 
-            function siguienteSlide() {
-                const nextIndex = (currentSlide + 1) % banners.length;
-                console.log(`Cambiando de slide ${currentSlide} a ${nextIndex}`);
-                cambiarSlide(nextIndex);
-            }
+            resetBtn.disabled = true;
+            resetBtnTxt.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i>Guardando...';
+            msgEl.innerHTML = '';
 
-            function iniciarAutoplay() {
-                // Limpiar intervalo anterior si existe
-                if (carouselInterval) {
-                    clearInterval(carouselInterval);
+            try {
+                const res  = await fetch('../api/auth/reset-password.php', {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ token, password, password_confirm: confirm })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showMessage(msgEl, '✅ ¡Contraseña actualizada! Ahora puedes iniciar sesión.', 'success');
+                    document.getElementById('resetForm').style.display = 'none';
+                    setTimeout(() => closeModal(modalReset), 2500);
+                } else {
+                    showMessage(msgEl, data.message || 'Error al actualizar. Intenta nuevamente.', 'error');
                 }
-
-                if (banners.length > 1) {
-                    console.log('Autoplay activado: cambio cada 5 segundos');
-                    carouselInterval = setInterval(siguienteSlide, 5000); // Cambiar cada 5 segundos
-                }
+            } catch (err) {
+                console.error('Error reset-password:', err);
+                showMessage(msgEl, 'Error de conexión. Intenta nuevamente.', 'error');
+            } finally {
+                resetBtn.disabled = false;
+                resetBtnTxt.innerHTML = '<i class="fas fa-check mr-2"></i>Guardar Nueva Contraseña';
             }
+        });
 
-            function detenerAutoplay() {
-                if (carouselInterval) {
-                    clearInterval(carouselInterval);
-                    carouselInterval = null;
-                }
-            }
-
-            // Pausar autoplay cuando el usuario interactúa
-            document.getElementById('bannerCarousel')?.addEventListener('mouseenter', detenerAutoplay);
-            document.getElementById('bannerCarousel')?.addEventListener('mouseleave', iniciarAutoplay);
-
-            // Función para acceder como visitante
-            window.accederComoVisitante = function () {
-                console.log('🔍 Accediendo como visitante...');
-
-                // Crear sesión de visitante en localStorage
-                localStorage.setItem('visitante_mode', 'true');
-                localStorage.setItem('visitante_timestamp', Date.now());
-
-                // Mostrar loading en el botón
-                const visitanteBtn = document.getElementById('visitanteBtn');
-                const originalContent = visitanteBtn.innerHTML;
-                visitanteBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Accediendo...';
-                visitanteBtn.disabled = true;
-
-                // Redirigir a la página principal de visitante después de un delay
-                setTimeout(() => {
-                    window.location.href = '../visitante.html';
-                }, 800);
+        // ── Helpers ────────────────────────────────────────────────────────
+        function showMessage(container, msg, type) {
+            const styles = {
+                success: 'background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d;',
+                error:   'background: rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.5); color:#ef4444;'
             };
+            container.innerHTML = `<div style="${styles[type] || styles.error} padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; line-height: 1.5;">${msg}</div>`;
+        }
 
-            // Sidebar functionality
-            function initializeSidebar() {
-                const sidebar = document.querySelector('.porsche-sidebar');
-                const overlay = document.getElementById('sidenavOverlay');
-                const mobileToggle = document.getElementById('mobileToggle');
+        function updateStrength(password) {
+            const bar   = document.getElementById('strengthBar');
+            const label = document.getElementById('strengthLabel');
+            let score   = 0;
+            if (password.length >= 8)         score++;
+            if (/[A-Z]/.test(password))       score++;
+            if (/[a-z]/.test(password))       score++;
+            if (/[0-9]/.test(password))       score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
 
-                if (!sidebar || !overlay || !mobileToggle) {
-                    console.log('Sidebar elements not found');
-                    return;
-                }
-
-                // Toggle sidebar function
-                function toggleSidebar() {
-                    const isVisible = sidebar.classList.contains('sidenav-show');
-
-                    if (isVisible) {
-                        closeSidebar();
-                    } else {
-                        openSidebar();
-                    }
-                }
-
-                function openSidebar() {
-                    sidebar.classList.add('sidenav-show');
-                    sidebar.setAttribute('aria-expanded', 'true');
-                    overlay.classList.add('show');
-                }
-
-                function closeSidebar() {
-                    sidebar.classList.remove('sidenav-show');
-                    sidebar.setAttribute('aria-expanded', 'false');
-                    overlay.classList.remove('show');
-                }
-
-                // Event listeners
-                mobileToggle.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    toggleSidebar();
-                });
-
-                // Close sidebar when clicking overlay
-                overlay.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    closeSidebar();
-                });
-
-                // Close sidebar on ESC key
-                document.addEventListener('keydown', function (e) {
-                    if (e.key === 'Escape') {
-                        closeSidebar();
-                    }
-                });
-
-                console.log('✅ Sidebar functionality initialized');
-            }
-        </script>
-
-        <!-- JWT Manager -->
-        <script src="../assets/js/jwt-manager.js"></script>
-        <script src="../assets/js/token-refresh-worker.js"></script>
-
-        <!-- plugin for scrollbar -->
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
-        <!-- main script file -->
-        <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+            const levels = [
+                { pct: '0%',   color: '#e2e8f0', text: '' },
+                { pct: '25%',  color: '#ef4444', text: 'Muy débil' },
+                { pct: '50%',  color: '#f97316', text: 'Débil' },
+                { pct: '75%',  color: '#eab308', text: 'Aceptable' },
+                { pct: '90%',  color: '#22c55e', text: 'Fuerte' },
+                { pct: '100%', color: '#16a34a', text: '¡Excelente!' }
+            ];
+            const lvl    = levels[score] || levels[0];
+            bar.style.width           = lvl.pct;
+            bar.style.backgroundColor = lvl.color;
+            if (label) { label.textContent = lvl.text; label.style.color = lvl.color; }
+        }
+    });
+    </script>
 </body>
 
 </html>
+<script src="../assets/js/loading-screen.js"></script>
