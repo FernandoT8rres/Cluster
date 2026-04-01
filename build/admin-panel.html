@@ -21,782 +21,345 @@
     <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- Main Styling -->
     <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
-
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- FullCalendar v6 -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/es.global.min.js'></script>
     <style>
-        /* Porsche-inspired Design System */
+        /* 
+        =================================================================
+        CLAUT PREMIUM DESIGN SYSTEM - PORSCHE INSPIRED (V3.0)
+        Optimizado para rendimiento, legibilidad y estética de élite.
+        ================================================================= 
+        */
         :root {
-            /* Primary Colors - Inspired by Porsche */
-            --porsche-black: #1a1a1a;
-            --porsche-charcoal: #2d2d2d;
-            --porsche-silver: #8a8a8a;
-            --porsche-white: #ffffff;
-            --porsche-light-gray: #f5f5f5;
-            --porsche-accent: #c9302c;
-            /* Clúster red for brand consistency */
-            /* Typography */
-            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --porsche-font-weight-light: 300;
-            --porsche-font-weight-regular: 400;
-            --porsche-font-weight-medium: 500;
-            --porsche-font-weight-semibold: 600;
-            --porsche-font-weight-bold: 700;
-            /* Spacing */
-            --porsche-space-xs: 0.5rem;
-            --porsche-space-sm: 1rem;
-            --porsche-space-md: 1.5rem;
-            --porsche-space-lg: 2rem;
-            --porsche-space-xl: 3rem;
-            /* Shadows */
-            --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
-            /* Border Radius */
-            --porsche-radius-sm: 4px;
-            --porsche-radius-md: 8px;
-            --porsche-radius-lg: 12px;
-            --porsche-radius-xl: 16px;
+            /* Porsche Elite Dark Neon Palette */
+            --porsche-black: #09090b;
+            --porsche-anthracite: #18181b;
+            --porsche-charcoal: #27272a;
+            --porsche-accent: #C7252B;
+            /* Neon Orange Precision */
+            --porsche-accent-glow: rgba(199, 37, 43, 0.4);
+            --porsche-slate-50: #f8fafc;
+            --porsche-slate-400: #94a3b8;
+            --porsche-slate-700: #334155;
+            --porsche-slate-800: #1e293b;
+
+            /* Advanced Liquid Glass */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+            --porsche-font: 'Inter', system-ui, -apple-system, sans-serif;
+            --sidebar-width: 280px;
+            --porsche-radius: 24px;
         }
 
-        /* Global Typography Enhancement */
+        /* Essential Resets & Dark Mode base */
         * {
-            font-family: var(--porsche-font) !important;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-weight: var(--porsche-font-weight-regular);
-            line-height: 1.6;
-            letter-spacing: -0.01em;
-            background: linear-gradient(135deg, var(--porsche-light-gray) 0%, var(--porsche-white) 100%);
+            font-family: var(--porsche-font);
+            background-color: var(--porsche-black);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.2) 0px, transparent 50%);
+            color: var(--porsche-slate-50);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Porsche-inspired Sidebar */
+        /* --- SIDEBAR ELITE --- */
         .porsche-sidebar {
-            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
-            border-radius: var(--porsche-radius-lg) !important;
-            box-shadow: var(--porsche-shadow-large) !important;
-            height: calc(100vh - 2rem) !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
+            background: var(--porsche-black) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 50;
         }
 
-        .porsche-sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .porsche-sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .porsche-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-        }
-
-        .porsche-sidebar .porsche-logo {
-            color: var(--porsche-white) !important;
-            font-weight: var(--porsche-font-weight-bold) !important;
-            font-size: 1.5rem !important;
-            letter-spacing: -0.02em !important;
+        .porsche-logo-container {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 1rem;
         }
 
         .porsche-nav-item {
-            color: rgba(255, 255, 255, 0.8) !important;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            border-radius: var(--porsche-radius-md) !important;
-            margin: var(--porsche-space-xs) 0 !important;
-        }
-
-        .porsche-nav-item:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
-            color: var(--porsche-white) !important;
-            transform: translateX(4px) !important;
-        }
-
-        .porsche-nav-item.active-nav,
-        .porsche-nav-item.active {
-            background: var(--porsche-accent) !important;
-            color: var(--porsche-white) !important;
-        }
-
-        /* Porsche-inspired Card System */
-        .porsche-card,
-        .admin-section {
-            background: var(--porsche-white);
-            border-radius: var(--porsche-radius-lg);
-            box-shadow: var(--porsche-shadow-medium);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--porsche-slate-400);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
-            padding: var(--porsche-space-lg);
-            margin-bottom: var(--porsche-space-lg);
         }
 
-        .porsche-card::before,
-        .admin-section::before {
+        .porsche-nav-item i {
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .porsche-nav-item:hover,
+        .porsche-nav-item.active {
+            color: #fff;
+            background: rgba(249, 115, 22, 0.05);
+        }
+
+        .porsche-nav-item.active::before {
             content: '';
             position: absolute;
-            top: 0;
             left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--porsche-accent);
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 15px var(--porsche-accent);
         }
 
-        .porsche-card:hover,
-        .admin-section:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--porsche-shadow-large);
+        .porsche-nav-item.active i {
+            color: var(--porsche-accent);
+            filter: drop-shadow(0 0 5px var(--porsche-accent-glow));
         }
 
-        .porsche-card:hover::before,
-        .admin-section:hover::before {
-            opacity: 1;
+        /* --- CONTENT WRAPPER --- */
+        .main-content {
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        /* Liquid Glass Statistics Cards */
-        .stat-card {
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.1),
-                    rgba(255, 255, 255, 0.05));
+        /* --- NAVBAR BLUR --- */
+        .top-navbar {
+            background: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            margin: 1.5rem;
+            position: sticky;
+            top: 1.5rem;
+            z-index: 40;
+        }
+
+        /* --- CARDS & STATS (LIQUID GLASS) --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--porsche-radius);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 120px;
             position: relative;
             overflow: hidden;
-            padding: 0.75rem;
-            text-align: center;
-            min-height: 80px;
-            width: 100%;
         }
 
-        .stat-card::before {
-            content: '';
+        .stat-card i {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            right: -10px;
+            bottom: -10px;
+            font-size: 4rem;
+            opacity: 0.05;
+            transition: all 0.5s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow:
-                0 20px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+        .stat-card:hover i {
+            transform: scale(1.2) rotate(-10deg);
+            opacity: 0.08;
         }
 
-        .stat-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .stat-card h3,
-        .stat-card .text-3xl {
-            font-size: 1.5rem;
-            font-weight: var(--porsche-font-weight-bold);
-            color: rgba(0, 0, 0, 0.9);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-            letter-spacing: -0.03em;
+        .stat-card .value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--porsche-slate-800);
+            letter-spacing: -0.05em;
             line-height: 1;
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--porsche-slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             margin-bottom: 0.25rem;
         }
 
-        .stat-card p,
-        .stat-card .text-sm {
-            font-size: 0.75rem;
-            font-weight: var(--porsche-font-weight-medium);
-            color: rgba(0, 0, 0, 0.7);
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .stat-card.users::before {
-            background: linear-gradient(90deg, #f093fb, #f5576c);
-        }
-
-        .stat-card.companies::before {
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
-        }
-
-        .stat-card.events::before {
-            background: linear-gradient(90deg, #43e97b, #38f9d7);
-        }
-
-        .stat-card.bulletins::before {
-            background: linear-gradient(90deg, #fa709a, #fee140);
-        }
-
-        .stat-card.documents::before {
-            background: linear-gradient(90deg, #6366f1, #4f46e5);
-        }
-
-        .stat-card.discounts::before {
-            background: linear-gradient(90deg, #e53e3e, #c53030);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .table-row:hover {
-            background-color: var(--porsche-light-gray);
-            transform: translateX(2px);
-            transition: all 0.2s ease;
-        }
-
-        .badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .badge.admin {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .badge.empresa {
-            background: #dbeafe;
-            color: #2563eb;
-        }
-
-        .badge.empleado {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .badge.activo {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .badge.inactivo {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            border: none;
-            cursor: pointer;
-            margin: 0 2px;
-        }
-
-        .action-btn.edit {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .action-btn.delete {
-            background: #ef4444;
-            color: white;
-        }
-
-        .action-btn.view {
-            background: #6b7280;
-            color: white;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .alert.success {
-            background: #dcfce7;
-            color: #16a34a;
-            border: 1px solid #bbf7d0;
-        }
-
-        .alert.error {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-
-        .alert.warning {
-            background: #fef3c7;
-            color: #d97706;
-            border: 1px solid #fde68a;
-        }
-
-        /* Estilos para secciones */
-        .section {
-            display: block;
-            width: 100%;
-            padding: 20px;
-        }
-
-        .section.hidden {
-            display: none !important;
-        }
-
-        /* Mejoras al layout principal */
-        .main-content {
-            margin-left: 16rem;
-            padding: 1rem;
-            width: calc(100% - 16rem);
-            overflow-x: hidden;
-            position: relative;
-            z-index: 10;
-        }
-
-        @media (max-width: 1200px) {
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 1rem;
-            }
-        }
-
-        /* Asegurar que el sidebar no interfiera */
-        aside {
-            z-index: 30;
-        }
-
-        /* Corregir posicionamiento en pantallas grandes */
-        @media (min-width: 1200px) {
-            aside {
-                position: fixed;
-                left: 1rem;
-                top: 1rem;
-                width: 15rem;
-                height: calc(100vh - 2rem);
-                transform: translateX(0) !important;
-            }
-        }
-
-        /* Overlay para móviles */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 20;
-        }
-
-        /* Mostrar overlay en móviles cuando sidebar está abierto */
-        @media (max-width: 1199px) {
-            aside:not(.-translate-x-full)+.sidebar-overlay {
-                display: block;
-            }
-        }
-
-        /* Asegurar que el contenido sea visible */
-        .section {
-            background: #f8fafc;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Contenedor de estadísticas */
-        .admin-section {
-            background: transparent;
-            margin-bottom: 2rem;
-        }
-
-        /* Asegurar visibilidad de los módulos */
-
-        /* Estilos mejorados para módulos */
+        /* --- MODULE CARDS --- */
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-            padding: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
 
         .module-card {
-            position: relative;
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.15),
-                    rgba(255, 255, 255, 0.08));
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow:
-                0 12px 40px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            background: var(--porsche-anthracite);
+            padding: 2.5rem;
+            border-radius: var(--porsche-radius);
+            border: 1px solid var(--glass-border);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
             overflow: hidden;
-            padding: 2rem;
-            z-index: 2;
-        }
-
-        .module-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg,
-                    rgba(99, 102, 241, 0.8),
-                    rgba(139, 92, 246, 0.8),
-                    rgba(59, 130, 246, 0.8));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .module-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.18),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.25),
-                    rgba(255, 255, 255, 0.12));
+            border-color: var(--porsche-accent);
+            box-shadow: 0 0 40px var(--porsche-accent-glow);
+            transform: translateY(-5px);
         }
 
-        .module-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .module-icon {
+        .module-icon-box {
             width: 64px;
             height: 64px;
-            border-radius: 12px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 1.5rem;
-            color: white;
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--porsche-accent);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
         }
 
-        .module-title {
-            font-size: 1.25rem;
+        .module-card:hover .module-icon-box {
+            background: var(--porsche-accent);
+            color: #fff;
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        /* --- BUTTONS --- */
+        .porsche-btn {
+            background: var(--porsche-accent);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 14px;
             font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.75rem;
-            color: rgba(31, 41, 55, 0.95);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-            letter-spacing: -0.02em;
-        }
-
-        .module-description {
-            font-size: 0.9rem;
-            color: rgba(107, 114, 128, 0.9);
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-            text-align: center;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .module-button {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
             border: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        /* Porsche-inspired Buttons */
-        .porsche-btn {
-            background: var(--porsche-black);
-            color: var(--porsche-white);
-            border: none;
-            border-radius: var(--porsche-radius-sm);
-            padding: var(--porsche-space-xs) var(--porsche-space-md);
-            font-size: 0.875rem;
-            font-weight: var(--porsche-font-weight-medium);
-            letter-spacing: 0.025em;
-            text-transform: uppercase;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            gap: 10px;
+            box-shadow: 0 0 20px var(--porsche-accent-glow);
         }
 
         .porsche-btn:hover {
-            background: var(--porsche-charcoal);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 0 30px var(--porsche-accent-glow);
         }
 
-        .porsche-btn-accent {
-            background: var(--porsche-accent);
-            color: var(--porsche-white);
+        /* --- SKELETON LOADING --- */
+        .skeleton {
+            background: linear-gradient(90deg, var(--white/5) 25%, var(--white/10) 50%, var(--white/5) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 8px;
         }
 
-        .porsche-btn-accent:hover {
-            background: #b12a28;
-        }
-
-        /* Porsche-inspired Animations */
-        @keyframes porscheSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes porscheShimmer {
+        @keyframes skeleton-loading {
             0% {
-                background-position: -200% 0;
+                background-position: 200% 0;
             }
 
             100% {
-                background-position: 200% 0;
+                background-position: -200% 0;
             }
         }
 
-        .porsche-slideIn {
-            animation: porscheSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* --- UTILITIES --- */
+        .neon-orange-text {
+            color: var(--porsche-accent);
+            text-shadow: 0 0 10px var(--porsche-accent-glow);
+            font-weight: 700;
         }
 
-        /* Porsche-inspired Layout System */
-        .porsche-layout {
-            background: linear-gradient(135deg, var(--porsche-light-gray) 0%, var(--porsche-white) 100%);
-            min-height: 100vh;
+        /* --- RESPONSIVE --- */
+        @media (min-width: 1280px) {
+            .porsche-sidebar {
+                width: var(--sidebar-width) !important;
+                left: 0;
+                position: fixed;
+                height: 100vh;
+            }
+
+            .main-content {
+                margin-left: var(--sidebar-width);
+            }
         }
 
-        .porsche-main {
-            background: var(--porsche-white);
-            border-radius: var(--porsche-radius-xl);
-            box-shadow: var(--porsche-shadow-medium);
-            margin: var(--porsche-space-sm);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        @media (max-width: 1279px) {
+            .porsche-sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                height: 100vh;
+                width: 280px;
+            }
+
+            .porsche-sidebar.sidenav-show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
         }
 
-        /* Enhanced Action Buttons with Porsche Style */
-        .action-btn {
-            background: var(--porsche-charcoal);
-            color: var(--porsche-white);
-            border: none;
-            border-radius: var(--porsche-radius-sm);
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: var(--porsche-font-weight-medium);
-            cursor: pointer;
-            margin: 0 2px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        .sidenav-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 45;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
 
-        .action-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--porsche-shadow-medium);
+        .sidenav-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .action-btn.edit {
-            background: #3b82f6;
-        }
-
-        .action-btn.delete {
-            background: var(--porsche-accent);
-        }
-
-        .action-btn.view {
-            background: var(--porsche-silver);
-        }
-
-        /* FontAwesome Icon Fixes */
-        .fas,
-        .far,
-        .fab {
-            font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro" !important;
-            font-weight: 900 !important;
-            font-style: normal !important;
-            font-variant: normal !important;
-            text-rendering: auto !important;
-            line-height: 1 !important;
-        }
-
-        .far {
-            font-weight: 400 !important;
-        }
-
-        .fab {
-            font-weight: 400 !important;
-            font-family: "Font Awesome 6 Brands" !important;
-        }
-
-        /* Icon sizes for consistency */
-        .fas.fa-times {
-            font-size: 16px !important;
-        }
-
-        .fas.fa-sign-out-alt {
-            font-size: 16px !important;
-        }
-
-        .fas.fa-plus {
-            font-size: 14px !important;
-        }
-
-        /* Sidebar icon styles */
-        .porsche-sidebar .fas {
-            font-size: 16px !important;
-        }
-
-        /* FontAwesome icon fallbacks with Unicode */
-        .fas.fa-users::before {
-            content: "\f0c0" !important;
-        }
-
-        .fas.fa-building::before {
-            content: "\f1ad" !important;
-        }
-
-        .fas.fa-user-cog::before {
-            content: "\f4fe" !important;
-        }
-
-        .fas.fa-tachometer-alt::before {
-            content: "\f3fd" !important;
-        }
-
-        .fas.fa-calendar-alt::before {
-            content: "\f073" !important;
-        }
-
-        .fas.fa-newspaper::before {
-            content: "\f1ea" !important;
-        }
-
-        .fas.fa-sign-out-alt::before {
-            content: "\f2f5" !important;
-        }
-
-        .fas.fa-times::before {
-            content: "\f00d" !important;
-        }
-
-        .fas.fa-plus::before {
-            content: "\f067" !important;
-        }
-
-        /* Force FontAwesome font loading */
-        @font-face {
-            font-family: 'Font Awesome 6 Free';
-            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2') format('woff2');
-            font-weight: 900;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* Specific icon fixes */
+        /* Icon fixes */
         .sidebar-icon-users::before {
             content: "\f0c0";
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            color: #10b981;
         }
 
         .sidebar-icon-building::before {
             content: "\f1ad";
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            color: #8b5cf6;
         }
 
-        .sidebar-icon-user-cog::before {
-            content: "\f4fe";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            color: #6b7280;
+        .reveal-anim {
+            opacity: 0;
+            transform: translateY(10px);
         }
 
         /* Fallback icon detection */
@@ -1353,6 +916,130 @@
                 color: #9ca3af !important;
             }
         }
+
+        /* --- CALENDAR PREMIUM UI --- */
+        .porsche-calendar-ui .fc-header-toolbar {
+            margin-bottom: 2rem !important;
+        }
+
+        .porsche-calendar-ui .fc-button {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: white !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            font-size: 0.75rem !important;
+            border-radius: 12px !important;
+            padding: 0.6rem 1.2rem !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .porsche-calendar-ui .fc-button-primary:not(:disabled).fc-button-active,
+        .porsche-calendar-ui .fc-button-primary:hover {
+            background: #C7252B !important;
+            border-color: #C7252B !important;
+            box-shadow: 0 0 20px rgba(199, 37, 43, 0.3) !important;
+        }
+
+        .porsche-calendar-ui .fc-daygrid-day {
+            background: rgba(255, 255, 255, 0.01) !important;
+            border-color: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .porsche-calendar-ui .fc-daygrid-day:hover {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .porsche-calendar-ui .fc-col-header-cell {
+            padding: 1.2rem 0 !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            color: #94a3b8 !important;
+            font-size: 0.65rem !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
+            border-color: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .porsche-calendar-ui .fc-day-today {
+            background: rgba(199, 37, 43, 0.05) !important;
+        }
+
+        .porsche-calendar-ui .fc-event {
+            border-radius: 8px !important;
+            padding: 4px 8px !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            border: none !important;
+            cursor: pointer !important;
+            transition: transform 0.2s ease !important;
+        }
+
+        .porsche-calendar-ui .fc-event:hover {
+            transform: scale(1.02) !important;
+        }
+
+        .porsche-calendar-ui .fc-scrollgrid {
+            border-color: rgba(255, 255, 255, 0.05) !important;
+            border-radius: 16px !important;
+            overflow: hidden !important;
+        }
+
+        .porsche-calendar-ui .fc-daygrid-day-number {
+            color: #fff !important;
+            font-weight: 600 !important;
+            font-size: 0.8rem !important;
+            padding: 10px !important;
+        }
+
+        .porsche-calendar-ui .fc-daygrid-day-top {
+            flex-direction: row !important;
+        }
+        /* ====== EMAIL CONTROL PANEL TOGGLES ====== */
+        .email-toggle-track {
+            width: 52px; height: 28px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s cubic-bezier(0.4,0,0.2,1);
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        .email-toggle-track.on  { background: linear-gradient(135deg,#C7252B,#e8464b); border-color: #C7252B; box-shadow: 0 0 12px rgba(199,37,43,0.4); }
+        .email-toggle-thumb {
+            width: 20px; height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px; left: 4px;
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .email-toggle-track.on .email-toggle-thumb { transform: translateX(24px); }
+        .email-config-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(12px);
+        }
+        .email-config-card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        .email-config-card.card-active { border-color: rgba(199,37,43,0.3); box-shadow: 0 4px 20px rgba(199,37,43,0.1); }
+        .email-dest-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+            background: rgba(255,255,255,0.06); color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .email-dest-badge.dest-admin { background: rgba(168,85,247,0.15); color: #c084fc; border-color: rgba(168,85,247,0.2); }
+        .email-dest-badge.dest-todos { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+        .email-dest-badge.dest-dest { background: rgba(16,185,129,0.15); color: #34d399; border-color: rgba(16,185,129,0.2); }
     </style>
 </head>
 
@@ -1360,137 +1047,76 @@
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidenav-overlay" id="sidenavOverlay"></div>
 
-    <!-- Sidebar -->
-    <aside
-        class="porsche-sidebar sidebar-enhanced fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 m-0 overflow-y-auto overflow-x-hidden antialiased transition-transform duration-200 border-0 max-w-64 ease-nav-brand z-990 xl:ml-6 xl:left-0 xl:translate-x-0 scroll-enhanced"
-        aria-expanded="false">
-        <div class="h-24 py-4 relative">
-            <!-- Botón de cerrar para móvil -->
-            <button class="xl:hidden absolute top-2 right-2 text-white hover:text-gray-300 text-2xl z-50 p-2"
-                id="sidebarCloseBtn" sidenav-close aria-label="Cerrar menú">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <a class="porsche-logo block px-8 m-0 text-center whitespace-nowrap" href="dashboard.html" target="_blank">
-                <img src="./assets/img/apple-icon.png"
-                    class="block mx-auto h-20 w-20 max-w-full transition-all duration-200 ease-nav-brand mb-3"
-                    alt="main_logo" />
-                <span class="block text-sm transition-all duration-200 ease-nav-brand text-white font-medium">Clúster
-                    Admin</span>
-            </a>
-        </div>
-
-        <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
-
-        <div class="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
-            <ul class="flex flex-col pl-0 mb-0">
-                <!-- Dashboard -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="dashboard.html" onclick="showSection('dashboard')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-tachometer-alt text-blue-500"></i>
+    <!-- Sidebar Elite -->
+    <aside class="porsche-sidebar fixed inset-y-0 flex flex-col justify-between" id="sidebar">
+        <div>
+            <div class="px-8 py-10 flex flex-col gap-6">
+                <div class="flex items-center gap-4">
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-orange-400 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200">
                         </div>
-                        <span class="ml-1 duration-300 opacity-100">Dashboard</span>
-                    </a>
-                </li>
-
-                <!-- Usuarios -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="gestionar_usuarios.php" onclick="showSection('users')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-users text-green-500 sidebar-icon-users icon-primary"></i>
-                            <span class="text-green-500 font-bold text-lg icon-fallback"></span>
+                        <div
+                            class="relative w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10 shadow-2xl overflow-hidden">
+                            <img src="./assets/img/logo-ct.png" alt="Logo" class="w-8 h-8 object-contain">
                         </div>
-                        <span class="ml-1 duration-300 opacity-100">Usuarios</span>
-                    </a>
-                </li>
-
-                <!-- Empresas -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="demo_empresas.html" onclick="showSection('companies')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-building text-purple-500 sidebar-icon-building icon-primary"></i>
-                            <span class="text-purple-500 font-bold text-lg icon-fallback"></span>
-                        </div>
-                        <span class="ml-1 duration-300 opacity-100">Empresas</span>
-                    </a>
-                </li>
-
-                <!-- Eventos -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="demo_evento.html" onclick="showSection('events')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-calendar-alt text-orange-500"></i>
-                        </div>
-                        <span class="ml-1 duration-300 opacity-100">Eventos</span>
-                    </a>
-                </li>
-
-                <!-- Boletines -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="demo_boletines.html" onclick="showSection('bulletins')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-newspaper text-red-500"></i>
-                        </div>
-                        <span class="ml-1 duration-300 opacity-100">Boletines</span>
-                    </a>
-                </li>
-
-                <!-- Documentos -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="demo_empresas.html" onclick="showSection('companies')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-file text-purple-500 sidebar-icon-building icon-primary"></i>
-                            <span class="text-purple-500 font-bold text-lg icon-fallback"></span>
-                        </div>
-                        <span class="ml-1 duration-300 opacity-100">Documentos</span>
-                    </a>
-                </li>
-
-                <!-- Descuentos -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="demo_descuentos.html" onclick="showSection('discounts')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-tags text-red-500 icon-primary"></i>
-                            <span class="text-red-500 font-bold text-lg icon-fallback"></span>
-                        </div>
-                        <span class="ml-1 duration-300 opacity-100">Descuentos</span>
-                    </a>
-                </li>
-
-                <!-- Perfil -->
-                <li class="mt-0.5 w-full">
-                    <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="profile.html" onclick="showSection('system')">
-                        <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-user-cog text-gray-500 sidebar-icon-user-cog icon-primary"></i>
-                            <span class="text-gray-500 font-bold text-lg icon-fallback"></span>
-                        </div>
-                        <span class="ml-1 duration-300 opacity-100">Perfil</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="mx-4">
-            <button onclick="logout()"
-                class="py-2.7 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors text-red-600 hover:text-red-800">
-                <!-- Icono en cuadro -->
-                <div
-                    class="shadow-soft-2xl mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-white bg-center stroke-0 text-center xl:p-2.5">
-                    <i class="fas fa-sign-out-alt text-red-500" style="font-size: 16px;"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1.5 text-white">
+                            Intranet Admin
+                        </p>
+                    </div>
                 </div>
-                <span class="ml-1 duration-300 opacity-100 pointer-events-none ease-soft">Cerrar Sesión</span>
-            </button>
+                <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+            </div>
+
+            <nav class="mt-4">
+                <a href="admin-panel.html" class="porsche-nav-item active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i>
+                    <span>Panel Admin</span>
+                </a>
+                <a href="dashboard.html" class="porsche-nav-item" onclick="showSection('Admin')">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="gestionar_usuarios.php" class="porsche-nav-item" onclick="showSection('users')">
+                    <i class="fas fa-users"></i>
+                    <span>Usuarios</span>
+                </a>
+                <a href="demo_empresas.html" class="porsche-nav-item" onclick="showSection('companies')">
+                    <i class="fas fa-building"></i>
+                    <span>Empresas</span>
+                </a>
+                <a href="demo_evento.html" class="porsche-nav-item" onclick="showSection('events')">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Eventos</span>
+                </a>
+                <a href="demo_boletines.html" class="porsche-nav-item" onclick="showSection('bulletins')">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Boletines</span>
+                </a>
+                <a href="demo_descuentos.html" class="porsche-nav-item" onclick="showSection('discounts')">
+                    <i class="fas fa-tags"></i>
+                    <span>Descuentos</span>
+                </a>
+                <a href="profile.html" class="porsche-nav-item" onclick="showSection('system')">
+                    <i class="fas fa-gear"></i>
+                    <span>Configuración</span>
+                </a>
+                <a href="#" class="porsche-nav-item" onclick="showSection('email-control'); loadEmailConfig(); return false;" id="nav-email-control">
+                    <i class="fas fa-envelope-open-text"></i>
+                    <span>Correos</span>
+                </a>
+            </nav>
         </div>
 
+        <div class="p-6">
+            <button onclick="logout()"
+                class="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-white/5 text-red-400 hover:bg-neutral-900 transition-all font-bold text-sm">
+                <i class="fas fa-sign-out-alt"></i>
+                Cerrar Sesión
+            </button>
+        </div>
     </aside>
 
     <!-- Sidebar overlay for mobile -->
@@ -1498,31 +1124,31 @@
 
     <!-- Main content -->
     <main class="main-content ease-soft-in-out relative rounded-xl transition-all duration-200">
-        <!-- Navbar -->
-        <nav class="bg-black text-white relative flex flex-wrap items-center justify-between px-0 py-2 mx-6 transition-all shadow-none duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start"
-            navbar-main navbar-scroll="true">
-            <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
-                <div class="flex items-center">
-                    <!-- Hamburger Menu Button for Mobile -->
-                    <button
-                        class="xl:hidden mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md"
-                        sidenav-trigger aria-label="Abrir menú de navegación">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                    <div>
-                        <h6 class="mb-0 font-bold capitalize text-white">Panel de Administración</h6>
-                        <p class="text-sm leading-normal mb-0 text-white">Sistema de gestión completo</p>
-                    </div>
+        <!-- Top Navbar Elite -->
+        <nav class="top-navbar px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button class="xl:hidden p-2 text-slate-800" onclick="openSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <h6 class="text-white font-bold tracking-tight">Panel de Administración</h6>
+                    <p class="text-[10px] uppercase font-bold text-white tracking-widest" id="sectionIndicator">
+                        Vista General</p>
                 </div>
+            </div>
 
-                <div class="flex items-center text-white">
-                    <div class="user-info mr-4" id="adminUserInfo">
-                        <span class="text-sm font-semibold text-white" id="adminUserName">Cargando...</span>
-                        <br>
-                        <span class="text-xs text-gray-500 text-white" id="adminUserRole">Administrador</span>
+            <div class="flex items-center gap-6">
+                <!-- User Profile -->
+                <div class="flex items-center gap-3 pr-2" id="adminUserInfo">
+                    <div class="text-right hidden sm:block">
+                        <span class="block text-sm font-bold text-white leading-tight"
+                            id="adminUserName">Cargando...</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase" id="adminUserRole">Administrador
+                            del Sistema</span>
+                    </div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-500 font-bold">
+                        A
                     </div>
                 </div>
             </div>
@@ -1533,536 +1159,579 @@
             <!-- Alert container -->
             <div id="alertContainer"></div>
 
-            <!-- Dashboard Section -->
-            <div id="dashboard-section" class="section">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold">Estadísticas del Sistema</h2>
-                    <button onclick="refreshStats()" class="porsche-btn porsche-btn-accent" id="refreshStatsBtn">
-                        <i class="fas fa-sync-alt"></i> Actualizar
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- PANEL DE CONTROL DE CORREOS                    -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="email-control-section" class="section hidden">
+
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                    <div>
+                        <h2 class="text-2xl font-black text-white leading-tight flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center shadow-lg shadow-red-600/30">
+                                <i class="fas fa-envelope-open-text text-white text-base"></i>
+                            </span>
+                            Control de Notificaciones por Correo
+                        </h2>
+                        <p class="text-slate-400 text-sm italic opacity-80 mt-1 ml-13">
+                            Activa o desactiva qué eventos generan un correo automático
+                        </p>
+                    </div>
+                    <button onclick="sendTestEmail()" id="btnTestEmail"
+                        class="porsche-btn bg-slate-800 text-white px-6 flex items-center gap-2">
+                        <i class="fas fa-flask"></i> Enviar correo de prueba
                     </button>
                 </div>
-                <div class="stats-grid grid gap-3 mb-6"
-                    style="grid-template-columns: repeat(3, 1fr) !important; display: grid !important;">
-                    <div class="stat-card users">
-                        <div class="flex items-center justify-between">
-                            <div class="text-3xl font-bold" id="totalUsers">
-                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-users text-blue-500"></i>
-                        </div>
-                        <div class="text-sm opacity-80">Total Usuarios</div>
+
+                <!-- Status bar -->
+                <div id="emailConfigStatus" class="hidden mb-6 p-4 rounded-2xl border text-sm font-semibold flex items-center gap-3"></div>
+
+                <!-- Config cards grid -->
+                <div id="emailConfigGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                    <!-- Skeleton loading -->
+                    <div class="glass-card p-6 animate-pulse">
+                        <div class="h-5 bg-white/10 rounded w-3/4 mb-3"></div>
+                        <div class="h-4 bg-white/5 rounded w-full mb-5"></div>
+                        <div class="h-8 bg-white/10 rounded w-1/3"></div>
                     </div>
-                    <div class="stat-card companies">
-                        <div class="flex items-center justify-between">
-                            <div class="text-3xl font-bold" id="totalCompanies">
-                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-building text-green-500"></i>
-                        </div>
-                        <div class="text-sm opacity-80">Empresas Activas</div>
+                    <div class="glass-card p-6 animate-pulse">
+                        <div class="h-5 bg-white/10 rounded w-3/4 mb-3"></div>
+                        <div class="h-4 bg-white/5 rounded w-full mb-5"></div>
+                        <div class="h-8 bg-white/10 rounded w-1/3"></div>
                     </div>
-                    <div class="stat-card events">
-                        <div class="flex items-center justify-between">
-                            <div class="text-3xl font-bold" id="totalEvents">
-                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-calendar text-purple-500"></i>
-                        </div>
-                        <div class="text-sm opacity-80">Eventos</div>
+                    <div class="glass-card p-6 animate-pulse">
+                        <div class="h-5 bg-white/10 rounded w-3/4 mb-3"></div>
+                        <div class="h-4 bg-white/5 rounded w-full mb-5"></div>
+                        <div class="h-8 bg-white/10 rounded w-1/3"></div>
                     </div>
-                    <div class="stat-card bulletins">
-                        <div class="flex items-center justify-between">
-                            <div class="text-3xl font-bold" id="totalBulletins">
-                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-newspaper text-orange-500"></i>
-                        </div>
-                        <div class="text-sm opacity-80">Boletines</div>
-                    </div>
-                    <div class="stat-card documents">
-                        <div class="flex items-center justify-between">
-                            <div class="text-3xl font-bold" id="totalDocuments">
-                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-file-alt text-red-500"></i>
-                        </div>
-                        <div class="text-sm opacity-80">Documentos</div>
-                    </div>
-                    <div class="stat-card discounts">
-                        <div class="flex items-center justify-between">
-                            <div class="text-3xl font-bold" id="totalDiscounts">
-                                <i class="fas fa-spinner fa-spin text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-percent text-yellow-500"></i>
-                        </div>
-                        <div class="text-sm opacity-80">Descuentos</div>
+                    <div class="glass-card p-6 animate-pulse">
+                        <div class="h-5 bg-white/10 rounded w-3/4 mb-3"></div>
+                        <div class="h-4 bg-white/5 rounded w-full mb-5"></div>
+                        <div class="h-8 bg-white/10 rounded w-1/3"></div>
                     </div>
                 </div>
 
+                <!-- Info footer -->
+                <div class="glass-card p-5 border border-white/5 flex items-start gap-4">
+                    <i class="fas fa-circle-info text-blue-400 mt-0.5 text-lg flex-shrink-0"></i>
+                    <div>
+                        <p class="text-white font-bold text-sm mb-1">¿Cómo funciona?</p>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Cuando activas un tipo de notificación, el sistema enviará un correo automático cada vez que ocurra ese evento.
+                            Los cambios se aplican de inmediato. La cuenta de envío es
+                            <span class="text-white font-mono">auxsistemas@clautmetropolitano.mx</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Dashboard Section Premium -->
+            <div id="dashboard-section" class="section">
+                <!-- Módulos de Gestión Premium -->
+                <div class="mb-12">
+                    <h3 class="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                        <i class="fas fa-layer-group text-white"></i>
+                        Ecosistema de Módulos
+                    </h3>
 
-
-                <!-- Módulos de Gestión -->
-                <div class="admin-section mb-8">
-                    <h3 class="text-xl font-bold mb-6">Módulos de Gestión</h3>
-                    <div class="module-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
+                    <div class="module-grid">
                         <!-- Gestión de Banners -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 7h18M3 12h18M3 17h18" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-blue-500">
+                                <i class="fas fa-images"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Banners</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra los banners del carrusel
-                                principal y las imágenes promocionales.</p>
+                            <h4 class="text-lg font-bold text-white mb-2">Visual Branding</h4>
+                            <p class="text-slate-400 text-sm mb-6">Control maestro de carruseles, banners promocionales
+                                e identidad visual del portal.</p>
                             <button onclick="window.open('./admin/banner-admin-mejorado.php', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #3b82f6;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
-                                </svg>
-                                Gestionar Banners
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-pen-to-square"></i> Gestionar Banners
                             </button>
                         </div>
 
                         <!-- Gestión de Boletines -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #10b981, #047857);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21H5a2 2 0 01-2-2V7h18v12a2 2 0 01-2 2zM3 7V5a2 2 0 012-2h2" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-emerald-500">
+                                <i class="fas fa-newspaper"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Boletines</h4>
-                            <p class="module-description text-gray-600 mb-4">Crea y publica boletines informativos para
-                                la comunidad.</p>
+                            <h4 class="text-lg font-bold text-white mb-2">Comunicación</h4>
+                            <p class="text-slate-400 text-sm mb-6">Publicación de boletines informativos y circulares
+                                para la comunidad industrial.</p>
                             <button onclick="window.open('../demo_boletines.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #10b981;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
-                                </svg>
-                                Gestionar Boletines
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-feather"></i> Gestionar Boletines
                             </button>
                         </div>
 
                         <!-- Gestión de Documentos -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-indigo-500">
+                                <i class="fas fa-file-invoice"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Documentos</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra la documentación organizacional
-                                con categorías y permisos.</p>
+                            <h4 class="text-lg font-bold text-white mb-2">Centro Documental</h4>
+                            <p class="text-slate-400 text-sm mb-6">Repositorio cloud de normativa, convenios y
+                                documentos corporativos oficiales.</p>
                             <button onclick="window.open('./demo_documentos.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #6366f1;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
-                                </svg>
-                                Gestionar Documentos
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-folder-open"></i> Gestionar Docs
                             </button>
                         </div>
 
                         <!-- Gestión de Descuentos -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #e53e3e, #c53030);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-red-500">
+                                <i class="fas fa-tags"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Descuentos</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra descuentos empresariales con
-                                códigos promocionales y vigencias.</p>
+                            <h4 class="text-lg font-bold text-white mb-2">Benefits & Perks</h4>
+                            <p class="text-slate-400 text-sm mb-6">Administración de convenios de descuento y beneficios
+                                exclusivos para socios.</p>
                             <button onclick="window.open('./demo_descuentos.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #e53e3e;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                </svg>
-                                Gestionar Descuentos
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-percent"></i> Gestionar Beneficios
                             </button>
                         </div>
 
                         <!-- Gestión de Comités -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M9 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-purple-500">
+                                <i class="fas fa-users-rectangle"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Comités</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra los comités y grupos de trabajo
-                                de la organización.</p>
+                            <h4 class="text-lg font-bold text-white mb-2">Grupos de Trabajo</h4>
+                            <p class="text-slate-400 text-sm mb-6">Coordinación de comités técnicos y mesas directivas
+                                del Clúster Metropolitano.</p>
                             <button onclick="window.open('../demo_comite.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #8b5cf6;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 20h9M3 20h9M12 4v16M3 4h9M15 4h6" />
-                                </svg>
-                                Gestionar Comités
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-network-wired"></i> Gestionar Comités
                             </button>
                         </div>
 
-                        <!-- Gestión de Empresas -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 21h18V8H3v13zM16 3v5m-4-5v5M8 3v5" />
-                                </svg>
+                        <!-- Master Calendar Management -->
+                        <div class="module-card">
+                            <div class="module-icon-box text-red-500">
+                                <i class="fas fa-calendar-days"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Empresas</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra las empresas afiliadas y sus
-                                convenios comerciales.</p>
-                            <button onclick="window.open('../demo_empresas.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #6366f1;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 21h18V8H3v13zM16 3v5m-4-5v5M8 3v5" />
-                                </svg>
-                                Gestionar Empresas
+                            <h4 class="text-lg font-bold text-white mb-2">Master Calendar</h4>
+                            <p class="text-slate-400 text-sm mb-6">Planificación visual 360° de la agenda del Clúster
+                                con interfaz estilo Notion e interactiva.</p>
+                            <button onclick="window.location.href='calendario.html'"
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-desktop"></i> Consola Calendario
+                            </button>
+                        </div>
+
+
+                        <!-- Gestion Empresas -->
+                        <div class="module-card">
+                            <div class="module-icon-box text-red-500">
+                                <i class="fas fa-calendar-days"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-2">Socios</h4>
+                            <p class="text-slate-400 text-sm mb-6">Manten un control de tus socios y sus datos.</p>
+                            <button onclick="window.location.href='empresas-convenio.html'"
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-desktop"></i> Gestionar Socios
                             </button>
                         </div>
 
                         <!-- Gestión de Eventos -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10m-12 8h14V7H4v13z" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-rose-500">
+                                <i class="fas fa-calendar-check"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Eventos</h4>
-                            <p class="module-description text-gray-600 mb-4">Crea y administra eventos, conferencias y
-                                actividades.</p>
+                            <h4 class="text-lg font-bold text-white mb-2">Event Hub</h4>
+                            <p class="text-slate-400 text-sm mb-6">Planificación de asambleas, webinars y eventos
+                                networking de alto nivel.</p>
                             <button onclick="window.open('../demo_evento.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #ef4444;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10m-12 8h14V7H4v13z" />
-                                </svg>
-                                Gestionar Eventos
-                            </button>
-                        </div>
-
-                        <!-- Gestión de Gráficos -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #14b8a6, #0f766e);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 3v18m6-6H5" />
-                                </svg>
-                            </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Gráficos</h4>
-                            <p class="module-description text-gray-600 mb-4">Configura dashboards y visualizaciones de
-                                datos del sistema.</p>
-                            <button onclick="window.open('../demo_gestion_grafico.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #14b8a6;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 3v18m6-6H5" />
-                                </svg>
-                                Gestionar Gráficos
-                            </button>
-                        </div>
-
-                        <!-- Estadísticas Dinámicas -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #f97316, #ea580c);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3" />
-                                </svg>
-                            </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Estadísticas Dinámicas</h4>
-                            <p class="module-description text-gray-600 mb-4">Personaliza las estadísticas del dashboard
-                                principal del sistema.</p>
-                            <button onclick="window.open('../demo_estadisticasdinamicas.html', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #f97316;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4l3 3" />
-                                </svg>
-                                Configurar Estadísticas
+                                class="porsche-btn w-full justify-center">
+                                <i class="fas fa-star"></i> Gestionar Eventos
                             </button>
                         </div>
 
                         <!-- Gestión de Usuarios -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M9 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
+                        <div class="module-card">
+                            <div class="module-icon-box text-cyan-600">
+                                <i class="fas fa-users"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Usuarios</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra usuarios, permisos, roles y
-                                configuraciones de acceso.</p>
-                            <button onclick="window.open('../gestionar_usuarios.php', '_blank')"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #06b6d4;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M9 7a4 4 0 11-8 0 4 4 0 018 0zM21 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                                Gestionar Usuarios
+                            <h4 class="text-lg font-bold text-slate-900 mb-2 text-white">Control de Usuarios</h4>
+                            <p class="text-slate-500 text-sm mb-6">Monitoreo y Control de Accesos y Usuarios</p>
+                            <button onclick="abrirDemoUsuarios()" class="porsche-btn w-full justify-center">
+                                <i class="fas fa-shield-halved"></i> Gestionar Usuarios
                             </button>
                         </div>
 
-                        <!-- Módulo de Gestión de Visitantes -->
-                        <div class="module-card bg-white p-6 rounded-2xl shadow-md text-center" id="gestionVisitantes">
-                            <div class="module-icon mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                                style="background: linear-gradient(135deg, #7c3aed, #5b21b6);">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
+                        <!-- Gestión de Visitantes -->
+                        <div class="module-card">
+                            <div class="module-icon-box text-cyan-600">
+                                <i class="fas fa-user-secret"></i>
                             </div>
-                            <h4 class="module-title text-lg font-semibold mb-2">Gestión de Visitantes</h4>
-                            <p class="module-description text-gray-600 mb-4">Administra el acceso de visitantes y
-                                configura las páginas disponibles</p>
-                            <button onclick="abrirDemoVisitante()"
-                                class="module-button px-4 py-2 rounded-lg shadow text-white font-medium hover:opacity-90 transition"
-                                style="background: #7c3aed;">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                Gestionar Visitantes
+                            <h4 class="text-lg font-bold text-slate-900 mb-2 text-white">Control de Acceso</h4>
+                            <p class="text-slate-500 text-sm mb-6">Monitoreo de perfiles visitantes y configuración de
+                                accesos temporales restringidos.</p>
+                            <button onclick="abrirDemoVisitante()" class="porsche-btn w-full justify-center">
+                                <i class="fas fa-shield-halved"></i> Gestionar Visitantes
                             </button>
                         </div>
+                    </div>
+                </div>
 
+                <!-- Events Section -->
+                <div id="events-section" class="section hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-white leading-tight">Gestión de Eventos</h2>
+                            <p class="text-slate-400 text-sm italic opacity-80">Asambleas, Networking y Capacitaciones
+                            </p>
+                        </div>
+                        <div class="flex gap-3 items-center">
+                            <!-- View Switcher Premium -->
+                            <div class="flex bg-white/5 rounded-xl p-1 border border-white/10 mr-4">
+                                <button onclick="toggleEventView('table')" id="btnViewTable"
+                                    class="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-red-600 text-white shadow-lg shadow-red-600/20">
+                                    <i class="fas fa-list mr-2"></i>Tabla
+                                </button>
+                                <button onclick="toggleEventView('calendar')" id="btnViewCalendar"
+                                    class="px-4 py-2 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-white/5">
+                                    <i class="fas fa-calendar-alt mr-2"></i>Calendario
+                                </button>
+                            </div>
+
+                            <button onclick="openEventModal()" class="porsche-btn bg-slate-900 text-white px-6">
+                                <i class="fas fa-plus-circle"></i> Nuevo Evento
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="glass-card p-6 border-l-4 border-red-500">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total Eventos</p>
+                            <h3 class="text-2xl font-black text-white" id="totalEventos">0</h3>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-blue-500">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Próximos</p>
+                            <h3 class="text-2xl font-black text-white" id="proximosEventos">0</h3>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-emerald-500">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">En Curso</p>
+                            <h3 class="text-2xl font-black text-white" id="enCursoEventos">0</h3>
+                        </div>
+                        <div class="glass-card p-6 border-l-4 border-orange-500">
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Total Registros
+                            </p>
+                            <h3 class="text-2xl font-black text-white" id="totalRegistros">0</h3>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Tabla (Original) -->
+                    <div id="tableViewContainer" class="animate-in fade-in duration-500">
+                        <div class="glass-card p-0 overflow-hidden">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr
+                                            class="bg-white/5 text-slate-400 text-[10px] uppercase font-bold tracking-widest border-b border-white/5">
+                                            <th class="px-6 py-5">Evento</th>
+                                            <th class="px-6 py-5">Fecha / Ubicación</th>
+                                            <th class="px-6 py-5">Tipo / Modalidad</th>
+                                            <th class="px-6 py-5">Capacidad</th>
+                                            <th class="px-6 py-5">Estado</th>
+                                            <th class="px-6 py-5 text-right">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="eventsTableBody">
+                                        <tr>
+                                            <td colspan="6" class="px-6 py-10 text-center">
+                                                <div class="flex justify-center mb-4">
+                                                    <div
+                                                        class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500">
+                                                    </div>
+                                                </div>
+                                                <p class="text-slate-400">Cargando eventos...</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vista de Calendario Visual (1-30 días) -->
+                    <div id="calendarViewContainer"
+                        class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div class="glass-card p-6 min-h-[600px]">
+                            <div id="adminCalendar" class="porsche-calendar-ui text-white"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usuarios Section -->
+                <div id="users-section" class="section">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-white leading-tight">Control de Usuarios</h2>
+                            <p class="text-slate-400 text-sm italic opacity-80">Gestión de accesos, roles y perfiles del
+                                sistema</p>
+                        </div>
+                        <div>
+                            <div class="relative w-full max-w-md">
+                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white"></i>
+                                <input type="text" id="userSearch" placeholder="Buscar socios, colaboradores..."
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-sm text-white focus:ring-2 focus:ring-orange-500 focus:bg-white/10 transition-all outline-none">
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="openUserModal()" class="porsche-btn bg-slate-900 text-white px-6">
+                                <i class="fas fa-user-plus"></i> Nuevo Usuario
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-0 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="bg-white/5 text-slate-400 text-[10px] uppercase font-bold tracking-widest border-b border-white/5">
+                                        <th class="px-6 py-5">Usuario</th>
+                                        <th class="px-6 py-5">Email</th>
+                                        <th class="px-6 py-5">Rol</th>
+                                        <th class="px-6 py-5">Empresa / Socio</th>
+                                        <th class="px-6 py-5">Estado</th>
+                                        <th class="px-6 py-5 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody" class="divide-y divide-white/5">
+                                    <!-- Renderizado vía JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="companies-section" class="section hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-white leading-tight">Directorio de Socios</h2>
+                            <p class="text-slate-400 text-sm italic opacity-80">Empresas afiliadas y convenios vigentes
+                            </p>
+                        </div>
+                        <button onclick="openCompanyModal()" class="porsche-btn bg-slate-900 text-white px-6">
+                            <i class="fas fa-building-circle-check"></i> Registrar Socio
+                        </button>
+                    </div>
+
+                    <div class="glass-card p-0 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="bg-slate-50/50 text-slate-500 text-[10px] uppercase font-bold tracking-widest border-b border-slate-100">
+                                        <th class="px-6 py-4">Empresa</th>
+                                        <th class="px-6 py-4">Categoría</th>
+                                        <th class="px-6 py-4">Beneficio</th>
+                                        <th class="px-6 py-4">Estado</th>
+                                        <th class="px-6 py-4 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="companiesTableBody" class="divide-y divide-slate-100">
+                                    <!-- Renderizado vía JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
 
-                <div class="admin-section">
-                    <h3 class="text-xl font-bold mb-4">Actividad Reciente</h3>
-                    <div id="recentActivity">Cargando actividad...</div>
+                <!-- Boletines Section -->
+                <div id="bulletins-section" class="section hidden">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900 leading-tight">Boletines Informativos</h2>
+                            <p class="text-slate-500 text-sm">Gestión de publicaciones y circulares</p>
+                        </div>
+                        <button onclick="openBulletinModal()" class="porsche-btn bg-slate-900 text-white px-6">
+                            <i class="fas fa-plus"></i> Nuevo Boletín
+                        </button>
+                    </div>
+                    <div id="bulletinsContainer" class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                        <!-- Contenido dinámico -->
+                    </div>
                 </div>
+
+                <!-- Documentos Section -->
+                <div id="documents-section" class="section hidden">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-black text-slate-900 leading-tight">Centro de Documentación</h2>
+                        <p class="text-slate-500 text-sm">Repositorio oficial de activos de la organización</p>
+                    </div>
+                    <div id="documentsContainer">
+                        <!-- Renderizado vía JS -->
+                    </div>
+                </div>
+
+                <!-- Descuentos Section -->
+                <div id="discounts-section" class="section hidden">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-black text-slate-900 leading-tight">Benefits & Perks</h2>
+                        <p class="text-slate-500 text-sm">Administración de programas de beneficios exclusivos</p>
+                    </div>
+                    <div id="discountsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- Contenido dinámico -->
+                    </div>
+                </div>
+
             </div>
 
+            <!-- Portals: Modals High-Fidelity (Neon Dark) -->
+            <div id="userModal" class="modal fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-xl transition-opacity"
+                    onclick="closeUserModal()"></div>
 
+                <div class="relative w-full max-w-2xl bg-zinc-900 rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden reveal-anim-up"
+                    style="opacity: 1;">
+                    <!-- Header Neon -->
+                    <div
+                        class="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-orange-500/10 to-transparent">
+                        <div>
+                            <h3 class="text-2xl font-black text-white" id="userModalTitle">Gestionar Perfil</h3>
+                            <p class="text-[10px] uppercase font-bold text-white tracking-widest mt-1">
+                                Configuración Estándar Elite</p>
+                        </div>
+                        <button onclick="closeUserModal()"
+                            class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="userForm" class="p-10 space-y-8">
+                        <input type="hidden" id="userId">
+
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="text-[11px] uppercase font-black text-slate-400 ml-1">Nombre</label>
+                                <input type="text" id="userNombre" required
+                                    class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white text-sm focus:ring-2 focus:ring-orange-500 focus:bg-white/10 transition-all outline-none">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[11px] uppercase font-black text-slate-400 ml-1">Apellido</label>
+                                <input type="text" id="userApellido" required
+                                    class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white text-sm focus:ring-2 focus:ring-orange-500 focus:bg-white/10 transition-all outline-none">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[11px] uppercase font-black text-slate-400 ml-1">Email
+                                Institucional</label>
+                            <input type="email" id="userEmail" required
+                                class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white text-sm focus:ring-2 focus:ring-orange-500 focus:bg-white/10 transition-all outline-none">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label class="text-[11px] uppercase font-black text-slate-400 ml-1">Acceso &
+                                    Estado</label>
+                                <div class="flex items-center gap-6 bg-white/5 p-5 rounded-2xl border border-white/5">
+                                    <!-- Status Checkbox (Fixed Crowding) -->
+                                    <label class="flex items-center gap-3 cursor-pointer group">
+                                        <div
+                                            class="relative w-12 h-6 bg-slate-700 rounded-full transition-all group-hover:bg-slate-600">
+                                            <input type="checkbox" id="userStatusCheck" class="sr-only peer" checked>
+                                            <div
+                                                class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:left-7 peer-checked:bg-orange-500">
+                                            </div>
+                                        </div>
+                                        <span class="text-xs font-bold text-white">Activo</span>
+                                    </label>
+
+                                    <div class="w-px h-6 bg-white/10"></div>
+
+                                    <label class="flex items-center gap-3 cursor-pointer group">
+                                        <input type="checkbox" id="userAdminCheck"
+                                            class="w-5 h-5 rounded border-white/20 bg-white/5 text-orange-500 focus:ring-orange-500">
+                                        <span class="text-xs font-bold text-white">Admin</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-[11px] uppercase font-black text-slate-400 ml-1">Rol de
+                                    Acceso</label>
+                                <select id="userRol" onchange="toggleUserEmpresaField()"
+                                    class="w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 text-white text-sm focus:ring-2 focus:ring-orange-500 transition-all outline-none appearance-none">
+                                    <option value="user" class="bg-zinc-900">Usuario Estándar</option>
+                                    <option value="empresa" class="bg-zinc-900">Socio / Empresa</option>
+                                    <option value="admin" class="bg-zinc-900">Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-4 pt-6">
+                            <button type="button" onclick="closeUserModal()"
+                                class="px-8 py-4 rounded-2xl text-slate-400 font-bold hover:text-white hover:bg-white/5 transition-all">Cancelar</button>
+                            <button type="submit" id="userSubmitBtn" class="porsche-btn">
+                                Guardar Cambios Elite
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Scripts & Animations (Elite GSAP Engine) -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+            <script src="./js/auth-session.js"></script>
+            <script>
+                // --- GSAP PRE-ENGINE ---
+                document.addEventListener('DOMContentLoaded', () => {
+                    gsap.from(".porsche-sidebar", { x: -100, opacity: 0, duration: 1.2, ease: "expo.out" });
+                    gsap.from(".top-navbar", { y: -50, opacity: 0, delay: 0.3, duration: 1, ease: "expo.out" });
+
+                    // Skeleton Effect Handling (CSS Placeholder)
+                    // Usado durante la carga de fetch
+                });
+
+                function revealSection(id) {
+                    gsap.from(`#${id} > *`, {
+                        y: 30, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power4.out"
+                    });
+                }
+            </script>
 
 
             <!-- Scripts -->
             <script src="./js/auth-session.js"></script>
             <script>
-                // === SIDEBAR RETRACTABLE FUNCTIONALITY ===
-                document.addEventListener('DOMContentLoaded', function () {
-                    initializeSidebar();
-                });
-
-                function initializeSidebar() {
-                    const sidebar = document.querySelector('.porsche-sidebar');
+                // === PORSCHE ELITE - SIDEBAR CORE CONTROLS ===
+                function openSidebar() {
+                    const sidebar = document.getElementById('sidebar');
                     const overlay = document.getElementById('sidenavOverlay');
-                    const hamburgerBtn = document.querySelector('[sidenav-trigger]');
-                    const closeBtn = document.getElementById('sidebarCloseBtn');
-
-                    if (!sidebar || !overlay || !hamburgerBtn) {
-                        console.warn('Sidebar elements not found');
-                        return;
+                    if (sidebar && overlay) {
+                        sidebar.classList.add('sidenav-show');
+                        overlay.classList.add('show');
+                        document.body.style.overflow = 'hidden';
                     }
-
-                    // Toggle sidebar function
-                    function toggleSidebar() {
-                        const isVisible = sidebar.classList.contains('sidenav-show');
-
-                        if (!isVisible) {
-                            // Open sidebar
-                            sidebar.classList.add('sidenav-show');
-                            sidebar.setAttribute('aria-expanded', 'true');
-                            overlay.classList.add('show');
-                            document.body.style.overflow = 'hidden';
-
-                            // Focus management for accessibility
-                            const firstLink = sidebar.querySelector('.porsche-nav-item');
-                            if (firstLink) {
-                                setTimeout(() => firstLink.focus(), 100);
-                            }
-                        } else {
-                            // Close sidebar
-                            closeSidebar();
-                        }
-                    }
-
-                    // Close sidebar function
-                    function closeSidebar() {
-                        sidebar.classList.remove('sidenav-show');
-                        sidebar.setAttribute('aria-expanded', 'false');
-                        overlay.classList.remove('show');
-                        document.body.style.overflow = '';
-
-                        // Return focus to hamburger button
-                        if (hamburgerBtn && window.innerWidth < 1280) {
-                            hamburgerBtn.focus();
-                        }
-                    }
-
-                    // Event listeners
-                    hamburgerBtn.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleSidebar();
-                    });
-
-                    hamburgerBtn.addEventListener('touchstart', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleSidebar();
-                    }, { passive: false });
-
-                    if (overlay) {
-                        overlay.addEventListener('click', closeSidebar);
-                        overlay.addEventListener('touchstart', function (e) {
-                            e.preventDefault();
-                            closeSidebar();
-                        }, { passive: false });
-                    }
-
-                    if (closeBtn) {
-                        closeBtn.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            closeSidebar();
-                        });
-                        closeBtn.addEventListener('touchstart', function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            closeSidebar();
-                        }, { passive: false });
-                    }
-
-                    // Close on escape key
-                    document.addEventListener('keydown', function (e) {
-                        if (e.key === 'Escape') {
-                            closeSidebar();
-                        }
-                    });
-
-                    // Handle window resize
-                    window.addEventListener('resize', function () {
-                        if (window.innerWidth >= 1280) {
-                            closeSidebar();
-                        }
-                    });
-
-                    // Swipe to close functionality
-                    let touchStartX = 0;
-                    let touchStartY = 0;
-
-                    sidebar.addEventListener('touchstart', function (e) {
-                        touchStartX = e.touches[0].clientX;
-                        touchStartY = e.touches[0].clientY;
-                    }, { passive: true });
-
-                    sidebar.addEventListener('touchmove', function (e) {
-                        if (!touchStartX) return;
-
-                        const currentX = e.touches[0].clientX;
-                        const currentY = e.touches[0].clientY;
-                        const diffX = touchStartX - currentX;
-                        const diffY = Math.abs(touchStartY - currentY);
-
-                        // Swipe left to close
-                        if (diffX > 50 && diffY < 100) {
-                            closeSidebar();
-                            touchStartX = 0;
-                            touchStartY = 0;
-                        }
-                    }, { passive: true });
-
-                    // Keyboard navigation in sidebar
-                    sidebar.addEventListener('keydown', function (e) {
-                        if (e.key === 'Escape') {
-                            closeSidebar();
-                        }
-
-                        // Arrow navigation
-                        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            const navItems = Array.from(sidebar.querySelectorAll('.porsche-nav-item:not([style*="display: none"])'));
-                            const currentIndex = navItems.indexOf(document.activeElement);
-
-                            if (e.key === 'ArrowDown') {
-                                const nextIndex = (currentIndex + 1) % navItems.length;
-                                navItems[nextIndex].focus();
-                            } else {
-                                const prevIndex = currentIndex <= 0 ? navItems.length - 1 : currentIndex - 1;
-                                navItems[prevIndex].focus();
-                            }
-                        }
-                    });
-
-                    console.log('✅ Sidebar functionality initialized successfully');
                 }
 
-                // Legacy function compatibility
                 function closeSidebar() {
-                    const sidebar = document.querySelector('.porsche-sidebar');
+                    const sidebar = document.getElementById('sidebar');
                     const overlay = document.getElementById('sidenavOverlay');
-
                     if (sidebar && overlay) {
                         sidebar.classList.remove('sidenav-show');
-                        sidebar.setAttribute('aria-expanded', 'false');
                         overlay.classList.remove('show');
                         document.body.style.overflow = '';
                     }
                 }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Animación de entrada premium para tarjetas
+                    const cards = document.querySelectorAll('.glass-card, .module-card');
+                    cards.forEach((card, index) => {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 100 + (index * 50));
+                    });
+                });
             </script>
             <script>
                 // Icon fallback detection
@@ -2091,11 +1760,7 @@
                 let allUsers = [];
                 let allCompanies = [];
 
-                // Función para cerrar sidebar en móviles
-                function closeSidebar() {
-                    const sidebar = document.querySelector('aside');
-                    sidebar.classList.add('-translate-x-full');
-                }
+                // Función para cerrar sidebar (se usa la global definida arriba)
 
                 // Inicialización
                 document.addEventListener('DOMContentLoaded', function () {
@@ -2191,16 +1856,34 @@
                     document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
 
                     // Mostrar sección seleccionada
-                    document.getElementById(section + '-section').classList.remove('hidden');
-
-                    // Actualizar navegación
-                    document.querySelectorAll('aside a').forEach(a => a.classList.remove('active-nav'));
-                    const activeLink = document.querySelector(`a[href="#${section}"]`);
-                    if (activeLink) {
-                        activeLink.classList.add('active-nav');
+                    const targetSection = document.getElementById(section + '-section');
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                        if (typeof revealSection === 'function') revealSection(section + '-section');
                     }
 
+                    // Actualizar navegación Elite
+                    document.querySelectorAll('.porsche-nav-item').forEach(a => a.classList.remove('active'));
+                    const activeNav = document.querySelector(`.porsche-nav-item[onclick*="'${section}'"]`);
+                    if (activeNav) activeNav.classList.add('active');
+
+                    // Actualizar indicador de sección
+                    const indicatorMap = {
+                        'dashboard': 'Vista General',
+                        'users': 'Gestión de Usuarios',
+                        'companies': 'Directorio de Socios',
+                        'events': 'Calendario de Eventos',
+                        'bulletins': 'Boletines Informativos',
+                        'discounts': 'Benefits & Perks',
+                        'email-control': '📧 Control de Correos',
+                        'system': 'Configuración del Sistema'
+                    };
+                    document.getElementById('sectionIndicator').textContent = indicatorMap[section] || 'Administración';
+
                     currentSection = section;
+
+                    // Cerrar sidebar en móvil después de navegar
+                    if (window.innerWidth < 1280) closeSidebar();
 
                     // Cargar datos según la sección
                     switch (section) {
@@ -2306,7 +1989,6 @@
 
                     } catch (error) {
                         console.error('Error cargando dashboard:', error);
-                        showAlert('Error cargando datos del dashboard', 'error');
                     }
                 }
 
@@ -2540,88 +2222,69 @@
                 }
 
                 // Formulario de usuario
-                const userForm = document.getElementById('userForm');
-                if (userForm) {
-                    userForm.addEventListener('submit', async function (e) {
-                        e.preventDefault();
+                document.getElementById('userForm').addEventListener('submit', async function (e) {
+                    e.preventDefault();
 
-                        const submitBtn = document.getElementById('userSubmitBtn');
-                        const originalText = submitBtn.textContent;
+                    const submitBtn = document.getElementById('userSubmitBtn');
+                    const originalText = submitBtn.textContent;
 
-                        try {
-                            submitBtn.disabled = true;
-                            submitBtn.textContent = 'Guardando...';
+                    try {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Guardando...';
 
-                            const formData = new FormData(this);
-                            const data = Object.fromEntries(formData.entries());
+                        const formData = new FormData(this);
+                        const data = Object.fromEntries(formData.entries());
 
-                            // Agregar campos del formulario
-                            data.nombre = document.getElementById('userNombre').value;
-                            data.apellido = document.getElementById('userApellido').value;
-                            data.email = document.getElementById('userEmail').value;
-                            data.rol = document.getElementById('userRol').value;
-                            data.telefono = document.getElementById('userTelefono').value;
-                            data.cargo = document.getElementById('userCargo').value;
-                            data.departamento = document.getElementById('userDepartamento').value;
-                            data.empresa_id = document.getElementById('userEmpresa').value || null;
-                            data.password = document.getElementById('userPassword').value;
+                        // Agregar campos del formulario
+                        data.nombre = document.getElementById('userNombre').value;
+                        data.apellido = document.getElementById('userApellido').value;
+                        data.email = document.getElementById('userEmail').value;
+                        data.rol = document.getElementById('userRol').value;
+                        data.telefono = document.getElementById('userTelefono').value;
+                        data.cargo = document.getElementById('userCargo').value;
+                        data.departamento = document.getElementById('userDepartamento').value;
+                        data.empresa_id = document.getElementById('userEmpresa').value || null;
+                        data.password = document.getElementById('userPassword').value;
 
-                            const userId = document.getElementById('userId').value;
-                            const isEdit = !!userId;
+                        const userId = document.getElementById('userId').value;
+                        const isEdit = !!userId;
 
-                            const url = isEdit ? `./api/admin/users.php?id=${userId}` : './api/admin/users.php';
-                            const method = isEdit ? 'PUT' : 'POST';
+                        const url = isEdit ? `./api/admin/users.php?id=${userId}` : './api/admin/users.php';
+                        const method = isEdit ? 'PUT' : 'POST';
 
-                            const response = await fetch(url, {
-                                method: method,
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                credentials: 'include',
-                                body: JSON.stringify(data)
-                            });
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify(data)
+                        });
 
-                            const result = await response.json();
+                        const result = await response.json();
 
-                            if (result.success) {
-                                showAlert(`Usuario ${isEdit ? 'actualizado' : 'creado'} correctamente`, 'success');
-                                closeUserModal();
-                                loadUsers();
-                            } else {
-                                showAlert(result.message || 'Error al guardar usuario', 'error');
-                            }
-
-                        } catch (error) {
-                            console.error('Error:', error);
-                            showAlert('Error de conexión', 'error');
-                        } finally {
-                            submitBtn.disabled = false;
-                            submitBtn.textContent = originalText;
+                        if (result.success) {
+                            showAlert(`Usuario ${isEdit ? 'actualizado' : 'creado'} correctamente`, 'success');
+                            closeUserModal();
+                            loadUsers();
+                        } else {
+                            showAlert(result.message || 'Error al guardar usuario', 'error');
                         }
-                    });
-                }
+
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showAlert('Error de conexión', 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                });
 
                 // Funciones adicionales
                 function loadEvents() {
-                    document.getElementById('eventsContainer').innerHTML = '<p class="text-center py-8">Cargando eventos...</p>';
-                    // TODO: Implementar carga de eventos
-                }
-
-                function loadBulletins() {
-                    document.getElementById('bulletinsContainer').innerHTML = '<p class="text-center py-8">Cargando boletines...</p>';
-                    // TODO: Implementar carga de boletines
-                }
-
-                function openCompanyModal() {
-                    showAlert('Funcionalidad de empresas en desarrollo', 'warning');
-                }
-
-                function openEventModal() {
-                    showAlert('Funcionalidad de eventos en desarrollo', 'warning');
-                }
-
-                function openBulletinModal() {
-                    showAlert('Funcionalidad de boletines en desarrollo', 'warning');
+                    if (typeof loadAdminEventos === 'function') {
+                        loadAdminEventos();
+                    }
                 }
 
                 // Utility functions for documents
@@ -3198,6 +2861,12 @@ Beneficios: ${company.beneficios || 'N/A'}`;
                     window.open('./demo_visitante.html', '_blank');
                 }
 
+                // Función para abrir demo de usuarios
+                function abrirDemoUsuarios() {
+                    console.log('🔗 Abriendo configuración de usuarios...');
+                    window.open('./gestionar_usuarios.php', '_blank');
+                }
+
                 // Inicializar la página cuando se carga
                 document.addEventListener('DOMContentLoaded', function () {
                     console.log('🚀 Inicializando panel de administración...');
@@ -3331,13 +3000,287 @@ Beneficios: ${company.beneficios || 'N/A'}`;
                 document.addEventListener('DOMContentLoaded', function () {
                     // Cargar eventos después de un pequeño delay para asegurar que el DOM esté listo
                     setTimeout(() => {
-                        loadEventos();
+                        // Si la función existe en admin-eventos.js, la llamamos
+                        if (typeof loadAdminEventos === 'function') loadAdminEventos();
                     }, 500);
                 });
-
-                // Exponer funciones globalmente
-                window.refreshEventStats = refreshEventStats;
             </script>
+
+            <!-- ===== PANEL CONTROL DE CORREOS — JS ===== -->
+            <script>
+            let _emailConfig = [];
+
+            async function loadEmailConfig() {
+                const grid = document.getElementById('emailConfigGrid');
+                // Mostrar skeleton
+                grid.innerHTML = Array(4).fill(`<div class="glass-card p-6 animate-pulse">
+                    <div class="h-5 bg-white/10 rounded w-3/4 mb-3"></div>
+                    <div class="h-4 bg-white/5 rounded w-full mb-5"></div>
+                    <div class="h-8 bg-white/10 rounded w-1/3"></div></div>`).join('');
+                try {
+                    const res = await fetch('./api/email-config.php', { credentials: 'include' });
+                    const data = await res.json();
+                    if (data.success) {
+                        _emailConfig = data.config;
+                        renderEmailConfig(data.config);
+                    } else {
+                        showEmailStatus('error', data.message || 'Error al cargar la configuración.');
+                    }
+                } catch (e) {
+                    showEmailStatus('error', 'No se pudo conectar con el servidor.');
+                }
+            }
+
+            function renderEmailConfig(configs) {
+                const grid = document.getElementById('emailConfigGrid');
+                const destLabels = {
+                    'admin'        : { label: 'Solo administrador', cls: 'dest-admin', icon: 'fa-user-shield' },
+                    'todos'        : { label: 'Todos los usuarios', cls: 'dest-todos', icon: 'fa-users' },
+                    'destinatario' : { label: 'Al destinatario',    cls: 'dest-dest',  icon: 'fa-user' }
+                };
+                if (!configs || configs.length === 0) {
+                    grid.innerHTML = '<div class="text-slate-500 col-span-2 text-center py-10">No se encontró configuración.</div>';
+                    return;
+                }
+                grid.innerHTML = configs.map(cfg => {
+                    const on = cfg.activo;
+                    const dest = destLabels[cfg.dirigido_a] || destLabels['admin'];
+                    return `
+                    <div class="email-config-card ${on ? 'card-active' : ''}" id="card-${cfg.evento_tipo}">
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
+                                    ${on ? 'bg-gradient-to-br from-red-600 to-red-800 shadow-lg shadow-red-600/25' : 'bg-white/5'}
+                                    transition-all duration-300">
+                                    <i class="fas ${cfg.icono} text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-sm leading-tight">${cfg.nombre}</h3>
+                                    <p class="text-slate-500 text-xs mt-0.5">${cfg.descripcion || ''}</p>
+                                </div>
+                            </div>
+                            <div class="email-toggle-track ${on ? 'on' : ''} flex-shrink-0 mt-1"
+                                id="toggle-${cfg.evento_tipo}"
+                                onclick="toggleEmailConfig('${cfg.evento_tipo}', ${!on})"
+                                title="${on ? 'Desactivar' : 'Activar'} notificación">
+                                <div class="email-toggle-thumb"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                            <span class="email-dest-badge ${dest.cls}">
+                                <i class="fas ${dest.icon}"></i> ${dest.label}
+                            </span>
+                            <span class="text-[10px] font-bold">
+                                ${on ? '<span class="text-emerald-400"><i class="fas fa-circle text-[6px] mr-1"></i>ACTIVO</span>'
+                                     : '<span class="text-slate-600"><i class="fas fa-circle text-[6px] mr-1"></i>INACTIVO</span>'}
+                            </span>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            async function toggleEmailConfig(eventoTipo, nuevoEstado) {
+                const track = document.getElementById('toggle-' + eventoTipo);
+                if (!track) return;
+                track.classList.toggle('on', nuevoEstado);
+                try {
+                    const res = await fetch('./api/email-config.php', {
+                        method: 'POST', credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ evento_tipo: eventoTipo, activo: nuevoEstado })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        showEmailStatus('ok', `Notificación "${eventoTipo}" ${nuevoEstado ? 'activada ✅' : 'desactivada'}.`);
+                        await loadEmailConfig();
+                    } else {
+                        track.classList.toggle('on', !nuevoEstado);
+                        showEmailStatus('error', data.message || 'Error al guardar.');
+                    }
+                } catch(e) {
+                    track.classList.toggle('on', !nuevoEstado);
+                    showEmailStatus('error', 'Error de conexión.');
+                }
+            }
+
+            async function sendTestEmail() {
+                const btn = document.getElementById('btnTestEmail');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enviando...';
+                try {
+                    const res = await fetch('./api/email-config.php', {
+                        method: 'POST', credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'test', evento_tipo: 'prueba_manual' })
+                    });
+                    const data = await res.json();
+                    showEmailStatus(data.success ? 'ok' : 'error', data.message);
+                } catch(e) {
+                    showEmailStatus('error', 'Error de conexión al enviar prueba.');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-flask mr-2"></i> Enviar correo de prueba';
+                }
+            }
+
+            function showEmailStatus(type, msg) {
+                const el = document.getElementById('emailConfigStatus');
+                el.className = 'mb-6 p-4 rounded-2xl border text-sm font-semibold flex items-center gap-3';
+                if (type === 'ok') {
+                    el.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+                    el.innerHTML = `<i class="fas fa-check-circle text-lg"></i><span>${msg}</span>`;
+                } else {
+                    el.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
+                    el.innerHTML = `<i class="fas fa-triangle-exclamation text-lg"></i><span>${msg}</span>`;
+                }
+                el.classList.remove('hidden');
+                clearTimeout(el._t);
+                el._t = setTimeout(() => el.classList.add('hidden'), 6000);
+            }
+            </script>
+            <!-- ============================================ -->
+
+            <!-- Admin Eventos Script -->
+            <script src="./js/admin-eventos.js"></script>
+
+            <!-- Modal Gestión de Eventos -->
+            <div id="eventModal" class="fixed inset-0 z-[9999] hidden flex items-center justify-center p-4">
+                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" onclick="closeEventModal()"></div>
+                <div
+                    class="relative bg-slate-900 border border-white/10 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in fade-in zoom-in duration-300">
+                    <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+                        <div>
+                            <h3 class="text-xl font-bold text-white" id="eventModalTitle">Nuevo Evento</h3>
+                            <p class="text-xs text-slate-400">Configure los detalles del evento corporativo</p>
+                        </div>
+                        <button onclick="closeEventModal()" class="text-slate-400 hover:text-white transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <form id="eventForm" class="p-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                        <input type="hidden" id="event_id" name="id">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Título
+                                    del Evento</label>
+                                <input type="text" name="titulo" id="event_titulo" required
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all"
+                                    placeholder="Ej: Asamblea General de Socios 2026">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Descripción</label>
+                                <textarea name="descripcion" id="event_descripcion" rows="3"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all"
+                                    placeholder="Detalles sobre el orden del día, ponentes, etc."></textarea>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Fecha
+                                    Inicio</label>
+                                <input type="datetime-local" name="fecha_inicio" id="event_fecha_inicio" required
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Fecha
+                                    Fin</label>
+                                <input type="datetime-local" name="fecha_fin" id="event_fecha_fin"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Tipo
+                                    de Evento</label>
+                                <select name="tipo" id="event_tipo"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                                    <option value="Asamblea">Asamblea</option>
+                                    <option value="Networking">Networking</option>
+                                    <option value="Capacitación">Capacitación</option>
+                                    <option value="Webinar">Webinar</option>
+                                    <option value="Social">Social</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Modalidad</label>
+                                <select name="modalidad" id="event_modalidad"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                                    <option value="Presencial">Presencial</option>
+                                    <option value="Virtual">Virtual</option>
+                                    <option value="Híbrido">Híbrido</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Ubicación
+                                    / Plataforma</label>
+                                <input type="text" name="ubicacion" id="event_ubicacion"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all"
+                                    placeholder="Sede Clúster / Zoom">
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Capacidad
+                                    Máxima</label>
+                                <input type="number" name="capacidad_maxima" id="event_capacidad_maxima" value="100"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Imagen
+                                    del Evento</label>
+                                <div class="flex gap-4 items-center">
+                                    <div id="imagePreview"
+                                        class="w-16 h-16 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                                        <i class="fas fa-image text-slate-600 text-xl"></i>
+                                    </div>
+                                    <input type="file" name="imagenFile" id="event_imagenFile" accept="image/*"
+                                        class="flex-1 text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-500/10 file:text-red-500 hover:file:bg-red-500/20 transition-all">
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Link
+                                    de Acceso / Registro</label>
+                                <input type="url" name="link_evento" id="event_link_evento"
+                                    class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-red-500 outline-none transition-all"
+                                    placeholder="https://zoom.us/j/...">
+                            </div>
+
+                            <div class="md:col-span-2 flex items-center gap-2">
+                                <input type="checkbox" name="tiene_beneficio" id="event_tiene_beneficio" value="1"
+                                    class="w-5 h-5 bg-white/5 border-white/10 rounded accent-red-500">
+                                <label for="event_tiene_beneficio" class="text-sm text-slate-300">Este evento otorga
+                                    beneficios exclusivos a socios</label>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 pt-4 border-t border-white/5">
+                            <button type="button" onclick="closeEventModal()"
+                                class="flex-1 px-6 py-4 rounded-xl bg-white/5 text-white font-bold hover:bg-white/10 transition-all border border-white/10">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                class="flex-1 px-6 py-4 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition-all shadow-lg shadow-red-600/20">
+                                Guardar Evento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 </body>
 
 </html>

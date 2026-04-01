@@ -108,6 +108,9 @@ try {
                 `usos_maximos` int(11) DEFAULT NULL,
                 `usos_actuales` int(11) DEFAULT 0,
                 `estado` enum('activo','inactivo','expirado') DEFAULT 'activo',
+                `accion_tipo` enum('link','telefono','email','whatsapp','mapa','ninguno') DEFAULT 'ninguno',
+                `accion_valor` varchar(500) DEFAULT NULL,
+                `accion_etiqueta` varchar(100) DEFAULT NULL,
                 `fecha_creacion` datetime DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (`id`),
                 KEY `idx_empresa_oferente` (`empresa_oferente_id`),
@@ -117,6 +120,20 @@ try {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
             ";
             $pdo->exec($createTableSQL);
+        }
+
+        // Auto-migración: agregar columnas de acción si no existen
+        try {
+            $cols = $pdo->query("SHOW COLUMNS FROM descuentos LIKE 'accion_tipo'")->fetch();
+            if (!$cols) {
+                $pdo->exec("ALTER TABLE descuentos
+                    ADD COLUMN accion_tipo ENUM('link','telefono','email','whatsapp','mapa','ninguno') DEFAULT 'ninguno',
+                    ADD COLUMN accion_valor VARCHAR(500) DEFAULT NULL,
+                    ADD COLUMN accion_etiqueta VARCHAR(100) DEFAULT NULL");
+                error_log('✅ Columnas accion_* agregadas a tabla descuentos');
+            }
+        } catch (PDOException $e) {
+            error_log('⚠️ Auto-migración accion fields: ' . $e->getMessage());
         }
     } catch (PDOException $e) {
         error_log("Error configurando tabla descuentos: " . $e->getMessage());
@@ -399,9 +416,19 @@ try {
             $usos_maximos = isset($_POST['usos_maximos']) && $_POST['usos_maximos'] !== '' ? intval($_POST['usos_maximos']) : null;
             $estado = clean($_POST['estado'] ?? 'activo');
 
+            // Campos del botón de acción
+            $accionTiposValidos = ['link','telefono','email','whatsapp','mapa','ninguno'];
+            $accion_tipo = clean($_POST['accion_tipo'] ?? 'ninguno');
+            if (!in_array($accion_tipo, $accionTiposValidos)) $accion_tipo = 'ninguno';
+            $accion_valor = $accion_tipo !== 'ninguno' ? clean($_POST['accion_valor'] ?? '') : null;
+            $accion_valor = ($accion_valor === '') ? null : $accion_valor;
+            $accion_etiqueta = $accion_tipo !== 'ninguno' ? clean($_POST['accion_etiqueta'] ?? '') : null;
+            $accion_etiqueta = ($accion_etiqueta === '') ? null : $accion_etiqueta;
+
             // Obtener datos adicionales para validación
             $empresa_nombre = clean($_POST['empresa_nombre'] ?? '');
             $tipo_empresa = clean($_POST['tipo_empresa'] ?? 'convenio');
+
 
             // Validaciones ajustadas para soportar empresas externas
             if (empty($titulo) || empty($fecha_inicio) || empty($fecha_fin)) {
@@ -439,10 +466,10 @@ try {
                 }
             }
 
-            $sql = "INSERT INTO descuentos (titulo, descripcion, empresa_oferente_id, empresa_nombre, tipo_empresa, codigo_descuento, porcentaje_descuento, monto_descuento, fecha_inicio, fecha_fin, usos_maximos, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO descuentos (titulo, descripcion, empresa_oferente_id, empresa_nombre, tipo_empresa, codigo_descuento, porcentaje_descuento, monto_descuento, fecha_inicio, fecha_fin, usos_maximos, estado, accion_tipo, accion_valor, accion_etiqueta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
 
-            if ($stmt->execute([$titulo, $descripcion, $empresa_oferente_id, $empresa_nombre, $tipo_empresa, $codigo_descuento, $porcentaje_descuento, $monto_descuento, $fecha_inicio, $fecha_fin, $usos_maximos, $estado])) {
+            if ($stmt->execute([$titulo, $descripcion, $empresa_oferente_id, $empresa_nombre, $tipo_empresa, $codigo_descuento, $porcentaje_descuento, $monto_descuento, $fecha_inicio, $fecha_fin, $usos_maximos, $estado, $accion_tipo, $accion_valor, $accion_etiqueta])) {
                 $id = $pdo->lastInsertId();
 
                 // Obtener el descuento recién creado con información de empresa
@@ -476,10 +503,36 @@ try {
                     $nuevoDescuento['sector'] = 'Externo';
                 }
 
+                // ── Hook de correo: Nuevo Descuento (best-effort) ──────────
+                try {
+                    require_once __DIR__ . '/../utils/NotificationMailer.php';
+                    $descNombre  = $nuevoDescuento['titulo'] ?? $titulo;
+                    $empNombre   = $nuevoDescuento['empresa_nombre'] ?? $empresa_nombre ?? 'Empresa';
+                    $porcentaje  = $nuevoDescuento['porcentaje_descuento'] ?? $porcentaje_descuento ?? '';
+                    $fechaFin    = isset($nuevoDescuento['fecha_fin'])
+                        ? date('d/m/Y', strtotime($nuevoDescuento['fecha_fin']))
+                        : $fecha_fin;
+
+                    NotificationMailer::dispatch(
+                        'nuevo_descuento',
+                        "🏷️ Nuevo descuento disponible: $descNombre",
+                        "La empresa «$empNombre» ha publicado un nuevo descuento.\n\n" .
+                        "Descuento: $descNombre\n" .
+                        ($porcentaje ? "Beneficio: $porcentaje% de descuento\n" : '') .
+                        "Válido hasta: $fechaFin\n\n" .
+                        "Ingresa a la intranet para ver todos los detalles y obtener tu código.",
+                        $pdo
+                    );
+                } catch (Exception $emailEx) {
+                    error_log('⚠️ [descuentos] Hook correo falló: ' . $emailEx->getMessage());
+                }
+                // ───────────────────────────────────────────────────────────
+
                 sendJsonResponse([
                     'message' => 'Descuento creado exitosamente',
                     'data' => $nuevoDescuento
                 ]);
+
             } else {
                 sendJsonResponse('Error al crear el descuento', false);
             }
@@ -499,6 +552,15 @@ try {
             $fecha_fin = clean($_POST['fecha_fin'] ?? '');
             $usos_maximos = isset($_POST['usos_maximos']) && $_POST['usos_maximos'] !== '' ? intval($_POST['usos_maximos']) : null;
             $estado = clean($_POST['estado'] ?? 'activo');
+
+            // Campos del botón de acción
+            $accionTiposValidos = ['link','telefono','email','whatsapp','mapa','ninguno'];
+            $accion_tipo = clean($_POST['accion_tipo'] ?? 'ninguno');
+            if (!in_array($accion_tipo, $accionTiposValidos)) $accion_tipo = 'ninguno';
+            $accion_valor = $accion_tipo !== 'ninguno' ? clean($_POST['accion_valor'] ?? '') : null;
+            $accion_valor = ($accion_valor === '') ? null : $accion_valor;
+            $accion_etiqueta = $accion_tipo !== 'ninguno' ? clean($_POST['accion_etiqueta'] ?? '') : null;
+            $accion_etiqueta = ($accion_etiqueta === '') ? null : $accion_etiqueta;
 
             // Obtener datos adicionales para validación
             $empresa_nombre = clean($_POST['empresa_nombre'] ?? '');
@@ -529,10 +591,10 @@ try {
                 sendJsonResponse('Descuento no encontrado', false);
             }
 
-            $sql = "UPDATE descuentos SET titulo = ?, descripcion = ?, empresa_oferente_id = ?, empresa_nombre = ?, tipo_empresa = ?, codigo_descuento = ?, porcentaje_descuento = ?, monto_descuento = ?, fecha_inicio = ?, fecha_fin = ?, usos_maximos = ?, estado = ? WHERE id = ?";
+            $sql = "UPDATE descuentos SET titulo = ?, descripcion = ?, empresa_oferente_id = ?, empresa_nombre = ?, tipo_empresa = ?, codigo_descuento = ?, porcentaje_descuento = ?, monto_descuento = ?, fecha_inicio = ?, fecha_fin = ?, usos_maximos = ?, estado = ?, accion_tipo = ?, accion_valor = ?, accion_etiqueta = ? WHERE id = ?";
             $stmt = $pdo->prepare($sql);
 
-            if ($stmt->execute([$titulo, $descripcion, $empresa_oferente_id, $empresa_nombre, $tipo_empresa, $codigo_descuento, $porcentaje_descuento, $monto_descuento, $fecha_inicio, $fecha_fin, $usos_maximos, $estado, $id])) {
+            if ($stmt->execute([$titulo, $descripcion, $empresa_oferente_id, $empresa_nombre, $tipo_empresa, $codigo_descuento, $porcentaje_descuento, $monto_descuento, $fecha_inicio, $fecha_fin, $usos_maximos, $estado, $accion_tipo, $accion_valor, $accion_etiqueta, $id])) {
                 // Obtener descuento actualizado según el tipo
                 if ($tipo_empresa === 'convenio' && $empresa_oferente_id) {
                     // Determinar qué tabla de empresas usar

@@ -190,10 +190,34 @@ class NotificacionesAPI {
         $stmt->bindParam(':metadata', json_encode($data['metadata'] ?? []));
 
         if ($stmt->execute()) {
-            $this->sendSuccess(['id' => $this->connection->lastInsertId()]);
+            $newId = $this->connection->lastInsertId();
+
+            // ── Hook de correo: Mensaje en Buzón (best-effort) ────────────
+            try {
+                require_once dirname(__DIR__) . '/utils/NotificationMailer.php';
+
+                $emailDestino = $data['destinatario_email'] ?? null;
+                $tituloNot    = $data['titulo'] ?? 'Nueva notificación';
+                $contenidoNot = $data['contenido'] ?? '';
+
+                NotificationMailer::dispatch(
+                    'mensaje_buzon',
+                    "🔔 $tituloNot",
+                    "$contenidoNot\n\n" .
+                    "Puedes ver todas tus notificaciones ingresando a la Intranet del Clúster.",
+                    $this->connection,
+                    $emailDestino  // null → no aplica para 'destinatario', lo ignora
+                );
+            } catch (Exception $emailEx) {
+                error_log('⚠️ [notificaciones] Hook correo falló: ' . $emailEx->getMessage());
+            }
+            // ──────────────────────────────────────────────────────────────
+
+            $this->sendSuccess(['id' => $newId]);
         } else {
             $this->sendError('Error al crear la notificación');
         }
+
     }
 
     private function markAsRead($id) {

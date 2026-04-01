@@ -68,16 +68,58 @@ Claut_BD/
 php -S localhost:8000 -t build/
 
 # URLs principales
-http://localhost:8000/demo_empresas.html     # Panel admin empresas
-http://localhost:8000/dashboard.html         # Dashboard principal
-http://localhost:8000/admin-panel.html       # Panel admin general
+http://localhost:8000/pages/sign-in.html      # Login (con modal forgot-password)
+http://localhost:8000/demo_empresas.html       # Panel admin empresas
+http://localhost:8000/dashboard.html           # Dashboard principal
+http://localhost:8000/admin-panel.html         # Panel admin general
 
 # Verificar logs de seguridad
 tail -f build/logs/security/security_$(date +%Y%m%d).log
 
 # Generar JWT secret seguro
 openssl rand -hex 32
+
+# Test SMTP (solo local/dev)
+php build/setup/test_smtp.php
 ```
+
+---
+
+## 🚀 Deploy a Producción
+
+### Método: FileZilla FTP
+El proyecto se sube a producción manualmente vía **FileZilla** (cliente FTP).
+
+**Datos de conexión FTP:**
+- **Host**: Ver en hPanel Hostinger → Hosting → FTP Accounts
+- **User**: Usuario FTP de Hostinger (generalmente `u695712029`)
+- **Pass**: Contraseña FTP de Hostinger (diferente a la de correo)
+- **Port**: `21` (FTP) ó `22` (SFTP — más seguro)
+- **Ruta remota**: `/home/u695712029/domains/intranet.clautmetropolitano.mx/public_html/`
+
+**Pasos de deploy:**
+1. Abrir FileZilla → conectar con credenciales FTP
+2. Panel izquierdo (local): navegar a `/Users/fernandotorres/Desktop/Claut_BD/build/`
+3. Panel derecho (remoto): navegar a `public_html/`
+4. Seleccionar y arrastrar los archivos/carpetas modificados
+5. Confirmar sobreescritura
+
+**⚠️ Archivos que NUNCA sube Git y deben subirse manualmente por FTP:**
+| Archivo | Razón |
+|---------|--------|
+| `build/.env` | Está en `.gitignore` — contiene `MAIL_PASS`, `DB_PASS` etc. |
+| `build/uploads/` | Contenido generado por usuarios |
+| `build/logs/` | Logs del servidor |
+
+**⚠️ Después de cada deploy que incluya nuevas migraciones SQL:**
+- Ejecutar el SQL en phpMyAdmin de Hostinger (`auth-db529.hstgr.io`)
+- Verificar en la lista de tablas que aparece la nueva tabla
+
+### Repositorio Git (backup/historial)
+- **GitHub**: `https://github.com/FernandoT8rres/Cluster.git`
+- **Rama activa**: `main`
+- El push a GitHub requiere Personal Access Token (PAT) — configurar en GitHub Settings
+- Git se usa para historial y backup, **no** como pipeline de deploy automático
 
 ---
 
@@ -451,7 +493,6 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
 | Refactor JS | `.agent/workflows/refactor_js.md` | Limpiar, modularizar y minificar JS con esbuild |
 | Security Guidelines | `.agents/workflows/security_guidelines.md` | Checklist de seguridad para nuevas implementaciones |
 | Setup API | `.agents/workflows/setup_api.md` | Plantilla estándar para crear nuevos endpoints |
-
 **Cuándo usar subagentes**:
 - Tareas de exploración masiva de código (usar `Explore` subagent)
 - Refactorizaciones que tocan muchos archivos en paralelo (usar `General Purpose`)
@@ -480,8 +521,18 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
     - [x] Modal "¿Olvidaste?" en sign-in.html
     - [x] Tabla email_tokens con rate limiting
     - [x] Hook de correo de bienvenida en register.php
-    - [ ] **PENDIENTE**: Configurar `MAIL_PASS` en `.env` (obtener desde hPanel Hostinger)
-    - [ ] **PENDIENTE**: Ejecutar migración `20260401_email_tokens.sql` en producción
+    - [x] MAIL_PASS configurado en `.env` (`Claut@2025`)
+    - [x] Migración `20260401_email_tokens.sql` ejecutada en producción
+- [x] **Notificaciones Automáticas por Correo + Panel de Control** — 2026-04-01 (v2)
+    - [x] `NotificationMailer.php` — helper centralizado best-effort
+    - [x] Hook en `eventos.php` → notifica a todos al crear evento
+    - [x] Hook en `descuentos.php` → notifica a todos al crear descuento
+    - [x] Hook en `empresas-simple.php` → notifica al admin al registrar empresa
+    - [x] Hook en `notificaciones.php` → copia por correo al crear notificación interna
+    - [x] `api/email-config.php` — API de control de configuración (solo admin)
+    - [x] Tabla `email_notification_config` — 4 tipos configurables
+    - [x] Migración `20260401_email_notification_config.sql`
+    - [x] Sección "Correos" en `admin-panel.html` con toggle switches glassmorphism
 - [ ] Consolidar 3 APIs de empresas en una sola (`empresas-simple.php` es la activa)
 - [ ] Consolidar 3 implementaciones JWT en `middleware/jwt-validator.php`
 - [ ] Eliminar exposición de `$_SESSION` en `login-compatible.php` (L38)

@@ -721,11 +721,36 @@ try {
                 ]);
                 
                 if ($result) {
+                    $nuevoEventoId = $conn->lastInsertId();
+
+                    // ── Hook de correo: Nuevo Evento (best-effort) ──────────
+                    try {
+                        require_once __DIR__ . '/../utils/NotificationMailer.php';
+                        $fechaFormateada = $fecha_inicio
+                            ? date('d/m/Y \a \l\a\s H:i', strtotime($fecha_inicio))
+                            : 'próximamente';
+                        NotificationMailer::dispatch(
+                            'nuevo_evento',
+                            "📅 Nuevo evento: $titulo",
+                            "Se ha programado un nuevo evento en la Intranet del Clúster.\n\n" .
+                            "Evento: $titulo\n" .
+                            "Fecha: $fechaFormateada\n" .
+                            ($ubicacion ? "Lugar: $ubicacion\n" : '') .
+                            "Modalidad: $modalidad\n\n" .
+                            "Ingresa a la intranet para ver los detalles y registrarte.",
+                            $conn
+                        );
+                    } catch (Exception $emailEx) {
+                        error_log('⚠️ [eventos] Hook correo falló: ' . $emailEx->getMessage());
+                    }
+                    // ─────────────────────────────────────────────────────────
+
                     echo json_encode([
                         'success' => true,
                         'message' => 'Evento creado exitosamente',
-                        'evento_id' => $conn->lastInsertId()
+                        'evento_id' => $nuevoEventoId
                     ]);
+
                 } else {
                     echo json_encode([
                         'success' => false,
