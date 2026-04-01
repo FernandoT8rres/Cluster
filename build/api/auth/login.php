@@ -16,24 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Función para respuesta JSON limpia
-function jsonResponse($data, $httpCode = 200) {
-    // Limpiar cualquier output previo
-    if (ob_get_level()) {
-        ob_clean();
-    }
-    
-    http_response_code($httpCode);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
+// Incluir utilerías y middleware
+require_once dirname(dirname(__DIR__)) . '/utils/api-response.php';
+require_once dirname(dirname(__DIR__)) . '/middleware/jwt-validator.php';
 
 // Verificar método
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    jsonResponse([
-        'success' => false, 
-        'message' => 'Método no permitido. Use POST.'
-    ], 405);
+    ApiResponse::error('Método no permitido. Use POST.', 405);
 }
 
 // ============================================
@@ -55,13 +44,11 @@ try {
     
     // Si se excedió el límite, bloquear
     if (!$status['allowed']) {
-        jsonResponse([
-            'success' => false,
+        ApiResponse::error('Demasiados intentos de login. Intenta de nuevo en ' . 
+                          ceil($status['retry_after'] / 60) . ' minutos.', 429, [
             'error' => 'too_many_attempts',
-            'message' => 'Demasiados intentos de login. Intenta de nuevo en ' . 
-                         ceil($status['retry_after'] / 60) . ' minutos.',
             'retry_after' => $status['retry_after']
-        ], 429);
+        ]);
     }
     
     // Registrar intento
@@ -75,21 +62,8 @@ try {
 // ============================================
 
 try {
-    // Incluir archivos necesarios
-    $basePath = dirname(dirname(__DIR__));
-    $configPath = $basePath . '/assets/conexion/config.php';
-    $jwtPath = dirname(__FILE__) . '/jwt_helper.php';
-    
-    if (!file_exists($configPath)) {
-        throw new Exception("Archivo de configuración no encontrado: $configPath");
-    }
-    
-    if (!file_exists($jwtPath)) {
-        throw new Exception("JWT helper no encontrado: $jwtPath");
-    }
-    
     require_once $configPath;
-    require_once $jwtPath;
+    // El middleware JWT ya está cargado arriba
     
     // Obtener datos de entrada
     $rawInput = file_get_contents('php://input');
@@ -125,64 +99,35 @@ try {
     $userData = $usuario->login($email, $password);
     
     if (!$userData) {
-        // Log del intento fallido
         error_log("Intento de login fallido para email: $email desde IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-        
-        jsonResponse([
-            'success' => false,
-            'message' => 'Credenciales incorrectas o cuenta inactiva'
-        ], 401);
+        ApiResponse::error('Credenciales incorrectas o cuenta inactiva', 401);
     }
     
     
     // Login exitoso, generar tokens JWT mejorados
     try {
-        // Cargar nuevo sistema JWT si está disponible
-        $jwtValidatorPath = dirname(dirname(__DIR__)) . '/middleware/jwt-validator.php';
-        $useNewJWT = file_exists($jwtValidatorPath);
+        // Obtener secreto desde .env o usar default
+        $jwtSecret = getenv('JWT_SECRET') ?: 'CLAUT_SECRET_KEY_2024_SECURE';
         
-        if ($useNewJWT) {
-            require_once $jwtValidatorPath;
-            
-            // Obtener secreto desde .env o usar default
-            $jwtSecret = getenv('JWT_SECRET') ?: 'CLAUT_SECRET_KEY_2024_SECURE';
-            
-            // Payload para los tokens
-            $payload = [
-                'user_id' => $userData['id'],
-                'email' => $userData['email'],
-                'rol' => $userData['rol']
-            ];
-            
-            // Generar access token (15 minutos)
-            $accessToken = JwtValidator::generate($payload, $jwtSecret, JwtConfig::ACCESS_TOKEN_EXPIRY);
-            
-            // Generar refresh token (7 días)
-            $refreshToken = JwtValidator::generateRefreshToken($payload, $jwtSecret);
-            
-            if (!$accessToken || !$refreshToken) {
-                throw new Exception('Error generando tokens de autenticación');
-            }
-            
-            $token = $accessToken; // Para retrocompatibilidad
-            $hasRefreshToken = true;
-            
-        } else {
-            // Fallback al sistema JWT antiguo
-            $token = generateJWT([
-                'user_id' => $userData['id'],
-                'email' => $userData['email'],
-                'rol' => $userData['rol'],
-                'iat' => time(),
-                'exp' => time() + 3600 // 1 hora
-            ]);
-            
-            if (!$token) {
-                throw new Exception('Error generando token de autenticación');
-            }
-            
-            $hasRefreshToken = false;
+        // Payload para los tokens
+        $payload = [
+            'user_id' => $userData['id'],
+            'email' => $userData['email'],
+            'rol' => $userData['rol']
+        ];
+        
+        // Generar access token (15 minutos)
+        $accessToken = JwtValidator::generate($payload, $jwtSecret, JwtConfig::ACCESS_TOKEN_EXPIRY);
+        
+        // Generar refresh token (7 días)
+        $refreshToken = JwtValidator::generateRefreshToken($payload, $jwtSecret);
+        
+        if (!$accessToken || !$refreshToken) {
+            throw new Exception('Error generando tokens de autenticación');
         }
+        
+        $token = $accessToken;
+        $hasRefreshToken = true;
         
     } catch (Exception $e) {
         error_log("Error generando JWT: " . $e->getMessage());
@@ -226,10 +171,8 @@ try {
     }
     
     
-    // Respuesta exitosa
-    $response = [
-        'success' => true,
-        'message' => 'Login exitoso',
+    // Preparar datos para la respuesta
+    $data = [
         'token' => $token,
         'user' => [
             'id' => $userData['id'],
@@ -245,24 +188,21 @@ try {
     
     // Agregar refresh token si está disponible
     if (isset($hasRefreshToken) && $hasRefreshToken && isset($refreshToken)) {
-        $response['refresh_token'] = $refreshToken;
-        $response['token_type'] = 'Bearer';
-        $response['expires_in'] = 900; // 15 minutos para access token
+        $data['refresh_token'] = $refreshToken;
+        $data['token_type'] = 'Bearer';
+        $data['expires_in'] = 900;
     }
     
-    jsonResponse($response);
+    ApiResponse::success($data, 'Login exitoso');
     
 } catch (Exception $e) {
     error_log("Error en login API: " . $e->getMessage());
     
-    jsonResponse([
-        'success' => false,
-        'message' => $e->getMessage(),
+    ApiResponse::error($e->getMessage(), 400, [
         'debug' => [
             'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
+            'line' => $e->getLine()
         ]
-    ], 400);
+    ]);
 }
 ?>

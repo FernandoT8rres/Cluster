@@ -41,7 +41,9 @@ Claut_BD/
     │   ├── cors.php            ← ⭐ Centralized CORS — usar en nuevos endpoints
     │   ├── jwt-validator.php   ← ⭐ JWT fuente de verdad
     │   └── ...
-    ├── utils/                  ← FileUploadValidator, InputValidator, SecurityLogger
+    ├── utils/                  ← FileUploadValidator, InputValidator, SecurityLogger, ApiResponse
+    │   ├── api-response.php    ← ⭐ Estandarizador de respuestas JSON (Global)
+    │   └── ...
     ├── config/
     │   ├── database.php        ← Singleton Database — ÚNICA fuente de conexión BD
     │   ├── env-loader.php      ← Carga .env
@@ -58,8 +60,8 @@ Claut_BD/
 
 ### Patrones de Arquitectura
 - **Singleton DB**: `$db = Database::getInstance()->getConnection()` — Conexión exclusiva a MySQL Hostinger (SQLite eliminado 2026-04-01)
+- **API Response Standard**: Usar siempre `ApiResponse::success($data)` o `ApiResponse::error($msg)` (v2.0 2026-04-01)
 - **Soft Delete**: Nunca `DELETE` físico — usar `activo = 0` + `estado = 'inactiva'`
-- **API Response**: Siempre `['success' => bool, 'data' => mixed, 'message' => string]`
 - **COALESCE dual-column**: Columnas duplicadas por legacy (`nombre`/`nombre_empresa`, `sector`/`categoria`) — usar `COALESCE(e.nombre, e.nombre_empresa) AS nombre`
 
 ---
@@ -438,13 +440,12 @@ Eliminados en commit `ca3376b`: emergencia.js, solucionador.js, auth-fix.js, aut
 ### JWT — Estado actual
 | Archivo | Estado | Uso |
 |---------|--------|-----|
-| `middleware/jwt-validator.php` | ✅ **Fuente de verdad** | Generación y validación en `login.php` |
-| `api/auth/jwt_helper.php` | ⚠️ Legacy / fallback | Fallback en `login.php`, `me.php` si `jwt-validator.php` no existe |
-| `api/auth/jwt_helper_fixed.php` | ❌ **ELIMINADO** 2026-04-01 | Tenía `FILTER_SANITIZE_STRING` (deprecado) y secret hardcodeado |
+| `middleware/jwt-validator.php` | ✅ **Única fuente de verdad** | Generación y validación (Producción) |
+| `api/auth/jwt_helper.php` | ❌ **ELIMINADO** 2026-04-01 | Reemplazado por JwtValidator |
+| `api/auth/jwt_helper_fixed.php` | ❌ **ELIMINADO** 2026-04-01 | Legacy / Vulnerable |
 
-- **NO eliminar `jwt_helper.php`** — `login.php` y `me.php` lo requieren como fallback
-- El flujo real es: `login.php` primero carga `jwt-validator.php` (middleware), si no existe usa `jwt_helper.php`
-- `jwt_helper.php` lee el `JWT_SECRET` desde `.env` — es seguro
+- **JWT Consolidado**: `login.php` y `me.php` usan exclusivamente `JwtValidator`.
+- El token tiene una vida de 15 min (Access) y 7 días (Refresh).
 
 ### UI/UX
 - Usar siempre el `claut-header` horizontal como header maestro.

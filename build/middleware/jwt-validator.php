@@ -243,9 +243,15 @@ class JwtValidator {
      * @return void (envía respuesta JSON y termina ejecución)
      */
     public static function errorResponse($error, $httpCode = 401) {
+        $utilsPath = dirname(__DIR__) . '/utils/api-response.php';
+        if (file_exists($utilsPath)) {
+            require_once $utilsPath;
+            ApiResponse::error($error, $httpCode, ['requires_login' => true]);
+        }
+        
+        // Fallback si no existe ApiResponse
         http_response_code($httpCode);
         header('Content-Type: application/json');
-        
         echo json_encode([
             'success' => false,
             'error' => $error,

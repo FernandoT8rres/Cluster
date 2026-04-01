@@ -10,47 +10,23 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
-// Función para respuesta JSON limpia
-function jsonResponse($data, $httpCode = 200) {
-    // Limpiar cualquier output previo
-    if (ob_get_level()) {
-        ob_clean();
-    }
-    
-    http_response_code($httpCode);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
+// Incluir utilerías y middleware
+require_once dirname(dirname(__DIR__)) . '/utils/api-response.php';
+require_once dirname(dirname(__DIR__)) . '/middleware/jwt-validator.php';
 
 // Manejar preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    jsonResponse(['status' => 'ok']);
+    ApiResponse::success(null, 'ok');
 }
 
 // Verificar método
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    jsonResponse([
-        'success' => false, 
-        'message' => 'Método no permitido. Use GET.'
-    ], 405);
+    ApiResponse::error('Método no permitido. Use GET.', 405);
 }
 
 try {
-    // Incluir archivos necesarios
-    $basePath = dirname(dirname(__DIR__));
-    $configPath = $basePath . '/assets/conexion/config.php';
-    $jwtPath = dirname(__FILE__) . '/jwt_helper.php';
-    
-    if (!file_exists($configPath)) {
-        throw new Exception("Archivo de configuración no encontrado");
-    }
-    
-    if (!file_exists($jwtPath)) {
-        throw new Exception("JWT helper no encontrado");
-    }
-    
     require_once $configPath;
-    require_once $jwtPath;
+    // El middleware JWT ya está cargado arriba
     
     // Obtener el token del header Authorization
     $headers = getallheaders();
@@ -65,10 +41,7 @@ try {
     }
     
     if (!$authHeader) {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Token de autorización requerido'
-        ], 401);
+        ApiResponse::error('Token de autorización requerido', 401, ['requires_login' => true]);
     }
     
     // Extraer el token (formato: "Bearer TOKEN")
@@ -78,58 +51,47 @@ try {
     }
     
     if (!$token) {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Formato de token inválido'
-        ], 401);
+        ApiResponse::error('Formato de token inválido', 401, ['requires_login' => true]);
     }
     
-    // Verificar el token JWT
-    $decoded = verifyJWT($token);
+    // Verificar el token JWT usando el validador central
+    $jwtSecret = getenv('JWT_SECRET') ?: 'CLAUT_SECRET_KEY_2024_SECURE';
+    $result = JwtValidator::validate($token, $jwtSecret);
     
-    if (!$decoded) {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Token inválido o expirado'
-        ], 401);
+    if (!$result['valid']) {
+        ApiResponse::error($result['error'] ?? 'Token inválido o expirado', 401, ['requires_login' => true]);
     }
+    
+    $decoded = $result['payload'];
     
     // Obtener información actual del usuario
     $usuario = new Usuario();
     $userData = $usuario->obtenerPorId($decoded['user_id']);
     
-    if (!$userData || $userData['estado'] !== 'activo') {
-        jsonResponse([
-            'success' => false,
-            'message' => 'Usuario no válido o inactivo'
-        ], 401);
+    if (!$userData || ($userData['estado'] ?? '') !== 'activo') {
+        ApiResponse::error('Usuario no válido o inactivo', 401, ['requires_login' => true]);
     }
     
     // Preparar datos del usuario (sin contraseña)
     unset($userData['password']);
     
     // Respuesta exitosa
-    jsonResponse([
-        'success' => true,
-        'message' => 'Token válido',
+    ApiResponse::success([
         'user' => [
             'id' => $userData['id'],
             'nombre' => $userData['nombre'],
             'apellido' => $userData['apellido'],
             'email' => $userData['email'],
             'rol' => $userData['rol'],
-            'estado' => $userData['estado'],
+            'estado' => $userData['estado'] ?? 'activo',
             'telefono' => $userData['telefono'] ?? null,
             'avatar' => $userData['avatar'] ?? null
         ]
-    ]);
+    ], 'Token válido');
     
 } catch (Exception $e) {
     error_log("Error en me.php: " . $e->getMessage());
     
-    jsonResponse([
-        'success' => false,
-        'message' => 'Error interno del servidor'
-    ], 500);
+    ApiResponse::error('Error interno del servidor', 500);
 }
 ?>
