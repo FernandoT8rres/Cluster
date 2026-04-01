@@ -6,64 +6,34 @@
 class AdminEmpresasManager {
     constructor() {
         this.empresas = [];
+        this.usuarios = [];
+        this.solicitudes = [];
         this.empresaEditando = null;
         this.enviandoFormulario = false;
-        // Usar URL absoluta fija para evitar problemas de hostname
-        // Detectar si estamos en el servidor correcto
-        if (window.location.hostname === 'intranet.clústermetropolitano.mx' || 
+
+        if (window.location.hostname === 'intranet.clústermetropolitano.mx' ||
             window.location.hostname === 'clústermetropolitano.mx') {
-            // Servidor de producción - usar URL absoluta
             this.apiUrl = 'https://intranet.clústermetropolitano.mx/build/api/empresas-simple.php';
+            this.solicitudesApiUrl = 'https://intranet.clústermetropolitano.mx/build/api/solicitudes_empresa.php';
         } else {
-            // Desarrollo local - usar ruta relativa
             this.apiUrl = './api/empresas-simple.php';
+            this.solicitudesApiUrl = './api/solicitudes_empresa.php';
         }
-        
-        // Debug logging para verificar URLs
-        console.log('🔧 [URL DEBUG] Hostname:', window.location.hostname);
-        console.log('🔧 [URL DEBUG] API URL final:', this.apiUrl);
-        console.log('🔧 [URL DEBUG] Es URL absoluta:', this.apiUrl.startsWith('http'));
-        
-        // Verificar que la URL es accesible
-        this.verificarApiUrl();
-        
+
+        this.apiUsuariosUrl = this.apiUrl.replace('/empresas-simple.php', '/admin/users.php');
         this.init();
     }
 
-    async verificarApiUrl() {
-        try {
-            console.log('🔗 [API CHECK] Verificando conectividad con API...');
-            const response = await fetch(this.apiUrl + '?action=listar&test=1', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            
-            if (response.ok) {
-                console.log('✅ [API CHECK] Conectividad OK - Status:', response.status);
-            } else {
-                console.warn('⚠️ [API CHECK] Respuesta no OK - Status:', response.status);
-            }
-        } catch (error) {
-            console.error('❌ [API CHECK] Error de conectividad:', error.message);
-            console.error('❌ [API CHECK] URL probada:', this.apiUrl);
-            
-            // Si hay error, intentar URL alternativa
-            if (!this.apiUrl.startsWith('http')) {
-                console.log('🔄 [API CHECK] Intentando URL absoluta como fallback...');
-                this.apiUrl = 'https://intranet.clústermetropolitano.mx/build/api/empresas-simple.php';
-                console.log('🔄 [API CHECK] Nueva URL:', this.apiUrl);
-            }
-        }
-    }
-
     init() {
-        console.log('🔧 Inicializando administrador de empresas...');
         this.setupEventListeners();
         this.cargarEmpresas();
-        
+        this.cargarUsuarios();
+        this.cargarSolicitudes();
+
         // Refresco automático cada 30 segundos para mantener datos actualizados
         setInterval(() => {
             this.refrescarSilencioso();
+            this.cargarSolicitudes(); // También refrescar solicitudes
         }, 30000);
     }
 
@@ -99,9 +69,7 @@ class AdminEmpresasManager {
     async cargarEmpresas() {
         try {
             const url = `${this.apiUrl}?action=listar&t=${Date.now()}`;
-            console.log('📡 [ADMIN] Cargando empresas desde:', url);
-            console.log('📡 [ADMIN] URL completa:', window.location.origin + '/' + url.replace('./', ''));
-            
+
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -109,42 +77,25 @@ class AdminEmpresasManager {
                     'Cache-Control': 'no-cache'
                 }
             });
-            
-            console.log('📡 [ADMIN] Respuesta HTTP:', response.status, response.statusText);
-            console.log('📡 [ADMIN] Response URL:', response.url);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            
+
             const responseText = await response.text();
-            console.log('📡 [ADMIN] Respuesta RAW:', responseText);
-            
             const data = JSON.parse(responseText);
-            console.log('📡 [ADMIN] Datos parseados:', data);
-            console.log('📡 [ADMIN] Datos recibidos:', data);
 
             if (data.success) {
                 this.empresas = data.data.empresas || [];
-                console.log(`✅ [ADMIN] ${this.empresas.length} empresas cargadas`);
                 this.renderizarTablaAdmin();
                 this.actualizarEstadisticas();
             } else {
                 throw new Error(data.message || 'Error en respuesta de API');
             }
         } catch (error) {
-            console.error('❌ [ADMIN] Error completo:', error);
-            console.error('❌ [ADMIN] Stack trace:', error.stack);
-            console.error('❌ [ADMIN] API URL era:', this.apiUrl);
-            console.error('❌ [ADMIN] Window location:', window.location.href);
-            
-            this.mostrarError(`Error cargando empresas: ${error.message}
+            console.error('Error cargando empresas:', error);
+            this.mostrarError(`Error cargando empresas: ${error.message}`);
 
-🔍 DEBUG INFO:
-- API URL: ${this.apiUrl}
-- Page URL: ${window.location.href}
-- Timestamp: ${new Date().toISOString()}`);
-            
             // Mostrar información de debug en la tabla
             const tbody = document.getElementById('empresasTableBody');
             if (tbody) {
@@ -166,6 +117,26 @@ class AdminEmpresasManager {
         }
     }
 
+    async cargarUsuarios() {
+        try {
+            const response = await fetch(this.apiUsuariosUrl);
+            const data = await response.json();
+            if (data.success) {
+                this.usuarios = data.data || [];
+                // Llenar el select
+                const selectUsuario = document.getElementById('admin_usuario_id');
+                if (selectUsuario) {
+                    selectUsuario.innerHTML = '<option value="">Seleccionar Usuario Asignado...</option>';
+                    this.usuarios.forEach(user => {
+                        selectUsuario.innerHTML += `<option value="${user.id}">${user.nombre} ${user.apellidos || ''} (${user.email})</option>`;
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('❌ [ADMIN] Error cargando usuarios:', error);
+        }
+    }
+
     renderizarTablaAdmin(empresasList = null) {
         const tbody = document.getElementById('empresasTableBody');
         if (!tbody) {
@@ -174,7 +145,6 @@ class AdminEmpresasManager {
         }
 
         const empresas = empresasList || this.empresas || [];
-        console.log(`📊 [ADMIN] Renderizando ${empresas.length} empresas en tabla`);
 
         if (empresas.length === 0) {
             tbody.innerHTML = `
@@ -190,11 +160,19 @@ class AdminEmpresasManager {
         }
 
         try {
-            tbody.innerHTML = empresas.map(empresa => `
+            tbody.innerHTML = empresas.map(empresa => {
+                // Normalizar la URL del logo removiendo el prefijo ./
+                // Cache-busting solo para uploads locales (no afecta URLs externas)
+                let logoUrl = empresa.logo_url ? empresa.logo_url.replace(/^\.\//, '') : this.generarLogoDefault(empresa.nombre);
+                if (logoUrl && logoUrl.startsWith('uploads/')) {
+                    logoUrl += (logoUrl.includes('?') ? '&' : '?') + 't=' + (empresa.updated_at ? new Date(empresa.updated_at).getTime() : Date.now());
+                }
+
+                return `
             <tr class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
-                        <img src="${empresa.logo_url || this.generarLogoDefault(empresa.nombre)}" 
+                        <img src="${logoUrl}" 
                              alt="${empresa.nombre}"
                              class="company-logo mr-3"
                              onerror="this.src='${this.generarLogoDefault(empresa.nombre)}'">
@@ -209,10 +187,9 @@ class AdminEmpresasManager {
                     <div class="text-sm text-gray-500">${empresa.telefono || 'No especificado'}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs rounded-full ${
-                        empresa.estado === 'activa' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
+                    <span class="px-2 py-1 text-xs rounded-full ${empresa.estado === 'activa'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
                     }">
                         ${empresa.estado === 'activa' ? 'Activa' : 'Inactiva'}
                     </span>
@@ -221,15 +198,18 @@ class AdminEmpresasManager {
                     ${empresa.descuento_porcentaje ? empresa.descuento_porcentaje + '%' : 'Sin descuento'}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    ${empresa.sitio_web ? 
+                    ${empresa.sitio_web ?
                         `<a href="${empresa.sitio_web}" target="_blank" class="text-blue-600 hover:text-blue-800">
                             <i class="fas fa-external-link-alt"></i>
-                        </a>` : 
+                        </a>` :
                         '<span class="text-gray-400">No especificado</span>'
                     }
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     ${this.formatearFecha(empresa.fecha_registro)}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-indigo-600">${empresa.admin_nombre || '<span class="text-gray-400 font-normal">Sin asignar</span>'}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div class="flex space-x-2">
@@ -248,18 +228,19 @@ class AdminEmpresasManager {
                     </div>
                 </td>
             </tr>
-        `).join('');
+                    `;
+            }).join('');
         } catch (error) {
             console.error('❌ [ADMIN] Error renderizando tabla:', error);
             tbody.innerHTML = `
-                <tr>
+                    < tr >
                     <td colspan="7" class="px-6 py-12 text-center text-red-500">
                         <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
                         <p class="text-lg font-semibold">Error renderizando datos</p>
                         <p class="text-sm">${error.message}</p>
                     </td>
-                </tr>
-            `;
+                </tr >
+                    `;
         }
     }
 
@@ -293,7 +274,7 @@ class AdminEmpresasManager {
             modalPrevia.id = 'modalVistaPrevia';
             modalPrevia.className = 'fixed inset-0 z-50 hidden items-center justify-center modal-backdrop bg-black bg-opacity-50';
             modalPrevia.innerHTML = `
-                <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                    < div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" >
                     <div class="flex items-center justify-between p-6 border-b">
                         <h3 id="previaEmpresaNombre" class="text-lg font-medium text-gray-900"></h3>
                         <button id="btnCerrarPrevia" class="text-gray-400 hover:text-gray-600">
@@ -303,8 +284,8 @@ class AdminEmpresasManager {
                     <div id="previaContenido" class="p-6">
                         <!-- Contenido dinámico -->
                     </div>
-                </div>
-            `;
+                </div >
+                    `;
             document.body.appendChild(modalPrevia);
             document.getElementById('btnCerrarPrevia').addEventListener('click', () => this.cerrarModalPrevia());
         }
@@ -345,44 +326,41 @@ class AdminEmpresasManager {
             logoFile.dataset.configured = 'true';
         }
 
-        console.log('✅ [MODAL] Eventos de modal configurados sin duplicaciones');
     }
 
     abrirModalCrear() {
-        console.log('🆕 [CREAR] Abriendo modal de creación...');
         this.empresaEditando = null;
-        console.log('🆕 [CREAR] empresaEditando establecido a:', this.empresaEditando);
+
+        const hiddenIdField = document.getElementById('empresa_id_hidden');
+        if (hiddenIdField) hiddenIdField.value = '';
+
         document.getElementById('modalTitulo').textContent = 'Agregar Nueva Empresa';
         document.getElementById('btnGuardar').textContent = 'Crear Empresa';
-        console.log('🆕 [CREAR] Título y botón configurados para creación');
         this.limpiarFormulario();
-        console.log('🆕 [CREAR] Formulario limpiado');
         this.mostrarModal();
-        console.log('🆕 [CREAR] Modal mostrado - listo para crear nueva empresa');
     }
 
     editarEmpresa(id) {
-        console.log('✏️ [EDITAR] === INICIANDO EDICIÓN ===');
-        console.log('✏️ [EDITAR] ID a editar:', id);
-
         const empresa = this.empresas.find(e => e.id == id);
-        if (!empresa) {
-            console.error('❌ [EDITAR] Empresa no encontrada con ID:', id);
-            return;
-        }
+        if (!empresa) return;
 
-        console.log('✏️ [EDITAR] Empresa encontrada:', empresa);
         this.empresaEditando = empresa;
-        console.log('✏️ [EDITAR] empresaEditando establecido a:', this.empresaEditando);
+
+        let hiddenIdField = document.getElementById('empresa_id_hidden');
+        if (!hiddenIdField) {
+            hiddenIdField = document.createElement('input');
+            hiddenIdField.type = 'hidden';
+            hiddenIdField.id = 'empresa_id_hidden';
+            hiddenIdField.name = 'empresa_id_hidden';
+            document.getElementById('formEmpresa').appendChild(hiddenIdField);
+        }
+        hiddenIdField.value = empresa.id;
 
         document.getElementById('modalTitulo').textContent = 'Editar Empresa';
         document.getElementById('btnGuardar').textContent = 'Actualizar';
 
         this.llenarFormulario(empresa);
         this.mostrarModal();
-
-        console.log('✏️ [EDITAR] Modal de edición configurado');
-        console.log('✏️ [EDITAR] empresaEditando al final:', this.empresaEditando);
     }
 
     llenarFormulario(empresa) {
@@ -403,6 +381,11 @@ class AdminEmpresasManager {
         document.getElementById('contacto_telefono').value = empresa.contacto_telefono || '';
         document.getElementById('contacto_email').value = empresa.contacto_email || '';
 
+        const adminUsuarioSelect = document.getElementById('admin_usuario_id');
+        if (adminUsuarioSelect) {
+            adminUsuarioSelect.value = empresa.admin_usuario_id || '';
+        }
+
         if (empresa.logo_url) {
             this.actualizarPreviewLogo(empresa.logo_url);
         }
@@ -412,6 +395,8 @@ class AdminEmpresasManager {
         document.getElementById('formEmpresa').reset();
         document.getElementById('logoPreview').classList.add('hidden');
         document.getElementById('logo_file').value = '';
+        const adminUsuarioSelect = document.getElementById('admin_usuario_id');
+        if (adminUsuarioSelect) adminUsuarioSelect.value = '';
     }
 
     manejarArchivoLogo(event) {
@@ -455,7 +440,7 @@ class AdminEmpresasManager {
     mostrarPreviewLogo(src) {
         const preview = document.getElementById('logoPreview');
         const img = document.getElementById('logoImg');
-        
+
         img.src = src;
         img.onload = () => preview.classList.remove('hidden');
         img.onerror = () => {
@@ -474,135 +459,112 @@ class AdminEmpresasManager {
     async guardarEmpresa(e) {
         e.preventDefault();
 
-        // Prevenir envío múltiple
-        if (this.enviandoFormulario) {
-            console.log('⚠️ [GUARDAR] Ya hay un proceso de guardado en curso, ignorando...');
+        if (this.enviandoFormulario) return;
+
+        // Validación frontend de campos obligatorios
+        const nombre = document.getElementById('nombre').value.trim();
+        if (!nombre) {
+            this.mostrarError('El nombre de la empresa es obligatorio');
+            document.getElementById('nombre').focus();
             return;
         }
 
         this.enviandoFormulario = true;
-        console.log('💾 [GUARDAR] === INICIANDO PROCESO DE GUARDADO ===');
-        console.log('💾 [GUARDAR] empresaEditando:', this.empresaEditando);
-        console.log('💾 [GUARDAR] Tipo de empresaEditando:', typeof this.empresaEditando);
-        console.log('💾 [GUARDAR] Es null?:', this.empresaEditando === null);
-        console.log('💾 [GUARDAR] Es undefined?:', this.empresaEditando === undefined);
-        
+
         const btnGuardar = document.getElementById('btnGuardar');
         const textoOriginal = btnGuardar.textContent;
         btnGuardar.textContent = 'Guardando...';
         btnGuardar.disabled = true;
-        
+
         try {
             let logoUrl = document.getElementById('logo_url').value.trim();
-            console.log('🔧 [DEBUG] logoUrl inicial:', logoUrl);
-            
-            // Primero subir imagen si se seleccionó archivo
+
+            // Subir imagen si se seleccionó archivo
             const logoFile = document.getElementById('logo_file').files[0];
             if (logoFile) {
-                console.log('🔧 [DEBUG] Subiendo archivo de imagen:', logoFile.name);
                 logoUrl = await this.subirImagen(logoFile);
-                console.log('🔧 [DEBUG] URL de imagen subida:', logoUrl);
-            }
-            
-            const formData = new FormData();
-            const action = this.empresaEditando ? 'actualizar' : 'crear';
-            console.log('🎯 [ACCIÓN] empresaEditando evaluación:', !!this.empresaEditando);
-            console.log('🎯 [ACCIÓN] Acción determinada:', action);
-            console.log('🎯 [ACCIÓN] Lógica: empresaEditando ?', this.empresaEditando ? 'TRUTHY (actualizar)' : 'FALSY (crear)');
-            
-            formData.append('action', action);
-            
-            if (this.empresaEditando) {
-                formData.append('id', this.empresaEditando.id);
-                console.log('🔧 [DEBUG] ID empresa a editar:', this.empresaEditando.id);
-            }
-            
-            // Recopilar datos del formulario
-            const campos = ['nombre', 'sector', 'estado', 'email', 'telefono',
-                           'sitio_web', 'direccion', 'descripcion', 'descuento_porcentaje',
-                           'fecha_convenio', 'beneficios', 'condiciones', 'contacto_persona',
-                           'contacto_telefono', 'contacto_email'];
-            
-            console.log('🔧 [DEBUG] Recopilando datos del formulario...');
-            const datosFormulario = {};
-            
-            campos.forEach(campo => {
-                const elemento = document.getElementById(campo);
-                const valor = elemento ? elemento.value.trim() : '';
-                datosFormulario[campo] = valor;
-                if (valor) {
-                    formData.append(campo, valor);
-                    console.log(`🔧 [DEBUG] ${campo}:`, valor);
-                }
-            });
-            
-            // Agregar logo URL (desde archivo subido o URL manual)
-            if (logoUrl) {
-                formData.append('logo_url', logoUrl);
-                console.log('🔧 [DEBUG] Logo URL agregado:', logoUrl);
             }
 
-            console.log('🔧 [DEBUG] Enviando petición a API:', this.apiUrl);
-            console.log('🔧 [DEBUG] FormData entries:');
-            for (let [key, value] of formData.entries()) {
-                console.log(`  ${key}: ${value}`);
+            const formData = new FormData();
+
+            // Recuperar empresaEditando desde campo oculto si se perdió
+            if (!this.empresaEditando) {
+                const hiddenIdField = document.getElementById('empresa_id_hidden');
+                if (hiddenIdField && hiddenIdField.value) {
+                    const empresaId = parseInt(hiddenIdField.value);
+                    this.empresaEditando = this.empresas.find(e => e.id === empresaId);
+                }
+            }
+
+            const action = this.empresaEditando ? 'actualizar' : 'crear';
+            formData.append('action', action);
+
+            if (this.empresaEditando) {
+                formData.append('id', this.empresaEditando.id);
+            }
+
+            // Recopilar TODOS los campos (incluyendo vacíos para permitir borrado en edición)
+            const campos = ['nombre', 'sector', 'estado', 'email', 'telefono',
+                'sitio_web', 'direccion', 'descripcion', 'descuento_porcentaje',
+                'fecha_convenio', 'beneficios', 'condiciones', 'contacto_persona',
+                'contacto_telefono', 'contacto_email', 'admin_usuario_id'];
+
+            campos.forEach(campo => {
+                const elemento = document.getElementById(campo);
+                if (elemento) {
+                    formData.append(campo, elemento.value.trim());
+                }
+            });
+
+            if (logoUrl) {
+                formData.append('logo_url', logoUrl);
             }
 
             const response = await fetch(this.apiUrl, {
                 method: 'POST',
                 body: formData
             });
-            
-            console.log('🔧 [DEBUG] Respuesta HTTP status:', response.status);
-            console.log('🔧 [DEBUG] Respuesta HTTP statusText:', response.statusText);
-            
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
             const responseText = await response.text();
-            console.log('🔧 [DEBUG] Respuesta RAW:', responseText);
-            
             let data;
             try {
                 data = JSON.parse(responseText);
-                console.log('🔧 [DEBUG] Datos parseados:', data);
-            } catch (parseError) {
-                console.error('❌ [DEBUG] Error parsing JSON:', parseError);
-                console.error('❌ [DEBUG] Respuesta no válida:', responseText);
+            } catch {
                 throw new Error('Respuesta del servidor no es JSON válido');
             }
-            
+
             if (data.success) {
-                console.log('✅ [DEBUG] Operación exitosa');
                 this.mostrarExito(this.empresaEditando ? 'Empresa actualizada exitosamente' : 'Empresa creada exitosamente');
                 this.cerrarModal();
-                console.log('🔧 [DEBUG] Recargando lista de empresas...');
-                await this.cargarEmpresas(); // Recargar lista
-                console.log('✅ [DEBUG] Lista recargada');
+                await this.cargarEmpresas();
             } else {
-                console.error('❌ [DEBUG] Error en respuesta del API:', data.message);
                 throw new Error(data.message || 'Error guardando empresa');
             }
         } catch (error) {
-            console.error('❌ [DEBUG] Error completo en guardarEmpresa:', error);
-            console.error('❌ [DEBUG] Stack trace:', error.stack);
+            console.error('Error en guardarEmpresa:', error);
             this.mostrarError('Error: ' + error.message);
         } finally {
             btnGuardar.textContent = textoOriginal;
             btnGuardar.disabled = false;
-            this.enviandoFormulario = false; // Reset del flag
-            console.log('🔧 [DEBUG] Proceso de guardado finalizado');
+            this.enviandoFormulario = false;
         }
     }
 
     async subirImagen(file) {
         const formData = new FormData();
         formData.append('image', file);
-        
+
         const response = await fetch('./api/upload-image.php', {
             method: 'POST',
             body: formData
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
             return data.data.url;
         } else {
@@ -614,7 +576,7 @@ class AdminEmpresasManager {
         const empresa = this.empresas.find(e => e.id == id);
         if (!empresa) return;
 
-        if (!confirm(`¿Estás seguro de eliminar "${empresa.nombre}"?\n\nEsta acción no se puede deshacer.`)) return;
+        if (!confirm(`¿Estás seguro de eliminar "${empresa.nombre}" ?\n\nEsta acción no se puede deshacer.`)) return;
 
         try {
             const formData = new FormData();
@@ -625,9 +587,9 @@ class AdminEmpresasManager {
                 method: 'POST',
                 body: formData
             });
-            
+
             const data = await response.json();
-            
+
             if (data.success) {
                 this.mostrarExito('Empresa eliminada exitosamente');
                 await this.cargarEmpresas(); // Refresco automático
@@ -647,7 +609,7 @@ class AdminEmpresasManager {
 
         document.getElementById('previaEmpresaNombre').textContent = empresa.nombre;
         document.getElementById('previaContenido').innerHTML = this.generarVistaPrevia(empresa);
-        
+
         const modal = document.getElementById('modalVistaPrevia');
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -655,7 +617,7 @@ class AdminEmpresasManager {
 
     generarVistaPrevia(empresa) {
         return `
-            <!-- Como se verá en empresas-convenio.html -->
+                    < !--Como se verá en empresas - convenio.html-- >
             <div class="text-center mb-6">
                 <img src="${empresa.logo_url || this.generarLogoDefault(empresa.nombre)}" 
                      alt="${empresa.nombre}"
@@ -675,7 +637,7 @@ class AdminEmpresasManager {
                     ` : ''}
                 </div>
             </div>
-        `;
+                `;
     }
 
     mostrarModal() {
@@ -717,15 +679,17 @@ class AdminEmpresasManager {
                     'Cache-Control': 'no-cache'
                 }
             });
-            
+
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    const empresasAntes = this.empresas.length;
-                    this.empresas = data.data.empresas || [];
-                    
-                    // Solo re-renderizar si hubo cambios
-                    if (empresasAntes !== this.empresas.length) {
+                    const nuevasEmpresas = data.data.empresas || [];
+                    const hashAntes = JSON.stringify(this.empresas.map(e => ({ id: e.id, logo_url: e.logo_url, nombre: e.nombre })));
+                    const hashDespues = JSON.stringify(nuevasEmpresas.map(e => ({ id: e.id, logo_url: e.logo_url, nombre: e.nombre })));
+
+                    this.empresas = nuevasEmpresas;
+
+                    if (hashAntes !== hashDespues) {
                         this.renderizarTablaAdmin();
                         this.actualizarEstadisticas();
                     }
@@ -733,25 +697,30 @@ class AdminEmpresasManager {
             }
         } catch (error) {
             // Refresco silencioso - no mostrar errores al usuario
-            console.log('🔄 Refresco automático falló (silencioso):', error.message);
+            // console.log('🔄 Refresco automático falló (silencioso):', error.message);
         }
     }
 
     actualizarEstadisticas() {
         const total = this.empresas.length;
         const activas = this.empresas.filter(e => e.estado === 'activa').length;
-        
-        // Actualizar elementos de estadísticas si existen
+        const destacadas = this.empresas.filter(e => e.destacado === true || e.destacado == 1).length;
+        const conDescuento = this.empresas.filter(e => parseFloat(e.descuento_porcentaje) > 0).length;
+
         const totalEl = document.getElementById('totalEmpresas');
         const activasEl = document.getElementById('empresasActivas');
-        
+        const destacadasEl = document.getElementById('destacadasEmpresas');
+        const descuentosEl = document.getElementById('descuentosEmpresas');
+
         if (totalEl) totalEl.textContent = total;
         if (activasEl) activasEl.textContent = activas;
+        if (destacadasEl) destacadasEl.textContent = destacadas;
+        if (descuentosEl) descuentosEl.textContent = conDescuento;
     }
 
     filtrarEmpresas(termino) {
         // Implementar filtro de búsqueda
-        const empresasFiltradas = this.empresas.filter(empresa => 
+        const empresasFiltradas = this.empresas.filter(empresa =>
             empresa.nombre.toLowerCase().includes(termino.toLowerCase()) ||
             (empresa.sector && empresa.sector.toLowerCase().includes(termino.toLowerCase()))
         );
@@ -778,12 +747,12 @@ class AdminEmpresasManager {
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-        
+
         this.mostrarExito('Datos exportados exitosamente');
     }
 
     mostrarExito(mensaje) {
-        console.log('✅', mensaje);
+        // console.log('✅', mensaje);
         this.mostrarNotificacion(mensaje, 'success');
     }
 
@@ -805,7 +774,7 @@ class AdminEmpresasManager {
         // Crear notificación
         const notificacion = document.createElement('div');
         notificacion.className = `notification max-w-sm p-4 rounded-lg shadow-lg border-l-4 transform translate-x-full transition-transform duration-300 ${this.obtenerClasesNotificacion(tipo)}`;
-        
+
         notificacion.innerHTML = `
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
@@ -861,6 +830,200 @@ class AdminEmpresasManager {
                 return 'fas fa-exclamation-triangle text-yellow-500';
             default:
                 return 'fas fa-info-circle text-blue-500';
+        }
+    }
+
+    // ============================================
+    // Company Requests Management
+    // ============================================
+
+    async cargarSolicitudes() {
+        try {
+            const url = `${this.solicitudesApiUrl}?estado=pendiente&t=${Date.now()}`;
+
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.solicitudes = data.solicitudes || [];
+                this.renderizarSolicitudes();
+            } else {
+                throw new Error(data.error || 'Error en respuesta de API');
+            }
+        } catch (error) {
+            // Silencioso: no bloquear UI si no hay solicitudes
+            console.warn('Solicitudes no disponibles:', error.message);
+        }
+    }
+
+    renderizarSolicitudes() {
+        const section = document.getElementById('solicitudesSection');
+        const container = document.getElementById('solicitudesContainer');
+        const badge = document.getElementById('solicitudesBadge');
+
+        if (!section || !container || !badge) {
+            console.warn('⚠️ [SOLICITUDES] Elementos de UI no encontrados');
+            return;
+        }
+
+        const solicitudesPendientes = this.solicitudes.filter(s => s.estado === 'pendiente');
+
+        // Update badge
+        badge.textContent = solicitudesPendientes.length;
+
+        // Show/hide section
+        if (solicitudesPendientes.length === 0) {
+            section.classList.add('hidden');
+            return;
+        }
+
+        section.classList.remove('hidden');
+
+        // Render requests
+        container.innerHTML = solicitudesPendientes.map(sol => this.renderizarSolicitudCard(sol)).join('');
+    }
+
+    renderizarSolicitudCard(sol) {
+        const tipoText = sol.tipo_solicitud === 'crear' ? 'Crear nueva empresa' : 'Mostrar empresa existente';
+        const tipoIcon = sol.tipo_solicitud === 'crear' ? 'fa-plus-circle' : 'fa-eye';
+        const tipoColor = sol.tipo_solicitud === 'crear' ? 'text-green-600' : 'text-blue-600';
+
+        let datosEmpresa = '';
+        if (sol.datos_empresa) {
+            const datos = typeof sol.datos_empresa === 'string'
+                ? JSON.parse(sol.datos_empresa)
+                : sol.datos_empresa;
+
+            datosEmpresa = `
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-gray-900 mb-2">Datos de la empresa:</h4>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        ${datos.nombre ? `<div><strong>Nombre:</strong> ${datos.nombre}</div>` : ''}
+                        ${datos.sector ? `<div><strong>Sector:</strong> ${datos.sector}</div>` : ''}
+                        ${datos.email ? `<div><strong>Email:</strong> ${datos.email}</div>` : ''}
+                        ${datos.telefono ? `<div><strong>Teléfono:</strong> ${datos.telefono}</div>` : ''}
+                        ${datos.descripcion ? `<div class="col-span-2"><strong>Descripción:</strong> ${datos.descripcion}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white hover:shadow-md transition">
+                <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas ${tipoIcon} text-2xl ${tipoColor}"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">${tipoText}</h3>
+                            <p class="text-sm text-gray-600">
+                                Solicitado por: <strong>${sol.usuario_nombre} ${sol.usuario_apellidos || ''}</strong>
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                <i class="far fa-clock mr-1"></i>${this.formatearFecha(sol.fecha_solicitud)}
+                            </p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
+                        Pendiente
+                    </span>
+                </div>
+
+                ${datosEmpresa}
+
+                ${sol.empresa_nombre_existente ? `
+                    <div class="bg-blue-50 rounded-lg p-3 mb-4">
+                        <p class="text-sm"><strong>Empresa existente:</strong> ${sol.empresa_nombre_existente}</p>
+                    </div>
+                ` : ''}
+
+                <div class="flex items-center justify-end space-x-3 pt-3 border-t">
+                    <button onclick="adminEmpresas.rechazarSolicitud(${sol.id})" 
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <i class="fas fa-times mr-2"></i>Rechazar
+                    </button>
+                    <button onclick="adminEmpresas.aprobarSolicitud(${sol.id})" 
+                            class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition" 
+                            style="background: #C7252B;">
+                        <i class="fas fa-check mr-2"></i>Aprobar
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    async aprobarSolicitud(id) {
+        if (!confirm('¿Estás seguro de que deseas aprobar esta solicitud?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(this.solicitudesApiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id,
+                    accion: 'aprobar'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.mostrarNotificacion('Solicitud aprobada exitosamente', 'success');
+                await this.cargarSolicitudes();
+                await this.cargarEmpresas(); // Reload companies list
+            } else {
+                throw new Error(data.error || 'Error aprobando solicitud');
+            }
+        } catch (error) {
+            console.error('❌ [SOLICITUDES] Error aprobando:', error);
+            this.mostrarNotificacion('Error aprobando solicitud: ' + error.message, 'error');
+        }
+    }
+
+    async rechazarSolicitud(id) {
+        const notas = prompt('¿Por qué rechazas esta solicitud? (opcional)');
+        if (notas === null) return; // User cancelled
+
+        try {
+            const response = await fetch(this.solicitudesApiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id,
+                    accion: 'rechazar',
+                    notas: notas || 'Sin motivo especificado'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.mostrarNotificacion('Solicitud rechazada', 'success');
+                await this.cargarSolicitudes();
+            } else {
+                throw new Error(data.error || 'Error rechazando solicitud');
+            }
+        } catch (error) {
+            console.error('❌ [SOLICITUDES] Error rechazando:', error);
+            this.mostrarNotificacion('Error rechazando solicitud: ' + error.message, 'error');
         }
     }
 }

@@ -27,11 +27,11 @@ class GestionGraficos {
      * Inicializar el sistema
      */
     init() {
-        console.log('🚀 Iniciando sistema de gestión de gráficos...');
+        // console.log('🚀 Iniciando sistema de gestión de gráficos...');
         this.setupBasicEventListeners();
         this.initializeTabs();
         this.loadInitialData();
-        console.log('✅ Sistema de gestión de gráficos iniciado');
+        // console.log('✅ Sistema de gestión de gráficos iniciado');
     }
 
     /**
@@ -69,7 +69,7 @@ class GestionGraficos {
             }
         });
 
-        console.log('✅ Event listeners básicos configurados');
+        // console.log('✅ Event listeners básicos configurados');
     }
 
     /**
@@ -97,7 +97,7 @@ class GestionGraficos {
      */
     async loadInitialData() {
         try {
-            console.log('📊 Cargando datos iniciales...');
+            // console.log('📊 Cargando datos iniciales...');
             this.showLoading();
             await this.cargarDatosReales();
             this.updateDataStatus('Datos cargados correctamente', 'success');
@@ -161,11 +161,11 @@ class GestionGraficos {
      */
     async cargarDatosReales() {
         try {
-            console.log(`📊 Cargando datos de: ${this.currentConfig.dataSource}`);
+            // console.log(`📊 Cargando datos de: ${this.currentConfig.dataSource}`);
             this.showLoading();
             
             const endpoint = `./api/estadisticas_simple.php?action=${this.currentConfig.dataSource}_historico`;
-            console.log(`🔗 Endpoint: ${endpoint}`);
+            // console.log(`🔗 Endpoint: ${endpoint}`);
             
             const response = await fetch(endpoint);
             
@@ -182,7 +182,7 @@ class GestionGraficos {
                 this.previsualizarGrafico();
                 
                 this.mostrarNotificacion('Datos cargados correctamente desde la API', 'success');
-                console.log(`✅ ${result.data.length} registros cargados`);
+                // console.log(`✅ ${result.data.length} registros cargados`);
             } else {
                 throw new Error(result.message || 'No se encontraron datos');
             }
@@ -201,7 +201,7 @@ class GestionGraficos {
      * Cargar datos de ejemplo
      */
     loadSampleData() {
-        console.log('📋 Generando datos de ejemplo...');
+        // console.log('📋 Generando datos de ejemplo...');
         
         const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'];
         const data = [];
@@ -225,7 +225,7 @@ class GestionGraficos {
         this.updateDataStatus('Datos de ejemplo generados', 'info');
         this.previsualizarGrafico();
         
-        console.log(`✅ ${data.length} registros de ejemplo generados`);
+        // console.log(`✅ ${data.length} registros de ejemplo generados`);
     }
 
     /**
@@ -259,7 +259,7 @@ class GestionGraficos {
             return;
         }
         
-        console.log('🔄 Actualizando datos...');
+        // console.log('🔄 Actualizando datos...');
         
         try {
             this.updateDataStatus('Actualizando...', 'info');
@@ -282,7 +282,7 @@ class GestionGraficos {
             return;
         }
 
-        console.log(`📊 Previsualizando gráfico tipo: ${this.currentConfig.type}`);
+        // console.log(`📊 Previsualizando gráfico tipo: ${this.currentConfig.type}`);
 
         // Destruir gráfico anterior
         if (this.currentChart) {
@@ -296,7 +296,7 @@ class GestionGraficos {
             return item.valor || item.empresas || item.count || item.usuarios || 0;
         });
 
-        console.log(`📋 Datos preparados: ${labels.length} etiquetas, valores: [${values.slice(0, 3).join(', ')}...]`);
+        // console.log(`📋 Datos preparados: ${labels.length} etiquetas, valores: [${values.slice(0, 3).join(', ')}...]`);
 
         // Configuración del gráfico
         const config = {
@@ -368,7 +368,7 @@ class GestionGraficos {
             if (stats) this.mostrarEstadisticasDatos(data, stats);
             
             this.mostrarNotificacion('Datos JSON válidos ✅', 'success');
-            console.log(`✅ ${data.length} registros validados correctamente`);
+            // console.log(`✅ ${data.length} registros validados correctamente`);
             
         } catch (error) {
             console.error('❌ Error validando JSON:', error.message);
@@ -390,7 +390,7 @@ class GestionGraficos {
      * Mostrar preview de los datos en un mini-gráfico
      */
     GestionGraficos.prototype.mostrarPreviewDatos = function(data) {
-        console.log('📊 Generando preview de datos...');
+        // console.log('📊 Generando preview de datos...');
         
         const preview = document.getElementById('dataPreview');
         if (!preview) return;
@@ -442,7 +442,7 @@ class GestionGraficos {
                 }
             });
             
-            console.log('✅ Preview generado');
+            // console.log('✅ Preview generado');
         } catch (error) {
             console.error('Error generando preview:', error);
             preview.innerHTML = '<p class="text-red-500 text-center">Error generando preview</p>';
@@ -470,7 +470,7 @@ class GestionGraficos {
         
         statsElement.style.display = 'block';
         
-        console.log(`📈 Estadísticas: ${data.length} registros, ${fields} campos, rango: ${minValue}-${maxValue}`);
+        // console.log(`📈 Estadísticas: ${data.length} registros, ${fields} campos, rango: ${minValue}-${maxValue}`);
     };
 
     /**
@@ -502,7 +502,7 @@ class GestionGraficos {
             this.cerrarEditorDatos();
             
             this.mostrarNotificacion('Datos personalizados guardados y aplicados', 'success');
-            console.log('✅ Datos personalizados guardados');
+            // console.log('✅ Datos personalizados guardados');
             
         } catch (error) {
             this.mostrarNotificacion('Error al guardar datos: ' + error.message, 'error');
@@ -531,7 +531,7 @@ class GestionGraficos {
             
             localStorage.setItem('graficos_configuraciones', JSON.stringify(configs));
             this.mostrarNotificacion('Configuración guardada correctamente', 'success');
-            console.log('💾 Configuración guardada:', configName);
+            // console.log('💾 Configuración guardada:', configName);
         }
     };
 
@@ -539,7 +539,7 @@ class GestionGraficos {
      * Inicializar editor de tabla (placeholder)
      */
     GestionGraficos.prototype.initializeTableEditor = function() {
-        console.log('📋 Inicializando editor de tabla...');
+        // console.log('📋 Inicializando editor de tabla...');
         this.mostrarNotificacion('Editor de tabla disponible próximamente', 'info');
     };
 
@@ -547,7 +547,7 @@ class GestionGraficos {
      * Inicializar importador CSV (placeholder)
      */
     GestionGraficos.prototype.initializeCSVImport = function() {
-        console.log('📥 Inicializando importador CSV...');
+        // console.log('📥 Inicializando importador CSV...');
         this.mostrarNotificacion('Importador CSV disponible próximamente', 'info');
     };
 
@@ -574,14 +574,14 @@ class GestionGraficos {
         }
     };
 
-    console.log('🎯 Sistema de gestión de gráficos completamente cargado');
+    // console.log('🎯 Sistema de gestión de gráficos completamente cargado');
 } Crear nuevo gráfico
             this.currentChart = new Chart(canvas, config);
             
             // Actualizar estadísticas del gráfico
             this.updateChartStats();
             
-            console.log('✅ Gráfico previsualizado correctamente');
+            // console.log('✅ Gráfico previsualizado correctamente');
             this.mostrarNotificacion('Gráfico actualizado correctamente', 'success');
             
         } catch (error) {
@@ -637,7 +637,7 @@ class GestionGraficos {
      * Cuando cambia la configuración
      */
     onConfigChange() {
-        console.log('🔄 Configuración cambiada, actualizando gráfico...');
+        // console.log('🔄 Configuración cambiada, actualizando gráfico...');
         
         // Actualizar el gráfico automáticamente si existe
         if (this.currentChart && this.currentData.length > 0) {
@@ -654,12 +654,12 @@ let gestionGraficos;
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🔧 DOM cargado, inicializando gestión de gráficos...');
+    // console.log('🔧 DOM cargado, inicializando gestión de gráficos...');
     
     if (typeof Chart !== 'undefined') {
         gestionGraficos = new GestionGraficos();
     } else {
-        console.log('⏳ Esperando a que Chart.js se cargue...');
+        // console.log('⏳ Esperando a que Chart.js se cargue...');
         const checkChart = setInterval(() => {
             if (typeof Chart !== 'undefined') {
                 clearInterval(checkChart);
@@ -669,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-console.log('📄 Parte 1 del sistema de gestión cargada');
+// console.log('📄 Parte 1 del sistema de gestión cargada');
 
 // ==================== FUNCIONES DE CONFIGURACIÓN Y TABS ====================
 
@@ -679,7 +679,7 @@ if (typeof GestionGraficos !== 'undefined') {
      * Inicializar sistema de tabs
      */
     GestionGraficos.prototype.initializeTabs = function() {
-        console.log('📋 Inicializando sistema de tabs...');
+        // console.log('📋 Inicializando sistema de tabs...');
         
         // Event listeners para las tabs del editor de datos
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -693,7 +693,7 @@ if (typeof GestionGraficos !== 'undefined') {
         // Configurar event listeners de configuración
         this.setupConfigEventListeners();
         
-        console.log('✅ Tabs inicializadas');
+        // console.log('✅ Tabs inicializadas');
     };
 
     /**
@@ -704,7 +704,7 @@ if (typeof GestionGraficos !== 'undefined') {
         document.querySelectorAll('input[name="chartType"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 this.currentConfig.type = e.target.value;
-                console.log(`📊 Tipo de gráfico cambiado a: ${e.target.value}`);
+                // console.log(`📊 Tipo de gráfico cambiado a: ${e.target.value}`);
                 this.onConfigChange();
             });
         });
@@ -714,7 +714,7 @@ if (typeof GestionGraficos !== 'undefined') {
         if (dataSource) {
             dataSource.addEventListener('change', (e) => {
                 this.currentConfig.dataSource = e.target.value;
-                console.log(`🗄️ Fuente de datos cambiada a: ${e.target.value}`);
+                // console.log(`🗄️ Fuente de datos cambiada a: ${e.target.value}`);
                 
                 // Si no es custom, recargar datos
                 if (e.target.value !== 'custom') {
@@ -730,7 +730,7 @@ if (typeof GestionGraficos !== 'undefined') {
         if (periodRange) {
             periodRange.addEventListener('change', (e) => {
                 this.currentConfig.period = e.target.value;
-                console.log(`📅 Período cambiado a: ${e.target.value}`);
+                // console.log(`📅 Período cambiado a: ${e.target.value}`);
                 
                 if (e.target.value === 'custom') {
                     this.toggleCustomPeriod();
@@ -754,7 +754,7 @@ if (typeof GestionGraficos !== 'undefined') {
         if (primaryColor) {
             primaryColor.addEventListener('change', (e) => {
                 this.currentConfig.color = e.target.value;
-                console.log(`🎨 Color cambiado a: ${e.target.value}`);
+                // console.log(`🎨 Color cambiado a: ${e.target.value}`);
                 this.onConfigChange();
             });
         }
@@ -765,7 +765,7 @@ if (typeof GestionGraficos !== 'undefined') {
                 const color = e.target.dataset.color;
                 if (primaryColor) primaryColor.value = color;
                 this.currentConfig.color = color;
-                console.log(`🎨 Color preset aplicado: ${color}`);
+                // console.log(`🎨 Color preset aplicado: ${color}`);
                 this.onConfigChange();
             });
         });
@@ -783,7 +783,7 @@ if (typeof GestionGraficos !== 'undefined') {
             if (checkbox) {
                 checkbox.addEventListener('change', (e) => {
                     this.currentConfig[configKey] = e.target.checked;
-                    console.log(`☑️ ${configKey} cambiado a: ${e.target.checked}`);
+                    // console.log(`☑️ ${configKey} cambiado a: ${e.target.checked}`);
                     this.onConfigChange();
                 });
             }
@@ -810,7 +810,7 @@ if (typeof GestionGraficos !== 'undefined') {
      * Cambiar tab activa
      */
     GestionGraficos.prototype.switchTab = function(tabId) {
-        console.log(`📋 Cambiando a tab: ${tabId}`);
+        // console.log(`📋 Cambiando a tab: ${tabId}`);
         
         // Desactivar todas las tabs
         document.querySelectorAll('.tab-button').forEach(btn => {
@@ -850,7 +850,7 @@ if (typeof GestionGraficos !== 'undefined') {
      * Abrir editor de datos
      */
     GestionGraficos.prototype.abrirEditorDatos = function() {
-        console.log('📝 Abriendo editor de datos...');
+        // console.log('📝 Abriendo editor de datos...');
         
         const panel = document.getElementById('customDataPanel');
         if (panel) {
@@ -871,7 +871,7 @@ if (typeof GestionGraficos !== 'undefined') {
      * Cerrar editor de datos
      */
     GestionGraficos.prototype.cerrarEditorDatos = function() {
-        console.log('❌ Cerrando editor de datos...');
+        // console.log('❌ Cerrando editor de datos...');
         
         const panel = document.getElementById('customDataPanel');
         if (panel) {
@@ -920,5 +920,5 @@ if (typeof GestionGraficos !== 'undefined') {
         }, 5000);
     };
 
-    console.log('📄 Funciones de configuración y tabs añadidas');
+    // console.log('📄 Funciones de configuración y tabs añadidas');
 }

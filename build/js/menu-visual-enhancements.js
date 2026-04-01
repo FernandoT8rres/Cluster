@@ -305,7 +305,7 @@ function applyEnhancedStyles() {
   style.textContent = enhancedMenuStyles;
   document.head.appendChild(style);
   
-  console.log('✨ Estilos mejorados aplicados al menú');
+  // console.log('✨ Estilos mejorados aplicados al menú');
 }
 
 // Función para agregar efectos especiales
@@ -335,7 +335,7 @@ function addMenuEnhancements() {
     }
   });
   
-  console.log('🎨 Efectos especiales agregados al menú');
+  // console.log('🎨 Efectos especiales agregados al menú');
 }
 
 // Función para animar la habilitación del menú
@@ -355,12 +355,12 @@ function animateMenuActivation() {
     }, index * 100);
   });
   
-  console.log('✅ Animación de activación del menú completada');
+  // console.log('✅ Animación de activación del menú completada');
 }
 
 // Inicializar mejoras cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🎨 Inicializando mejoras visuales del menú...');
+  // console.log('🎨 Inicializando mejoras visuales del menú...');
   
   // Aplicar estilos inmediatamente
   applyEnhancedStyles();
@@ -389,7 +389,7 @@ if (document.readyState !== 'loading') {
 
 // Escuchar eventos de autenticación para activar animaciones
 document.addEventListener('userLoggedIn', function() {
-  console.log('👤 Usuario logueado - activando animaciones del menú');
+  // console.log('👤 Usuario logueado - activando animaciones del menú');
   setTimeout(animateMenuActivation, 500);
 });
 
@@ -397,7 +397,7 @@ document.addEventListener('userLoggedIn', function() {
 window.refreshMenuStyles = function() {
   applyEnhancedStyles();
   addMenuEnhancements();
-  console.log('🔄 Estilos del menú actualizados');
+  // console.log('🔄 Estilos del menú actualizados');
 };
 
 // Función para mostrar estado del menú
@@ -413,7 +413,7 @@ window.showMenuStatus = function() {
   return info;
 };
 
-console.log('✨ Mejoras visuales del menú cargadas');
-console.log('Comandos disponibles:');
-console.log('- refreshMenuStyles(): Actualizar estilos del menú');
-console.log('- showMenuStatus(): Mostrar estado del menú');
+// console.log('✨ Mejoras visuales del menú cargadas');
+// console.log('Comandos disponibles:');
+// console.log('- refreshMenuStyles(): Actualizar estilos del menú');
+// console.log('- showMenuStatus(): Mostrar estado del menú');

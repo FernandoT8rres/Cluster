@@ -12,7 +12,7 @@ class AuthSessionManager {
     }
 
     init() {
-        console.log('🔐 Inicializando sistema de autenticación basado en sesiones...');
+        // console.log('🔐 Inicializando sistema de autenticación basado en sesiones...');
 
         // Verificar estado de autenticación al cargar la página
         if (document.readyState === 'loading') {
@@ -23,14 +23,14 @@ class AuthSessionManager {
     }
 
     async checkAuthentication() {
-        console.log('🔍 Verificando autenticación desde el servidor...');
-        console.log('🌐 Ubicación actual:', window.location.href);
-        console.log('🍪 Cookies disponibles:', document.cookie);
+        // console.log('🔍 Verificando autenticación desde el servidor...');
+        // console.log('🌐 Ubicación actual:', window.location.href);
+        // console.log('🍪 Cookies disponibles:', document.cookie);
 
         // Si estamos en páginas de login, no verificar
         if (window.location.pathname.includes('sign-in.html') ||
             window.location.pathname.includes('sign-up.html')) {
-            console.log('📍 En página de login, saltando verificación');
+            // console.log('📍 En página de login, saltando verificación');
             return;
         }
 
@@ -47,7 +47,7 @@ class AuthSessionManager {
 
         for (const endpoint of endpoints) {
             try {
-                console.log(`🔍 Probando endpoint para verificación: ${endpoint}`);
+                // console.log(`🔍 Probando endpoint para verificación: ${endpoint}`);
 
                 const response = await fetch(endpoint, {
                     method: 'GET',
@@ -58,21 +58,21 @@ class AuthSessionManager {
                 });
 
                 if (!response.ok) {
-                    console.log(`❌ HTTP error en ${endpoint}: ${response.status}`);
+                    // console.log(`❌ HTTP error en ${endpoint}: ${response.status}`);
                     continue;
                 }
 
                 const result = await response.json();
-                console.log(`📄 Respuesta de ${endpoint}:`, result);
+                // console.log(`📄 Respuesta de ${endpoint}:`, result);
 
                 if (result.success && result.data) {
-                    console.log(`✅ Usuario autenticado desde ${endpoint}:`, result.data.nombre || result.data.email);
+                    // console.log(`✅ Usuario autenticado desde ${endpoint}:`, result.data.nombre || result.data.email);
                     userData = result.data;
                     authSuccess = true;
                     break;
                 }
             } catch (error) {
-                console.log(`❌ Error en ${endpoint}:`, error.message);
+                // console.log(`❌ Error en ${endpoint}:`, error.message);
                 continue;
             }
         }
@@ -81,12 +81,17 @@ class AuthSessionManager {
             this.currentUser = userData;
             this.isAuthenticated = true;
 
-            // Guardar timestamp de autenticación exitosa para preservar navegación
+            // Guardar para que otros sistemas (como session-security.js) lo reconozcan
+            localStorage.setItem('userData', JSON.stringify(userData));
+            localStorage.setItem('currentUser', JSON.stringify(userData));
             localStorage.setItem('lastAuthCheck', Date.now().toString());
+
+            // Puente de compatibilidad para otros scripts
+            window.currentUser = userData;
 
             this.setupAuthenticatedUI();
         } else {
-            console.log('❌ Usuario no autenticado en ningún endpoint');
+            // console.log('❌ Usuario no autenticado en ningún endpoint');
 
             // Verificar contexto de sesión más cuidadosamente
             const urlParams = new URLSearchParams(window.location.search);
@@ -96,19 +101,34 @@ class AuthSessionManager {
 
             // Si hay login reciente o parámetros válidos, dar acceso temporal
             if (recentLogin === 'true' || urlParams.get('login') === 'success') {
-                console.log('🔄 Login reciente detectado, configurando acceso temporal...');
+                // console.log('🔄 Login reciente detectado, configurando acceso temporal...');
                 this.setupTemporaryAccess();
                 sessionStorage.removeItem('recentLogin');
 
                 // Si viene de navegación interna y tuvo autenticación reciente, intentar preservar
             } else if (isFromInternalNavigation && lastAuthCheck &&
                 (Date.now() - parseInt(lastAuthCheck)) < 5 * 60 * 1000) { // 5 minutos
-                console.log('🔄 Navegación interna detectada, preservando sesión...');
+                // console.log('🔄 Navegación interna detectada, preservando sesión...');
                 this.setupTemporaryAccess();
 
             } else {
+                // Verificar si existe una sesión previa en localStorage para dar un margen de espera
+                const cachedUser = localStorage.getItem('userData');
+                if (cachedUser && isFromInternalNavigation) {
+                    try {
+                        // console.log('⏳ Sesión previa encontrada, esperando validación asíncrona...');
+                        this.currentUser = JSON.parse(cachedUser);
+                        this.isAuthenticated = true;
+                        window.currentUser = this.currentUser;
+                        this.setupAuthenticatedUI();
+                        return; // No redirigir de inmediato
+                    } catch (e) {
+                        console.error('Error parseando sesion previa:', e);
+                    }
+                }
+
                 // Usuario definitivamente no autenticado - redirigir al login
-                console.log('❌ Usuario no autenticado - redirigiendo al login');
+                // console.log('❌ Usuario no autenticado - redirigiendo al login');
                 this.isAuthenticated = false;
                 this.currentUser = null;
                 this.redirectToLogin();
@@ -117,7 +137,7 @@ class AuthSessionManager {
     }
 
     async login(email, password) {
-        console.log('🚪 Intentando login para:', email);
+        // console.log('🚪 Intentando login para:', email);
 
         try {
             const response = await fetch(`${this.API_URL}?action=login`, {
@@ -135,12 +155,12 @@ class AuthSessionManager {
             const result = await response.json();
 
             if (result.success && result.data) {
-                console.log('✅ Login exitoso');
+                // console.log('✅ Login exitoso');
                 this.currentUser = result.data;
                 this.isAuthenticated = true;
                 return { success: true, user: result.data };
             } else {
-                console.log('❌ Login fallido:', result.message);
+                // console.log('❌ Login fallido:', result.message);
                 return { success: false, message: result.message };
             }
         } catch (error) {
@@ -150,20 +170,20 @@ class AuthSessionManager {
     }
 
     async logout() {
-        console.log('🚪 Cerrando sesión...');
+        // console.log('🚪 Cerrando sesión...');
 
         // ============================================
         // NUEVO: Limpiar tokens JWT si existen
         // ============================================
         if (window.jwtManager) {
             await window.jwtManager.logout();
-            console.log('✅ Tokens JWT limpiados');
+            // console.log('✅ Tokens JWT limpiados');
         }
 
         // Detener worker de renovación
         if (window.tokenRefreshWorker) {
             window.tokenRefreshWorker.stop();
-            console.log('⏹️ Worker de renovación detenido');
+            // console.log('⏹️ Worker de renovación detenido');
         }
         // ============================================
 
@@ -192,7 +212,7 @@ class AuthSessionManager {
                 const result = await response.json();
 
                 if (result.success) {
-                    console.log(`✅ Logout exitoso desde ${endpoint}`);
+                    // console.log(`✅ Logout exitoso desde ${endpoint}`);
                     logoutSuccess = true;
                     break;
                 }
@@ -211,7 +231,7 @@ class AuthSessionManager {
     }
 
     redirectToLogin() {
-        console.log('🔄 Redirigiendo al login...');
+        // console.log('🔄 Redirigiendo al login...');
 
         // Solo limpiar datos si definitivamente no hay sesión válida
         // Preservar parámetros importantes que indiquen navegación válida
@@ -275,7 +295,7 @@ class AuthSessionManager {
     }
 
     setupAuthenticatedUI() {
-        console.log('🎨 Configurando interfaz para usuario autenticado...');
+        // console.log('🎨 Configurando interfaz para usuario autenticado...');
 
         // Ocultar elementos de login
         this.hideElements(['loginNavItem', 'signupNavItem', 'loginMenuItem', 'authRequiredMessage', 'restrictedOverlay']);
@@ -291,7 +311,7 @@ class AuthSessionManager {
     }
 
     setupUnauthenticatedUI() {
-        console.log('🎨 Configurando interfaz para usuario no autenticado...');
+        // console.log('🎨 Configurando interfaz para usuario no autenticado...');
 
         // Mostrar elementos de login
         this.showElements(['loginNavItem', 'signupNavItem', 'loginMenuItem', 'authRequiredMessage', 'restrictedOverlay']);
@@ -307,7 +327,7 @@ class AuthSessionManager {
     }
 
     setupTemporaryAccess() {
-        console.log('🔄 Configurando acceso temporal...');
+        // console.log('🔄 Configurando acceso temporal...');
 
         // Crear usuario temporal
         this.currentUser = {
@@ -333,7 +353,7 @@ class AuthSessionManager {
 
     showTemporaryAccessMessage() {
         // Solo mostrar si realmente hay un login reciente válido
-        console.log('ℹ️ Acceso temporal concedido por login reciente');
+        // console.log('ℹ️ Acceso temporal concedido por login reciente');
         // No mostrar mensaje visual para mejorar UX
     }
 
@@ -423,13 +443,13 @@ class AuthSessionManager {
             welcomeMessage.innerHTML = `<h6 class="mb-0 font-bold text-white capitalize">Bienvenido, ${nombreUsuario}</h6>`;
         }
 
-        console.log('👤 Información de usuario cargada:', user.nombre || user.email);
-        console.log('🏢 Empresa:', user.nombre_empresa);
-        console.log('🎭 Rol:', user.rol);
+        // console.log('👤 Información de usuario cargada:', user.nombre || user.email);
+        // console.log('🏢 Empresa:', user.nombre_empresa);
+        // console.log('🎭 Rol:', user.rol);
     }
 
     lockContent() {
-        console.log('🔒 Bloqueando contenido...');
+        // console.log('🔒 Bloqueando contenido...');
         const mainContent = document.getElementById('mainContent');
         const restrictedOverlay = document.getElementById('restrictedOverlay');
 
@@ -443,7 +463,7 @@ class AuthSessionManager {
     }
 
     unlockContent() {
-        console.log('🔓 Desbloqueando contenido...');
+        // console.log('🔓 Desbloqueando contenido...');
         const mainContent = document.getElementById('mainContent');
         const restrictedOverlay = document.getElementById('restrictedOverlay');
 
@@ -460,11 +480,11 @@ class AuthSessionManager {
     }
 
     unlockMenuItems() {
-        console.log('🔓 Desbloqueando elementos del menú...');
+        // console.log('🔓 Desbloqueando elementos del menú...');
 
         // 1. Desbloquear todos los elementos restricted-nav-item
         const restrictedNavItems = document.querySelectorAll('.restricted-nav-item');
-        console.log(`📋 Encontrados ${restrictedNavItems.length} elementos restringidos`);
+        // console.log(`📋 Encontrados ${restrictedNavItems.length} elementos restringidos`);
 
         restrictedNavItems.forEach((item, index) => {
             const link = item.querySelector('a[data-restricted="true"]');
@@ -487,7 +507,7 @@ class AuthSessionManager {
                 item.classList.add('authenticated');
 
                 const linkText = link.textContent.trim();
-                console.log(`✅ Desbloqueado ${index + 1}: "${linkText}"`);
+                // console.log(`✅ Desbloqueado ${index + 1}: "${linkText}"`);
             }
         });
 
@@ -508,8 +528,8 @@ class AuthSessionManager {
         // 4. Agregar CSS override temporal para forzar desbloqueado
         this.addUnlockStyles();
 
-        console.log('✅ Proceso de desbloqueo de menú completado');
-        console.log('🔍 Elementos procesados:', restrictedNavItems.length);
+        // console.log('✅ Proceso de desbloqueo de menú completado');
+        // console.log('🔍 Elementos procesados:', restrictedNavItems.length);
     }
 
     addUnlockStyles() {
@@ -549,7 +569,7 @@ class AuthSessionManager {
                 }
             `;
             document.head.appendChild(style);
-            console.log('✅ Estilos de desbloqueo agregados');
+            // console.log('✅ Estilos de desbloqueo agregados');
         }
     }
 }
@@ -569,7 +589,7 @@ window.getCurrentUser = function () {
 
 // Función de emergencia para desbloquear menú manualmente
 window.forceUnlockMenu = function () {
-    console.log('🚨 Forzando desbloqueo manual del menú...');
+    // console.log('🚨 Forzando desbloqueo manual del menú...');
     if (window.authSessionManager) {
         window.authSessionManager.unlockMenuItems();
     }
@@ -593,16 +613,16 @@ window.forceUnlockMenu = function () {
         }
     });
 
-    console.log('✅ Desbloqueo manual completado');
+    // console.log('✅ Desbloqueo manual completado');
     alert('Menú desbloqueado manualmente. Si el problema persiste, recarga la página.');
 };
 
 // Función para forzar acceso completo
 window.forceFullAccess = function () {
-    console.log('🚨 FORZANDO ACCESO COMPLETO AL DASHBOARD...');
+    // console.log('🚨 FORZANDO ACCESO COMPLETO AL DASHBOARD...');
 
     if (window.authSessionManager) {
-        console.log('🔄 Activando acceso temporal...');
+        // console.log('🔄 Activando acceso temporal...');
         window.authSessionManager.setupTemporaryAccess();
 
         // Remover overlay de restricción
@@ -627,7 +647,7 @@ window.forceFullAccess = function () {
             mainContent.style.pointerEvents = 'auto';
         }
 
-        console.log('✅ Acceso completo forzado');
+        // console.log('✅ Acceso completo forzado');
         alert('🔓 Dashboard completamente desbloqueado!\n\nTodos los menús y funciones están disponibles.');
     }
 };
@@ -637,18 +657,18 @@ window.checkMenuStatus = function () {
     const restrictedItems = document.querySelectorAll('.restricted-nav-item');
     const authenticatedItems = document.querySelectorAll('.restricted-nav-item a.authenticated');
 
-    console.log('📊 Estado del menú:');
-    console.log(`- Total elementos restringidos: ${restrictedItems.length}`);
-    console.log(`- Elementos autenticados: ${authenticatedItems.length}`);
-    console.log(`- Usuario autenticado: ${window.authSessionManager?.isAuthenticated ? 'SÍ' : 'NO'}`);
+    // console.log('📊 Estado del menú:');
+    // console.log(`- Total elementos restringidos: ${restrictedItems.length}`);
+    // console.log(`- Elementos autenticados: ${authenticatedItems.length}`);
+    // console.log(`- Usuario autenticado: ${window.authSessionManager?.isAuthenticated ? 'SÍ' : 'NO'}`);
 
     if (restrictedItems.length > 0 && authenticatedItems.length === 0) {
-        console.log('⚠️ PROBLEMA: Elementos restringidos no están desbloqueados');
-        console.log('💡 Ejecuta forceUnlockMenu() para desbloquear manualmente');
+        // console.log('⚠️ PROBLEMA: Elementos restringidos no están desbloqueados');
+        // console.log('💡 Ejecuta forceUnlockMenu() para desbloquear manualmente');
     } else if (authenticatedItems.length > 0) {
-        console.log('✅ Elementos del menú están desbloqueados');
+        // console.log('✅ Elementos del menú están desbloqueados');
     }
 };
 
-console.log('🔧 Sistema de autenticación basado en sesiones inicializado');
-console.log('🔐 Verificación de autenticación activa - redirección automática al login si no hay sesión válida');
+// console.log('🔧 Sistema de autenticación basado en sesiones inicializado');
+// console.log('🔐 Verificación de autenticación activa - redirección automática al login si no hay sesión válida');

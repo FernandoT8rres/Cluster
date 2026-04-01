@@ -1,14 +1,14 @@
 // ==================== SISTEMA DE GUARDADO Y EDICIÓN MEJORADO ====================
 // Funciones específicas para guardado y edición
 
-console.log('💾 Cargando sistema de guardado y edición...');
+// console.log('💾 Cargando sistema de guardado y edición...');
 
 // Extender el sistema de emergencia con funciones de edición
 if (window.sistemaEmergencia) {
     
     // Función mejorada de guardado con feedback
     window.sistemaEmergencia.guardarMejorado = function() {
-        console.log('💾 Iniciando proceso de guardado mejorado...');
+        // console.log('💾 Iniciando proceso de guardado mejorado...');
         
         // Mostrar modal de guardado personalizado
         const modalHTML = `
@@ -114,7 +114,7 @@ if (window.sistemaEmergencia) {
     
     // Función mejorada de edición de datos
     window.sistemaEmergencia.editarDatosMejorado = function() {
-        console.log('📝 Abriendo editor de datos mejorado...');
+        // console.log('📝 Abriendo editor de datos mejorado...');
         
         const panel = document.getElementById('customDataPanel');
         if (panel) {
@@ -137,7 +137,7 @@ if (window.sistemaEmergencia) {
     
     // Configurar funcionalidad del editor de datos
     window.sistemaEmergencia.configurarEditorDatos = function() {
-        console.log('⚙️ Configurando editor de datos...');
+        // console.log('⚙️ Configurando editor de datos...');
         
         // Botón validar datos
         const btnValidar = document.getElementById('validarDatos');
@@ -178,7 +178,7 @@ if (window.sistemaEmergencia) {
     
     // Validar y actualizar datos desde el editor
     window.sistemaEmergencia.validarYActualizarDatos = function() {
-        console.log('🔍 Validando datos del editor...');
+        // console.log('🔍 Validando datos del editor...');
         
         const editor = document.getElementById('customDataEditor');
         const preview = document.getElementById('dataPreview');
@@ -223,7 +223,7 @@ if (window.sistemaEmergencia) {
             this.mostrarEstadisticas(data);
             this.mostrarNotificacion(`✅ Datos válidos: ${data.length} registros`, 'success');
             
-            console.log('✅ Datos validados correctamente:', data);
+            // console.log('✅ Datos validados correctamente:', data);
             
         } catch (error) {
             console.error('❌ Error validando datos:', error);
@@ -283,7 +283,7 @@ if (window.sistemaEmergencia) {
     
     // Aplicar datos personalizados
     window.sistemaEmergencia.aplicarDatosPersonalizados = function() {
-        console.log('✨ Aplicando datos personalizados...');
+        // console.log('✨ Aplicando datos personalizados...');
         
         const editor = document.getElementById('customDataEditor');
         if (!editor) return;
@@ -414,7 +414,7 @@ if (window.sistemaEmergencia) {
         document.body.appendChild(modal);
     };
     
-    console.log('✅ Sistema de guardado y edición mejorado cargado');
+    // console.log('✅ Sistema de guardado y edición mejorado cargado');
 }
 
 // Funciones globales para el modal de guardado
@@ -445,7 +445,7 @@ window.confirmarGuardado = function() {
     localStorage.setItem('configs_emergencia', JSON.stringify(configs));
     
     window.sistemaEmergencia.mostrarNotificacion(`✅ "${nombre}" guardado correctamente`, 'success');
-    console.log('💾 Configuración guardada:', config);
+    // console.log('💾 Configuración guardada:', config);
     
     cerrarModalGuardado();
 };
@@ -480,4 +480,4 @@ window.cargarConfiguracion = function(index) {
     }
 };
 
-console.log('💾 Sistema de guardado y edición completamente cargado');
+// console.log('💾 Sistema de guardado y edición completamente cargado');

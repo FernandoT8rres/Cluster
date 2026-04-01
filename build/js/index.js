@@ -12,7 +12,7 @@ async function cargarEmpresasConvenio() {
     if (!tableBody) return;
     
     try {
-        console.log('🏭 Cargando empresas en convenio...');
+        // console.log('🏭 Cargando empresas en convenio...');
         
         const response = await fetch('./api/empresas_convenio.php?activo=1&limit=5&orderBy=created_at&order=DESC');
         
@@ -21,7 +21,7 @@ async function cargarEmpresasConvenio() {
         }
         
         const result = await response.json();
-        console.log('Respuesta de empresas:', result);
+        // console.log('Respuesta de empresas:', result);
         
         if (result.success && result.data && result.data.length > 0) {
             tableBody.innerHTML = '';
@@ -83,10 +83,10 @@ async function cargarEmpresasConvenio() {
             if (table) table.classList.remove('hidden');
             if (noCompaniesMessage) noCompaniesMessage.classList.add('hidden');
             
-            console.log(`✅ ${result.data.length} empresas cargadas`);
+            // console.log(`✅ ${result.data.length} empresas cargadas`);
             
         } else {
-            console.log('⚠️ No hay empresas en convenio en la base de datos');
+            // console.log('⚠️ No hay empresas en convenio en la base de datos');
             
             if (table) table.classList.add('hidden');
             if (noCompaniesMessage) noCompaniesMessage.classList.remove('hidden');
@@ -454,7 +454,7 @@ async function cargarEmpresasConvenio() {
 
         if (this.isAuthenticated) {
           // Usuario autenticado
-          console.log('Usuario autenticado:', this.user);
+          // console.log('Usuario autenticado:', this.user);
           
           if (welcomeMessage) {
             welcomeMessage.innerHTML = `<h6 class="mb-0 font-bold text-white capitalize">Bienvenido, ${this.user.nombre || 'Usuario'}</h6>`;
@@ -495,7 +495,7 @@ async function cargarEmpresasConvenio() {
 
         } else {
           // Usuario no autenticado
-          console.log('Usuario NO autenticado');
+          // console.log('Usuario NO autenticado');
           
           if (welcomeMessage) {
             welcomeMessage.innerHTML = `<h6 class="mb-0 font-bold text-white capitalize">Bienvenido a Clúster Intranet</h6>`;
@@ -947,7 +947,7 @@ async function cargarEmpresasConvenio() {
       }
 
       try {
-        console.log('🔄 Cargando anuncios importantes desde la base de datos...');
+        // console.log('🔄 Cargando anuncios importantes desde la base de datos...');
 
         // Mostrar skeleton de carga
         mostrarSkeletonAnuncios();
@@ -967,28 +967,28 @@ async function cargarEmpresasConvenio() {
         }
 
         const data = await response.json();
-        console.log('📡 Respuesta de la API:', data);
+        // console.log('📡 Respuesta de la API:', data);
 
         let anuncios = [];
 
         // Verificar diferentes formatos de respuesta
         if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
           anuncios = data.data;
-          console.log(`✅ ${anuncios.length} anuncios destacados cargados desde la base de datos`);
+          // console.log(`✅ ${anuncios.length} anuncios destacados cargados desde la base de datos`);
           renderizarAnunciosImportantes(anuncios);
 
         } else if (data && Array.isArray(data.boletines) && data.boletines.length > 0) {
           anuncios = data.boletines;
-          console.log(`✅ ${anuncios.length} anuncios destacados cargados desde la base de datos`);
+          // console.log(`✅ ${anuncios.length} anuncios destacados cargados desde la base de datos`);
           renderizarAnunciosImportantes(anuncios);
 
         } else if (Array.isArray(data) && data.length > 0) {
           anuncios = data;
-          console.log(`✅ ${anuncios.length} anuncios destacados cargados desde la base de datos`);
+          // console.log(`✅ ${anuncios.length} anuncios destacados cargados desde la base de datos`);
           renderizarAnunciosImportantes(anuncios);
 
         } else {
-          console.log('📋 No hay anuncios destacados en la base de datos - intentando cargar cualquier boletín publicado');
+          // console.log('📋 No hay anuncios destacados en la base de datos - intentando cargar cualquier boletín publicado');
           
           // Fallback: cargar cualquier boletín publicado si no hay destacados
           const fallbackUrl = './api/boletines.php?estado=publicado&limit=4&orderBy=fecha_publicacion&order=DESC';
@@ -999,11 +999,11 @@ async function cargarEmpresasConvenio() {
             
             if (fallbackData && Array.isArray(fallbackData.data) && fallbackData.data.length > 0) {
               anuncios = fallbackData.data;
-              console.log(`✅ ${anuncios.length} anuncios recientes cargados desde la base de datos`);
+              // console.log(`✅ ${anuncios.length} anuncios recientes cargados desde la base de datos`);
               renderizarAnunciosImportantes(anuncios);
             } else if (Array.isArray(fallbackData) && fallbackData.length > 0) {
               anuncios = fallbackData;
-              console.log(`✅ ${anuncios.length} anuncios recientes cargados desde la base de datos`);
+              // console.log(`✅ ${anuncios.length} anuncios recientes cargados desde la base de datos`);
               renderizarAnunciosImportantes(anuncios);
             } else {
               mostrarMensajeNoAnuncios();
@@ -1073,7 +1073,7 @@ async function cargarEmpresasConvenio() {
       const announcementsList = document.getElementById('announcementsList');
       if (!announcementsList) return;
 
-      console.log(`Renderizando ${anuncios.length} anuncios importantes`);
+      // console.log(`Renderizando ${anuncios.length} anuncios importantes`);
 
       // Limpiar skeleton existente
       const skeletons = announcementsList.querySelectorAll('.skeleton-announcement');
@@ -1289,7 +1289,7 @@ async function cargarEmpresasConvenio() {
            * Función para ver detalle de anuncio
            */
           async function verDetalleAnuncio(anuncioId) {
-            console.log('🔍 Viendo detalle del anuncio:', anuncioId);
+            // console.log('🔍 Viendo detalle del anuncio:', anuncioId);
 
             try {
               // Mostrar modal de carga
@@ -1480,16 +1480,16 @@ async function cargarEmpresasConvenio() {
            */
           async function verificarInicializacionBD() {
             try {
-              console.log('🔍 Verificando estado de la base de datos...');
+              // console.log('🔍 Verificando estado de la base de datos...');
               
               // Verificar si existe el archivo de inicialización
               const initResponse = await fetch('init_database_with_announcements.php');
               
               if (initResponse.ok) {
-                console.log('🛠️ Archivo de inicialización encontrado');
+                // console.log('🛠️ Archivo de inicialización encontrado');
                 mostrarOpcionInicializacion();
               } else {
-                console.log('⚠️ No se encontró archivo de inicialización');
+                // console.log('⚠️ No se encontró archivo de inicialización');
               }
             } catch (error) {
               console.error('Error verificando inicialización:', error);
@@ -1563,12 +1563,12 @@ async function cargarEmpresasConvenio() {
            */
           async function cargarBannersSlider() {
             try {
-              console.log('🎬 Cargando banners para el slider...');
-              console.log('🌐 URL base:', window.location.origin);
-              console.log('📍 Ruta actual:', window.location.pathname);
+              // console.log('🎬 Cargando banners para el slider...');
+              // console.log('🌐 URL base:', window.location.origin);
+              // console.log('📍 Ruta actual:', window.location.pathname);
               
               const apiUrl = './api/banners.php?action=active';
-              console.log('🔗 URL de API:', apiUrl);
+              // console.log('🔗 URL de API:', apiUrl);
               
               const response = await fetch(apiUrl);
               
@@ -1592,10 +1592,10 @@ async function cargarEmpresasConvenio() {
               
               if (result.success && result.data && result.data.length > 0) {
                 bannersData = result.data;
-                console.log(`✅ ${bannersData.length} banners cargados para el slider`);
+                // console.log(`✅ ${bannersData.length} banners cargados para el slider`);
                 inicializarSlider();
               } else {
-                console.log('⚠️ No hay banners en la base de datos');
+                // console.log('⚠️ No hay banners en la base de datos');
                 mostrarSliderPorDefecto();
               }
               
@@ -1609,7 +1609,7 @@ async function cargarEmpresasConvenio() {
            * Inicializar el slider con los banners cargados
            */
           function inicializarSlider() {
-            console.log('🔧 Iniciando inicializarSlider...');
+            // console.log('🔧 Iniciando inicializarSlider...');
             
             const slidesContainer = document.getElementById('slidesContainer');
             const sliderIndicators = document.getElementById('sliderIndicators');
@@ -1617,10 +1617,10 @@ async function cargarEmpresasConvenio() {
             const btnNext = document.getElementById('sliderBtnNext');
             const btnPrev = document.getElementById('sliderBtnPrev');
             
-            console.log('📊 Estado del slider:');
-            console.log('   - slidesContainer:', slidesContainer ? 'encontrado' : 'NO encontrado');
-            console.log('   - bannersData.length:', bannersData.length);
-            console.log('   - sliderLoading:', sliderLoading ? 'encontrado' : 'NO encontrado');
+            // console.log('📊 Estado del slider:');
+            // console.log('   - slidesContainer:', slidesContainer ? 'encontrado' : 'NO encontrado');
+            // console.log('   - bannersData.length:', bannersData.length);
+            // console.log('   - sliderLoading:', sliderLoading ? 'encontrado' : 'NO encontrado');
             
             if (!slidesContainer) {
               console.error('❌ slidesContainer no encontrado');
@@ -1661,17 +1661,17 @@ async function cargarEmpresasConvenio() {
               `;
             }).join('');
             
-            console.log('✅ HTML generado e insertado en slidesContainer');
-            console.log('🔢 Número de slides creados:', slidesContainer.children.length);
+            // console.log('✅ HTML generado e insertado en slidesContainer');
+            // console.log('🔢 Número de slides creados:', slidesContainer.children.length);
             
             // Verificar que el primer slide sea visible
             const primerSlide = slidesContainer.querySelector('.banner-slide');
             if (primerSlide) {
-              console.log('👁️ Primer slide encontrado:', primerSlide);
+              // console.log('👁️ Primer slide encontrado:', primerSlide);
               const styles = getComputedStyle(primerSlide);
-              console.log('   - Opacity:', styles.opacity);
-              console.log('   - Display:', styles.display);
-              console.log('   - Background-image:', styles.backgroundImage);
+              // console.log('   - Opacity:', styles.opacity);
+              // console.log('   - Display:', styles.display);
+              // console.log('   - Background-image:', styles.backgroundImage);
             }
             
             // Crear indicadores si hay más de un banner
@@ -1869,13 +1869,13 @@ async function cargarEmpresasConvenio() {
           });
 
           async function inicializarDashboard() {
-            console.log('🚀 Inicializando dashboard Clúster Intranet...');
-            console.log('🔧 Versión del sistema: 1.0.0');
-            console.log('🌐 URL actual:', window.location.href);
+            // console.log('🚀 Inicializando dashboard Clúster Intranet...');
+            // console.log('🔧 Versión del sistema: 1.0.0');
+            // console.log('🌐 URL actual:', window.location.href);
             
             try {
               // Crear instancia del AuthManager
-              console.log('👤 Inicializando sistema de autenticación...');
+              // console.log('👤 Inicializando sistema de autenticación...');
               authManager = new AuthManager();
               window.authManager = authManager; // Hacerlo global para debugging
               
@@ -1883,56 +1883,56 @@ async function cargarEmpresasConvenio() {
               await new Promise(resolve => setTimeout(resolve, 100));
               
               // Configurar menú de usuario ya está en AuthManager
-              console.log('🔧 Sistema de autenticación configurado');
+              // console.log('🔧 Sistema de autenticación configurado');
               
               // Configurar formulario de anuncios
-              console.log('📝 Configurando formulario de anuncios...');
+              // console.log('📝 Configurando formulario de anuncios...');
               configurarFormularioAnuncio();
               
               // Actualizar visibilidad del botón agregar
               actualizarVisibilidadBotonAgregar();
               
               // Cargar anuncios importantes desde la BD
-              console.log('📢 Cargando anuncios importantes...');
+              // console.log('📢 Cargando anuncios importantes...');
               await cargarAnuncios();
               
               // Cargar banners para el slider
-              console.log('🎬 Cargando slider de banners...');
+              // console.log('🎬 Cargando slider de banners...');
               await cargarBannersSlider();
               
               // Cargar empresas en convenio
-              console.log('🏭 Cargando empresas en convenio...');
+              // console.log('🏭 Cargando empresas en convenio...');
               await cargarEmpresasConvenio();
               
               // Cargar empresas destacadas
-              console.log('⭐ Cargando empresas destacadas...');
+              // console.log('⭐ Cargando empresas destacadas...');
               await cargarEmpresasDestacadas();
               
               // Cargar otras secciones dinámicas si existen
               if (typeof cargarEmpresasComites === 'function') {
-                console.log('🏢 Cargando empresas y comités...');
+                // console.log('🏢 Cargando empresas y comités...');
                 await cargarEmpresasComites();
               } else {
-                console.log('⚠️ Función cargarEmpresasComites no disponible');
+                // console.log('⚠️ Función cargarEmpresasComites no disponible');
               }
               
               if (typeof cargarEstadisticas === 'function') {
-                console.log('📊 Cargando estadísticas...');
+                // console.log('📊 Cargando estadísticas...');
                 await cargarEstadisticas();
               } else {
-                console.log('⚠️ Función cargarEstadisticas no disponible');
+                // console.log('⚠️ Función cargarEstadisticas no disponible');
               }
               
-              console.log('✅ Dashboard inicializado correctamente');
+              // console.log('✅ Dashboard inicializado correctamente');
               
               // Log de estado final
               setTimeout(() => {
-                console.log('📋 Estado final del dashboard:');
+                // console.log('📋 Estado final del dashboard:');
                 const anunciosList = document.getElementById('announcementsList');
                 const anunciosCount = anunciosList ? anunciosList.children.length : 0;
-                console.log(`   - Anuncios cargados: ${anunciosCount}`);
-                console.log(`   - Elementos skeleton: ${document.querySelectorAll('.skeleton-announcement').length}`);
-                console.log('🎯 Sistema listo para usar');
+                // console.log(`   - Anuncios cargados: ${anunciosCount}`);
+                // console.log(`   - Elementos skeleton: ${document.querySelectorAll('.skeleton-announcement').length}`);
+                // console.log('🎯 Sistema listo para usar');
               }, 2000);
               
             } catch (error) {
@@ -1950,7 +1950,7 @@ async function cargarEmpresasConvenio() {
           
           // Inicializar cuando el DOM esté listo
           document.addEventListener('DOMContentLoaded', function() {
-            console.log('📋 DOM cargado - iniciando dashboard');
+            // console.log('📋 DOM cargado - iniciando dashboard');
             inicializarDashboard();
           });
 

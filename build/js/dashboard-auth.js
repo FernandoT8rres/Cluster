@@ -9,7 +9,7 @@ let authToken = null;
 
 // Inicialización del dashboard
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Dashboard inicializando...');
+    // console.log('🚀 Dashboard inicializando...');
     
     // Verificar autenticación
     checkAuthentication();
@@ -28,14 +28,14 @@ function checkAuthentication() {
         authToken = localStorage.getItem('clúster_token');
         const userString = localStorage.getItem('clúster_user');
         
-        console.log('🔍 Verificando autenticación...');
-        console.log('Token presente:', !!authToken);
-        console.log('Usuario presente:', !!userString);
+        // console.log('🔍 Verificando autenticación...');
+        // console.log('Token presente:', !!authToken);
+        // console.log('Usuario presente:', !!userString);
         
         if (authToken && userString) {
             try {
                 currentUser = JSON.parse(userString);
-                console.log('👤 Usuario autenticado:', currentUser);
+                // console.log('👤 Usuario autenticado:', currentUser);
                 
                 // Verificar que el token sea válido
                 if (isValidToken(authToken)) {
@@ -52,14 +52,14 @@ function checkAuthentication() {
                 clearAuthData();
             }
         } else {
-            console.log('⚠️ No hay datos de autenticación');
+            // console.log('⚠️ No hay datos de autenticación');
             disableAuthenticatedFeatures();
         }
         
         // Verificar parámetro authenticated en URL
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('authenticated') === 'true' && isUserAuthenticated) {
-            console.log('✅ Acceso autenticado confirmado por URL');
+            // console.log('✅ Acceso autenticado confirmado por URL');
         }
         
     } catch (error) {
@@ -95,7 +95,7 @@ function isValidToken(token) {
 
 // Habilitar funcionalidades autenticadas
 function enableAuthenticatedFeatures() {
-    console.log('✅ Habilitando funcionalidades autenticadas');
+    // console.log('✅ Habilitando funcionalidades autenticadas');
     
     // Remover clases de restricción
     document.querySelectorAll('.restricted-nav-item').forEach(item => {
@@ -133,7 +133,7 @@ function enableAuthenticatedFeatures() {
 
 // Deshabilitar funcionalidades autenticadas
 function disableAuthenticatedFeatures() {
-    console.log('⚠️ Deshabilitando funcionalidades autenticadas');
+    // console.log('⚠️ Deshabilitando funcionalidades autenticadas');
     
     // Aplicar restricciones visuales
     document.querySelectorAll('.restricted-nav-item').forEach(item => {
@@ -154,7 +154,7 @@ function disableAuthenticatedFeatures() {
 function updateUserInterface() {
     if (!currentUser) return;
     
-    console.log('🎨 Actualizando interfaz de usuario');
+    // console.log('🎨 Actualizando interfaz de usuario');
     
     // Actualizar nombre de usuario en elementos
     document.querySelectorAll('[data-user-name]').forEach(element => {
@@ -175,7 +175,7 @@ function updateUserInterface() {
             element.style.display = 'block';
         });
         
-        console.log('👑 Funcionalidades de admin habilitadas');
+        // console.log('👑 Funcionalidades de admin habilitadas');
     }
 }
 
@@ -184,7 +184,7 @@ function showWelcomeMessage() {
     if (!currentUser) return;
     
     const welcomeMsg = `¡Bienvenido, ${currentUser.nombre}!`;
-    console.log('👋 ' + welcomeMsg);
+    // console.log('👋 ' + welcomeMsg);
     
     // Actualizar elementos de bienvenida
     document.querySelectorAll('[data-welcome-message]').forEach(element => {
@@ -217,7 +217,7 @@ function showRestrictedAccessMessage() {
 
 // Cargar contenido del dashboard
 function loadDashboardContent() {
-    console.log('📊 Cargando contenido del dashboard...');
+    // console.log('📊 Cargando contenido del dashboard...');
     
     // Cargar banners
     loadBanners();
@@ -234,14 +234,14 @@ function loadDashboardContent() {
 
 // Cargar banners
 async function loadBanners() {
-    console.log('🖼️ Cargando banners...');
+    // console.log('🖼️ Cargando banners...');
     
     try {
         const response = await fetch('./api/banners.php?action=active');
         const data = await response.json();
         
         if (data.success && data.data && data.data.length > 0) {
-            console.log(`✅ ${data.data.length} banners cargados`);
+            // console.log(`✅ ${data.data.length} banners cargados`);
             displayBanners(data.data);
         } else {
             console.warn('⚠️ No hay banners disponibles');
@@ -271,17 +271,17 @@ function displayBanners(banners) {
     }
     
     // Mostrar banners (implementar carrusel si es necesario)
-    console.log('🖼️ Mostrando banners en el contenedor');
+    // console.log('🖼️ Mostrando banners en el contenedor');
 }
 
 // Cargar estadísticas
 async function loadStatistics() {
     if (!isUserAuthenticated) {
-        console.log('ℹ️ Estadísticas requieren autenticación');
+        // console.log('ℹ️ Estadísticas requieren autenticación');
         return;
     }
     
-    console.log('📊 Cargando estadísticas...');
+    // console.log('📊 Cargando estadísticas...');
     
     try {
         const response = await fetch('./api/estadisticas.php', {
@@ -294,7 +294,7 @@ async function loadStatistics() {
             const data = await response.json();
             if (data.success) {
                 displayStatistics(data.data);
-                console.log('✅ Estadísticas cargadas');
+                // console.log('✅ Estadísticas cargadas');
             }
         }
     } catch (error) {
@@ -305,7 +305,7 @@ async function loadStatistics() {
 
 // Cargar anuncios importantes
 async function loadAnnouncements() {
-    console.log('📢 Cargando anuncios importantes...');
+    // console.log('📢 Cargando anuncios importantes...');
     
     try {
         const response = await fetch('./api/anuncios.php?active=true');
@@ -313,7 +313,7 @@ async function loadAnnouncements() {
         
         if (data.success && data.data) {
             displayAnnouncements(data.data);
-            console.log('✅ Anuncios cargados');
+            // console.log('✅ Anuncios cargados');
         } else {
             showNoAnnouncementsMessage();
         }
@@ -409,7 +409,7 @@ function clearAuthData() {
     currentUser = null;
     isUserAuthenticated = false;
     
-    console.log('🧹 Datos de autenticación limpiados');
+    // console.log('🧹 Datos de autenticación limpiados');
     
     disableAuthenticatedFeatures();
 }
@@ -440,7 +440,7 @@ function showBannersError() {
 }
 
 function showNoAnnouncementsMessage() {
-    console.log('ℹ️ No hay anuncios disponibles, mostrando mensaje');
+    // console.log('ℹ️ No hay anuncios disponibles, mostrando mensaje');
 }
 
 function showStatsError() {
@@ -456,19 +456,19 @@ function showStatsError() {
 // Función de utilidad para mostrar estadísticas
 function displayStatistics(stats) {
     // Implementar según la estructura de estadísticas
-    console.log('📊 Mostrando estadísticas:', stats);
+    // console.log('📊 Mostrando estadísticas:', stats);
 }
 
 // Cargar empresas destacadas
 async function loadFeaturedCompanies() {
-    console.log('🏢 Cargando empresas destacadas...');
+    // console.log('🏢 Cargando empresas destacadas...');
     
     try {
         const response = await fetch('./api/empresas.php?destacadas=true');
         const data = await response.json();
         
         if (data.success && data.data) {
-            console.log('✅ Empresas destacadas cargadas');
+            // console.log('✅ Empresas destacadas cargadas');
         }
     } catch (error) {
         console.error('❌ Error cargando empresas:', error);

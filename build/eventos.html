@@ -36,9 +36,9 @@
   <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
   <!-- Events specific CSS -->
   <link rel="stylesheet" href="./assets/css/eventos.css">
+  <link rel="stylesheet" href="./assets/css/layout/header-navbar.css">
 
   <style>
-    /* Porsche-inspired Design System */
     :root {
       /* Primary Colors - Inspired by Porsche */
       --porsche-black: #1a1a1a;
@@ -47,7 +47,6 @@
       --porsche-white: #ffffff;
       --porsche-light-gray: #f5f5f5;
       --porsche-accent: #c9302c;
-      /* Clúster red for brand consistency */
 
       /* Typography */
       --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -57,45 +56,39 @@
       --porsche-font-weight-semibold: 600;
       --porsche-font-weight-bold: 700;
 
-      /* Spacing */
-      --porsche-space-xs: 0.5rem;
-      --porsche-space-sm: 1rem;
-      --porsche-space-md: 1.5rem;
-      --porsche-space-lg: 2rem;
-      --porsche-space-xl: 3rem;
+      /* Spacing & Layout */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --radius-lg: 12px;
+      --porsche-radius-lg: 12px;
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s ease;
 
       /* Shadows */
       --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
       --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
       --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
-
-      /* Border Radius */
-      --porsche-radius-sm: 4px;
-      --porsche-radius-md: 8px;
-      --porsche-radius-lg: 12px;
-      --porsche-radius-xl: 16px;
     }
 
     /* Global Typography Enhancement */
     * {
       font-family: var(--porsche-font) !important;
+      box-sizing: border-box !important;
     }
 
     body {
       font-weight: var(--porsche-font-weight-regular);
       line-height: 1.6;
       letter-spacing: -0.01em;
-    }
-
-    /* Global Typography Enhancement */
-    * {
-      font-family: var(--porsche-font) !important;
-    }
-
-    body {
-      font-weight: var(--porsche-font-weight-regular);
-      line-height: 1.6;
-      letter-spacing: -0.01em;
+      background-color: black;
+      color: #f3f4f6;
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
     }
 
     /* Background Sections Styles */
@@ -305,684 +298,6 @@
       }
     }
 
-    /* Porsche-inspired Navigation */
-    .porsche-navbar {
-      background: linear-gradient(135deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--porsche-shadow-medium);
-    }
-
-    .porsche-breadcrumb a {
-      color: rgba(255, 255, 255, 0.7);
-      transition: color 0.3s ease;
-    }
-
-    .porsche-breadcrumb a:hover {
-      color: var(--porsche-accent);
-    }
-
-    .porsche-welcome {
-      color: var(--porsche-white);
-      font-weight: var(--porsche-font-weight-semibold);
-    }
-
-    /* Navigation System Variables */
-    :root {
-      --header-height: 70px;
-      --bottom-nav-height: 80px;
-      --claut-primary: #1a1a1a;
-      --claut-primary-rgb: 26, 26, 26;
-      --claut-secondary: #2d2d2d;
-      --claut-accent: #c9302c;
-      --claut-accent-rgb: 201, 48, 44;
-      --claut-red: #dc2626;
-      --claut-red-rgb: 220, 38, 38;
-      --claut-surface: rgba(26, 26, 26, 0.95);
-      --claut-bg-surface: rgba(26, 26, 26, 0.95);
-      --claut-bg-secondary: rgba(45, 45, 45, 0.9);
-      --claut-text-primary: #ffffff;
-      --claut-text-secondary: rgba(255, 255, 255, 0.7);
-      --claut-border-light: rgba(255, 255, 255, 0.1);
-      --claut-border-medium: rgba(255, 255, 255, 0.15);
-      --claut-shadow-red: 0 4px 12px rgba(var(--claut-red-rgb), 0.3);
-      --transition-fast: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-      --transition-normal: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-      --space-1: 0.25rem;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-      --space-12: 3rem;
-    }
-
-    /* Header Horizontal Premium con Men\u00fa Integrado */
-    .claut-header {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      width: 100% !important;
-      height: var(--header-height);
-      background: var(--claut-bg-surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--claut-border-light);
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding: 0 var(--space-6);
-      z-index: 99999 !important;
-      transition: var(--transition-normal);
-      box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.2),
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-      will-change: transform, backdrop-filter;
-      transform: translateY(0px) !important;
-      overflow: visible !important;
-    }
-
-    /* Header scroll effects */
-    .claut-header.scrolled {
-      background: rgba(26, 26, 26, 0.98) !important;
-      box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.4),
-        0 8px 24px rgba(0, 0, 0, 0.25),
-        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-      backdrop-filter: blur(25px) !important;
-      -webkit-backdrop-filter: blur(25px) !important;
-      position: fixed !important;
-      top: 0 !important;
-    }
-
-    /* Logo area - usando el logo existente del sidebar */
-    .claut-header-logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      text-decoration: none;
-      color: var(--claut-text-primary);
-      font-weight: var(--apple-font-semibold);
-      transition: all var(--transition-normal);
-      padding: var(--space-2) var(--space-3);
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-
-    .claut-header-logo:hover {
-      color: var(--claut-red);
-      background: rgba(var(--claut-red-rgb, 199, 37, 43), 0.08);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(var(--claut-red-rgb, 199, 37, 43), 0.15);
-    }
-
-    .claut-header-logo:hover img {
-      transform: scale(1.05) rotate(2deg);
-      filter: brightness(1.1);
-    }
-
-    .claut-header-logo img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      transition: all var(--transition-normal);
-      object-fit: cover;
-    }
-
-    /* Actions area */
-    .claut-header-actions {
-      display: flex !important;
-      align-items: center !important;
-      gap: var(--space-3);
-      z-index: inherit;
-      position: relative;
-      height: 100%;
-    }
-
-    .claut-header-btn {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--claut-border-light);
-      border-radius: 10px;
-      color: var(--claut-text-tertiary);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      position: relative !important;
-      z-index: inherit;
-      overflow: visible !important;
-    }
-
-    .claut-header-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 1);
-      transform: scale(1.05);
-    }
-
-    .claut-header-btn.active {
-      background: var(--claut-red);
-      color: var(--claut-text-primary);
-      box-shadow: var(--claut-shadow-red);
-    }
-
-    /* Navegación horizontal principal */
-    .claut-header-nav {
-      display: none;
-      flex: 1;
-      justify-content: center;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 0 var(--space-6);
-    }
-
-    /* Navigation items - Header */
-    .claut-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: var(--space-2) var(--space-3);
-      text-decoration: none;
-      color: var(--claut-text-tertiary);
-      border-radius: 12px;
-      transition: var(--transition-normal);
-      position: relative;
-      min-width: 60px;
-      text-align: center;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .claut-nav-item i {
-      font-size: 18px;
-      margin-bottom: 2px;
-      transition: var(--transition-fast);
-    }
-
-    .claut-nav-item span {
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 1;
-      transition: var(--transition-fast);
-      opacity: 0.9;
-    }
-
-    .claut-nav-item:hover {
-      color: var(--claut-text-secondary);
-      background: rgba(255, 255, 255, 0.05);
-      transform: translateY(-2px);
-    }
-
-    .claut-nav-item:hover i {
-      color: var(--claut-red);
-      transform: scale(1.1);
-    }
-
-    .claut-nav-item.active {
-      color: var(--claut-red);
-      background: rgba(var(--claut-red-rgb), 0.1);
-      box-shadow: var(--claut-shadow-red);
-    }
-
-    .claut-nav-item.active i {
-      color: var(--claut-red);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .claut-nav-item.active span {
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Bottom Navigation - Solo m\u00f3vil y tablet */
-    .claut-bottom-nav {
-      position: fixed !important;
-      bottom: 0 !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
-      width: 95% !important;
-      max-width: 600px !important;
-      height: 70px !important;
-      background: var(--claut-bg-surface) !important;
-      border-radius: 35px 35px 0 0 !important;
-      border: 1px solid var(--claut-border-medium) !important;
-      border-bottom: none !important;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3), 0 -8px 40px rgba(0, 0, 0, 0.2) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      display: none;
-    }
-
-    .claut-bottom-nav::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 100%;
-      background: linear-gradient(180deg, var(--claut-bg-surface) 0%, var(--claut-bg-secondary) 100%);
-      opacity: 0.8;
-      z-index: -1;
-    }
-
-    .claut-nav-container {
-      position: relative !important;
-      width: 100% !important;
-      height: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-evenly !important;
-      padding: 0 8px !important;
-      box-sizing: border-box !important;
-      overflow-x: auto !important;
-      scrollbar-width: none !important;
-      -ms-overflow-style: none !important;
-    }
-
-    .claut-nav-container::-webkit-scrollbar {
-      display: none !important;
-    }
-
-    /* Curva decorativa */
-    .claut-nav-curve {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 40px;
-      background: var(--claut-bg-surface);
-      border-radius: 50px 50px 0 0;
-      border: 1px solid var(--claut-border-light);
-      border-bottom: none;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-
-    .claut-nav-curve::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
-      background: var(--claut-red);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--claut-red);
-    }
-
-    /* Navigation links - Bottom */
-    .claut-nav-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: var(--space-2) var(--space-3);
-      color: var(--claut-text-secondary);
-      text-decoration: none;
-      border-radius: 12px;
-      transition: var(--transition-fast);
-      font-size: 0.75rem;
-      font-weight: 500;
-      min-width: 44px;
-      min-height: 44px;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .claut-nav-link::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      transition: transform 0.2s ease;
-      z-index: -1;
-    }
-
-    .claut-nav-link:active::before {
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .claut-nav-link i {
-      font-size: 1.25rem;
-      transition: var(--transition-fast);
-    }
-
-    .claut-nav-link span {
-      font-size: 0.6rem;
-      font-weight: 600;
-      text-align: center;
-      line-height: 1;
-      letter-spacing: -0.01em;
-    }
-
-    .claut-nav-link:hover {
-      color: var(--claut-text-primary);
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .claut-nav-link.active {
-      color: var(--claut-text-primary);
-      background: linear-gradient(135deg, var(--claut-red), #ef4444);
-      box-shadow: var(--claut-shadow-red);
-    }
-
-    .claut-nav-link.active i {
-      transform: scale(1.1);
-    }
-
-    /* Responsive navigation */
-    @media (min-width: 768px) {
-      .claut-header-nav {
-        display: flex;
-      }
-    }
-
-    @media (max-width: 767px) {
-      .claut-mobile-menu-btn {
-        display: flex !important;
-      }
-
-      .claut-header-nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--claut-bg-surface);
-        backdrop-filter: blur(20px);
-        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-        padding: var(--space-4);
-        transform: translateY(-100%);
-        opacity: 0;
-        visibility: hidden;
-        transition: all var(--transition-normal);
-      }
-
-      .claut-header-nav.show {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-
-    /* Control de visibilidad entre header y bottom nav */
-    @media (max-width: 1024px) {
-      .claut-header-nav {
-        display: none !important;
-      }
-
-      .claut-bottom-nav {
-        display: flex !important;
-      }
-
-      /* Mantener los botones de acción del header visibles */
-      .claut-header-actions {
-        display: flex !important;
-      }
-
-      /* Ajustar el header para que sea más compacto en mobile */
-      .claut-header {
-        padding: 0 var(--space-4) !important;
-      }
-    }
-
-    @media (min-width: 1025px) {
-      .claut-header-nav {
-        display: flex !important;
-      }
-
-      .claut-bottom-nav {
-        display: none !important;
-      }
-
-      .claut-header-actions {
-        display: flex !important;
-      }
-    }
-
-    /* Bottom navigation responsive design */
-    @media (max-width: 480px) {
-      .claut-bottom-nav {
-        width: 95%;
-        height: 65px;
-      }
-
-      .claut-nav-link {
-        width: 55px;
-        height: 55px;
-      }
-
-      .claut-nav-link i {
-        font-size: 20px;
-      }
-    }
-
-    /* Ajuste para el contenido principal para evitar superposición con el menú inferior */
-    .main-content {
-      padding-bottom: 90px;
-    }
-
-    /* Navigation touch optimization for mobile */
-    @media (max-width: 768px) {
-      .claut-nav-link {
-        padding: var(--space-2);
-        min-width: 48px;
-        min-height: 48px;
-      }
-
-      .claut-nav-link i {
-        font-size: 1.1rem;
-      }
-
-      .claut-nav-link span {
-        font-size: 0.6rem;
-      }
-
-      .claut-nav-container {
-        padding: 0 var(--space-2);
-      }
-    }
-
-    /* Old Porsche Sidebar - REMOVED
-
-    .porsche-sidebar.sidenav-show,
-    .porsche-sidebar[aria-expanded="true"] {
-      transform: translateX(0);
-    }
-
-    /* Desktop sidebar */
-    @media (min-width: 1280px) {
-      .porsche-sidebar {
-        transform: translateX(0);
-        position: fixed;
-      }
-    }
-
-    .porsche-nav-item {
-      color: rgba(255, 255, 255, 0.8);
-      border-radius: var(--porsche-radius-md);
-      margin: 0.25rem 0.5rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .porsche-nav-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .porsche-nav-item:hover::before {
-      left: 100%;
-    }
-
-    .porsche-nav-item:hover,
-    .porsche-nav-item.active {
-      color: var(--porsche-white);
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateX(4px);
-    }
-
-    .porsche-nav-item.active {
-      background: linear-gradient(135deg, var(--porsche-accent), rgba(201, 48, 44, 0.8));
-      box-shadow: 0 4px 12px rgba(201, 48, 44, 0.3);
-    }
-
-    .porsche-logo span {
-      background: linear-gradient(135deg, var(--porsche-white), var(--porsche-silver));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Mobile Navigation */
-    .sidenav-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .sidenav-overlay.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    /* Main content area styling for new navigation system */
-    .claut-main {
-      margin-left: 0;
-      transition: all 0.3s ease;
-      min-height: 100vh;
-      padding-top: 6rem;
-      /* Space for header navigation */
-      padding-bottom: 6rem;
-      /* Space for bottom navigation on mobile */
-    }
-
-    @media (min-width: 1025px) {
-      .claut-main {
-        padding-top: 6rem;
-        /* Header navigation space */
-        padding-bottom: 2rem;
-        /* Normal bottom padding for desktop */
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .claut-main {
-        padding-top: 2rem;
-        /* Less top padding on mobile */
-        padding-bottom: 8rem;
-        /* More bottom space for curved bottom nav */
-      }
-    }
-
-    /* Events specific styles integration */
-    .events-container {
-      width: 100%;
-      margin: 0;
-      min-height: calc(100vh - 200px);
-    }
-
-    /* Override default navbar styles for events page */
-    .apple-user-info {
-      display: none !important;
-    }
-
-    #messageCenterButton {
-      display: none !important;
-    }
-
-    /* Ensure FontAwesome icons display correctly */
-    .fas,
-    .far,
-    .fab,
-    .fal,
-    .fad,
-    .fa {
-      font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 6 Brands" !important;
-      font-weight: 900;
-      text-rendering: auto;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* Fix specific icon display issues */
-    i[class*="fa-"]:before {
-      font-family: "Font Awesome 6 Free" !important;
-      font-weight: 900;
-    }
-
-    /* Ensure sidebar icons are visible */
-    .porsche-nav-item i {
-      display: inline-block;
-      width: 1em;
-      height: 1em;
-      text-align: center;
-    }
-
-    /* AUTENTICACIÓN Y MENÚ - Copiado exacto de dashboard.html */
-    /* Forzar elementos del menú siempre accesibles */
-    .porsche-nav-item a,
-    a[href],
-    .nav-link {
-      opacity: 1 !important;
-      pointer-events: auto !important;
-      cursor: pointer !important;
-      color: inherit !important;
-    }
-
-    /* Asegurar visibilidad del sidebar */
-    aside,
-    .sidebar,
-    nav {
-      display: block !important;
-      opacity: 1 !important;
-    }
-
-    /* Ocultar íconos de candado solamente */
-    .menu-icon,
-    .fa-lock,
-    .restricted-icon {
-      display: none !important;
-    }
-
-    /* Mostrar elementos de usuario autenticado */
-    .auth-user-info,
-    .user-menu {
-      display: block !important;
-      opacity: 1 !important;
-    }
-
-
-
     /* FontAwesome fixes */
     .fa,
     .fas,
@@ -1038,45 +353,6 @@
       content: "\f2f5" !important;
     }
 
-    /* Porsche-inspired Navbar */
-    .porsche-navbar {
-      background: rgba(26, 26, 26, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: var(--porsche-space-sm) var(--porsche-space-lg);
-      border-radius: var(--porsche-radius-lg);
-      margin: var(--porsche-space-sm);
-    }
-
-    .porsche-breadcrumb {
-      font-size: 0.75rem;
-      font-weight: var(--porsche-font-weight-medium);
-      color: rgba(255, 255, 255, 0.7);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .porsche-breadcrumb a {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
-    .porsche-breadcrumb a:hover {
-      opacity: 1;
-    }
-
-    /* Navbar content styling */
-    .porsche-navbar .apple-user-info {
-      color: var(--porsche-white);
-    }
-
-    .porsche-navbar .apple-nav-link {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .porsche-navbar .apple-nav-link:hover {
-      color: var(--porsche-white);
-    }
-
     /* STICKY STACKING CARDS EFFECT - Optimizado para Eventos */
 
     /* New Event Cards System - Motion.dev based */
@@ -1117,7 +393,7 @@
       width: 100%;
       height: 40vh;
       z-index: 10;
-      margin-top: 80px;
+      margin-top: var(--header-height);
       overflow: hidden;
       /* Prevenir scroll horizontal */
     }
@@ -1167,10 +443,10 @@
       font-weight: 400;
       text-align: center;
       background: linear-gradient(135deg,
-          var(--porsche-accent) 0%,
+          var(--claut-red) 0%,
           #e53e3e 25%,
-          var(--porsche-charcoal) 50%,
-          var(--porsche-accent) 75%,
+          #1a1a1a 50%,
+          var(--claut-red) 75%,
           #2d2d2d 100%);
       background-size: 300% 300%;
       background-clip: text;
@@ -1386,6 +662,7 @@
       border: 0.155rem solid transparent;
       background: linear-gradient(45deg, #232228, #232228, #232228, #232228, var(--card-accent-color)) border-box;
       -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: destination-out;
       mask-composite: exclude;
     }
@@ -1726,6 +1003,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 1;
+      line-clamp: 1;
       -webkit-box-orient: vertical;
     }
 
@@ -1733,6 +1011,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
     }
 
@@ -1740,6 +1019,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
     }
 
@@ -1761,114 +1041,123 @@
     nav.porsche-navbar {
       z-index: 10 !important;
     }
+
     /* === MODAL SCROLL FIXES === */
 
     /* Ensure modal container allows proper scrolling */
     #eventModal {
-        overflow: auto !important;
+      overflow: auto !important;
     }
 
     /* Modal content scrolling improvements */
     #eventModal .flex.items-center.justify-center {
-        overflow-y: auto !important;
-        scrollbar-width: thin;
-        scrollbar-color: #9ca3af #f3f4f6;
+      overflow-y: auto !important;
+      scrollbar-width: thin;
+      scrollbar-color: #9ca3af #f3f4f6;
     }
 
     /* Webkit scrollbar styling for modal */
     #eventModal .flex.items-center.justify-center::-webkit-scrollbar {
-        width: 8px;
+      width: 8px;
     }
 
     #eventModal .flex.items-center.justify-center::-webkit-scrollbar-track {
-        background: #f3f4f6;
-        border-radius: 4px;
+      background: #f3f4f6;
+      border-radius: 4px;
     }
 
     #eventModal .flex.items-center.justify-center::-webkit-scrollbar-thumb {
-        background: #9ca3af;
-        border-radius: 4px;
+      background: #9ca3af;
+      border-radius: 4px;
     }
 
     #eventModal .flex.items-center.justify-center::-webkit-scrollbar-thumb:hover {
-        background: #6b7280;
+      background: #6b7280;
     }
 
     /* Ensure iframe doesn't cause overflow issues */
     #eventIframe {
-        overflow: auto !important;
-        scroll-behavior: smooth;
+      overflow: auto !important;
+      scroll-behavior: smooth;
     }
 
     /* Mobile responsive modal improvements */
     @media (max-width: 768px) {
-        #eventModal .max-w-7xl {
-            max-width: calc(100% - 2rem) !important;
-            margin: 1rem !important;
-        }
+      #eventModal .max-w-7xl {
+        max-width: calc(100% - 2rem) !important;
+        margin: 1rem !important;
+      }
 
-        #eventModal .max-h-\[95vh\] {
-            max-height: calc(100vh - 2rem) !important;
-        }
+      #eventModal .max-h-\[95vh\] {
+        max-height: calc(100vh - 2rem) !important;
+      }
 
-        #eventIframe {
-            min-height: 60vh !important;
-        }
+      #eventIframe {
+        min-height: 60vh !important;
+      }
     }
 
     @media (max-width: 480px) {
-        #eventModal .max-w-7xl {
-            max-width: calc(100% - 1rem) !important;
-            margin: 0.5rem !important;
-        }
+      #eventModal .max-w-7xl {
+        max-width: calc(100% - 1rem) !important;
+        margin: 0.5rem !important;
+      }
 
-        #eventModal .max-h-\[95vh\] {
-            max-height: calc(100vh - 1rem) !important;
-        }
+      #eventModal .max-h-\[95vh\] {
+        max-height: calc(100vh - 1rem) !important;
+      }
 
-        #eventModal .p-6 {
-            padding: 1rem !important;
-        }
+      #eventModal .p-6 {
+        padding: 1rem !important;
+      }
 
-        #eventIframe {
-            min-height: 50vh !important;
-        }
+      #eventIframe {
+        min-height: 50vh !important;
+      }
     }
 
     /* Landscape mode optimizations */
     @media (max-height: 600px) and (orientation: landscape) {
-        #eventModal .max-h-\[95vh\] {
-            max-height: calc(100vh - 1rem) !important;
-        }
+      #eventModal .max-h-\[95vh\] {
+        max-height: calc(100vh - 1rem) !important;
+      }
 
-        #eventIframe {
-            min-height: 40vh !important;
-        }
+      #eventIframe {
+        min-height: 40vh !important;
+      }
     }
 
     /* Fix for touch scrolling on mobile */
     @media (max-width: 768px) {
-        #eventModal {
-            -webkit-overflow-scrolling: touch !important;
-        }
+      #eventModal {
+        -webkit-overflow-scrolling: touch !important;
+      }
 
-        #eventModal .flex.items-center.justify-center {
-            -webkit-overflow-scrolling: touch !important;
-        }
+      #eventModal .flex.items-center.justify-center {
+        -webkit-overflow-scrolling: touch !important;
+      }
     }
 
     /* Ensure proper z-index layering */
     #eventModal {
-        z-index: 9999 !important;
+      z-index: 9999 !important;
     }
-
   </style>
 </head>
 
-<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default text-slate-500">
-  <div
-    class="absolute w-full bg-gradient-to-br from-porsche-charcoal via-porsche-black to-porsche-accent dark:hidden min-h-75">
-  </div>
+<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default overflow-x-hidden"
+  style="background: var(--claut-bg-main); background-image: radial-gradient(ellipse at 60% 0%, rgba(199, 37, 43, 0.05) 0%, transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(15, 23, 42, 0.02) 0%, transparent 50%), radial-gradient(ellipse at 90% 90%, rgba(199, 37, 43, 0.05) 0%, transparent 45%); background-attachment: fixed; color: var(--claut-text-primary);">
+
+  <!-- Background Scroll Image - Fixed position behind everything -->
+  <section class="scroll-image-section"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; background: var(--claut-bg-main); overflow: hidden;">
+    <div class="image-motion" style="transform-origin: 50% 0; transform: rotateX(90deg); width: 100%; height: 100%;">
+      <picture>
+        <img src="./css/moveimage.png" alt="Portal Empresarial" style="width: 100%; height: 100%; object-fit: cover;">
+      </picture>
+    </div>
+  </section>
+
   <!-- Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="porsche-spinner"></div>
@@ -1876,54 +1165,63 @@
 
   <!-- Header Horizontal Premium con Menú Integrado -->
   <header class="claut-header">
-    <!-- Logo area con logo existente -->
-    <a href="#" class="claut-header-logo">
+    <!-- Logo area -->
+    <a href="dashboard.html" class="claut-header-logo">
       <img src="./assets/img/apple-icon.png" alt="Clúster Logo" />
     </a>
 
     <!-- Navegación horizontal principal -->
     <nav class="claut-header-nav" id="clautMainNav">
       <a href="dashboard.html" class="claut-nav-item">
-        <i class="fas fa-home text-white"></i>
-        <span class="text-white">Inicio</span>
+        <i class="fas fa-home"></i>
+        <span>Inicio</span>
       </a>
       <a href="./descuentos.html" class="claut-nav-item">
-        <i class="fas fa-tags text-white"></i>
-        <span class="text-white">Descuentos</span>
+        <i class="fas fa-tags"></i>
+        <span>Descuentos</span>
       </a>
-      <a href="./boletines.html" class="claut-nav-item ">
-        <i class="fas fa-newspaper text-white"></i>
-        <span class="text-white">Boletines</span>
+      <a href="./boletines.html" class="claut-nav-item">
+        <i class="fas fa-newspaper"></i>
+        <span>Boletines</span>
       </a>
-      <a href="./comites.html" class="claut-nav-item ">
-        <i class="fas fa-users text-white"></i>
-        <span class="text-white">Comites</span>
+      <a href="./comites.html" class="claut-nav-item">
+        <i class="fas fa-users"></i>
+        <span>Comites</span>
       </a>
       <a href="./contacto.html" class="claut-nav-item">
-        <i class="fas fa-headset text-white"></i>
-        <span class="text-white">Contacto</span>
+        <i class="fas fa-headset"></i>
+        <span>Contacto</span>
       </a>
       <a href="./eventos.html" class="claut-nav-item active">
-        <i class="fas fa-calendar-alt text-white"></i>
-        <span class="text-white">Eventos</span>
+        <i class="fas fa-calendar-alt"></i>
+        <span>Eventos</span>
       </a>
       <a href="./empresas-convenio.html" class="claut-nav-item">
-        <i class="fas fa-handshake text-white"></i>
-        <span class="text-white">Socios</span>
+        <i class="fas fa-handshake"></i>
+        <span>Socios</span>
       </a>
     </nav>
 
     <!-- Actions area -->
     <div class="claut-header-actions">
-
+      <!-- Botón mensajes -->
+      <button class="claut-header-btn" id="headerMessagesBtn" title="Centro de Mensajes">
+        <i class="fas fa-envelope"></i>
+        <span id="headerMessageCount"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+      </button>
 
       <!-- Menú usuario -->
       <div class="relative">
-        <a href="./profile.html" class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
+        <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
           <i class="fas fa-user-circle text-lg"></i>
-        </a>
+        </button>
       </div>
 
+      <!-- Botón toggle menú móvil -->
+      <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </header>
 
@@ -1959,353 +1257,306 @@
         <i class="fas fa-handshake"></i>
         <span>Convenios</span>
       </a>
+      </a>
     </div>
   </nav>
 
-  <main class="claut-main relative h-full max-h-screen transition-all duration-200 ease-in-out">
-    <!-- Navbar -->
-    <nav
-      class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-1 mx-6 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
-      navbar-main navbar-scroll="false">
-      <div class="flex items-center justify-between w-full px-4 py-0 mx-auto flex-wrap-inherit">
-        <nav>
-          <!-- breadcrumb -->
-          <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
-            <li class="text-sm leading-normal">
-              <a class="opacity-60" href="javascript:;">Intranet</a>
-            </li>
-            <li class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/']"
-              aria-current="page">Eventos</li>
-          </ol>
-          <!-- Mostrar saludo con usuario logueado -->
-          <div id="welcomeMessage" class="mb-2">
-            <h6 class="porsche-welcome mb-0 capitalize" id="welcomeText">Bienvenido a Clúster Intranet</h6>
-          </div>
-        </nav>
+  <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
+    style="margin-top: var(--header-height); margin-left: 0; padding: var(--space-2) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
+    <div id="mainContent" class="main-content-wrapper relative z-10">
 
-        <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
-          <div class="flex items-center md:ml-auto md:pr-4">
-            <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
-              <!-- Mostrar información del usuario autenticado -->
-              <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
-                <div class="flex flex-col">
-                  <span id="userName" class="text-sm font-semibold"></span>
-                  <span id="userRole" class="text-xs opacity-75"></span>
+      <!-- Navbar (Sub-header Glassmorphism) como en dashboard.html/contacto.html -->
+      <nav
+        class="porsche-navbar relative flex flex-wrap items-center justify-between transition-all ease-in duration-250 lg:flex-nowrap lg:justify-start"
+        navbar-main navbar-scroll="false" style="display: flex;">
+        <div class="flex items-center justify-between w-full px-6 py-0 mx-auto flex-wrap-inherit">
+          <nav>
+            <!-- breadcrumb -->
+            <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+              <li class="text-sm leading-normal">
+                <a class="opacity-60" href="javascript:;">Intranet</a>
+              </li>
+              <li class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/']"
+                aria-current="page">Eventos</li>
+            </ol>
+            <!-- Mostrar saludo con usuario logueado -->
+            <div id="welcomeMessage" class="mb-2">
+              <h2 class="porsche-welcome mb-0 capitalize text-white">Próximos Eventos</h2>
+            </div>
+          </nav>
+
+          <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+            <div class="flex items-center md:ml-auto md:pr-4">
+              <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
+                <!-- Mostrar información del usuario autenticado -->
+                <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
+                  <div class="flex flex-col">
+                    <span id="userName" class="text-sm font-semibold"></span>
+                    <span id="userRole" class="text-xs opacity-75"></span>
+                  </div>
                 </div>
               </div>
             </div>
+            <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
+              <!-- Menú para usuarios no autenticados -->
+              <li class="flex items-center" id="loginMenuItem">
+                <a href="./pages/sign-in.html"
+                  class="apple-nav-link block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75">
+                  <i class="fa fa-user sm:mr-1"></i>
+                  <span class="hidden sm:inline">Iniciar Sesión</span>
+                </a>
+              </li>
+              <!-- Botón Panel de Administración (solo para admins) -->
+              <li class="flex items-center pl-4 hidden" id="adminPanelButton">
+                <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                  class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
+                  title="Panel de Administración">
+                  <i class="fas fa-cogs mr-2"></i>
+                  <span class="hidden lg:inline">Admin Panel</span>
+                </a>
+              </li>
+            </ul>
           </div>
-          <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
-            <!-- Menú para usuarios no autenticados -->
-            <li class="flex items-center" id="loginMenuItem">
-              <a href="./pages/sign-in.html"
-                class="apple-nav-link block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75">
-                <i class="fa fa-user sm:mr-1"></i>
-                <span class="hidden sm:inline">Iniciar Sesión</span>
-              </a>
-            </li>
-            <!-- Buzón de Mensajes -->
-            <li class="flex items-center mr-4 hidden" id="messageCenterButton">
-              <div class="relative">
-                <button id="messageButton"
-                  class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 relative"
-                  onclick="
-                    event.stopPropagation();
-                    console.log('🔔 Click en botón buzón');
-                    console.log('🔧 Forzando apertura directa (sin toggle)');
-                    if (window.messageCenter) {
-                      window.messageCenter.forceOpen();
-                    } else if (window.toggleMessageCenter) {
-                      console.log('✅ Usando función toggleMessageCenter');
-                      window.toggleMessageCenter();
-                    } else if (window.messageCenter) {
-                      console.log('✅ Usando messageCenter existente');
-                      window.messageCenter.toggleModal();
-                    } else if (window.openMessageCenter) {
-                      console.log('✅ Usando función global openMessageCenter');
-                      window.openMessageCenter();
-                    } else {
-                      console.log('⚠️ Creando messageCenter on-demand');
-                      window.messageCenter = new MessageCenter();
-                      window.messageCenter.openModal();
-                    }
-                  " title="Centro de Mensajes">
-                  <i class="fas fa-envelope text-lg"></i>
-                  <span id="messageCount"
-                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
-                </button>
+        </div>
+      </nav>
+
+      <!-- end Navbar -->
+
+      <!-- Events Main Content with Background Sections -->
+      <div class="w-full h-full">
+        <!-- Header Section with White Background -->
+        <section class="loop-images" style="--bg: white; min-height: 100vh; position: relative;">
+          <!-- Compact Header -->
+          <header class="py-4">
+            <div class="container">
+              <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 opacity-20">Eventos Clúster</h1>
               </div>
-            </li>
-            <!-- User Dropdown Menu -->
-            <li class="flex items-center relative user-dropdown-container">
-              <div class="relative">
-                <button
-                  class="flex items-center px-3 py-1 text-sm font-bold text-white transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in border-white/20 bg-white/10 hover:scale-102 hover:border-white/40 active:opacity-85"
-                  onclick="toggleUserMenu()" id="userMenuBtn">
-                  <i class="fas fa-user text-white mr-2"></i>
-                  <span class="hidden sm:inline text-white" id="userDisplayName">Usuario</span>
-                  <i class="fas fa-chevron-down text-white ml-2 text-xs"></i>
-                </button>
-                <!-- User Dropdown -->
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 hidden"
-                  id="userDropdown" style="top: 100%; z-index: 9999 !important;">
-                  <div class="px-4 py-2 border-b border-gray-200">
-                    <p class="text-sm font-medium text-gray-900" id="dropdownUserName">Usuario</p>
-                    <p class="text-xs text-gray-500" id="dropdownUserRole">Rol</p>
+            </div>
+          </header>
+
+          <!-- Enhanced Professional Introductory Content -->
+          <div class="container relative z-20 pt-2 pb-16">
+            <!-- Hero Section with Professional Typography -->
+            <div class="text-center mb-12">
+              <div
+                class="inline-flex items-center justify-center px-4 py-2 bg-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6">
+                <i class="fas fa-calendar-star mr-2"></i>
+                AGENDA EMPRESARIAL 2024
+              </div>
+
+              <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-8">
+                <span class="block text-gray-900 mb-2">EXPERIENCIAS QUE</span>
+                <span class="block bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">TRANSFORMAN
+                  NEGOCIOS</span>
+              </h1>
+
+              <div class="max-w-4xl mx-auto">
+                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                  Participa en eventos estratégicamente diseñados para <strong class="text-gray-900">catapultar tu
+                    crecimiento empresarial</strong>
+                  y crear conexiones que definirán el futuro de tu negocio.
+                </p>
+
+                <div class="flex items-center justify-center space-x-8 text-sm text-gray-500 mb-12">
+                  <div class="flex items-center">
+                    <i class="fas fa-users text-red-500 mr-2"></i>
+                    <span>+500 Empresarios</span>
                   </div>
-                  <a href="profile.html" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-user-circle mr-3 text-gray-400"></i>
-                    Mi Perfil
-                  </a>
-                  <button onclick="handleLogout()"
-                    class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                    <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
-                    Cerrar Sesión
+                  <div class="flex items-center">
+                    <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                    <span>Networking Premium</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-trophy text-yellow-500 mr-2"></i>
+                    <span>Eventos Exclusivos</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Content Blocks -->
+            <div class="max-w-6xl mx-auto mb-12">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
+                <!-- Left Content -->
+                <div>
+                  <div
+                    class="inline-flex items-center px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-sm font-medium mb-6">
+                    <i class="fas fa-rocket mr-2"></i>
+                    IMPULSA TU CRECIMIENTO
+                  </div>
+                  <h3 class="text-3xl font-bold text-gray-900 mb-6">Conferencias Magistrales & Talleres Especializados
+                  </h3>
+                  <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                    Desde <span class="text-blue-600 font-semibold">conferencias magistrales</span> con líderes de
+                    industria hasta
+                    <span class="text-green-600 font-semibold">talleres especializados</span> en las últimas tendencias
+                    de
+                    innovación y tecnología.
+                  </p>
+                  <div class="space-y-3">
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                      <span class="text-gray-700">Estrategias de negocio probadas</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                      <span class="text-gray-700">Tecnologías emergentes aplicadas</span>
+                    </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                      <span class="text-gray-700">Casos de éxito reales</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Content -->
+                <div>
+                  <div
+                    class="inline-flex items-center px-3 py-1 bg-purple-50 border border-purple-200 rounded-full text-purple-700 text-sm font-medium mb-6">
+                    <i class="fas fa-handshake mr-2"></i>
+                    NETWORKING ESTRATÉGICO
+                  </div>
+                  <h3 class="text-3xl font-bold text-gray-900 mb-6">Conexiones de Alto Valor</h3>
+                  <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                    Sumérgete en experiencias de <span class="text-purple-600 font-semibold">networking de alto
+                      valor</span>,
+                    donde cada conversación puede convertirse en una <span class="text-red-600 font-semibold">alianza
+                      estratégica</span>
+                    que impulse tu crecimiento.
+                  </p>
+                  <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="text-center">
+                        <div class="text-2xl font-bold text-red-600">90%</div>
+                        <div class="text-sm text-gray-600">Empresas Participantes</div>
+                      </div>
+                      <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-600">98%</div>
+                        <div class="text-sm text-gray-600">Satisfacción</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Benefits Grid -->
+            <div class="max-w-6xl mx-auto mb-10">
+              <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">¿Por qué Participar en Nuestros Eventos?</h3>
+                <p class="text-lg text-gray-600">Beneficios exclusivos que marcarán la diferencia en tu trayectoria
+                  empresarial</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                  class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                  <div
+                    class="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-calendar-check text-white text-2xl"></i>
+                  </div>
+                  <h4 class="text-xl font-bold text-gray-900 mb-3">Eventos Exclusivos</h4>
+                  <p class="text-gray-600 leading-relaxed mb-4">Acceso privilegiado a conferencias y talleres de alto
+                    nivel con los mejores expertos de la industria</p>
+                  <div class="flex items-center text-red-600 font-semibold text-sm">
+                    <span>Más información</span>
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                  </div>
+                </div>
+
+                <div
+                  class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                  <div
+                    class="bg-gradient-to-br from-blue-500 to-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-network-wired text-white text-2xl"></i>
+                  </div>
+                  <h4 class="text-xl font-bold text-gray-900 mb-3">Networking Premium</h4>
+                  <p class="text-gray-600 leading-relaxed mb-4">Conecta directamente con líderes empresariales y
+                    desarrolla relaciones comerciales estratégicas duraderas</p>
+                  <div class="flex items-center text-blue-600 font-semibold text-sm">
+                    <span>Conectar ahora</span>
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                  </div>
+                </div>
+
+                <div
+                  class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-green-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                  <div
+                    class="bg-gradient-to-br from-green-500 to-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-lightbulb text-white text-2xl"></i>
+                  </div>
+                  <h4 class="text-xl font-bold text-gray-900 mb-3">Innovación Continua</h4>
+                  <p class="text-gray-600 leading-relaxed mb-4">Mantente a la vanguardia con las últimas tendencias
+                    tecnológicas y estrategias empresariales emergentes</p>
+                  <div class="flex items-center text-green-600 font-semibold text-sm">
+                    <span>Explorar tendencias</span>
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Call to Action -->
+            <div class="text-center mb-8">
+              <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl p-8 border border-gray-200">
+                <h3 class="text-3xl font-bold text-gray-900 mb-6">¿Listo para Transformar tu Negocio?</h3>
+                <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                  No te pierdas la oportunidad de formar parte de la comunidad empresarial más dinámica.
+                  Cada evento es una puerta hacia nuevas posibilidades.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <button
+                    class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center">
+                    <i class="fas fa-calendar-plus mr-3 text-xl"></i>
+                    Explora Nuestros Próximos Eventos
+                    <i class="fas fa-arrow-down ml-3 animate-bounce"></i>
                   </button>
                 </div>
               </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+            </div>
+          </div>
+        </section>
 
-    <!-- end Navbar -->
+        <!-- Scroll Image Section -->
+        <section class="section2" style="--bg: black;">
+          <div class="image-motion">
+            <picture>
+              <img src="./css/moveimage.png" alt="Colaboración empresarial">
+            </picture>
+          </div>
+        </section>
 
-    <!-- Events Main Content with Background Sections -->
-    <div class="w-full h-full">
-      <!-- Header Section with White Background -->
-      <section class="loop-images" style="--bg: white; min-height: 100vh; position: relative;">
-        <!-- Compact Header -->
-        <header class="py-4">
+        <!-- Events Content Section -->
+        <section style="--bg: black;" class="section3">
           <div class="container">
-            <div class="text-center">
-              <h1 class="text-4xl md:text-5xl font-bold text-gray-900 opacity-20">Eventos Clúster</h1>
-            </div>
-          </div>
-        </header>
+            <h1 class="title">Eventos del Clúster</h1>
+            <p class="subtitle">Conectando oportunidades de negocio</p>
 
-        <!-- Enhanced Professional Introductory Content -->
-        <div class="container relative z-20 pt-2 pb-16">
-          <!-- Hero Section with Professional Typography -->
-          <div class="text-center mb-12">
-            <div
-              class="inline-flex items-center justify-center px-4 py-2 bg-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6">
-              <i class="fas fa-calendar-star mr-2"></i>
-              AGENDA EMPRESARIAL 2024
-            </div>
-
-            <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-8">
-              <span class="block text-gray-900 mb-2">EXPERIENCIAS QUE</span>
-              <span class="block bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">TRANSFORMAN
-                NEGOCIOS</span>
-            </h1>
-
-            <div class="max-w-4xl mx-auto">
-              <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                Participa en eventos estratégicamente diseñados para <strong class="text-gray-900">catapultar tu
-                  crecimiento empresarial</strong>
-                y crear conexiones que definirán el futuro de tu negocio.
-              </p>
-
-              <div class="flex items-center justify-center space-x-8 text-sm text-gray-500 mb-12">
-                <div class="flex items-center">
-                  <i class="fas fa-users text-red-500 mr-2"></i>
-                  <span>+500 Empresarios</span>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-chart-line text-blue-500 mr-2"></i>
-                  <span>Networking Premium</span>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-trophy text-yellow-500 mr-2"></i>
-                  <span>Eventos Exclusivos</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Enhanced Content Blocks -->
-          <div class="max-w-6xl mx-auto mb-12">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
-              <!-- Left Content -->
-              <div>
-                <div
-                  class="inline-flex items-center px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-sm font-medium mb-6">
-                  <i class="fas fa-rocket mr-2"></i>
-                  IMPULSA TU CRECIMIENTO
-                </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-6">Conferencias Magistrales & Talleres Especializados
-                </h3>
-                <p class="text-lg text-gray-600 leading-relaxed mb-6">
-                  Desde <span class="text-blue-600 font-semibold">conferencias magistrales</span> con líderes de
-                  industria hasta
-                  <span class="text-green-600 font-semibold">talleres especializados</span> en las últimas tendencias de
-                  innovación y tecnología.
-                </p>
-                <div class="space-y-3">
-                  <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                    <span class="text-gray-700">Estrategias de negocio probadas</span>
-                  </div>
-                  <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                    <span class="text-gray-700">Tecnologías emergentes aplicadas</span>
-                  </div>
-                  <div class="flex items-center">
-                    <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                    <span class="text-gray-700">Casos de éxito reales</span>
-                  </div>
+            <main>
+              <!-- Loading State -->
+              <div id="loadingState" class="flex items-center justify-center min-h-96">
+                <div class="text-center">
+                  <i class="fas fa-spinner fa-spin text-4xl mb-4" style="color: #C7252B;"></i>
+                  <p class="text-gray-600">Cargando eventos...</p>
                 </div>
               </div>
 
-              <!-- Right Content -->
-              <div>
-                <div
-                  class="inline-flex items-center px-3 py-1 bg-purple-50 border border-purple-200 rounded-full text-purple-700 text-sm font-medium mb-6">
-                  <i class="fas fa-handshake mr-2"></i>
-                  NETWORKING ESTRATÉGICO
-                </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-6">Conexiones de Alto Valor</h3>
-                <p class="text-lg text-gray-600 leading-relaxed mb-6">
-                  Sumérgete en experiencias de <span class="text-purple-600 font-semibold">networking de alto
-                    valor</span>,
-                  donde cada conversación puede convertirse en una <span class="text-red-600 font-semibold">alianza
-                    estratégica</span>
-                  que impulse tu crecimiento.
-                </p>
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="text-center">
-                      <div class="text-2xl font-bold text-red-600">90%</div>
-                      <div class="text-sm text-gray-600">Empresas Participantes</div>
-                    </div>
-                    <div class="text-center">
-                      <div class="text-2xl font-bold text-blue-600">98%</div>
-                      <div class="text-sm text-gray-600">Satisfacción</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+              <!-- Event Cards Container - Will be populated by JavaScript -->
+              <ul id="event-cards"></ul>
+            </main>
 
-          <!-- Enhanced Benefits Grid -->
-          <div class="max-w-6xl mx-auto mb-10">
-            <div class="text-center mb-12">
-              <h3 class="text-3xl font-bold text-gray-900 mb-4">¿Por qué Participar en Nuestros Eventos?</h3>
-              <p class="text-lg text-gray-600">Beneficios exclusivos que marcarán la diferencia en tu trayectoria
-                empresarial</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div
-                class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <div
-                  class="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <i class="fas fa-calendar-check text-white text-2xl"></i>
-                </div>
-                <h4 class="text-xl font-bold text-gray-900 mb-3">Eventos Exclusivos</h4>
-                <p class="text-gray-600 leading-relaxed mb-4">Acceso privilegiado a conferencias y talleres de alto
-                  nivel con los mejores expertos de la industria</p>
-                <div class="flex items-center text-red-600 font-semibold text-sm">
-                  <span>Más información</span>
-                  <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-              </div>
-
-              <div
-                class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <div
-                  class="bg-gradient-to-br from-blue-500 to-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <i class="fas fa-network-wired text-white text-2xl"></i>
-                </div>
-                <h4 class="text-xl font-bold text-gray-900 mb-3">Networking Premium</h4>
-                <p class="text-gray-600 leading-relaxed mb-4">Conecta directamente con líderes empresariales y
-                  desarrolla relaciones comerciales estratégicas duraderas</p>
-                <div class="flex items-center text-blue-600 font-semibold text-sm">
-                  <span>Conectar ahora</span>
-                  <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-              </div>
-
-              <div
-                class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-green-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <div
-                  class="bg-gradient-to-br from-green-500 to-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <i class="fas fa-lightbulb text-white text-2xl"></i>
-                </div>
-                <h4 class="text-xl font-bold text-gray-900 mb-3">Innovación Continua</h4>
-                <p class="text-gray-600 leading-relaxed mb-4">Mantente a la vanguardia con las últimas tendencias
-                  tecnológicas y estrategias empresariales emergentes</p>
-                <div class="flex items-center text-green-600 font-semibold text-sm">
-                  <span>Explorar tendencias</span>
-                  <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Enhanced Call to Action -->
-          <div class="text-center mb-8">
-            <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl p-8 border border-gray-200">
-              <h3 class="text-3xl font-bold text-gray-900 mb-6">¿Listo para Transformar tu Negocio?</h3>
-              <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                No te pierdas la oportunidad de formar parte de la comunidad empresarial más dinámica.
-                Cada evento es una puerta hacia nuevas posibilidades.
-              </p>
-              <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button
-                  class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center">
-                  <i class="fas fa-calendar-plus mr-3 text-xl"></i>
-                  Explora Nuestros Próximos Eventos
-                  <i class="fas fa-arrow-down ml-3 animate-bounce"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Scroll Image Section -->
-      <section class="section2" style="--bg: black;">
-        <div class="image-motion">
-          <picture>
-            <img src="./css/moveimage.png" alt="Colaboración empresarial">
-          </picture>
-        </div>
-      </section>
-
-      <!-- Events Content Section -->
-      <section style="--bg: black;" class="section3">
-        <div class="container">
-          <h1 class="title">Eventos del Clúster</h1>
-          <p class="subtitle">Conectando oportunidades de negocio</p>
-
-          <main>
-            <!-- Loading State -->
-            <div id="loadingState" class="flex items-center justify-center min-h-96">
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex items-center justify-center min-h-96">
               <div class="text-center">
-                <i class="fas fa-spinner fa-spin text-4xl mb-4" style="color: #C7252B;"></i>
-                <p class="text-gray-600">Cargando eventos...</p>
+                <i class="fas fa-calendar-times text-6xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">No hay eventos disponibles</h3>
+                <p class="text-gray-500">Los eventos aparecerán aquí cuando estén disponibles.</p>
               </div>
             </div>
-
-            <!-- Event Cards Container - Will be populated by JavaScript -->
-            <ul id="event-cards"></ul>
-          </main>
-
-          <!-- Empty State -->
-          <div id="emptyState" class="hidden flex items-center justify-center min-h-96">
-            <div class="text-center">
-              <i class="fas fa-calendar-times text-6xl text-gray-400 mb-4"></i>
-              <h3 class="text-xl font-bold text-gray-700 mb-2">No hay eventos disponibles</h3>
-              <p class="text-gray-500">Los eventos aparecerán aquí cuando estén disponibles.</p>
-            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
 
   </main>
 
@@ -2322,7 +1573,8 @@
           </button>
         </div>
         <div class="flex-1 bg-gray-50 overflow-hidden">
-          <iframe id="eventIframe" src="" class="w-full h-full border-0 rounded-b-xl" style="min-height: 70vh;"></iframe>
+          <iframe id="eventIframe" src="" class="w-full h-full border-0 rounded-b-xl"
+            style="min-height: 70vh;"></iframe>
         </div>
       </div>
     </div>
@@ -3403,237 +2655,66 @@
         });
       }
 
-      // Touch events for swipe gestures
-      if (sidebar) {
-        // Touch start
-        sidebar.addEventListener('touchstart', function (e) {
-          startX = e.touches[0].clientX;
-          isDragging = true;
-        }, { passive: true });
-
-        // Touch move
-        sidebar.addEventListener('touchmove', function (e) {
-          if (!isDragging) return;
-          currentX = e.touches[0].clientX;
-          const deltaX = currentX - startX;
-
-          // If swiping left more than 50px, close sidebar
-          if (deltaX < -50) {
-            hideSidebar();
-            isDragging = false;
+      // Navigation & Scroll Effects
+      document.addEventListener('DOMContentLoaded', function () {
+        const header = document.querySelector('.claut-header');
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 20) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
           }
-        }, { passive: true });
-
-        // Touch end
-        sidebar.addEventListener('touchend', function () {
-          isDragging = false;
-        }, { passive: true });
-      }
-
-      // Escape key to close sidebar
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('sidenav-show')) {
-          hideSidebar();
-        }
+        });
       });
 
-      // Prevent clicks inside sidebar from closing it
-      if (sidebar) {
-        sidebar.addEventListener('click', function (e) {
-          e.stopPropagation();
-        });
+      // User Menu Toggle
+      function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown) dropdown.classList.toggle('hidden');
       }
 
-      // Auto-hide sidebar on larger screens when needed
-      function handleResize() {
-        if (window.innerWidth >= 1280) {
-          // Desktop - sidebar should be visible
-          if (overlay) overlay.classList.remove('show');
-          preventBodyScroll(false);
-        }
-      }
-
-      window.addEventListener('resize', handleResize);
-      handleResize(); // Call once on load
-    });
-  </script>
-
-  <!-- SCRIPTS DE AUTENTICACIÓN Y FUNCIONALIDAD - Copiados de dashboard.html -->
-  <script src="./js/auth-session.js"></script>
-  <script src="./js/auth-fix.js"></script>
-
-  <!-- Popper y Bootstrap -->
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="./assets/js/plugins/perfect-scrollbar.min.js" async></script>
-  <script src="./assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
-
-  <!-- SISTEMA DE AUTENTICACIÓN MEJORADO -->
-  <script>
-    // Configurar eventos para los botones de logout
-    document.addEventListener('DOMContentLoaded', function () {
-      // Botón de logout del sidebar
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function () {
-          if (window.authSessionManager) {
-            window.authSessionManager.logout();
-          } else if (window.logout) {
-            window.logout();
-          }
-        });
-      }
-
-      /**
-       * Sistema de autenticación completo basado en sesiones PHP
-       * Copiado exactamente de boletines.html
-       */
-
-      // URL del endpoint de autenticación
-      const AUTH_ENDPOINT = './api/auth/session.php';
-
-      /**
-       * Detectar y manejar la sesión del usuario
-       */
-      async function detectUserSession() {
+      // Auth & Session Management
+      async function initPageAuth() {
         try {
-          const response = await fetch(`${AUTH_ENDPOINT}?action=check`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
+          if (window.authSessionManager) {
+            const userData = await window.authSessionManager.checkSession();
+            if (userData) {
+              updateUserUI(userData);
             }
-          });
-
-          const result = await response.json();
-
-          if (result.success && result.data) {
-            displayUserInfo(result.data);
-            return result.data;
-          } else {
-            showLoginPrompt();
-            return null;
           }
         } catch (error) {
-          console.error('Error al verificar sesión:', error);
-          showLoginPrompt();
-          return null;
+          console.error('Auth initialization failed:', error);
         }
       }
 
-      /**
-       * Mostrar información del usuario en el sidebar
-       */
-      function displayUserInfo(userData) {
-        const userSection = document.getElementById('userSection');
-        const loginSection = document.getElementById('loginSection');
-        const userEmail = document.getElementById('userEmail');
-        const userName = document.getElementById('userName');
-        const userCompany = document.getElementById('userCompany');
+      function updateUserUI(userData) {
+        const names = document.querySelectorAll('#userDisplayName, #dropdownUserName');
+        const role = document.getElementById('dropdownUserRole');
 
-        if (userSection && loginSection) {
-          // Mostrar datos del usuario
-          if (userEmail) userEmail.textContent = userData.email || '';
-          if (userName) userName.textContent = userData.nombre || '';
-          if (userCompany) userCompany.textContent = userData.nombre_empresa || '';
+        names.forEach(el => el.textContent = userData.nombre || 'Usuario');
+        if (role) role.textContent = userData.rol || 'Miembro';
+      }
 
-          userSection.style.display = 'block';
-          loginSection.style.display = 'none';
+      function handleLogout() {
+        if (confirm('\u00bfEst\u00e1s seguro de que deseas cerrar sesi\u00f3n?')) {
+          if (window.authSessionManager) {
+            window.authSessionManager.logout();
+          } else {
+            window.location.href = './index.php';
+          }
         }
       }
 
-      /**
-       * Mostrar formulario de login
-       */
-      function showLoginPrompt() {
-        const userSection = document.getElementById('userSection');
-        const loginSection = document.getElementById('loginSection');
+      document.addEventListener('DOMContentLoaded', initPageAuth);
 
-        if (userSection && loginSection) {
-          userSection.style.display = 'none';
-          loginSection.style.display = 'block';
-        }
-      }
-
-      // Inicializar detección de sesión al cargar la página
-      setTimeout(detectUserSession, 300);
-
-      // User Menu Functionality (Copiado de empresas-convenio.html)
-      window.toggleUserMenu = function () {
+      // Close dropdowns on outside click
+      document.addEventListener('click', (e) => {
         const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('hidden');
-      };
-
-      // Close dropdown when clicking outside
-      document.addEventListener('click', function (event) {
-        const userMenu = document.getElementById('userMenuBtn');
-        const dropdown = document.getElementById('userDropdown');
-
-        if (!userMenu.contains(event.target) && !dropdown.contains(event.target)) {
+        const userBtn = document.getElementById('userMenuBtn');
+        if (dropdown && userBtn && !userBtn.contains(e.target) && !dropdown.contains(e.target)) {
           dropdown.classList.add('hidden');
         }
       });
-
-      // Logout functionality
-      window.handleLogout = function () {
-        if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-          // Clear user data
-          localStorage.removeItem('userData');
-          localStorage.removeItem('currentUser');
-          sessionStorage.clear();
-
-          // Redirect to login page
-          window.location.href = './index.php';
-        }
-      };
-
-      // Update user display info when user data is available
-      window.updateUserDisplay = function (userData) {
-        const userDisplayName = document.getElementById('userDisplayName');
-        const dropdownUserName = document.getElementById('dropdownUserName');
-        const dropdownUserRole = document.getElementById('dropdownUserRole');
-
-        const nombre = userData.nombre || userData.name || 'Usuario';
-        const rol = userData.rol || userData.role || 'Empleado';
-
-        if (userDisplayName) userDisplayName.textContent = nombre;
-        if (dropdownUserName) dropdownUserName.textContent = nombre;
-        if (dropdownUserRole) dropdownUserRole.textContent = rol;
-      };
-
-      // Initialize user info from session storage
-      function initializeUserInfo() {
-        try {
-          const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
-          if (userSession) {
-            const userData = JSON.parse(userSession);
-            console.log('👤 Usuario encontrado en sesión:', userData);
-            updateUserDisplay(userData);
-            // También llamar displayUserInfo si existe
-            if (window.displayUserInfo && typeof window.displayUserInfo === 'function') {
-              window.displayUserInfo(userData);
-            }
-          } else {
-            console.log('⚠️ No se encontró sesión de usuario');
-            // Mantener texto por defecto "Usuario"
-            updateUserDisplay({ nombre: 'Usuario', rol: 'Empleado' });
-          }
-        } catch (error) {
-          console.error('Error al inicializar información de usuario:', error);
-          updateUserDisplay({ nombre: 'Usuario', rol: 'Empleado' });
-        }
-      }
-
-      // Inicializar información del usuario cuando el DOM esté listo
-      initializeUserInfo();
-
-      // Override the displayUserInfo function to also update navbar
-      const originalDisplayUserInfo = window.displayUserInfo;
-      window.displayUserInfo = function (userData) {
-        if (originalDisplayUserInfo) {
-          originalDisplayUserInfo(userData);
-        }
-        updateUserDisplay(userData);
-      };
     });
 
     // Función para abrir el modal de evento (similar al patrón de boletines)
@@ -3812,6 +2893,8 @@
       console.log('✅ Scroll image effect initialized successfully');
     }
   </script>
+  <script src="./js/auth-session.js"></script>
+  <script src="assets/js/loading-screen.js"></script>
 </body>
 
 </html>

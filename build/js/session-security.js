@@ -19,10 +19,7 @@ class SessionSecurity {
     }
 
     init() {
-        console.log('🔒 Inicializando sistema de seguridad de sesión...');
-
-        // Verificar sesión inicial
-        this.validateSession();
+        // console.log('🔒 Inicializando sistema de seguridad de sesión...');
 
         // Configurar detectores de actividad
         this.setupActivityDetectors();
@@ -30,10 +27,15 @@ class SessionSecurity {
         // Iniciar timer de inactividad
         this.startInactivityTimer();
 
-        // Iniciar validador periódico de sesión
-        this.startSessionValidator();
+        // Iniciar validador periódico de sesión después de un margen de gracia
+        // para dar tiempo a que los scripts de autenticación asíncronos (auth-session.js) terminen
+        setTimeout(() => {
+            // console.log('🔍 Iniciando validador de sesión tras margen de gracia...');
+            this.validateSession();
+            this.startSessionValidator();
+        }, 3000);
 
-        console.log(`✅ Seguridad configurada: ${this.inactivityTimeout}min inactividad, verificación cada ${this.checkInterval}s`);
+        // console.log(`✅ Seguridad configurada: ${this.inactivityTimeout}min inactividad, verificación cada ${this.checkInterval}s`);
     }
 
     setupActivityDetectors() {
@@ -48,7 +50,7 @@ class SessionSecurity {
 
     updateActivity() {
         this.lastActivity = Date.now();
-        console.log('👆 Actividad detectada, timer reiniciado');
+        // console.log('👆 Actividad detectada, timer reiniciado');
     }
 
     startInactivityTimer() {
@@ -58,7 +60,7 @@ class SessionSecurity {
             const inactivityLimit = this.inactivityTimeout * 60 * 1000; // convertir a ms
 
             if (timeSinceActivity >= inactivityLimit) {
-                console.log('⏰ Tiempo de inactividad excedido, redirigiendo al login...');
+                // console.log('⏰ Tiempo de inactividad excedido, redirigiendo al login...');
                 this.redirectToLogin('inactivity');
             }
         }, 30000); // verificar cada 30 segundos
@@ -75,7 +77,7 @@ class SessionSecurity {
         const hasLocalSession = this.checkLocalSession();
 
         if (!hasLocalSession) {
-            console.log('❌ No se detectó sesión local válida');
+            // console.log('❌ No se detectó sesión local válida');
             this.redirectToLogin('no_session');
             return;
         }
@@ -94,8 +96,12 @@ class SessionSecurity {
                               document.querySelector('[data-user]') ||
                               window.currentUser;
         const hasAuthClass = document.body.classList.contains('authenticated');
+        
+        // Nueva verificación: ¿se autenticó recientemente via auth-session.js?
+        const lastAuthCheck = localStorage.getItem('lastAuthCheck');
+        const recentAuth = lastAuthCheck && (Date.now() - parseInt(lastAuthCheck)) < 300000; // 5 minutos
 
-        return userData || hasUserElement || hasAuthClass || window.currentUser;
+        return userData || hasUserElement || hasAuthClass || window.currentUser || recentAuth;
     }
 
     checkServerSession() {
@@ -109,14 +115,14 @@ class SessionSecurity {
         .then(response => response.json())
         .then(data => {
             if (!data.success || !data.valid) {
-                console.log('❌ Sesión inválida en servidor');
+                // console.log('❌ Sesión inválida en servidor');
                 this.redirectToLogin('invalid_server_session');
             } else {
-                console.log('✅ Sesión válida confirmada por servidor');
+                // console.log('✅ Sesión válida confirmada por servidor');
             }
         })
         .catch(error => {
-            console.log('⚠️ Error verificando sesión en servidor:', error);
+            // console.log('⚠️ Error verificando sesión en servidor:', error);
             // No redirigir por errores de red, solo por sesiones inválidas
         });
     }
@@ -146,12 +152,12 @@ class SessionSecurity {
         .then(response => response.json())
         .then(data => {
             if (data.success && data.data.acceso_restringido) {
-                console.log(`🚫 Acceso restringido a la página: ${currentPage}`);
+                // console.log(`🚫 Acceso restringido a la página: ${currentPage}`);
                 this.showAccessDeniedMessage(currentPage);
             }
         })
         .catch(error => {
-            console.log('⚠️ Error verificando restricciones de página:', error);
+            // console.log('⚠️ Error verificando restricciones de página:', error);
             // No redirigir por errores de red en verificación de restricciones
         });
     }
@@ -263,7 +269,7 @@ class SessionSecurity {
         if (!this.isActive) return;
 
         this.isActive = false;
-        console.log('🔄 Redirigiendo al dashboard por restricción de acceso');
+        // console.log('🔄 Redirigiendo al dashboard por restricción de acceso');
 
         // Limpiar timers
         if (this.inactivityTimer) clearInterval(this.inactivityTimer);
@@ -276,7 +282,7 @@ class SessionSecurity {
         if (!this.isActive) return; // Evitar múltiples redirecciones
 
         this.isActive = false;
-        console.log(`🔄 Redirigiendo al login. Razón: ${reason}`);
+        // console.log(`🔄 Redirigiendo al login. Razón: ${reason}`);
 
         // Limpiar timers
         if (this.inactivityTimer) clearInterval(this.inactivityTimer);
@@ -297,7 +303,7 @@ class SessionSecurity {
         this.isActive = false;
         if (this.inactivityTimer) clearInterval(this.inactivityTimer);
         if (this.sessionChecker) clearInterval(this.sessionChecker);
-        console.log('⏸️ Sistema de seguridad pausado');
+        // console.log('⏸️ Sistema de seguridad pausado');
     }
 
     resume() {
@@ -305,7 +311,7 @@ class SessionSecurity {
         this.lastActivity = Date.now();
         this.startInactivityTimer();
         this.startSessionValidator();
-        console.log('▶️ Sistema de seguridad reanudado');
+        // console.log('▶️ Sistema de seguridad reanudado');
     }
 
     // Método público para cambiar configuración
@@ -313,7 +319,7 @@ class SessionSecurity {
         Object.assign(this, newOptions);
         this.pause();
         this.resume();
-        console.log('🔧 Configuración de seguridad actualizada');
+        // console.log('🔧 Configuración de seguridad actualizada');
     }
 }
 

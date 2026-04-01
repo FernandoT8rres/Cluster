@@ -19,8 +19,8 @@ class AdminComitesManager {
         }
 
         // Debug logging
-        console.log('🔧 [URL DEBUG] Hostname:', window.location.hostname);
-        console.log('🔧 [URL DEBUG] API URL final:', this.apiUrl);
+        // console.log('🔧 [URL DEBUG] Hostname:', window.location.hostname);
+        // console.log('🔧 [URL DEBUG] API URL final:', this.apiUrl);
 
         this.verificarApiUrl();
         this.init();
@@ -28,14 +28,14 @@ class AdminComitesManager {
 
     async verificarApiUrl() {
         try {
-            console.log('🔗 [API CHECK] Verificando conectividad con API...');
+            // console.log('🔗 [API CHECK] Verificando conectividad con API...');
             const response = await fetch(this.apiUrl + '?action=listar&test=1', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
 
             if (response.ok) {
-                console.log('✅ [API CHECK] Conectividad OK - Status:', response.status);
+                // console.log('✅ [API CHECK] Conectividad OK - Status:', response.status);
             } else {
                 console.warn('⚠️ [API CHECK] Respuesta no OK - Status:', response.status);
             }
@@ -45,15 +45,15 @@ class AdminComitesManager {
 
             // Fallback a URL absoluta
             if (!this.apiUrl.startsWith('http')) {
-                console.log('🔄 [API CHECK] Intentando URL absoluta como fallback...');
+                // console.log('🔄 [API CHECK] Intentando URL absoluta como fallback...');
                 this.apiUrl = 'https://intranet.clústermetropolitano.mx/build/api/comites.php';
-                console.log('🔄 [API CHECK] Nueva URL:', this.apiUrl);
+                // console.log('🔄 [API CHECK] Nueva URL:', this.apiUrl);
             }
         }
     }
 
     init() {
-        console.log('🔧 Inicializando administrador de comités...');
+        // console.log('🔧 Inicializando administrador de comités...');
         this.setupEventListeners();
         this.cargarComites();
 
@@ -157,7 +157,7 @@ class AdminComitesManager {
 
     async subirImagen(file) {
         try {
-            console.log('📤 [IMAGEN] Subiendo archivo:', file.name);
+            // console.log('📤 [IMAGEN] Subiendo archivo:', file.name);
 
             const formData = new FormData();
             formData.append('action', 'subir_imagen');
@@ -171,7 +171,7 @@ class AdminComitesManager {
             const result = await response.json();
 
             if (result.success) {
-                console.log('✅ [IMAGEN] Imagen subida exitosamente:', result.url);
+                // console.log('✅ [IMAGEN] Imagen subida exitosamente:', result.url);
                 return result.url;
             } else {
                 console.error('❌ [IMAGEN] Error en respuesta:', result);
@@ -237,12 +237,12 @@ class AdminComitesManager {
     async cargarComites() {
         try {
             const url = `${this.apiUrl}?action=listar&t=${Date.now()}`;
-            console.log('📡 [ADMIN] Cargando comités desde:', url);
+            // console.log('📡 [ADMIN] Cargando comités desde:', url);
 
             const response = await fetch(url);
             const data = await response.json();
 
-            console.log('📡 [ADMIN] Respuesta del servidor:', data);
+            // console.log('📡 [ADMIN] Respuesta del servidor:', data);
 
             // Manejar diferentes formatos de respuesta de la API
             if (data.success || data.success === undefined) {
@@ -260,8 +260,8 @@ class AdminComitesManager {
                 }
 
                 this.renderComites();
-                console.log(`✅ [ADMIN] ${this.comites.length} comités cargados exitosamente`);
-                console.log('📡 [ADMIN] Datos de comités:', this.comites);
+                // console.log(`✅ [ADMIN] ${this.comites.length} comités cargados exitosamente`);
+                // console.log('📡 [ADMIN] Datos de comités:', this.comites);
             } else {
                 throw new Error(data.message || data.error || 'Error al cargar comités');
             }
@@ -274,15 +274,15 @@ class AdminComitesManager {
     }
 
     renderComites() {
-        console.log('🎨 [RENDER] === INICIANDO RENDERIZADO DE COMITÉS ===');
-        console.log('🎨 [RENDER] Número de comités:', this.comites.length);
-        console.log('🎨 [RENDER] Datos de comités:', this.comites);
+        // console.log('🎨 [RENDER] === INICIANDO RENDERIZADO DE COMITÉS ===');
+        // console.log('🎨 [RENDER] Número de comités:', this.comites.length);
+        // console.log('🎨 [RENDER] Datos de comités:', this.comites);
 
         const listEl = document.getElementById('comitesList');
         const emptyEl = document.getElementById('emptyState');
         const loadingEl = document.getElementById('loadingComites');
 
-        console.log('🎨 [RENDER] Elementos DOM:', {
+        // console.log('🎨 [RENDER] Elementos DOM:', {
             listEl: !!listEl,
             emptyEl: !!emptyEl,
             loadingEl: !!loadingEl
@@ -296,23 +296,23 @@ class AdminComitesManager {
         }
 
         if (this.comites.length === 0) {
-            console.log('🎨 [RENDER] No hay comités - mostrando estado vacío');
+            // console.log('🎨 [RENDER] No hay comités - mostrando estado vacío');
             listEl.classList.add('hidden');
             if (emptyEl) emptyEl.classList.remove('hidden');
             return;
         }
 
-        console.log('🎨 [RENDER] Renderizando comités...');
+        // console.log('🎨 [RENDER] Renderizando comités...');
         listEl.innerHTML = '';
         this.comites.forEach((comite, index) => {
-            console.log(`🎨 [RENDER] Creando card ${index + 1}:`, comite.nombre);
+            // console.log(`🎨 [RENDER] Creando card ${index + 1}:`, comite.nombre);
             const comiteCard = this.createComiteCard(comite);
             listEl.appendChild(comiteCard);
         });
 
         listEl.classList.remove('hidden');
         if (emptyEl) emptyEl.classList.add('hidden');
-        console.log('✅ [RENDER] Renderizado completado exitosamente');
+        // console.log('✅ [RENDER] Renderizado completado exitosamente');
     }
 
     createComiteCard(comite) {
@@ -424,8 +424,8 @@ class AdminComitesManager {
 
     async guardarComite(e) {
         e.preventDefault();
-        console.log('💾 [GUARDAR] === INICIANDO PROCESO DE GUARDADO ===');
-        console.log('💾 [GUARDAR] comiteEditando:', this.comiteEditando);
+        // console.log('💾 [GUARDAR] === INICIANDO PROCESO DE GUARDADO ===');
+        // console.log('💾 [GUARDAR] comiteEditando:', this.comiteEditando);
 
         // Validar campos requeridos
         const camposRequeridos = ['nombre', 'descripcion', 'objetivo'];
@@ -459,27 +459,27 @@ class AdminComitesManager {
             const imagenUrlInput = document.getElementById('imagen_url');
             if (imagenUrlInput) {
                 imagenUrl = imagenUrlInput.value.trim();
-                console.log('🔧 [DEBUG] imagenUrl desde formulario:', imagenUrl);
+                // console.log('🔧 [DEBUG] imagenUrl desde formulario:', imagenUrl);
             }
 
             // Verificar si hay archivo para enviar directamente al API
             const imagenFile = document.getElementById('imagen_file');
             let tieneArchivo = false;
             if (imagenFile && imagenFile.files[0]) {
-                console.log('🔧 [DEBUG] Archivo de imagen detectado:', imagenFile.files[0].name);
+                // console.log('🔧 [DEBUG] Archivo de imagen detectado:', imagenFile.files[0].name);
                 tieneArchivo = true;
             }
 
             const formData = new FormData();
 
             // Intentar con las acciones más comunes primero
-            console.log('🎯 [ACCIÓN] Usando acción específica para creación');
+            // console.log('🎯 [ACCIÓN] Usando acción específica para creación');
 
             // Basándome en APIs PHP estándar, probar estas acciones en orden de prioridad
             const action = this.comiteEditando ? 'editar' : 'crear';
 
             formData.append('action', action);
-            console.log('🎯 [ACCIÓN] Acción principal:', action);
+            // console.log('🎯 [ACCIÓN] Acción principal:', action);
 
             // Agregar parámetros adicionales que podrían ser necesarios
             formData.append('metodo', action);
@@ -487,7 +487,7 @@ class AdminComitesManager {
 
             if (this.comiteEditando) {
                 formData.append('id', this.comiteEditando.id);
-                console.log('🔧 [DEBUG] ID comité a editar:', this.comiteEditando.id);
+                // console.log('🔧 [DEBUG] ID comité a editar:', this.comiteEditando.id);
             }
 
             // Recopilar datos del formulario
@@ -499,7 +499,7 @@ class AdminComitesManager {
                 if (elemento) {
                     const valor = elemento.value.trim();
                     formData.append(campo, valor);
-                    console.log(`🔧 [DEBUG] ${campo}:`, valor);
+                    // console.log(`🔧 [DEBUG] ${campo}:`, valor);
                 }
             });
 
@@ -507,46 +507,46 @@ class AdminComitesManager {
             if (tieneArchivo && imagenFile.files[0]) {
                 // Enviar archivo directamente al API para que lo procese
                 formData.append('imagen', imagenFile.files[0]);
-                console.log('🔧 [DEBUG] imagen archivo:', imagenFile.files[0].name);
+                // console.log('🔧 [DEBUG] imagen archivo:', imagenFile.files[0].name);
             } else if (imagenUrl) {
                 // Enviar URL de imagen
                 formData.append('imagen_url', imagenUrl);
-                console.log('🔧 [DEBUG] imagen URL:', imagenUrl);
+                // console.log('🔧 [DEBUG] imagen URL:', imagenUrl);
             }
 
             // Agregar coordinador_id - enviar null si está vacío para respetar la FK
             // No enviar coordinador_id vacío, dejar que el API lo maneje como NULL
 
-            console.log('📡 [API] Enviando datos al servidor...');
-            console.log('📡 [API] URL de destino:', this.apiUrl);
-            console.log('📡 [API] FormData contents:');
+            // console.log('📡 [API] Enviando datos al servidor...');
+            // console.log('📡 [API] URL de destino:', this.apiUrl);
+            // console.log('📡 [API] FormData contents:');
             for (let [key, value] of formData.entries()) {
-                console.log(`   ${key}: ${value}`);
+                // console.log(`   ${key}: ${value}`);
             }
 
             // Test de conectividad antes del envío real
-            console.log('🔍 [TEST] Probando conectividad con API...');
+            // console.log('🔍 [TEST] Probando conectividad con API...');
             try {
                 const testResponse = await fetch(this.apiUrl + '?action=test', { method: 'GET' });
-                console.log('🔍 [TEST] API test status:', testResponse.status);
+                // console.log('🔍 [TEST] API test status:', testResponse.status);
             } catch (testError) {
-                console.log('🔍 [TEST] API test failed:', testError.message);
+                // console.log('🔍 [TEST] API test failed:', testError.message);
             }
 
             // El API busca la acción en $_GET['action'], no en POST
             const urlWithAction = `${this.apiUrl}?action=${action}`;
-            console.log('🌐 [URL] URL completa con acción:', urlWithAction);
+            // console.log('🌐 [URL] URL completa con acción:', urlWithAction);
 
             const response = await fetch(urlWithAction, {
                 method: 'POST',
                 body: formData
             });
 
-            console.log('📡 [API] Response status:', response.status, response.statusText);
-            console.log('📡 [API] Response headers:', Object.fromEntries(response.headers.entries()));
+            // console.log('📡 [API] Response status:', response.status, response.statusText);
+            // console.log('📡 [API] Response headers:', Object.fromEntries(response.headers.entries()));
 
             const data = await response.json();
-            console.log('📡 [API] Respuesta del servidor:', data);
+            // console.log('📡 [API] Respuesta del servidor:', data);
 
             // Verificar si la respuesta es exitosa
             if (!response.ok) {
@@ -555,29 +555,29 @@ class AdminComitesManager {
             }
 
             // Estrategia simplificada: verificar si aumentó el número de comités
-            console.log('🔍 [ANÁLISIS] Analizando respuesta y verificando cambios...');
+            // console.log('🔍 [ANÁLISIS] Analizando respuesta y verificando cambios...');
 
             if (data.success === true) {
                 // Guardar conteo actual antes de recargar
                 const comitesAntesDeGuardar = this.comites.length;
-                console.log('📊 [VERIFICACIÓN] Comités antes:', comitesAntesDeGuardar);
+                // console.log('📊 [VERIFICACIÓN] Comités antes:', comitesAntesDeGuardar);
 
                 // Recargar lista para verificar si se agregó
-                console.log('🔄 [RELOAD] Recargando para verificar si se guardó...');
+                // console.log('🔄 [RELOAD] Recargando para verificar si se guardó...');
                 await this.cargarComites();
 
                 const comitesDespuesDeGuardar = this.comites.length;
-                console.log('📊 [VERIFICACIÓN] Comités después:', comitesDespuesDeGuardar);
+                // console.log('📊 [VERIFICACIÓN] Comités después:', comitesDespuesDeGuardar);
 
                 // Verificar si se agregó un nuevo registro
                 if (!this.comiteEditando && comitesDespuesDeGuardar > comitesAntesDeGuardar) {
                     // ¡Éxito! Se agregó un nuevo comité
-                    console.log('✅ [ÉXITO] Comité creado exitosamente - aumentó el conteo');
+                    // console.log('✅ [ÉXITO] Comité creado exitosamente - aumentó el conteo');
                     this.mostrarExito('Comité creado exitosamente');
                     this.resetForm();
                 } else if (this.comiteEditando) {
                     // Para edición, asumir éxito si no hay errores
-                    console.log('✅ [ÉXITO] Comité actualizado exitosamente');
+                    // console.log('✅ [ÉXITO] Comité actualizado exitosamente');
                     this.mostrarExito('Comité actualizado exitosamente');
                     this.resetForm();
                 } else {
@@ -653,22 +653,22 @@ class AdminComitesManager {
     }
 
     analyzeApiResponse(data) {
-        console.log('🔍 [ANÁLISIS] Datos recibidos:', data);
+        // console.log('🔍 [ANÁLISIS] Datos recibidos:', data);
 
         // Si solo tiene 'success' y 'comites', probablemente es una respuesta de lista
         if (this.isStandardListResponse(data)) {
-            console.log('🔍 [ANÁLISIS] Detectada respuesta tipo lista');
+            // console.log('🔍 [ANÁLISIS] Detectada respuesta tipo lista');
             return 'list_only';
         }
 
         // Si tiene campos que indican operación específica
         if (data.message || data.id || data.created || data.inserted_id || data.affected_rows) {
-            console.log('🔍 [ANÁLISIS] Detectada respuesta de operación exitosa');
+            // console.log('🔍 [ANÁLISIS] Detectada respuesta de operación exitosa');
             return 'success';
         }
 
         // Respuesta ambigua
-        console.log('🔍 [ANÁLISIS] Respuesta ambigua');
+        // console.log('🔍 [ANÁLISIS] Respuesta ambigua');
         return 'ambiguous';
     }
 
@@ -723,13 +723,13 @@ class AdminComitesManager {
     // ======== NUEVAS FUNCIONES PARA GESTIÓN DE SOLICITUDES ========
 
     async cargarSolicitudesPendientes() {
-        console.log('📋 [SOLICITUDES] Cargando solicitudes pendientes...');
+        // console.log('📋 [SOLICITUDES] Cargando solicitudes pendientes...');
 
         try {
             const response = await fetch(`${this.apiUrl}?action=listar_registros_pendientes`);
             const data = await response.json();
 
-            console.log('📋 [SOLICITUDES] Datos recibidos:', data);
+            // console.log('📋 [SOLICITUDES] Datos recibidos:', data);
 
             if (data.success && data.registros) {
                 this.mostrarSolicitudes(data.registros);
@@ -853,7 +853,7 @@ class AdminComitesManager {
         this.mostrarExito('Función de mensajería se integrará con dashboard.html');
 
         // TODO: Integrar con el sistema de mensajería del dashboard
-        console.log('📧 [MENSAJE] Mensaje a enviar:', mensaje);
+        // console.log('📧 [MENSAJE] Mensaje a enviar:', mensaje);
     }
 }
 

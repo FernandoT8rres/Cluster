@@ -2,18 +2,18 @@
  * Gestión de Estadísticas Dinámicas para Dashboard
  */
 
-console.log('📊 Estadísticas Dinámicas: Script cargado');
+// console.log('📊 Estadísticas Dinámicas: Script cargado');
 
 let estadisticasConfig = [];
 let updateInterval = null;
 
 // Inicializar estadísticas dinámicas
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📊 Inicializando sistema de estadísticas dinámicas...');
+    // console.log('📊 Inicializando sistema de estadísticas dinámicas...');
     
     // Esperar un poco para asegurarse de que el DOM esté completamente listo
     setTimeout(() => {
-        console.log('📊 DOM listo, iniciando estadísticas dinámicas...');
+        // console.log('📊 DOM listo, iniciando estadísticas dinámicas...');
         inicializarEstadisticasDinamicas();
         
         // Actualizar cada 5 minutos
@@ -29,14 +29,14 @@ async function inicializarEstadisticasDinamicas() {
     while (intentos < maxIntentos) {
         try {
             intentos++;
-            console.log(`📊 Intento ${intentos}/${maxIntentos} - Cargando configuración de estadísticas...`);
+            // console.log(`📊 Intento ${intentos}/${maxIntentos} - Cargando configuración de estadísticas...`);
             
             await cargarConfiguracionEstadisticas();
             
-            console.log('📊 Aplicando estadísticas dinámicas al dashboard...');
+            // console.log('📊 Aplicando estadísticas dinámicas al dashboard...');
             await aplicarEstadisticasDinamicas();
             
-            console.log('✅ Sistema de estadísticas dinámicas iniciado correctamente');
+            // console.log('✅ Sistema de estadísticas dinámicas iniciado correctamente');
             return; // Éxito, salir del bucle
             
         } catch (error) {
@@ -44,7 +44,7 @@ async function inicializarEstadisticasDinamicas() {
             
             if (intentos < maxIntentos) {
                 const esperaMs = intentos * 2000; // Espera incremental: 2s, 4s, 6s
-                console.log(`⏳ Esperando ${esperaMs}ms antes del siguiente intento...`);
+                // console.log(`⏳ Esperando ${esperaMs}ms antes del siguiente intento...`);
                 await new Promise(resolve => setTimeout(resolve, esperaMs));
             } else {
                 console.error('❌ Todos los intentos fallaron. Usando estadísticas estáticas como fallback');
@@ -56,7 +56,7 @@ async function inicializarEstadisticasDinamicas() {
 
 // Función para mostrar estadísticas de fallback
 function mostrarEstadisticasFallback() {
-    console.log('📊 Aplicando estadísticas de fallback...');
+    // console.log('📊 Aplicando estadísticas de fallback...');
     
     const fallbackStats = [
         { nombre: 'comites', valor: 'N/A', error: null },
@@ -69,7 +69,7 @@ function mostrarEstadisticasFallback() {
         const elemento = document.getElementById(`stats${stat.nombre.charAt(0).toUpperCase() + stat.nombre.slice(1)}`);
         if (elemento) {
             elemento.textContent = stat.valor;
-            console.log(`🔄 Fallback aplicado para: ${stat.nombre}`);
+            // console.log(`🔄 Fallback aplicado para: ${stat.nombre}`);
         }
     });
 }
@@ -82,7 +82,7 @@ async function cargarConfiguracionEstadisticas() {
         
         if (data.success && data.data && data.data.length > 0) {
             estadisticasConfig = data.data.sort((a, b) => a.posicion - b.posicion);
-            console.log(`📊 ${estadisticasConfig.length} configuraciones de estadísticas cargadas`);
+            // console.log(`📊 ${estadisticasConfig.length} configuraciones de estadísticas cargadas`);
             return true;
         } else {
             console.warn('⚠️ No se encontraron configuraciones de estadísticas activas');
@@ -97,7 +97,7 @@ async function cargarConfiguracionEstadisticas() {
 // Aplicar estadísticas dinámicas al dashboard
 async function aplicarEstadisticasDinamicas() {
     try {
-        console.log('📊 Obteniendo valores de estadísticas...');
+        // console.log('📊 Obteniendo valores de estadísticas...');
         
         // Obtener valores reales de las estadísticas
         const response = await fetch('./api/estadisticas-config.php?accion=valores');
@@ -108,18 +108,18 @@ async function aplicarEstadisticasDinamicas() {
         
         const data = await response.json();
         
-        console.log('📊 Respuesta de API recibida:', data);
+        // console.log('📊 Respuesta de API recibida:', data);
         
         if (!data.success) {
             throw new Error(data.message || 'Error obteniendo valores');
         }
 
         const estadisticas = data.valores || [];
-        console.log(`📊 Aplicando ${estadisticas.length} estadísticas dinámicas:`, estadisticas);
+        // console.log(`📊 Aplicando ${estadisticas.length} estadísticas dinámicas:`, estadisticas);
         
         // Debug: mostrar cada estadística individualmente
         estadisticas.forEach((stat, index) => {
-            console.log(`📊 Estadística ${index + 1}:`, {
+            // console.log(`📊 Estadística ${index + 1}:`, {
                 nombre: stat.nombre,
                 titulo: stat.titulo, 
                 valor: stat.valor,
@@ -137,7 +137,7 @@ async function aplicarEstadisticasDinamicas() {
         // Renderizar todas las estadísticas dinámicamente
         renderizarEstadisticasCompletas(estadisticas);
 
-        console.log('✅ Todas las estadísticas aplicadas correctamente');
+        // console.log('✅ Todas las estadísticas aplicadas correctamente');
 
     } catch (error) {
         console.error('❌ Error aplicando estadísticas dinámicas:', error);
@@ -299,7 +299,7 @@ function actualizarTarjetaEstadistica(estadistica, index) {
         // Si hay error, mostrar el valor pero con advertencia en consola
         if (estadistica.error) {
             console.error(`❌ Error en estadística '${estadistica.nombre}': ${estadistica.error}`);
-            console.log(`🔧 Intentando usar valor: ${estadistica.valor}`);
+            // console.log(`🔧 Intentando usar valor: ${estadistica.valor}`);
             
             // Aún mostrar el valor si existe, pero con indicador visual de error
             if (estadistica.valor !== undefined && estadistica.valor !== null) {
@@ -349,7 +349,7 @@ function actualizarTarjetaEstadistica(estadistica, index) {
             }
         }
 
-        console.log(`✅ Estadística '${estadistica.nombre}' actualizada: ${estadistica.valor} ${estadistica.error ? '(con error)' : ''}`);
+        // console.log(`✅ Estadística '${estadistica.nombre}' actualizada: ${estadistica.valor} ${estadistica.error ? '(con error)' : ''}`);
         
     } else {
         console.warn(`⚠️ No se encontró elemento DOM para estadística: ${estadistica.nombre}`);
@@ -420,16 +420,16 @@ function ajustarLayoutEstadisticas(cantidad) {
         container.classList.add('grid-cols-1', 'xl:grid-cols-4');
     }
     
-    console.log(`📊 Layout ajustado para ${cantidad} estadísticas`);
+    // console.log(`📊 Layout ajustado para ${cantidad} estadísticas`);
 }
 
 // Función para actualizar estadísticas (llamada por botón o automáticamente)
 async function actualizarEstadisticasDinamicas() {
-    console.log('🔄 Actualizando estadísticas dinámicas...');
+    // console.log('🔄 Actualizando estadísticas dinámicas...');
     
     try {
         await aplicarEstadisticasDinamicas();
-        console.log('✅ Estadísticas actualizadas correctamente');
+        // console.log('✅ Estadísticas actualizadas correctamente');
         
         // Mostrar notificación visual opcional
         mostrarNotificacionActualizacion();
@@ -485,18 +485,18 @@ function mostrarNotificacionActualizacion() {
 
 // Función global para actualizar desde botón del dashboard
 window.actualizarEstadisticas = function() {
-    console.log('🔄 Actualización manual de estadísticas solicitada');
+    // console.log('🔄 Actualización manual de estadísticas solicitada');
     actualizarEstadisticasDinamicas();
 };
 
 // Función global para recargar configuración
 window.recargarConfiguracionEstadisticas = async function() {
-    console.log('🔄 Recargando configuración de estadísticas...');
+    // console.log('🔄 Recargando configuración de estadísticas...');
 
     try {
         await cargarConfiguracionEstadisticas();
         await aplicarEstadisticasDinamicas();
-        console.log('✅ Configuración recargada exitosamente');
+        // console.log('✅ Configuración recargada exitosamente');
 
         mostrarNotificacionActualizacion();
     } catch (error) {
@@ -506,7 +506,7 @@ window.recargarConfiguracionEstadisticas = async function() {
 
 // Función para eliminar una estadística específica del dashboard
 window.eliminarEstadistica = async function(nombreEstadistica) {
-    console.log('🗑️ Eliminando estadística:', nombreEstadistica);
+    // console.log('🗑️ Eliminando estadística:', nombreEstadistica);
 
     // Confirmar eliminación
     if (!confirm(`¿Estás seguro de que quieres eliminar la estadística "${nombreEstadistica}" del dashboard?`)) {
@@ -522,7 +522,7 @@ window.eliminarEstadistica = async function(nombreEstadistica) {
             return;
         }
 
-        console.log('🗑️ Desactivando estadística con ID:', estadistica.id);
+        // console.log('🗑️ Desactivando estadística con ID:', estadistica.id);
 
         // Hacer petición para desactivar la estadística (PUT con activo = 0)
         const formData = new URLSearchParams();
@@ -549,7 +549,7 @@ window.eliminarEstadistica = async function(nombreEstadistica) {
         const result = await response.json();
 
         if (result.success) {
-            console.log('✅ Estadística eliminada del dashboard exitosamente');
+            // console.log('✅ Estadística eliminada del dashboard exitosamente');
 
             // Mostrar notificación de éxito
             mostrarNotificacionEliminacion(estadistica.titulo);
@@ -617,7 +617,7 @@ function mostrarNotificacionEliminacion(titulo) {
 window.addEventListener('beforeunload', () => {
     if (updateInterval) {
         clearInterval(updateInterval);
-        console.log('🔄 Interval de actualización limpiado');
+        // console.log('🔄 Interval de actualización limpiado');
     }
 });
 
@@ -627,11 +627,11 @@ window.debugEstadisticas = {
     actualizar: actualizarEstadisticasDinamicas,
     recargar: window.recargarConfiguracionEstadisticas,
     test: async () => {
-        console.log('🧪 Test de estadísticas dinámicas');
-        console.log('Configuración:', estadisticasConfig);
+        // console.log('🧪 Test de estadísticas dinámicas');
+        // console.log('Configuración:', estadisticasConfig);
         await actualizarEstadisticasDinamicas();
     }
 };
 
-console.log('📊 Estadísticas Dinámicas: Funciones globales registradas');
-console.log('💡 Usa window.debugEstadisticas para debugging');
+// console.log('📊 Estadísticas Dinámicas: Funciones globales registradas');
+// console.log('💡 Usa window.debugEstadisticas para debugging');

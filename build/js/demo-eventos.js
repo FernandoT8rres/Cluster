@@ -43,7 +43,7 @@ function showNotification(message, type = 'info') {
 // Cargar eventos desde la API
 async function loadEventos() {
     try {
-        console.log('Iniciando carga de eventos...');
+        // console.log('Iniciando carga de eventos...');
         
         const response = await fetch(`${API_BASE}/eventos.php`, {
             method: 'GET',
@@ -62,7 +62,7 @@ async function loadEventos() {
         
         // Verificar el tipo de contenido
         const contentType = response.headers.get('content-type');
-        console.log('Content-Type recibido:', contentType);
+        // console.log('Content-Type recibido:', contentType);
         
         if (!response.ok) {
             let errorText = '';
@@ -83,13 +83,13 @@ async function loadEventos() {
         
         // Primero obtener el texto de la respuesta
         const responseText = await response.text();
-        console.log('Respuesta recibida (texto):', responseText);
+        // console.log('Respuesta recibida (texto):', responseText);
         
         // Intentar parsear como JSON
         let data;
         try {
             data = JSON.parse(responseText);
-            console.log('Datos parseados:', data);
+            // console.log('Datos parseados:', data);
         } catch (jsonError) {
             console.error('Error al parsear JSON:', jsonError);
             
@@ -111,9 +111,9 @@ async function loadEventos() {
             eventos = data.data?.eventos || [];
             filteredEventos = [...eventos];
             // renderEventosTable(); // Comentado - tabla eliminada
-            console.log('✅ Eventos cargados en loadEventos, usando renderEventosDemo para visualización');
+            // console.log('✅ Eventos cargados en loadEventos, usando renderEventosDemo para visualización');
             updateStats();
-            console.log(`Cargados ${eventos.length} eventos exitosamente`);
+            // console.log(`Cargados ${eventos.length} eventos exitosamente`);
         } else {
             throw new Error(data.message || 'Error al cargar eventos');
         }
@@ -134,13 +134,13 @@ async function loadEventos() {
         showNotification(errorMessage, 'error');
         
         // Mostrar estado vacío para que el usuario sepa que algo falló (tabla eliminada)
-        console.log('⚠️ Error en loadEventos - tabla eliminada, usando solo logs');
+        // console.log('⚠️ Error en loadEventos - tabla eliminada, usando solo logs');
     }
 }
 
 // Renderizar tabla de eventos (DESHABILITADA - tabla eliminada)
 function renderEventosTable() {
-    console.log('⚠️ renderEventosTable llamada pero tabla fue eliminada - función deshabilitada');
+    // console.log('⚠️ renderEventosTable llamada pero tabla fue eliminada - función deshabilitada');
     return; // Salir inmediatamente sin hacer nada
 }
 
@@ -167,10 +167,10 @@ function updateStats() {
 
 // Cargar registros de empresas desde la API
 async function loadRegistrosEmpresas() {
-    console.log('🔄 Cargando registros de empresas...');
+    // console.log('🔄 Cargando registros de empresas...');
     try {
         const url = `${API_BASE}/eventos.php?action=registros_all`;
-        console.log('📡 URL de registros:', url);
+        // console.log('📡 URL de registros:', url);
         
         const response = await fetch(url, {
             method: 'GET',
@@ -179,14 +179,14 @@ async function loadRegistrosEmpresas() {
             }
         });
         
-        console.log('📡 Respuesta de registros:', response.status, response.statusText);
+        // console.log('📡 Respuesta de registros:', response.status, response.statusText);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
         
         const responseText = await response.text();
-        console.log('📄 Texto de respuesta registros:', responseText);
+        // console.log('📄 Texto de respuesta registros:', responseText);
         
         let data;
         
@@ -197,13 +197,13 @@ async function loadRegistrosEmpresas() {
             throw new Error('Respuesta no válida del servidor');
         }
         
-        console.log('✅ Datos de registros parseados:', data);
+        // console.log('✅ Datos de registros parseados:', data);
         
         if (data.success) {
             registrosEmpresas = data.registros || [];
             filteredRegistros = [...registrosEmpresas];
             
-            console.log('📋 Registros cargados:', registrosEmpresas.length, registrosEmpresas);
+            // console.log('📋 Registros cargados:', registrosEmpresas.length, registrosEmpresas);
             
             renderRegistrosEmpresas();
             updateRegistrosStats();
@@ -224,7 +224,7 @@ async function loadRegistrosEmpresas() {
 
 // Renderizar lista de registros de empresas - FUNCIÓN DESHABILITADA
 function renderRegistrosEmpresas() {
-    console.log('🎨 Renderizando registros de empresas (DESHABILITADO):', filteredRegistros?.length || 0);
+    // console.log('🎨 Renderizando registros de empresas (DESHABILITADO):', filteredRegistros?.length || 0);
     // Esta función ha sido reemplazada por el sistema de notificaciones
     return;
 
@@ -232,21 +232,21 @@ function renderRegistrosEmpresas() {
     // const loadingState = document.getElementById('loadingRegistros');
     // const emptyState = document.getElementById('emptyRegistros');
 
-    // console.log('📦 Elementos DOM encontrados:', {
+    // // console.log('📦 Elementos DOM encontrados:', {
     //     container: !!container,
     //     loadingState: !!loadingState,
     //     emptyState: !!emptyState
     // });
     
     if (filteredRegistros.length === 0) {
-        console.log('📭 No hay registros para mostrar');
+        // console.log('📭 No hay registros para mostrar');
         container.innerHTML = '';
         loadingState.classList.add('hidden');
         emptyState.classList.remove('hidden');
         return;
     }
     
-    console.log('📋 Renderizando', filteredRegistros.length, 'registros');
+    // console.log('📋 Renderizando', filteredRegistros.length, 'registros');
     loadingState.classList.add('hidden');
     emptyState.classList.add('hidden');
     
@@ -291,14 +291,14 @@ function renderRegistrosEmpresas() {
 // Actualizar estadísticas de registros - FUNCIÓN DESHABILITADA
 function updateRegistrosStats() {
     const total = registrosEmpresas.length;
-    console.log('📊 Estadísticas de registros (DESHABILITADO):', { total });
+    // console.log('📊 Estadísticas de registros (DESHABILITADO):', { total });
 
     // Esta función ha sido reemplazada por el sistema de notificaciones
     const element = document.getElementById('totalRegistrosEmpresas');
     if (element) {
         element.textContent = total;
     } else {
-        console.log('⚠️ Elemento totalRegistrosEmpresas no encontrado (esperado - reemplazado por notificaciones)');
+        // console.log('⚠️ Elemento totalRegistrosEmpresas no encontrado (esperado - reemplazado por notificaciones)');
     }
 }
 
@@ -307,7 +307,7 @@ async function loadEventosForFilter() {
     const filterEvento = document.getElementById('filterEvento');
 
     if (!filterEvento) {
-        console.log('⚠️ Elemento filterEvento no encontrado (esperado - sección reemplazada por notificaciones)');
+        // console.log('⚠️ Elemento filterEvento no encontrado (esperado - sección reemplazada por notificaciones)');
         return;
     }
     
@@ -336,7 +336,7 @@ async function loadEventosForFilter() {
 
 // Aplicar filtros a registros de empresas - FUNCIÓN DESHABILITADA
 function applyRegistrosFilters() {
-    console.log('🔍 applyRegistrosFilters llamado (DESHABILITADO)');
+    // console.log('🔍 applyRegistrosFilters llamado (DESHABILITADO)');
     // Esta función ha sido reemplazada por el sistema de filtros de notificaciones
     return;
 
@@ -345,7 +345,7 @@ function applyRegistrosFilters() {
     const estadoFilterElement = document.getElementById('filterEstadoRegistro');
 
     if (!eventoFilterElement || !estadoFilterElement) {
-        console.log('⚠️ Elementos de filtro no encontrados (esperado - sección reemplazada por notificaciones)');
+        // console.log('⚠️ Elementos de filtro no encontrados (esperado - sección reemplazada por notificaciones)');
         return;
     }
 
@@ -370,7 +370,7 @@ function applyRegistrosFilters() {
 
 // Ver detalle de registro - FUNCIÓN DESHABILITADA
 async function viewDetalleRegistro(registroId) {
-    console.log('👁️ viewDetalleRegistro llamado (DESHABILITADO):', registroId);
+    // console.log('👁️ viewDetalleRegistro llamado (DESHABILITADO):', registroId);
     // Esta función ha sido reemplazada por el sistema de notificaciones
     return;
 
@@ -385,7 +385,7 @@ async function viewDetalleRegistro(registroId) {
         const content = document.getElementById('detalleRegistroContent');
 
         if (!content) {
-            console.log('⚠️ Modal de detalle de registro no encontrado');
+            // console.log('⚠️ Modal de detalle de registro no encontrado');
             return;
         }
         content.innerHTML = `
@@ -490,7 +490,7 @@ async function eliminarRegistro() {
 
 // Refrescar registros - FUNCIÓN DESHABILITADA
 async function refreshRegistros() {
-    console.log('🔄 RefreshRegistros llamado (DESHABILITADO - usando sistema de notificaciones)');
+    // console.log('🔄 RefreshRegistros llamado (DESHABILITADO - usando sistema de notificaciones)');
     // Esta función ha sido reemplazada por loadNotificaciones en demo_evento.html
     return;
 
@@ -508,7 +508,7 @@ let filteredEventosDemo = [];
 
 // Cargar eventos desde la API (misma lógica que eventos.html)
 async function loadEventosDemo() {
-    console.log('🔄 Cargando eventos para demo...');
+    // console.log('🔄 Cargando eventos para demo...');
     try {
         document.getElementById('loadingEventos').classList.remove('hidden');
         document.getElementById('eventosContainer').innerHTML = '';
@@ -520,24 +520,24 @@ async function loadEventosDemo() {
             }
         });
         
-        console.log('📡 Respuesta de eventos demo:', response.status, response.statusText);
+        // console.log('📡 Respuesta de eventos demo:', response.status, response.statusText);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
         
         const result = await response.json();
-        console.log('✅ Datos de eventos demo:', result);
+        // console.log('✅ Datos de eventos demo:', result);
         
         if (result.success && result.eventos && result.eventos.length > 0) {
             eventosDemo = result.eventos;
             filteredEventosDemo = [...eventosDemo];
-            console.log('📋 Eventos demo cargados:', eventosDemo.length, eventosDemo);
+            // console.log('📋 Eventos demo cargados:', eventosDemo.length, eventosDemo);
             
             renderEventosDemo();
             updateEventosStats();
         } else {
-            console.log('❌ No hay eventos disponibles');
+            // console.log('❌ No hay eventos disponibles');
             showEmptyEventos();
         }
         
@@ -551,14 +551,14 @@ async function loadEventosDemo() {
 
 // Renderizar eventos en demo
 function renderEventosDemo() {
-    console.log('🎨 Renderizando eventos demo:', filteredEventosDemo.length);
+    // console.log('🎨 Renderizando eventos demo:', filteredEventosDemo.length);
     
     const container = document.getElementById('eventosContainer');
     const loadingState = document.getElementById('loadingEventos');
     const emptyState = document.getElementById('emptyEventos');
     
     if (filteredEventosDemo.length === 0) {
-        console.log('📭 No hay eventos para mostrar');
+        // console.log('📭 No hay eventos para mostrar');
         container.innerHTML = '';
         loadingState.classList.add('hidden');
         emptyState.classList.remove('hidden');
@@ -569,12 +569,12 @@ function renderEventosDemo() {
     emptyState.classList.add('hidden');
     
     container.innerHTML = filteredEventosDemo.map(evento => createEventoCard(evento)).join('');
-    console.log('✅ Eventos demo renderizados correctamente');
+    // console.log('✅ Eventos demo renderizados correctamente');
 }
 
 // Crear tarjeta de evento para demo
 function createEventoCard(evento) {
-    console.log('🎨 Creando tarjeta para evento:', evento.id, evento.titulo);
+    // console.log('🎨 Creando tarjeta para evento:', evento.id, evento.titulo);
     
     const fechaInicio = new Date(evento.fecha_inicio);
     const fechaFormateada = fechaInicio.toLocaleDateString('es-MX', {
@@ -651,7 +651,7 @@ function updateEventosStats() {
     if (element) {
         element.textContent = total;
     } else {
-        console.log('⚠️ Elemento totalEventosDemo no encontrado');
+        // console.log('⚠️ Elemento totalEventosDemo no encontrado');
     }
 }
 
@@ -703,15 +703,15 @@ function applyEventosFilters() {
 
 // Ver registros de un evento específico
 function viewEventoRegistros(eventoId) {
-    console.log('👥 Ver registros del evento:', eventoId);
-    console.log('🔄 Iniciando viewEventoRegistros...');
+    // console.log('👥 Ver registros del evento:', eventoId);
+    // console.log('🔄 Iniciando viewEventoRegistros...');
     
     // Usar valores por defecto para evitar errores
     const eventoTitulo = `Evento ID ${eventoId}`;
     const totalRegistros = 0;
     
-    console.log('📋 Usando título por defecto:', eventoTitulo);
-    console.log('🚀 Llamando a viewRegistros...');
+    // console.log('📋 Usando título por defecto:', eventoTitulo);
+    // console.log('🚀 Llamando a viewRegistros...');
     
     // Llamar directamente a viewRegistros
     viewRegistros(eventoId, eventoTitulo, totalRegistros);
@@ -725,7 +725,7 @@ async function refreshEventosDemo() {
 
 // Editar evento demo
 function editEventoDemo(eventoId) {
-    console.log('📝 Editando evento:', eventoId);
+    // console.log('📝 Editando evento:', eventoId);
     
     // Buscar el evento en los datos cargados
     const evento = eventosDemo.find(e => e.id == eventoId);
@@ -734,7 +734,7 @@ function editEventoDemo(eventoId) {
         return;
     }
     
-    console.log('📋 Evento a editar:', evento);
+    // console.log('📋 Evento a editar:', evento);
     
     // Configurar modal para edición
     currentEventId = eventoId;
@@ -742,7 +742,7 @@ function editEventoDemo(eventoId) {
 
     // ¡CRÍTICO! Establecer el ID del evento en el campo oculto del formulario
     document.getElementById('eventId').value = eventoId;
-    console.log('🔍 EventId establecido en el formulario:', eventoId);
+    // console.log('🔍 EventId establecido en el formulario:', eventoId);
     
     // Rellenar el formulario del modal con los datos del evento usando los IDs correctos
     document.getElementById('titulo').value = evento.titulo || '';
@@ -765,7 +765,7 @@ function editEventoDemo(eventoId) {
 
     // Manejar imagen existente
     if (evento.imagen && evento.imagen.trim()) {
-        console.log('🖼️ Cargando imagen existente para edición:', evento.imagen);
+        // console.log('🖼️ Cargando imagen existente para edición:', evento.imagen);
 
         // Limpiar preview actual
         if (typeof clearImagePreview === 'function') {
@@ -787,11 +787,11 @@ function editEventoDemo(eventoId) {
             img.onload = function() {
                 preview.classList.remove('hidden');
                 imagenUrlFinal.value = evento.imagen;
-                console.log('✅ Preview de imagen existente cargado en edición');
+                // console.log('✅ Preview de imagen existente cargado en edición');
             };
 
             img.onerror = function() {
-                console.log('⚠️ Error cargando imagen para edición, usando placeholder');
+                // console.log('⚠️ Error cargando imagen para edición, usando placeholder');
                 const placeholderUrl = `https://via.placeholder.com/300x200/c9302c/ffffff?text=${encodeURIComponent(evento.titulo || 'Evento')}`;
                 this.src = placeholderUrl;
             };
@@ -819,7 +819,7 @@ function editEventoDemo(eventoId) {
 
 // Eliminar evento demo
 async function deleteEventoDemo(eventoId, eventoTitulo, registrados) {
-    console.log('🗑️ Eliminando evento:', eventoId, eventoTitulo);
+    // console.log('🗑️ Eliminando evento:', eventoId, eventoTitulo);
     
     let mensaje = `¿Estás seguro de eliminar el evento "${eventoTitulo}"?`;
     if (registrados > 0) {
@@ -827,12 +827,12 @@ async function deleteEventoDemo(eventoId, eventoTitulo, registrados) {
     }
     
     if (!confirm(mensaje)) {
-        console.log('❌ Eliminación cancelada por el usuario');
+        // console.log('❌ Eliminación cancelada por el usuario');
         return;
     }
     
     try {
-        console.log('🔄 Enviando petición de eliminación...');
+        // console.log('🔄 Enviando petición de eliminación...');
         
         const response = await fetch(`${API_BASE}/eventos.php?action=eliminar&id=${eventoId}`, {
             method: 'DELETE',
@@ -841,14 +841,14 @@ async function deleteEventoDemo(eventoId, eventoTitulo, registrados) {
             }
         });
         
-        console.log('📡 Respuesta de eliminación:', response.status, response.statusText);
+        // console.log('📡 Respuesta de eliminación:', response.status, response.statusText);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
         
         const result = await response.json();
-        console.log('✅ Resultado de eliminación:', result);
+        // console.log('✅ Resultado de eliminación:', result);
         
         if (result.success) {
             showNotification(`Evento "${eventoTitulo}" eliminado exitosamente`, 'success');
@@ -906,7 +906,7 @@ function showCreateModal() {
         modal.classList.remove('hidden');
     }
 
-    console.log('Modal de creación abierto - eventId limpiado');
+    // console.log('Modal de creación abierto - eventId limpiado');
 }
 
 // Editar evento
@@ -1103,16 +1103,16 @@ function closeModal() {
         clearImagePreview();
     }
 
-    console.log('Modal cerrado y formulario limpiado');
+    // console.log('Modal cerrado y formulario limpiado');
 }
 
 // Ver registros de evento
 async function viewRegistros(eventoId, eventoTitulo, totalRegistros) {
-    console.log('👥 Cargando registros para evento:', eventoId, eventoTitulo);
+    // console.log('👥 Cargando registros para evento:', eventoId, eventoTitulo);
     
     try {
         // Primero verificar si hay registros en general
-        console.log('🔍 Verificando registros generales primero...');
+        // console.log('🔍 Verificando registros generales primero...');
         const testResponse = await fetch(`${API_BASE}/eventos.php?action=registros_all`, {
             method: 'GET',
             headers: {
@@ -1120,15 +1120,15 @@ async function viewRegistros(eventoId, eventoTitulo, totalRegistros) {
             }
         });
         const testData = await testResponse.json();
-        console.log('📊 Todos los registros en BD:', testData);
+        // console.log('📊 Todos los registros en BD:', testData);
         
         // Filtrar registros de este evento específico
         const registrosDelEvento = testData.registros ? testData.registros.filter(r => r.evento_id == eventoId) : [];
-        console.log(`🎯 Registros del evento ${eventoId}:`, registrosDelEvento);
+        // console.log(`🎯 Registros del evento ${eventoId}:`, registrosDelEvento);
         
         // Ahora hacer la consulta específica del evento
         const url = `${API_BASE}/eventos.php?action=registros&evento_id=${eventoId}`;
-        console.log('📡 URL de consulta específica:', url);
+        // console.log('📡 URL de consulta específica:', url);
         
         const response = await fetch(url, {
             method: 'GET',
@@ -1137,14 +1137,14 @@ async function viewRegistros(eventoId, eventoTitulo, totalRegistros) {
             }
         });
         
-        console.log('📡 Respuesta de registros del evento:', response.status, response.statusText);
+        // console.log('📡 Respuesta de registros del evento:', response.status, response.statusText);
         
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
         
         const responseText = await response.text();
-        console.log('📄 Texto de respuesta crudo:', responseText);
+        // console.log('📄 Texto de respuesta crudo:', responseText);
         
         let data;
         try {
@@ -1154,7 +1154,7 @@ async function viewRegistros(eventoId, eventoTitulo, totalRegistros) {
             throw new Error('Respuesta no válida del servidor');
         }
         
-        console.log('✅ Datos de registros del evento parseados:', data);
+        // console.log('✅ Datos de registros del evento parseados:', data);
         
         if (data.success) {
             registros = data.registros || [];
@@ -1164,14 +1164,14 @@ async function viewRegistros(eventoId, eventoTitulo, totalRegistros) {
         }
         
         const totalReal = registros.length;
-        console.log('📊 Total de registros encontrados:', totalReal);
+        // console.log('📊 Total de registros encontrados:', totalReal);
         
         // Actualizar título del modal y guardar el evento actual
         const titleElement = document.getElementById('registrosEventTitle');
         if (titleElement) {
             titleElement.textContent = `${eventoTitulo} (${totalReal} registros)`;
         } else {
-            console.log('⚠️ Elemento registrosEventTitle no encontrado');
+            // console.log('⚠️ Elemento registrosEventTitle no encontrado');
         }
         currentEventId = eventoId; // Guardar el evento actual para futuras operaciones
 
@@ -1181,10 +1181,10 @@ async function viewRegistros(eventoId, eventoTitulo, totalRegistros) {
         if (registros.length === 0) {
             tbody.innerHTML = '';
             noRegistros.classList.remove('hidden');
-            console.log('📭 No hay registros para este evento');
+            // console.log('📭 No hay registros para este evento');
         } else {
             noRegistros.classList.add('hidden');
-            console.log('📋 Renderizando', registros.length, 'registros del evento');
+            // console.log('📋 Renderizando', registros.length, 'registros del evento');
             
             tbody.innerHTML = registros.map(registro => `
                 <tr class="hover:bg-gray-50">
@@ -1256,7 +1256,7 @@ function applyFilters() {
     });
     
     // renderEventosTable(); // Comentado - tabla eliminada
-    console.log('🔍 Filtros aplicados, eventos filtrados:', filteredEventos.length);
+    // console.log('🔍 Filtros aplicados, eventos filtrados:', filteredEventos.length);
 }
 
 // Funciones de utilidad
@@ -1300,7 +1300,7 @@ function getRegistroEstadoColor(estado) {
 // Función para cambiar estado de registro
 async function cambiarEstadoRegistro(registroId, nuevoEstado) {
     try {
-        console.log(`🔄 Cambiando estado de registro ${registroId} a ${nuevoEstado}`);
+        // console.log(`🔄 Cambiando estado de registro ${registroId} a ${nuevoEstado}`);
 
         const response = await fetch(`${API_BASE}/eventos.php?action=cambiar_estado_registro`, {
             method: 'POST',
@@ -1314,7 +1314,7 @@ async function cambiarEstadoRegistro(registroId, nuevoEstado) {
         });
 
         const result = await response.json();
-        console.log('📨 Respuesta del servidor:', result);
+        // console.log('📨 Respuesta del servidor:', result);
 
         if (result.success) {
             showNotification(result.message, 'success');
@@ -1506,7 +1506,7 @@ async function restoreBackup() {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎬 DOM cargado - iniciando carga de datos...');
+    // console.log('🎬 DOM cargado - iniciando carga de datos...');
     
     // Cargar datos iniciales
     loadEventos();
@@ -1514,7 +1514,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Esperar un poco antes de cargar eventos demo para evitar conflictos
     setTimeout(() => {
-        console.log('⏰ Cargando eventos demo después de delay...');
+        // console.log('⏰ Cargando eventos demo después de delay...');
         loadEventosDemo();
     }, 1500);
     
@@ -1575,11 +1575,11 @@ document.addEventListener('DOMContentLoaded', function() {
         postData.append('precio', parseFloat(formData.get('precio')) || 0);
 
         // === NUEVOS CAMPOS DE BENEFICIOS ===
-        console.log('🚀 AGREGANDO NUEVOS CAMPOS AL POSTDATA...');
+        // console.log('🚀 AGREGANDO NUEVOS CAMPOS AL POSTDATA...');
         postData.append('link_evento', formData.get('link_evento') || '');
         postData.append('link_mapa', formData.get('link_mapa') || '');
         postData.append('tiene_beneficio', formData.get('tiene_beneficio') || '0');
-        console.log('✅ Nuevos campos agregados:', {
+        // console.log('✅ Nuevos campos agregados:', {
             link_evento: formData.get('link_evento'),
             link_mapa: formData.get('link_mapa'),
             tiene_beneficio: formData.get('tiene_beneficio')
@@ -1611,23 +1611,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const eventoId = eventoIdField ? eventoIdField.value : null;
             const isEditing = eventoId && eventoId.trim() !== '';
 
-            console.log('Form submission - eventoId:', eventoId, 'isEditing:', isEditing, 'currentEventId:', currentEventId);
-            console.log('EventId field exists:', !!eventoIdField);
-            console.log('EventId field value type:', typeof eventoId);
-            console.log('EventId field value length:', eventoId ? eventoId.length : 0);
+            // console.log('Form submission - eventoId:', eventoId, 'isEditing:', isEditing, 'currentEventId:', currentEventId);
+            // console.log('EventId field exists:', !!eventoIdField);
+            // console.log('EventId field value type:', typeof eventoId);
+            // console.log('EventId field value length:', eventoId ? eventoId.length : 0);
 
             let response;
             if (isEditing) {
                 // Actualizar evento existente
                 postData.append('id', eventoId);
-                console.log('Editando evento con ID:', eventoId);
+                // console.log('Editando evento con ID:', eventoId);
                 response = await fetch(`${API_BASE}/eventos.php?action=editar`, {
                     method: 'POST',
                     body: postData
                 });
             } else {
                 // Crear nuevo evento
-                console.log('Creando nuevo evento');
+                // console.log('Creando nuevo evento');
                 response = await fetch(`${API_BASE}/eventos.php?action=crear`, {
                     method: 'POST',
                     body: postData
@@ -1635,12 +1635,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const data = await response.json();
-            console.log('Server response:', data);
-            console.log('About to show notification - isEditing:', isEditing);
+            // console.log('Server response:', data);
+            // console.log('About to show notification - isEditing:', isEditing);
 
             if (data.success) {
                 const message = isEditing ? 'Evento actualizado exitosamente' : 'Evento creado exitosamente';
-                console.log('Showing notification:', message);
+                // console.log('Showing notification:', message);
                 showNotification(message, 'success');
                 closeModal();
                 await loadEventosDemo(); // Cambiar a loadEventosDemo para actualizar la vista
@@ -1671,4 +1671,4 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('userInfo').textContent = `Conectado como: ${user.nombre}`;
     }
 });/* Última actualización: Tue Sep 16 10:07:05 CST 2025 */
-console.log('✅ JS actualizado a: Tue Sep 16 10:08:06 CST 2025');
+// console.log('✅ JS actualizado a: Tue Sep 16 10:08:06 CST 2025');

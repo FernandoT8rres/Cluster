@@ -1,7 +1,7 @@
 // ==================== CONTROLADOR DE TIPOS DE DATOS ====================
 // Maneja la selección de tipos de datos y la información descriptiva
 
-console.log('📊 Cargando controlador de tipos de datos...');
+// console.log('📊 Cargando controlador de tipos de datos...');
 
 class ControladorTiposDatos {
     constructor() {
@@ -51,7 +51,7 @@ class ControladorTiposDatos {
         this.configurarSelector();
         this.configurarBotones();
         this.actualizarDescripcion('empresas');
-        console.log('✅ Controlador de tipos de datos inicializado');
+        // console.log('✅ Controlador de tipos de datos inicializado');
     }
 
     configurarSelector() {
@@ -63,14 +63,14 @@ class ControladorTiposDatos {
             // Agregar nuevo evento
             selector.addEventListener('change', (e) => {
                 const nuevoTipo = e.target.value;
-                console.log(`🔄 Cambiando tipo de datos a: ${nuevoTipo}`);
+                // console.log(`🔄 Cambiando tipo de datos a: ${nuevoTipo}`);
                 
                 this.tipoActual = nuevoTipo;
                 this.actualizarDescripcion(nuevoTipo);
                 this.cargarDatosTipo(nuevoTipo);
             });
             
-            console.log('✅ Selector configurado');
+            // console.log('✅ Selector configurado');
         }
     }
 
@@ -79,7 +79,7 @@ class ControladorTiposDatos {
         const btnRecargar = document.getElementById('cargarDatosRapido');
         if (btnRecargar) {
             btnRecargar.addEventListener('click', () => {
-                console.log('🔄 Recargando datos forzadamente...');
+                // console.log('🔄 Recargando datos forzadamente...');
                 this.recargarDatosForzado();
             });
         }
@@ -88,12 +88,12 @@ class ControladorTiposDatos {
         const btnDetalles = document.getElementById('verDetallesDatos');
         if (btnDetalles) {
             btnDetalles.addEventListener('click', () => {
-                console.log('ℹ️ Mostrando detalles de datos...');
+                // console.log('ℹ️ Mostrando detalles de datos...');
                 this.mostrarDetallesDatos();
             });
         }
 
-        console.log('✅ Botones configurados');
+        // console.log('✅ Botones configurados');
     }
 
     actualizarDescripcion(tipo) {
@@ -126,7 +126,7 @@ class ControladorTiposDatos {
         // Actualizar el título del gráfico automáticamente
         this.actualizarTituloGrafico(tipo);
 
-        console.log(`📝 Descripción actualizada para: ${tipo}`);
+        // console.log(`📝 Descripción actualizada para: ${tipo}`);
     }
     
     actualizarTituloGrafico(tipo) {
@@ -157,7 +157,7 @@ class ControladorTiposDatos {
             }, 100);
         }
         
-        console.log(`🎨 Título actualizado a: ${nuevoTitulo}`);
+        // console.log(`🎨 Título actualizado a: ${nuevoTitulo}`);
     }
 
     async cargarDatosTipo(tipo) {
@@ -375,7 +375,7 @@ class ControladorTiposDatos {
         if (window.sistemaEmergencia && window.sistemaEmergencia.mostrarNotificacion) {
             window.sistemaEmergencia.mostrarNotificacion(mensaje, tipo);
         } else {
-            console.log(`${tipo.toUpperCase()}: ${mensaje}`);
+            // console.log(`${tipo.toUpperCase()}: ${mensaje}`);
         }
     }
 }
@@ -389,4 +389,4 @@ window.cerrarModalDetalles = function() {
 // Crear instancia global
 window.controladorTiposDatos = new ControladorTiposDatos();
 
-console.log('✅ Controlador de tipos de datos cargado');
+// console.log('✅ Controlador de tipos de datos cargado');

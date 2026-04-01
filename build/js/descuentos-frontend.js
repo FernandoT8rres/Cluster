@@ -138,11 +138,7 @@ function renderDescuentos(descuentos) {
                         </div>
 
                         <div class="mt-4 text-center">
-                            <button class="bg-clúster-red text-white px-4 py-2 rounded-lg hover:bg-clúster-red-dark transition-colors text-sm"
-                                    onclick="usarDescuento(${descuento.id}); event.stopPropagation();">
-                                <i class="fas fa-tag mr-1"></i>
-                                Usar Descuento
-                            </button>
+                            ${renderBotonAccion(descuento)}
                         </div>
                     </div>
                 </div>
@@ -164,35 +160,97 @@ function renderDescuentos(descuentos) {
 
 // Mostrar detalle del descuento
 function mostrarDescuentoDetalle(id) {
-    console.log('Mostrar detalle del descuento:', id);
+    // console.log('Mostrar detalle del descuento:', id);
 }
 
 // Función de test para debugging
 function testUsuarioEstado() {
-    console.log('🔍 === ESTADO COMPLETO DEL USUARIO ===');
-    console.log('window.currentUser:', window.currentUser);
-    console.log('localStorage.userData:', localStorage.getItem('userData'));
-    console.log('localStorage.currentUser:', localStorage.getItem('currentUser'));
-    console.log('sessionStorage.userSession:', sessionStorage.getItem('userSession'));
-    console.log('obtenerUsuarioId() result:', obtenerUsuarioId());
-    console.log('=== FIN ESTADO USUARIO ===');
+    // console.log('🔍 === ESTADO COMPLETO DEL USUARIO ===');
+    // console.log('window.currentUser:', window.currentUser);
+    // console.log('localStorage.userData:', localStorage.getItem('userData'));
+    // console.log('localStorage.currentUser:', localStorage.getItem('currentUser'));
+    // console.log('sessionStorage.userSession:', sessionStorage.getItem('userSession'));
+    // console.log('obtenerUsuarioId() result:', obtenerUsuarioId());
+    // console.log('=== FIN ESTADO USUARIO ===');
 }
 
 // Hacer función disponible globalmente para testing
 window.testUsuarioEstado = testUsuarioEstado;
 
+// Renderizar el botón de acción configurable por descuento
+function renderBotonAccion(descuento) {
+    const tipo = descuento.accion_tipo || 'ninguno';
+    const valor = descuento.accion_valor || '';
+    const etiqueta = descuento.accion_etiqueta;
+
+    // Si no tiene acción configurada, mostrar botón genérico de "Usar Descuento"
+    if (tipo === 'ninguno' || !tipo) {
+        return `<button class="bg-clúster-red text-white px-4 py-2 rounded-lg hover:bg-clúster-red-dark transition-colors text-sm"
+                        onclick="usarDescuento(${descuento.id}); event.stopPropagation();">
+                    <i class="fas fa-tag mr-1"></i> Usar Descuento
+                </button>`;
+    }
+
+    // Mapeo de tipo → { icono, etiqueta por defecto, color, acción JS }
+    const config = {
+        link: {
+            icon: 'fas fa-external-link-alt',
+            label: etiqueta || 'Visitar sitio',
+            color: 'bg-blue-600 hover:bg-blue-700',
+            action: valor ? `window.open(${JSON.stringify(valor)}, '_blank'); event.stopPropagation();` : null
+        },
+        telefono: {
+            icon: 'fas fa-phone',
+            label: etiqueta || 'Llamar ahora',
+            color: 'bg-green-600 hover:bg-green-700',
+            action: valor ? `window.location.href='tel:${valor}'; event.stopPropagation();` : null
+        },
+        email: {
+            icon: 'fas fa-envelope',
+            label: etiqueta || 'Enviar email',
+            color: 'bg-purple-600 hover:bg-purple-700',
+            action: valor ? `window.location.href='mailto:${valor}'; event.stopPropagation();` : null
+        },
+        whatsapp: {
+            icon: 'fab fa-whatsapp',
+            label: etiqueta || 'WhatsApp',
+            color: 'bg-green-500 hover:bg-green-600',
+            action: valor ? `window.open('https://wa.me/${valor.replace(/[^0-9]/g, '')}', '_blank'); event.stopPropagation();` : null
+        },
+        mapa: {
+            icon: 'fas fa-map-marker-alt',
+            label: etiqueta || 'Ver en mapa',
+            color: 'bg-orange-500 hover:bg-orange-600',
+            action: valor ? `window.open('https://maps.google.com/?q=${encodeURIComponent(valor)}', '_blank'); event.stopPropagation();` : null
+        }
+    };
+
+    const cfg = config[tipo];
+    if (!cfg || !cfg.action) {
+        // Si no hay valor configurado, renderiza botón deshabilitado
+        return `<button class="bg-gray-400 text-white px-4 py-2 rounded-lg text-sm cursor-not-allowed" disabled>
+                    <i class="${cfg ? cfg.icon : 'fas fa-tag'} mr-1"></i> ${cfg ? cfg.label : tipo}
+                </button>`;
+    }
+
+    return `<button class="${cfg.color} text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                    onclick="${cfg.action}">
+                <i class="${cfg.icon} mr-1"></i> ${cfg.label}
+            </button>`;
+}
+
 // Usar descuento (registrar uso)
 async function usarDescuento(id) {
     try {
-        console.log('🎯 === INICIANDO USO DE DESCUENTO ===');
-        console.log('ID del descuento:', id);
+        // console.log('🎯 === INICIANDO USO DE DESCUENTO ===');
+        // console.log('ID del descuento:', id);
 
         // Debug completo del estado del usuario
         testUsuarioEstado();
 
         // Obtener información del usuario actual
         const usuarioId = obtenerUsuarioId();
-        console.log('🔍 Usuario ID obtenido:', usuarioId);
+        // console.log('🔍 Usuario ID obtenido:', usuarioId);
 
         // Simplificar: si hay algún signo de usuario logueado, usar ID temporal
         const tieneUsuario = window.currentUser ||
@@ -201,7 +259,7 @@ async function usarDescuento(id) {
             sessionStorage.getItem('userSession') ||
             document.getElementById('userDisplayName')?.textContent !== 'Usuario';
 
-        console.log('🔍 Tiene usuario logueado:', tieneUsuario);
+        // console.log('🔍 Tiene usuario logueado:', tieneUsuario);
 
         if (!usuarioId && !tieneUsuario) {
             console.error('❌ No hay usuario logueado');
@@ -211,10 +269,10 @@ async function usarDescuento(id) {
 
         // Usar ID obtenido o ID temporal
         const usuarioIdFinal = usuarioId || 1;
-        console.log('🔧 Usuario ID final a usar:', usuarioIdFinal);
+        // console.log('🔧 Usuario ID final a usar:', usuarioIdFinal);
 
         if (!usuarioId) {
-            console.log('⚠️ Usuario logueado pero sin ID - usando ID temporal 1');
+            // console.log('⚠️ Usuario logueado pero sin ID - usando ID temporal 1');
 
         }
 
@@ -254,15 +312,15 @@ async function usarDescuento(id) {
 
 // Obtener ID del usuario actual - versión simplificada que usa los datos del navbar
 function obtenerUsuarioId() {
-    console.log('🔍 Obteniendo ID de usuario...');
+    // console.log('🔍 Obteniendo ID de usuario...');
 
     // Verificar si hay usuario en el navbar (mismo que está funcionando)
     const userDisplayName = document.getElementById('userDisplayName')?.textContent;
     const dropdownUserName = document.getElementById('dropdownUserName')?.textContent;
 
-    console.log('📊 Datos del navbar:');
-    console.log('  - userDisplayName:', userDisplayName);
-    console.log('  - dropdownUserName:', dropdownUserName);
+    // console.log('📊 Datos del navbar:');
+    // console.log('  - userDisplayName:', userDisplayName);
+    // console.log('  - dropdownUserName:', dropdownUserName);
 
     // Si hay usuario en navbar, usar ID basado en el nombre
     if (userDisplayName && userDisplayName !== 'Usuario') {
@@ -270,19 +328,19 @@ function obtenerUsuarioId() {
             a = ((a << 5) - a) + b.charCodeAt(0);
             return a & a;
         }, 0)) % 10000 + 1;
-        console.log(`✅ ID generado desde navbar: ${tempId} para "${userDisplayName}"`);
+        // console.log(`✅ ID generado desde navbar: ${tempId} para "${userDisplayName}"`);
         return tempId;
     }
 
     // Verificar window.currentUser (puede estar disponible)
     if (window.currentUser) {
-        console.log('📊 window.currentUser disponible:', window.currentUser);
+        // console.log('📊 window.currentUser disponible:', window.currentUser);
         if (window.currentUser.id) {
-            console.log('✅ ID encontrado en window.currentUser.id:', window.currentUser.id);
+            // console.log('✅ ID encontrado en window.currentUser.id:', window.currentUser.id);
             return window.currentUser.id;
         }
         if (window.currentUser.user_id) {
-            console.log('✅ ID encontrado en window.currentUser.user_id:', window.currentUser.user_id);
+            // console.log('✅ ID encontrado en window.currentUser.user_id:', window.currentUser.user_id);
             return window.currentUser.user_id;
         }
         if (window.currentUser.nombre || window.currentUser.email) {
@@ -291,7 +349,7 @@ function obtenerUsuarioId() {
                 a = ((a << 5) - a) + b.charCodeAt(0);
                 return a & a;
             }, 0)) % 10000 + 1;
-            console.log(`✅ ID generado desde window.currentUser: ${tempId} para "${identifier}"`);
+            // console.log(`✅ ID generado desde window.currentUser: ${tempId} para "${identifier}"`);
             return tempId;
         }
     }
@@ -310,11 +368,11 @@ function obtenerUsuarioId() {
         if (source) {
             try {
                 const userData = JSON.parse(source);
-                console.log(`📊 Datos de fuente ${i}:`, userData);
+                // console.log(`📊 Datos de fuente ${i}:`, userData);
 
                 if (userData && (userData.id || userData.user_id)) {
                     const foundId = userData.id || userData.user_id;
-                    console.log(`✅ ID real encontrado en fuente ${i}:`, foundId);
+                    // console.log(`✅ ID real encontrado en fuente ${i}:`, foundId);
                     return foundId;
                 }
 
@@ -324,7 +382,7 @@ function obtenerUsuarioId() {
                         a = ((a << 5) - a) + b.charCodeAt(0);
                         return a & a;
                     }, 0)) % 10000 + 1;
-                    console.log(`✅ ID generado desde storage: ${tempId} para "${identifier}"`);
+                    // console.log(`✅ ID generado desde storage: ${tempId} para "${identifier}"`);
                     return tempId;
                 }
             } catch (e) {

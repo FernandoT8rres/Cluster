@@ -50,7 +50,7 @@ function showNotification(message, type = 'info') {
 // Cargar descuentos desde la API
 async function loadDescuentos() {
     try {
-        console.log('Iniciando carga de descuentos...');
+        // console.log('Iniciando carga de descuentos...');
         
         const response = await fetch(`${API_BASE}/descuentos.php`, {
             method: 'GET',
@@ -69,7 +69,7 @@ async function loadDescuentos() {
         
         // Verificar el tipo de contenido
         const contentType = response.headers.get('content-type');
-        console.log('Content-Type recibido:', contentType);
+        // console.log('Content-Type recibido:', contentType);
         
         if (!response.ok) {
             let errorText = '';
@@ -90,13 +90,13 @@ async function loadDescuentos() {
         
         // Primero obtener el texto de la respuesta
         const responseText = await response.text();
-        console.log('Respuesta recibida (texto):', responseText);
+        // console.log('Respuesta recibida (texto):', responseText);
         
         // Intentar parsear como JSON
         let data;
         try {
             data = JSON.parse(responseText);
-            console.log('Datos parseados:', data);
+            // console.log('Datos parseados:', data);
         } catch (jsonError) {
             console.error('Error al parsear JSON:', jsonError);
             
@@ -123,7 +123,7 @@ async function loadDescuentos() {
         descuentos = data.data || [];
         filteredDescuentos = [...descuentos];
         
-        console.log(`${descuentos.length} descuentos cargados exitosamente`);
+        // console.log(`${descuentos.length} descuentos cargados exitosamente`);
         
         // Actualizar la interfaz
         updateDescuentosTable();
@@ -470,7 +470,7 @@ function formatearFecha(fecha) {
 
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Inicializando demo de descuentos...');
+    // console.log('Inicializando demo de descuentos...');
     
     // Configurar event listeners para los filtros
     const filtroCategoria = document.getElementById('filtroCategoria');

@@ -12,31 +12,31 @@ class EmpresasDestacadasIndex {
     }
 
     async init() {
-        console.log('Inicializando empresas destacadas en index...');
+        // console.log('Inicializando empresas destacadas en index...');
         await this.cargarEmpresasDestacadas();
     }
 
     async cargarEmpresasDestacadas() {
-        console.log('🔍 Iniciando carga de empresas destacadas...');
+        // console.log('🔍 Iniciando carga de empresas destacadas...');
         const container = document.getElementById(this.containerId);
         if (!container) {
             console.warn('❌ Container para empresas no encontrado:', this.containerId);
             return;
         }
-        console.log('✅ Container encontrado:', container);
+        // console.log('✅ Container encontrado:', container);
 
         this.mostrarCargando();
 
         try {
             const apiUrl = `${this.API_URL}?destacado=1&activo=1&limit=6&orderBy=updated_at&order=DESC`;
-            console.log('📡 Fetching from API:', apiUrl);
-            console.log('🌐 Current URL:', window.location.href);
-            console.log('📂 Base URL:', window.location.origin + window.location.pathname);
+            // console.log('📡 Fetching from API:', apiUrl);
+            // console.log('🌐 Current URL:', window.location.href);
+            // console.log('📂 Base URL:', window.location.origin + window.location.pathname);
             
             // Obtener empresas destacadas y activas de la base de datos
             const response = await fetch(apiUrl);
-            console.log('📊 Response status:', response.status, response.statusText);
-            console.log('📊 Response headers:', Object.fromEntries([...response.headers]));
+            // console.log('📊 Response status:', response.status, response.statusText);
+            // console.log('📊 Response headers:', Object.fromEntries([...response.headers]));
             
             if (!response.ok) {
                 const errorText = await response.text();
@@ -45,7 +45,7 @@ class EmpresasDestacadasIndex {
             }
 
             const responseText = await response.text();
-            console.log('📄 Raw response:', responseText.substring(0, 500) + '...');
+            // console.log('📄 Raw response:', responseText.substring(0, 500) + '...');
             
             let result;
             try {
@@ -56,16 +56,16 @@ class EmpresasDestacadasIndex {
                 throw new Error('Invalid JSON response from server');
             }
             
-            console.log('📋 API Response:', result);
+            // console.log('📋 API Response:', result);
             
             if (result.success && result.data && result.data.length > 0) {
-                console.log(`✅ Empresas encontradas: ${result.data.length}`);
+                // console.log(`✅ Empresas encontradas: ${result.data.length}`);
                 this.empresasDestacadas = result.data;
                 this.renderizarEmpresasEnTabla();
                 this.ocultarMensajeVacio();
             } else {
-                console.log('⚠️ No hay empresas destacadas o respuesta vacía');
-                console.log('📊 Result details:', {
+                // console.log('⚠️ No hay empresas destacadas o respuesta vacía');
+                // console.log('📊 Result details:', {
                     success: result.success,
                     dataExists: !!result.data,
                     dataLength: result.data ? result.data.length : 'N/A',
@@ -249,7 +249,7 @@ async function refreshCompaniesTable() {
 
 // Inicialización cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 DOM Content Loaded - Inicializando empresas destacadas...');
+    // console.log('🚀 DOM Content Loaded - Inicializando empresas destacadas...');
     
     // Crear instancia global
     window.empresasDestacadasIndex = new EmpresasDestacadasIndex();
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkContainer = () => {
         const container = document.getElementById('companiesTableBody');
         if (container) {
-            console.log('✅ Contenedor encontrado, inicializando...');
+            // console.log('✅ Contenedor encontrado, inicializando...');
             window.empresasDestacadasIndex.init();
         } else {
             console.warn('⚠️ Contenedor no encontrado, reintentando en 500ms...');
@@ -272,10 +272,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // También escuchar el evento window.load como respaldo
 window.addEventListener('load', () => {
-    console.log('🌐 Window Load Event - Verificando estado de empresas...');
+    // console.log('🌐 Window Load Event - Verificando estado de empresas...');
     
     if (!window.empresasDestacadasIndex) {
-        console.log('🚀 Instancia no existe, creando respaldo...');
+        // console.log('🚀 Instancia no existe, creando respaldo...');
         window.empresasDestacadasIndex = new EmpresasDestacadasIndex();
         
         setTimeout(() => {

@@ -1,4 +1,4 @@
-console.log('Cargando eventos.js...');
+// console.log('Cargando eventos.js...');
 
 // Variables globales
 let eventosData = [];
@@ -99,7 +99,7 @@ function createNotificationContainer() {
 
 // Cargar eventos
 async function cargarEventos() {
-    console.log('Cargando eventos...');
+    // console.log('Cargando eventos...');
     try {
         showLoading();
         
@@ -107,12 +107,12 @@ async function cargarEventos() {
             limit: 50
         });
         
-        console.log('Respuesta API:', response);
+        // console.log('Respuesta API:', response);
         
         if (response.success) {
             eventosData = response.data?.eventos || [];
             filteredEventos = [...eventosData];
-            console.log('Eventos cargados:', eventosData.length);
+            // console.log('Eventos cargados:', eventosData.length);
             renderEventos();
             updateStats();
         } else {
@@ -135,7 +135,7 @@ function renderEventos() {
         return;
     }
     
-    console.log('Renderizando eventos:', filteredEventos.length);
+    // console.log('Renderizando eventos:', filteredEventos.length);
     
     if (filteredEventos.length === 0) {
         showEmptyState();
@@ -300,7 +300,7 @@ function cerrarModal() {
 
 // Registrarse a evento
 async function registrarseEvento(eventoId, eventoTitulo, precio = 0) {
-    console.log('Registrándose al evento:', eventoId, eventoTitulo);
+    // console.log('Registrándose al evento:', eventoId, eventoTitulo);
     
     // Verificar usuario desde sesión
     let user = {};
@@ -407,15 +407,15 @@ window.refreshEvents = async function() {
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, inicializando eventos...');
+    // console.log('DOM loaded, inicializando eventos...');
     
     // Solo si estamos en la página de eventos
     if (document.getElementById('eventos-container')) {
-        console.log('Contenedor encontrado, cargando eventos...');
+        // console.log('Contenedor encontrado, cargando eventos...');
         cargarEventos();
     } else {
-        console.log('No se encontró el contenedor de eventos');
+        // console.log('No se encontró el contenedor de eventos');
     }
 });
 
-console.log('eventos.js cargado correctamente');
+// console.log('eventos.js cargado correctamente');

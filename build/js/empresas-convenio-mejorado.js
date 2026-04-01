@@ -15,7 +15,7 @@ class EmpresasConvenioManager {
     }
 
     init() {
-        console.log('🏢 Inicializando gestor de empresas en convenio...');
+        // console.log('🏢 Inicializando gestor de empresas en convenio...');
         this.setupEventListeners();
         this.cargarEmpresas();
         this.crearModalVistaPrevia();
@@ -58,13 +58,13 @@ class EmpresasConvenioManager {
 
     async cargarEmpresas() {
         try {
-            console.log('📡 Cargando empresas desde API...');
+            // console.log('📡 Cargando empresas desde API...');
             const response = await fetch(`${this.apiUrl}?action=listar`);
             const data = await response.json();
 
             if (data.success) {
                 this.empresas = data.data.empresas;
-                console.log(`✅ ${this.empresas.length} empresas cargadas`);
+                // console.log(`✅ ${this.empresas.length} empresas cargadas`);
                 this.renderizarEmpresas();
                 this.actualizarContador();
             } else {
@@ -266,7 +266,7 @@ class EmpresasConvenioManager {
 
     async abrirVistaPrevia(empresaId) {
         try {
-            console.log(`👁️ Abriendo vista previa para empresa ID: ${empresaId}`);
+            // console.log(`👁️ Abriendo vista previa para empresa ID: ${empresaId}`);
             
             // Buscar empresa en datos locales
             const empresa = this.empresas.find(e => e.id == empresaId);

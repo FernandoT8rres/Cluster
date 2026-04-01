@@ -11,7 +11,7 @@ class EmpresasVisualizacionManager {
     }
 
     init() {
-        console.log('👁️ Inicializando visualización de empresas...');
+        // console.log('👁️ Inicializando visualización de empresas...');
         this.setupEventListeners();
         this.cargarEmpresas();
         this.crearModalVisualizacion();
@@ -39,7 +39,7 @@ class EmpresasVisualizacionManager {
 
     async cargarEmpresas() {
         try {
-            console.log('📡 Cargando empresas desde:', this.apiUrl);
+            // console.log('📡 Cargando empresas desde:', this.apiUrl);
             this.mostrarCargando(true);
             
             const response = await fetch(`${this.apiUrl}?action=listar`, {
@@ -49,18 +49,18 @@ class EmpresasVisualizacionManager {
                 }
             });
             
-            console.log('📡 Respuesta HTTP:', response.status, response.statusText);
+            // console.log('📡 Respuesta HTTP:', response.status, response.statusText);
             
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
             const data = await response.json();
-            console.log('📡 Datos recibidos:', data);
+            // console.log('📡 Datos recibidos:', data);
 
             if (data.success) {
                 this.empresas = data.data.empresas;
-                console.log(`✅ ${this.empresas.length} empresas cargadas`);
+                // console.log(`✅ ${this.empresas.length} empresas cargadas`);
                 this.renderizarEmpresas();
                 this.actualizarContador();
             } else {

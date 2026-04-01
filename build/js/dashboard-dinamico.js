@@ -19,7 +19,7 @@ class DashboardStats {
    * Inicializar el sistema de estadísticas
    */
   async init() {
-    console.log('📊 Inicializando sistema de estadísticas dinámicas...');
+    // console.log('📊 Inicializando sistema de estadísticas dinámicas...');
     
     try {
       // Cargar estadísticas iniciales
@@ -31,7 +31,7 @@ class DashboardStats {
       // Configurar actualización automática cada 5 minutos
       this.configurarActualizacionAutomatica();
       
-      console.log('✅ Sistema de estadísticas inicializado correctamente');
+      // console.log('✅ Sistema de estadísticas inicializado correctamente');
       
     } catch (error) {
       console.error('❌ Error inicializando sistema de estadísticas:', error);
@@ -49,7 +49,7 @@ class DashboardStats {
     this.mostrarSkeletonStats();
     
     try {
-      console.log('🔄 Cargando estadísticas desde la base de datos...');
+      // console.log('🔄 Cargando estadísticas desde la base de datos...');
       
       // Cargar estadísticas generales
       const statsResponse = await this.fetchAPI('estadisticas_mejoradas.php?action=general');
@@ -66,7 +66,7 @@ class DashboardStats {
           timestamp: Date.now()
         });
         
-        console.log('✅ Estadísticas cargadas correctamente:', stats);
+        // console.log('✅ Estadísticas cargadas correctamente:', stats);
         
       } else {
         throw new Error(statsResponse.message || 'Error obteniendo estadísticas');
@@ -93,7 +93,7 @@ class DashboardStats {
    */
   async cargarDatosEmpresas() {
     try {
-      console.log('🏢 Cargando datos históricos de empresas...');
+      // console.log('🏢 Cargando datos históricos de empresas...');
       
       // Obtener histórico de empresas desde la nueva API
       const historicoResponse = await this.fetchAPI('estadisticas_mejoradas.php?action=empresas_historico');
@@ -107,7 +107,7 @@ class DashboardStats {
           timestamp: Date.now()
         });
         
-        console.log('✅ Datos históricos de empresas cargados:', datosHistoricos);
+        // console.log('✅ Datos históricos de empresas cargados:', datosHistoricos);
         
       } else {
         throw new Error('Error obteniendo histórico de empresas');
@@ -189,7 +189,7 @@ class DashboardStats {
       let datosHistoricos = this.obtenerDatosCache('empresas_historico');
       
       if (!datosHistoricos) {
-        console.log('⚠️ Usando datos de fallback para el gráfico');
+        // console.log('⚠️ Usando datos de fallback para el gráfico');
         datosHistoricos = this.generarDatosFallback();
       }
 
@@ -290,7 +290,7 @@ class DashboardStats {
       // Actualizar texto de crecimiento
       this.actualizarTextoGrafico(datosHistoricos);
       
-      console.log('✅ Gráfico de empresas inicializado correctamente');
+      // console.log('✅ Gráfico de empresas inicializado correctamente');
       
     } catch (error) {
       console.error('❌ Error inicializando gráfico:', error);
@@ -314,7 +314,7 @@ class DashboardStats {
     if (!this.chart) return;
     
     try {
-      console.log('🔄 Actualizando gráfico...');
+      // console.log('🔄 Actualizando gráfico...');
       
       await this.cargarDatosEmpresas();
       const datosHistoricos = this.obtenerDatosCache('empresas_historico');
@@ -326,7 +326,7 @@ class DashboardStats {
         
         this.actualizarTextoGrafico(datosHistoricos);
         
-        console.log('✅ Gráfico actualizado correctamente');
+        // console.log('✅ Gráfico actualizado correctamente');
       }
       
     } catch (error) {
@@ -337,12 +337,12 @@ class DashboardStats {
   configurarActualizacionAutomatica() {
     // Actualizar cada 5 minutos
     this.updateInterval = setInterval(async () => {
-      console.log('⏰ Actualización automática de estadísticas...');
+      // console.log('⏰ Actualización automática de estadísticas...');
       await this.cargarTodasLasEstadisticas();
       await this.actualizarGrafico();
     }, 5 * 60 * 1000);
     
-    console.log('⏰ Actualización automática configurada (cada 5 minutos)');
+    // console.log('⏰ Actualización automática configurada (cada 5 minutos)');
   }
 
   async fetchAPI(endpoint, options = {}) {
@@ -435,7 +435,7 @@ class DashboardStats {
   }
 
   usarDatosFallback() {
-    console.log('⚠️ Usando datos de fallback...');
+    // console.log('⚠️ Usando datos de fallback...');
     
     // Estadísticas de fallback
     const statsFallback = {
@@ -484,7 +484,7 @@ class DashboardStats {
   }
 
   async actualizarManualmente() {
-    console.log('🔄 Actualización manual solicitada...');
+    // console.log('🔄 Actualización manual solicitada...');
     
     if (typeof mostrarNotificacion === 'function') {
       mostrarNotificacion('Actualizando estadísticas...', 'info');
@@ -527,7 +527,7 @@ let dashboardStats = null;
 
 async function inicializarEstadisticasDinamicas() {
   try {
-    console.log('🚀 Inicializando sistema de estadísticas dinámicas...');
+    // console.log('🚀 Inicializando sistema de estadísticas dinámicas...');
     
     // Crear instancia global
     dashboardStats = new DashboardStats();
@@ -539,7 +539,7 @@ async function inicializarEstadisticasDinamicas() {
     // Inicializar el sistema
     await dashboardStats.init();
     
-    console.log('✅ Sistema de estadísticas dinámicas inicializado');
+    // console.log('✅ Sistema de estadísticas dinámicas inicializado');
     
   } catch (error) {
     console.error('❌ Error inicializando estadísticas dinámicas:', error);
