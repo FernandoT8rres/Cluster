@@ -37,7 +37,10 @@ Claut_BD/
     │   ├── upload-image.php    ← Subida de logos con validación 9 capas
     │   ├── estadisticas_simple.php ← Stats del dashboard
     │   └── ...
-    ├── middleware/             ← CSRF, JWT, Rate Limiter, Security Headers
+    ├── middleware/             ← CSRF, JWT, Rate Limiter, Security Headers, CORS
+    │   ├── cors.php            ← ⭐ Centralized CORS — usar en nuevos endpoints
+    │   ├── jwt-validator.php   ← ⭐ JWT fuente de verdad
+    │   └── ...
     ├── utils/                  ← FileUploadValidator, InputValidator, SecurityLogger
     ├── config/
     │   ├── database.php        ← Singleton Database — ÚNICA fuente de conexión BD
@@ -423,11 +426,29 @@ Eliminados en commit `ca3376b`: emergencia.js, solucionador.js, auth-fix.js, aut
 ### Seguridad
 - **NUNCA** hardcodear credenciales en ningún archivo `.php` ni `.md` — solo en `.env`.
 - **NUNCA** usar `FILTER_SANITIZE_STRING` — deprecado PHP 8.1, usar `htmlspecialchars()`.
-- **NUNCA** exponer `$_SESSION` completo en respuestas JSON — `login-compatible.php` tenía `debug_session => $_SESSION` activo, exponiendo roles, tokens y datos de sesión a cualquier cliente. **CORREGIDO 2026-04-01**.
+- **NUNCA** exponer `$_SESSION` completo en respuestas JSON — `login-compatible.php` tenía `debug_session => $_SESSION` activo. **CORREGIDO 2026-04-01**.
 - **NUNCA** incluir `session_id()` en respuestas JSON de APIs — permite secuestro de sesión.
-- **NUNCA** dejar páginas `demo_*.html` sin `auth-session.js` en producción — son accesibles sin login. Patrón correcto: incluir `<script src="./js/auth-session.js"></script>` antes de `</body>`.
+- **NUNCA** usar `header('Access-Control-Allow-Origin: *')` en producción — en nuevos endpoints usar `middleware/cors.php`:
+  ```php
+  require_once __DIR__ . '/../middleware/cors.php';
+  setCorsHeaders();
+  handlePreflight();
+  ```
+  Los 42 archivos legacy con `*` están mitigados por `.htaccess` (Apache sobreescribe el header). No modificar masivamente — riesgo de romper flujos.
+- **NUNCA** dejar páginas `demo_*.html` o páginas de usuario sin `auth-session.js`. **CORREGIDO 2026-04-01**.
 - **SIEMPRE** usar soft delete (`activo = 0`) — nunca `DELETE` físico en tablas de entidades.
-- **Patrón auth guard en páginas HTML**: Solo incluir `./js/auth-session.js`. El script verifica sesión con el servidor y redirige a `./pages/sign-in.html` automáticamente si no hay sesión válida.
+- **Patrón auth guard en páginas HTML**: Solo incluir `./js/auth-session.js` antes de `</body>`.
+
+### JWT — Estado actual
+| Archivo | Estado | Uso |
+|---------|--------|-----|
+| `middleware/jwt-validator.php` | ✅ **Fuente de verdad** | Generación y validación en `login.php` |
+| `api/auth/jwt_helper.php` | ⚠️ Legacy / fallback | Fallback en `login.php`, `me.php` si `jwt-validator.php` no existe |
+| `api/auth/jwt_helper_fixed.php` | ❌ **ELIMINADO** 2026-04-01 | Tenía `FILTER_SANITIZE_STRING` (deprecado) y secret hardcodeado |
+
+- **NO eliminar `jwt_helper.php`** — `login.php` y `me.php` lo requieren como fallback
+- El flujo real es: `login.php` primero carga `jwt-validator.php` (middleware), si no existe usa `jwt_helper.php`
+- `jwt_helper.php` lee el `JWT_SECRET` desde `.env` — es seguro
 
 ### UI/UX
 - Usar siempre el `claut-header` horizontal como header maestro.
@@ -455,6 +476,8 @@ Eliminados en commit `ca3376b`: emergencia.js, solucionador.js, auth-fix.js, aut
 | CSRF Protection | `middleware/csrf-protection.php` | ✅ Implementado |
 | Rate Limiter | `middleware/rate-limiter.php` | ✅ Implementado |
 | JWT Validator | `middleware/jwt-validator.php` | ✅ Implementado (fuente de verdad) |
+| CORS Middleware | `middleware/cors.php` | ✅ Creado 2026-04-01 — usar en nuevos endpoints |
+| CORS .htaccess | `build/.htaccess` | ✅ Restringido a dominio propio 2026-04-01 |
 | Input Validator | `utils/input-validator.php` | ✅ Implementado |
 | File Upload Validator | `utils/file-upload-validator.php` | ✅ 9 capas de validación |
 | Security Logger | `utils/security-logger.php` | ✅ JSON logs + rotación |
@@ -629,7 +652,10 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
 
 **Método**: FileZilla FTP → `intranet.clautmetropolitano.mx`
 **Rama Git activa**: `main`
-**Último commit**: `ca3376b` — console.log cleanup + auth guards + 23 legacy JS files removed (2026-04-01)
+**Último deploy exitoso**: `2026-04-01` — todos los archivos del día subidos por FileZilla ✅  
+**Migración SQL ejecutada**: `20260401_email_notification_config.sql` ✅  
+**Sistema de correos activo en producción**: sí ✅
+
 
 ### Commits a subir a producción (por FileZilla)
 ```bash
