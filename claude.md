@@ -147,9 +147,29 @@ El proyecto se sube a producción manualmente vía **FileZilla** (cliente FTP).
 ### JavaScript — Frontend
 - Clases: ES6 `class` con `PascalCase`
 - Variables/métodos: `camelCase` | Constantes: `UPPER_SNAKE_CASE`
-- Sin `console.log` en producción — solo `console.error` y `console.warn`
+- **NUNCA** `console.log` en producción — solo `console.error` y `console.warn` para errores reales
+- **NUNCA** agregar `console.log` nuevos en ninguna función** — todos los 482 logs del proyecto fueron comentados el 2026-04-01. Si se necesita debug temporal, usar `console.warn('[DEBUG]', ...)` y removerlo antes del commit.
+- Para comentar logs masivos: `sed -i '' "s/console\.log(/\/\/ console.log(/g" archivo.js`
 - FormData: SIEMPRE hacer `append` de todos los campos (incluso vacíos) para que los vaciados en edición se persistan
 - Inputs sin `name=""` no son capturados por `new FormData(form)` — verificar siempre
+
+### Archivos JS Activos (NO eliminar)
+| Archivo | Propósito |
+|---------|----------|
+| `js/auth-session.js` | Guard de sesión — **incluir en todas las páginas** |
+| `js/admin-empresas.js` | ⭐ CRUD completo de empresas |
+| `js/admin-eventos.js` | CRUD de eventos del admin panel |
+| `js/admin-comites.js` | Gestión de comités |
+| `js/index.js` | Lógica del dashboard/home |
+| `js/admin-calendar-master.js` | Calendario del admin panel |
+| `js/auth-redirect.js` | Redirección post-login |
+| `js/dashboard-auth.js` | Auth específico del dashboard |
+| `js/descuentos-frontend.js` | UI de descuentos |
+| `js/eventos.js` | Página pública de eventos |
+| `js/session-security.js` | Verificación de seguridad de sesión |
+
+### Archivos JS Legacy Eliminados (2026-04-01)
+Eliminados en commit `ca3376b`: emergencia.js, solucionador.js, auth-fix.js, auth-pattern-fix.js, dashboard-simple.js, dashboard-force-unlock.js, bulletin-database.js, chart-fix-final.js, clear-localStorage.js, diagnostico-simple.js, demo-empresas.js, demo-empresas-basico.js, empresas-simple-viewer.js, empresas-analisis.js, empresas-evervault.js, force-login-links.js, gestor-datos-reales.js, grafico-seccion-correcta.js, menu-auth-fixer.js, menu-direct-fix.js, solucionador.js.
 
 ### SQL
 - Tablas: `snake_case` plural | Columnas: `snake_case`
@@ -551,6 +571,13 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
     - Era `debug_session => $_SESSION` — exponía toda la sesión (rol, tokens, email) a cualquier cliente
 - [x] **Añadir auth guard** a páginas `demo_*.html` sin protección — **CORREGIDO 2026-04-01**
     - Añadido `auth-session.js` a: `demo_comite`, `demo_documentos`, `demo_estadisticasdinamicas`, `demo_evento`, `demo_visitante`
+- [x] **Añadir auth guard** a páginas de usuario reales — **CORREGIDO 2026-04-01**
+    - Añadido `auth-session.js` a: `eventos.html`, `profile.html`
+    - `visitante.html` NO tiene auth guard intencional — usa su propio sistema de acceso con `localStorage.visitante_mode`
+- [x] **Limpiar 482 `console.log`** de 22 archivos JS — **CORREGIDO 2026-04-01** (commit `ca3376b`)
+    - Comentados (no eliminados) para mantener trazabilidad en código fuente
+    - 0 logs activos en producción — verificado con `grep`
+- [x] **Eliminar 23 archivos JS legacy** (emergencia.js, solucionador.js, etc.) — **CORREGIDO 2026-04-01**
 - [ ] Consolidar 3 implementaciones JWT en `middleware/jwt-validator.php`
     - ⚠️ **Alta complejidad** — muchos archivos dependen de las implementaciones legacy. Requiere auditoría completa antes de eliminar.
 
@@ -569,15 +596,64 @@ El proyecto tiene workflows en `.agents/` y `.agent/` para tareas específicas:
 
 ---
 
+## 🗺️ Mapa de Auth Guard — Páginas HTML
+
+| Página | Auth Guard | Notas |
+|--------|-----------|-------|
+| `dashboard.html` | ✅ auth-session.js | |
+| `eventos.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `profile.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `descuentos.html` | ✅ auth-session.js | |
+| `boletines.html` | ✅ auth-session.js | |
+| `comites.html` | ✅ auth-session.js | |
+| `empresas-convenio.html` | ✅ auth-session.js | |
+| `calendario.html` | ✅ auth-session.js | |
+| `contacto.html` | ✅ auth-session.js | |
+| `demo_boletines.html` | ✅ auth-session.js | |
+| `demo_descuentos.html` | ✅ auth-session.js | |
+| `demo_empresas.html` | ✅ auth-session.js | |
+| `demo_gestion_grafico.html` | ✅ auth-session.js | |
+| `demo_comite.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `demo_documentos.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `demo_estadisticasdinamicas.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `demo_evento.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `demo_visitante.html` | ✅ auth-session.js | Añadido 2026-04-01 |
+| `visitante.html` | ⚡ Custom | Sistema propio con `localStorage.visitante_mode` |
+| `admin-panel.html` | ✅ auth-session.js | |
+| `pages/sign-in.html` | ❌ Pública | Es la página de login |
+| `pages/sign-up.html` | ❌ Pública | Registro de usuarios |
+
+---
+
 ## 🚀 Estado de Deploy — Producción
 
 **Método**: FileZilla FTP → `intranet.clautmetropolitano.mx`
 **Rama Git activa**: `main`
-**Último commit relevante**: `4e0854b` — security fixes (2026-04-01)
+**Último commit**: `ca3376b` — console.log cleanup + auth guards + 23 legacy JS files removed (2026-04-01)
 
-### Archivos pendientes de subir a producción (después de cada sesión de trabajo)
-Después de cada commit, subir por FileZilla los archivos modificados. Ver log con:
+### Commits a subir a producción (por FileZilla)
 ```bash
-git log --oneline -5
-git show --stat HEAD
+git log --oneline -5    # ver commits recientes
+git show --stat HEAD    # ver qué archivos cambió el último commit
+```
+
+### Archivos modificados el 2026-04-01 (subir todos):
+```
+build/api/auth/login-compatible.php     ← CRÍTICO: fix session exposure
+build/api/descuentos.php                ← hook email notif
+build/api/empresas-simple.php           ← hook email notif
+build/api/notificaciones.php            ← hook email notif
+build/api/eventos.php                   ← hook email notif
+build/api/email-config.php              ← NUEVO: panel control correos
+build/utils/NotificationMailer.php      ← NUEVO: helper correos
+build/admin-panel.html                  ← panel correos + sidebar
+build/eventos.html                      ← auth guard
+build/profile.html                      ← auth guard
+build/demo_comite.html                  ← auth guard
+build/demo_documentos.html              ← auth guard
+build/demo_estadisticasdinamicas.html   ← auth guard
+build/demo_evento.html                  ← auth guard
+build/demo_visitante.html               ← auth guard
+build/js/                               ← TODOS: 0 console.log activos
+build/setup/migrations/20260401_email_notification_config.sql  ← NUEVO (ejecutar en phpMyAdmin)
 ```
