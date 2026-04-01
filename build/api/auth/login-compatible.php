@@ -27,15 +27,16 @@ require_once __DIR__ . '/../../config/database.php';
 
 /**
  * Función para responder en JSON
+ * SECURITY: NO incluir session_id ni $_SESSION en respuestas — vulnerabilidad de exposición de datos
  */
 function responderJSON($success, $data = null, $message = '', $extra = []) {
     $response = [
-        'success' => $success,
-        'message' => $message,
-        'data' => $data,
+        'success'   => $success,
+        'message'   => $message,
+        'data'      => $data,
         'timestamp' => date('c'),
-        'session_id' => session_id(),
-        'debug_session' => $_SESSION // DUMP COMPLETO DE SESION
+        // ELIMINADO: 'session_id' => session_id()       — expone ID de sesión al cliente
+        // ELIMINADO: 'debug_session' => $_SESSION       — exponía TODA la sesión en cada response
     ];
     
     foreach ($extra as $key => $value) {
