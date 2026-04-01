@@ -141,7 +141,7 @@ class FileUploadValidator {
         }
         
         // 7. Escanear contenido por patrones maliciosos
-        $this->scanForMaliciousContent($file['tmp_name']);
+        $this->scanForMaliciousContent($file['tmp_name'], $validateImageContent);
         
         // 8. Validar nombre de archivo
         $this->validateFilename($filename);
@@ -159,9 +159,10 @@ class FileUploadValidator {
     /**
      * Escanea el contenido del archivo por patrones maliciosos
      * @param string $filePath Ruta temporal del archivo
+     * @param bool $isBinaryFile Si es un archivo binario (imagen), no validar null bytes
      * @throws Exception Si se detecta contenido malicioso
      */
-    private function scanForMaliciousContent($filePath) {
+    private function scanForMaliciousContent($filePath, $isBinaryFile = false) {
         // Leer primeros 8KB del archivo para escaneo
         $handle = fopen($filePath, 'rb');
         $content = fread($handle, 8192);
@@ -174,8 +175,9 @@ class FileUploadValidator {
             }
         }
         
-        // Verificar null bytes (técnica de evasión)
-        if (strpos($content, "\0") !== false) {
+        // Verificar null bytes SOLO en archivos de texto/documentos
+        // Las imágenes binarias (PNG, JPG, etc.) contienen null bytes legítimos
+        if (!$isBinaryFile && strpos($content, "\0") !== false) {
             throw new Exception('Archivo contiene caracteres no válidos');
         }
     }

@@ -1,7 +1,7 @@
 <?php
 // API de login mejorada con mejor manejo de errores
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 

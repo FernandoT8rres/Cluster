@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Bash(grep *))",
+      "Bash(Bash(head *))",
+      "Bash(Bash(grep *))",
+      "Bash(Bash(head *))",
+      "Bash(Bash(find *))",
+      "Bash(Bash(head *))",
+      "Bash(Bash(grep *))",
+      "Bash(Bash(head *))",
+      "Bash(Bash(grep *))",
+      "Bash(Bash(head *))",
+      "Bash(Bash(find *))",
+      "Bash(Bash(sort *))",
+      "Bash(wc *)",
+      "Bash(Bash(grep *))",
+      "Bash(Bash(head *))",
+      "Bash(Bash(grep *))",
+      "Bash(Bash(head *))",
+      "Bash(grep *)",
+      "Bash(head *)",
+      "Bash(tail *)"
+    ]
+  }
+}

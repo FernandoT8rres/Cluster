@@ -16,7 +16,7 @@ require_once dirname(dirname(__DIR__)) . '/config/session-config.php';
 SessionConfig::init();
 
 header('Content-Type: application/json; charset=UTF-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true');

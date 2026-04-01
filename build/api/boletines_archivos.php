@@ -3,19 +3,13 @@
  * API para manejar archivos adjuntos de boletines
  */
 
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');
 
-// Configuración de base de datos
-$config = [
-    'host' => '127.0.0.1',
-    'username' => 'u695712029_claut_fer',
-    'password' => 'CLAUT@admin_fernando!7',
-    'database' => 'u695712029_claut_intranet',
-    'charset' => 'utf8mb4'
-];
+// Utilizar configuración centralizada
+require_once __DIR__ . '/../config/database.php';
 
 function sendJsonResponse($data, $success = true) {
     $response = [
@@ -34,11 +28,7 @@ function sendJsonResponse($data, $success = true) {
 }
 
 try {
-    $dsn = "mysql:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";
-    $pdo = new PDO($dsn, $config['username'], $config['password'], [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]);
+    $pdo = Database::getInstance()->getConnection();
     
     $boletin_id = isset($_GET['boletin_id']) ? intval($_GET['boletin_id']) : null;
     

@@ -93,20 +93,26 @@ class ApiValidator {
                 // Min length/value
                 if (strpos($rule, 'min:') === 0) {
                     $min = (int)substr($rule, 4);
-                    if (is_numeric($value) && $value < $min) {
-                        $errors[$field] = "El campo '$field' debe ser mayor o igual a $min";
-                    } elseif (is_string($value) && strlen($value) < $min) {
-                        $errors[$field] = "El campo '$field' debe tener al menos $min caracteres";
+                    // Decidir si validar por valor o por longitud
+                    $isString = in_array('string', $fieldRules) || (is_string($value) && !in_array('int', $fieldRules));
+                    
+                    if (!$isString && is_numeric($value)) {
+                        if ($value < $min) $errors[$field] = "El campo '$field' debe ser mayor o igual a $min";
+                    } else {
+                        if (strlen((string)$value) < $min) $errors[$field] = "El campo '$field' debe tener al menos $min caracteres";
                     }
                 }
                 
                 // Max length/value
                 if (strpos($rule, 'max:') === 0) {
                     $max = (int)substr($rule, 4);
-                    if (is_numeric($value) && $value > $max) {
-                        $errors[$field] = "El campo '$field' debe ser menor o igual a $max";
-                    } elseif (is_string($value) && strlen($value) > $max) {
-                        $errors[$field] = "El campo '$field' debe tener máximo $max caracteres";
+                    // Decidir si validar por valor o por longitud
+                    $isString = in_array('string', $fieldRules) || (is_string($value) && !in_array('int', $fieldRules));
+                    
+                    if (!$isString && is_numeric($value)) {
+                        if ($value > $max) $errors[$field] = "El campo '$field' debe ser menor o igual a $max";
+                    } else {
+                        if (strlen((string)$value) > $max) $errors[$field] = "El campo '$field' debe tener máximo $max caracteres";
                     }
                 }
                 

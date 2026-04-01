@@ -17,8 +17,8 @@ Documento de memoria principal del proyecto. Leer **siempre antes de implementar
 |------|-----------|
 | Frontend | HTML5, Vanilla JS ES6+, Tailwind CSS, GSAP, Chart.js, Three.js |
 | Backend | PHP 8.0+, PDO |
-| Base de datos | MySQL 8.0+ (Hostinger) |
-| Seguridad | CSRF, JWT, Rate Limiting, FileUploadValidator (9 capas) |
+| Base de datos | MySQL 8.0+ (Hostinger) — **Strict Production Only** |
+| Seguridad | CSRF, JWT, Rate Limiting, FileUploadValidator, CORS Restricted |
 | Entorno | `.env` via `EnvLoader` — NUNCA credenciales en código |
 
 ---
@@ -28,7 +28,7 @@ Documento de memoria principal del proyecto. Leer **siempre antes de implementar
 ### Estructura de Directorios
 ```
 Claut_BD/
-└── build/                      ← Raíz del servidor (php -S localhost:8000 -t build/)
+└── build/                      ← Raíz del servidor (Producción Hostinger)
     ├── api/                    ← Endpoints REST (JSON puro)
     │   ├── auth/               ← Login, logout, session, profile
     │   ├── empresas-simple.php ← ⭐ API activa para admin-empresas.js
@@ -57,34 +57,30 @@ Claut_BD/
 ```
 
 ### Patrones de Arquitectura
-- **Singleton DB**: `$db = Database::getInstance()->getConnection()` — nunca instanciar PDO directamente
+- **Singleton DB**: `$db = Database::getInstance()->getConnection()` — Conexión exclusiva a MySQL Hostinger (SQLite eliminado 2026-04-01)
 - **Soft Delete**: Nunca `DELETE` físico — usar `activo = 0` + `estado = 'inactiva'`
 - **API Response**: Siempre `['success' => bool, 'data' => mixed, 'message' => string]`
 - **COALESCE dual-column**: Columnas duplicadas por legacy (`nombre`/`nombre_empresa`, `sector`/`categoria`) — usar `COALESCE(e.nombre, e.nombre_empresa) AS nombre`
 
 ---
 
-## 🔑 Comandos Clave
+## 🔑 URLs de Producción
 
-```bash
-# Servidor de desarrollo
-php -S localhost:8000 -t build/
+| Página | URL |
+|--------|-----|
+| Login | `https://intranet.clautmetropolitano.mx/pages/sign-in.html` |
+| Dashboard | `https://intranet.clautmetropolitano.mx/dashboard.html` |
+| Admin Panel | `https://intranet.clautmetropolitano.mx/admin-panel.html` |
 
-# URLs principales
-http://localhost:8000/pages/sign-in.html      # Login (con modal forgot-password)
-http://localhost:8000/demo_empresas.html       # Panel admin empresas
-http://localhost:8000/dashboard.html           # Dashboard principal
-http://localhost:8000/admin-panel.html         # Panel admin general
+---
 
-# Verificar logs de seguridad
-tail -f build/logs/security/security_$(date +%Y%m%d).log
+## 🔒 Seguridad de Entorno — Hostinger Only
 
-# Generar JWT secret seguro
-openssl rand -hex 32
+El sistema ha sido blindado para funcionar **exclusivamente** en el dominio `intranet.clautmetropolitano.mx`. 
 
-# Test SMTP (solo local/dev)
-php build/setup/test_smtp.php
-```
+1. **CORS**: Bloquea cualquier origen que no sea el dominio oficial (incluyendo localhost).
+2. **Base de Datos**: Remoción completa de SQLite fallback. Si la conexión MySQL falla, el sistema lanza un error fatal de conexión en lugar de usar datos locales.
+3. **Logs**: Los logs se escriben directamente en el servidor de Hostinger.
 
 ---
 

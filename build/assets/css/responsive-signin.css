@@ -1,442 +1,183 @@
 /* =================================================================
-   CLAUT - RESPONSIVE SIGN-IN STYLES
-   Archivo CSS externo para hacer responsive la página de login
+   CLAUT - PREMIUM SIGN-IN STYLES (ULTRA-PROFESSIONAL CLARITY)
+   Refinamiento estético avanzado para una experiencia de élite
    ================================================================= */
 
-/* Estilos base que ya existían */
-.error-message {
-    background-color: #fee2e2;
-    border: 1px solid #fecaca;
-    color: #dc2626;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
+:root {
+    /* Primary Colors - Elite Light Theme */
+    --porsche-black: #0f172a;
+    --porsche-slate-900: #0f172a;
+    --porsche-slate-500: #64748b;
+    --porsche-accent: #C7252B; /* Clúster red */
+    --porsche-accent-hover: #a31e23;
+    --porsche-bg: #fdfdfd; 
+    
+    /* UI Elevations */
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+    --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    
+    --porsche-font: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-.success-message {
-    background-color: #dcfce7;
-    border: 1px solid #bbf7d0;
-    color: #16a34a;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
-}
-
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #ffffff;
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.spinner-border {
-    display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    vertical-align: text-bottom;
-    border: 0.25em solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spinner-border 0.75s linear infinite;
-}
-
-@keyframes spinner-border {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
+body {
+    background: var(--porsche-bg);
+    color: var(--porsche-slate-900);
+    font-family: var(--porsche-font);
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* =================================================================
-   ESTILOS DEL CARRUSEL
-   ================================================================= */
-.carousel-container {
+/* Utilities */
+.w-40 { width: 10rem !important; }
+.tracking-ultra { letter-spacing: 0.15em !important; }
+.text-shadow-xs { text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+/* LAYOUT SECTION */
+.login-section { display: flex; min-height: 100vh; }
+
+/* LEFT: FORM SIDE */
+.login-form-container {
+    background: #ffffff;
+    width: 45% !important;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: relative;
+    z-index: 10;
+}
+
+.login-form-content {
     width: 100%;
-    height: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+/* FORM ELEMENTS */
+.form-input {
+    background: #fbfbfc !important;
+    border: 1px solid #eef0f3 !important;
+    color: var(--porsche-slate-900) !important;
+    padding: 1.1rem 1.25rem !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    font-size: 0.95rem !important;
+}
+
+.form-input:focus {
+    background: #fff !important;
+    border-color: var(--porsche-accent) !important;
+    box-shadow: 0 0 0 4px rgba(199, 37, 43, 0.06) !important;
+    transform: translateY(-1px);
+}
+
+.form-button {
+    background: var(--porsche-accent);
+    color: white;
+    padding: 1.1rem !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 30px rgba(199, 37, 43, 0.2);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-button:hover {
+    background: var(--porsche-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(199, 37, 43, 0.3);
+}
+
+.visitante-btn {
+    background: #ffffff;
+    border: 1px solid #eef0f3;
+    color: var(--porsche-slate-500);
+    padding: 0.9rem !important;
+    border-radius: 12px !important;
+    font-weight: 600;
+}
+
+.visitante-btn:hover {
+    background: #fdfdfd;
+    border-color: #cbd5e1;
+    color: var(--porsche-slate-900);
+}
+
+/* RIGHT: BANNER SIDE */
+.login-banner-container {
+    width: 55% !important;
+    position: relative;
+    overflow: hidden;
+    background: #e2e8f0;
 }
 
 .carousel-slide {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
+    inset: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    transition: transform 6s ease-in-out;
 }
 
-.carousel-slide.active {
-    opacity: 1;
-}
+.carousel-slide.active { transform: scale(1.05); }
 
-.carousel-content {
+.carousel-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 15;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 100%);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, transparent 60%, rgba(0,0,0,0.1) 100%);
+    z-index: 10;
 }
 
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.banner-glass-card {
+    position: absolute;
+    bottom: 4rem;
+    left: 4rem;
+    right: 4rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 3rem;
+    border-radius: 2rem;
+    z-index: 20;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
-.carousel-dot.active {
-    background-color: white;
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+    .login-form-container { width: 50% !important; }
+    .login-banner-container { width: 50% !important; }
 }
 
-.carousel-dot:hover {
-    background-color: rgba(255, 255, 255, 0.8);
+@media (max-width: 767px) {
+    .login-section { flex-direction: column; }
+    .login-banner-container { height: 30vh; width: 100% !important; order: -1; }
+    .login-form-container { width: 100% !important; min-height: 70vh; padding: 3rem 1.5rem; }
+    .banner-glass-card { display: none; }
 }
 
-/* =================================================================
-   RESPONSIVE DESIGN - MOBILE FIRST APPROACH
-   ================================================================= */
+/* Animations */
+.reveal-anim { opacity: 0; transform: translateY(15px); }
 
-/* Base styles para móviles (hasta 767px) */
-.login-section {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
+/* Shimmer utility */
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.animate-shimmer { background: linear-gradient(90deg, transparent, rgba(199, 37, 43, 0.1), transparent); background-size: 200% 100%; animation: shimmer 2s infinite linear; }
 
-.login-form-container {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    padding: 1rem;
-    min-height: 100vh;
-}
 
-.login-form-content {
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem;
-    background-color: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
 
-.banner-container {
-    display: none;
-    /* Oculto en móviles por defecto */
-}
-
-/* Logo responsive */
-.logo-container img {
-    max-width: 120px;
-    height: auto;
-}
-
-/* Formulario responsive */
-.form-input {
-    width: 100%;
-    padding: 0.875rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.form-input:focus {
-    outline: none;
-    ring: 2px;
-    ring-color: #C7252B;
-    border-color: transparent;
-}
-
-.form-button {
-    width: 100%;
-    padding: 0.875rem 1.5rem;
-    background-color: #C7252B;
-    color: white;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
-    font-weight: 600;
-}
-
-.form-button:hover {
-    background-color: #88171a;
-}
-
-.form-button:focus {
-    outline: none;
-    ring: 2px;
-    ring-color: #C7252B;
-    ring-offset: 2px;
-}
-
-/* =================================================================
-   TABLETS (768px - 1023px)
-   ================================================================= */
-@media (min-width: 768px) {
-    .login-form-container {
-        padding: 2rem;
-    }
-
-    .login-form-content {
-        max-width: 450px;
-        padding: 2rem;
-    }
-
-    .logo-container img {
-        max-width: 140px;
-    }
-
-    .form-input {
-        padding: 1rem;
-        font-size: 1rem;
-    }
-
-    .form-button {
-        padding: 1rem 1.5rem;
-    }
-}
-
-/* =================================================================
-   TABLETS LANDSCAPE y ESCRITORIO PEQUEÑO (1024px - 1279px)
-   ================================================================= */
-@media (min-width: 1024px) {
-    .login-section {
-        flex-direction: row;
-        height: 100vh;
-    }
-
-    .login-form-container {
-        width: 50%;
-        min-height: auto;
-        padding: 2rem;
-    }
-
-    .banner-container {
-        display: flex !important;
-        width: 50%;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .logo-container img {
-        max-width: 150px;
-    }
-}
-
-/* =================================================================
-   ESCRITORIO MEDIANO (1280px - 1535px)
-   ================================================================= */
-@media (min-width: 1280px) {
-    .login-form-container {
-        padding: 3rem;
-    }
-
-    .login-form-content {
-        max-width: 500px;
-        padding: 2.5rem;
-    }
-
-    .logo-container img {
-        max-width: 160px;
-    }
-}
-
-/* =================================================================
-   ESCRITORIO GRANDE (1536px y más)
-   ================================================================= */
-@media (min-width: 1536px) {
-    .login-form-container {
-        padding: 4rem;
-    }
-
-    .login-form-content {
-        max-width: 550px;
-        padding: 3rem;
-    }
-
-    .logo-container img {
-        max-width: 180px;
-    }
-
-    .carousel-content {
-        max-width: 90%;
-    }
-}
-
-/* =================================================================
-   MEJORAS ADICIONALES PARA UX RESPONSIVE
-   ================================================================= */
-
-/* Mejorar legibilidad en pantallas pequeñas */
 @media (max-width: 480px) {
     .login-form-content {
-        padding: 1rem;
-        margin: 0.5rem;
-        border-radius: 0.5rem;
+        padding: 0.5rem;
     }
-
-    .logo-container img {
-        max-width: 100px;
-    }
-
-    .form-input {
-        padding: 0.75rem;
-        font-size: 16px;
-        /* Evita zoom en iOS */
-    }
-
-    .form-button {
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-    }
-
-    /* Títulos más pequeños en móviles muy pequeños */
-    .login-title {
-        font-size: 1.25rem !important;
-    }
-
-    .login-subtitle {
-        font-size: 0.875rem !important;
+    .carousel-content h4 {
+        font-size: 1.25rem;
     }
 }
 
-/* Optimizaciones para landscape en móviles */
-@media (max-height: 500px) and (orientation: landscape) {
-    .login-form-container {
-        min-height: auto;
-        padding: 1rem;
-    }
-
-    .login-form-content {
-        padding: 1rem;
-    }
-
-    .logo-container {
-        margin-bottom: 1rem !important;
-    }
-
-    .logo-container img {
-        max-width: 80px;
-    }
-}
-
-/* =================================================================
-   ESTADOS DE HOVER MEJORADOS
-   ================================================================= */
-@media (hover: hover) and (pointer: fine) {
-    .form-input:hover {
-        border-color: #9ca3af;
-    }
-
-    .form-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-    }
-
-    .carousel-dot:hover {
-        transform: scale(1.2);
-    }
-}
-
-/* =================================================================
-   ANIMACIONES Y TRANSICIONES SUAVES
-   ================================================================= */
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-
-.login-form-content {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* =================================================================
-   ACCESIBILIDAD Y FOCUS STATES
-   ================================================================= */
-.form-input:focus-visible,
-.form-button:focus-visible {
-    outline: 2px solid #C7252B;
-    outline-offset: 2px;
-}
-
-/* Mejor contraste para mensajes de error */
-.error-message {
-    border-left: 4px solid #dc2626;
-}
-
-.success-message {
-    border-left: 4px solid #16a34a;
-}
-
-/* =================================================================
-   PRINT STYLES
-   ================================================================= */
-@media print {
-
-    .banner-container,
-    .carousel-container {
-        display: none !important;
-    }
-
-    .login-section {
-        display: block !important;
-    }
-
-    .login-form-container {
-        width: 100% !important;
-    }
+/* Entrance Animation Utilities */
+.reveal-anim {
+    opacity: 0;
+    transform: translateY(15px);
 }

@@ -7,7 +7,7 @@
 // Headers de seguridad
 require_once __DIR__ . '/../middleware/security-headers.php';
 
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
 header('Content-Type: application/json; charset=utf-8');
@@ -140,8 +140,8 @@ try {
             unlink($filePath);
             rename($optimizedPath, $filePath);
             
-            // Actualizar permisos
-            chmod($filePath, 0640);
+            // Actualizar permisos para que sean legibles por el servidor web
+            chmod($filePath, 0644);
         }
     }
 

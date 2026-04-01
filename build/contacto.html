@@ -47,955 +47,148 @@
     }
   </script>
 </head>
+<link rel="stylesheet" href="./assets/css/layout/header-navbar.css" />
 <style>
-  /* Porsche-inspired Design System */
-  :root {
-    /* Primary Colors - Inspired by Porsche */
-    --porsche-black: #1a1a1a;
-    --porsche-charcoal: #2d2d2d;
-    --porsche-silver: #8a8a8a;
-    --porsche-white: #ffffff;
-    --porsche-light-gray: #f5f5f5;
-    --porsche-accent: #c9302c;
-    /* Clúster red for brand consistency */
-
-    /* Typography */
-    --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --porsche-font-weight-light: 300;
-    --porsche-font-weight-regular: 400;
-    --porsche-font-weight-medium: 500;
-    --porsche-font-weight-semibold: 600;
-    --porsche-font-weight-bold: 700;
-
-    /* Spacing */
-    --porsche-space-xs: 0.5rem;
-    --porsche-space-sm: 1rem;
-    --porsche-space-md: 1.5rem;
-    --porsche-space-lg: 2rem;
-    --porsche-space-xl: 3rem;
-
-    /* Shadows */
-    --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
-    --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
-
-    /* Border Radius */
-    --porsche-radius-sm: 4px;
-    --porsche-radius-md: 8px;
-    --porsche-radius-lg: 12px;
-    --porsche-radius-xl: 16px;
-  }
-
-  /* Global Typography Enhancement */
-  * {
-    font-family: var(--porsche-font) !important;
-  }
-
-  body {
-    font-weight: var(--porsche-font-weight-regular);
-    line-height: 1.6;
-    letter-spacing: -0.01em;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
-
-  /* Navigation System Variables */
-  :root {
-    --header-height: 70px;
-    --bottom-nav-height: 80px;
-    --claut-primary: #1a1a1a;
-    --claut-primary-rgb: 26, 26, 26;
-    --claut-secondary: #2d2d2d;
-    --claut-accent: #c9302c;
-    --claut-accent-rgb: 201, 48, 44;
-    --claut-red: #dc2626;
-    --claut-red-rgb: 220, 38, 38;
-    --claut-surface: rgba(26, 26, 26, 0.95);
-    --claut-bg-surface: rgba(26, 26, 26, 0.95);
-    --claut-text-primary: #ffffff;
-    --claut-text-secondary: rgba(255, 255, 255, 0.7);
-    --claut-border-light: rgba(255, 255, 255, 0.1);
-    --claut-border-medium: rgba(255, 255, 255, 0.15);
-    --claut-shadow-red: 0 4px 12px rgba(var(--claut-red-rgb), 0.3);
-    --transition-fast: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-    --transition-normal: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-    --space-1: 0.25rem;
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --space-6: 1.5rem;
-    --space-8: 2rem;
-    --space-12: 3rem;
-  }
-
-  /* Header Horizontal Premium con Men\u00fa Integrado */
-  .claut-header {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    height: var(--header-height);
-    background: var(--claut-bg-surface);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--claut-border-light);
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 0 var(--space-6);
-    z-index: 99999 !important;
-    transition: var(--transition-normal);
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.2),
-      0 4px 12px rgba(0, 0, 0, 0.15),
-      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-    will-change: transform, backdrop-filter;
-    transform: translateY(0px) !important;
-    overflow: visible !important;
-  }
-
-  /* Header scroll effects */
-  .claut-header.scrolled {
-    background: rgba(26, 26, 26, 0.98) !important;
-    box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.4),
-      0 8px 24px rgba(0, 0, 0, 0.25),
-      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    position: fixed !important;
-    top: 0 !important;
-  }
-
-  /* Logo area - usando el logo existente del sidebar */
-  .claut-header-logo {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    text-decoration: none;
-    color: var(--claut-text-primary);
-    font-weight: var(--apple-font-semibold);
-    transition: all var(--transition-normal);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-  }
-
-  .claut-header-logo:hover {
-    color: var(--claut-red);
-    background: rgba(var(--claut-red-rgb, 199, 37, 43), 0.08);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(var(--claut-red-rgb, 199, 37, 43), 0.15);
-  }
-
-  .claut-header-logo:hover img {
-    transform: scale(1.05) rotate(2deg);
-    filter: brightness(1.1);
-  }
-
-  .claut-header-logo img {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    transition: all var(--transition-normal);
-    object-fit: cover;
-  }
-
-  /* Actions area */
-  .claut-header-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: var(--space-3);
-    z-index: inherit;
-    position: relative;
-    height: 100%;
-  }
-
-  .claut-header-btn {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--claut-border-light);
-    border-radius: 10px;
-    color: var(--claut-text-tertiary);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    position: relative !important;
-    z-index: inherit;
-    overflow: visible !important;
-  }
-
-  .claut-header-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 1);
-    transform: scale(1.05);
-  }
-
-  .claut-header-btn.active {
-    background: var(--claut-red);
-    color: var(--claut-text-primary);
-    box-shadow: var(--claut-shadow-red);
-  }
-
-  /* Navegación horizontal principal */
-  .claut-header-nav {
-    display: none;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-6);
-  }
-
-  /* Navigation items - Header */
-  .claut-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: var(--space-2) var(--space-3);
-    text-decoration: none;
-    color: var(--claut-text-tertiary);
-    border-radius: 12px;
-    transition: var(--transition-normal);
-    position: relative;
-    min-width: 60px;
-    text-align: center;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .claut-nav-item i {
-    font-size: 18px;
-    margin-bottom: 2px;
-    transition: var(--transition-fast);
-  }
-
-  .claut-nav-item span {
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1;
-    transition: var(--transition-fast);
-    opacity: 0.9;
-  }
-
-  .claut-nav-item:hover {
-    color: var(--claut-text-secondary);
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
-  }
-
-  .claut-nav-item:hover i {
-    color: var(--claut-red);
-    transform: scale(1.1);
-  }
-
-  .claut-nav-item.active {
-    color: var(--claut-red);
-    background: rgba(var(--claut-red-rgb), 0.1);
-    box-shadow: var(--claut-shadow-red);
-  }
-
-  .claut-nav-item.active i {
-    color: var(--claut-red);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  .claut-nav-item.active span {
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Bottom Navigation - Solo m\u00f3vil y tablet */
-  .claut-bottom-nav {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 95% !important;
-    max-width: 600px !important;
-    height: 70px !important;
-    background: var(--claut-bg-surface) !important;
-    border-radius: 35px 35px 0 0 !important;
-    border: 1px solid var(--claut-border-medium) !important;
-    border-bottom: none !important;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3), 0 -8px 40px rgba(0, 0, 0, 0.2) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .claut-bottom-nav::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(180deg, var(--claut-bg-surface) 0%, var(--claut-bg-secondary) 100%);
-    opacity: 0.8;
-    z-index: -1;
-  }
-
-  .claut-nav-container {
-    position: relative !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-evenly !important;
-    padding: 0 8px !important;
-    box-sizing: border-box !important;
-    overflow-x: auto !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
-
-  .claut-nav-container::-webkit-scrollbar {
-    display: none !important;
-  }
-
-  /* Curva decorativa */
-  .claut-nav-curve {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 40px;
-    background: var(--claut-bg-surface);
-    border-radius: 50px 50px 0 0;
-    border: 1px solid var(--claut-border-light);
-    border-bottom: none;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .claut-nav-curve::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 8px;
-    height: 8px;
-    background: var(--claut-red);
-    border-radius: 50%;
-    box-shadow: 0 0 12px var(--claut-red);
-  }
-
-  /* Navigation links - Bottom */
-  .claut-nav-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: var(--space-2) var(--space-3);
-    color: var(--claut-text-secondary);
-    text-decoration: none;
-    border-radius: 12px;
-    transition: var(--transition-fast);
-    font-size: 0.75rem;
-    font-weight: 500;
-    min-width: 44px;
-    min-height: 44px;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .claut-nav-link::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    transition: transform 0.2s ease;
-    z-index: -1;
-  }
-
-  .claut-nav-link:active::before {
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  .claut-nav-link i {
-    font-size: 1.25rem;
-    transition: var(--transition-fast);
-  }
-
-  .claut-nav-link span {
-    font-size: 0.6rem;
-    font-weight: 600;
-    text-align: center;
-    line-height: 1;
-    letter-spacing: -0.01em;
-  }
-
-  .claut-nav-link:hover {
-    color: var(--claut-text-primary);
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-  }
-
-  .claut-nav-link.active {
-    color: var(--claut-text-primary);
-    background: linear-gradient(135deg, var(--claut-red), #ef4444);
-    box-shadow: var(--claut-shadow-red);
-  }
-
-  .claut-nav-link.active i {
-    transform: scale(1.1);
-  }
-
-  /* Responsive navigation */
-  @media (min-width: 768px) {
-    .claut-header-nav {
-      display: flex;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .claut-mobile-menu-btn {
-      display: flex !important;
-    }
-
-    .claut-header-nav {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: var(--claut-bg-surface);
-      backdrop-filter: blur(20px);
-      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-      padding: var(--space-4);
-      transform: translateY(-100%);
-      opacity: 0;
-      visibility: hidden;
-      transition: all var(--transition-normal);
-    }
-
-    .claut-header-nav.show {
-      transform: translateY(0);
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  /* Control de visibilidad entre header y bottom nav */
-  @media (max-width: 1024px) {
-    .claut-header-nav {
-      display: none !important;
-    }
-
-    .claut-bottom-nav {
-      display: flex !important;
-    }
-
-    /* Mantener los botones de acción del header visibles */
-    .claut-header-actions {
-      display: flex !important;
-    }
-
-    /* Ajustar el header para que sea más compacto en mobile */
-    .claut-header {
-      padding: 0 var(--space-4) !important;
-    }
-  }
-
+  /* Estilos responsivos de la barra y contenido */
   @media (min-width: 1025px) {
-    .claut-header-nav {
-      display: flex !important;
-    }
-
-    .claut-bottom-nav {
-      display: none !important;
-    }
-
-    .claut-header-actions {
-      display: flex !important;
+    .claut-main-responsive {
+      padding: var(--space-4) var(--space-12) 80px var(--space-12) !important;
     }
   }
 
-  /* Bottom navigation responsive design */
-  @media (max-width: 480px) {
-    .claut-bottom-nav {
-      width: 95%;
-      height: 65px;
-    }
-
-    .claut-nav-link {
-      width: 55px;
-      height: 55px;
-    }
-
-    .claut-nav-link i {
-      font-size: 20px;
+  @media (max-width: 1024px) {
+    .claut-main-responsive {
+      padding: var(--space-4) var(--space-4) 80px var(--space-4) !important;
     }
   }
 
-  /* Ajuste para el contenido principal para evitar superposición con el menú inferior */
-  .main-content {
-    padding-bottom: 90px;
-  }
-
-  /* Navigation touch optimization for mobile */
   @media (max-width: 768px) {
-    .claut-nav-link {
-      padding: var(--space-2);
-      min-width: 48px;
-      min-height: 48px;
-    }
-
-    .claut-nav-link i {
-      font-size: 1.1rem;
-    }
-
-    .claut-nav-link span {
-      font-size: 0.6rem;
-    }
-
-    .claut-nav-container {
-      padding: 0 var(--space-2);
+    .claut-main-responsive {
+      padding: var(--space-2) var(--space-2) 80px var(--space-2) !important;
     }
   }
 
-  /* Old Porsche Sidebar - REMOVED
-  .porsche-sidebar {
-    background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%);
-    border-radius: var(--porsche-radius-lg);
-    box-shadow: var(--porsche-shadow-large);
-    margin: var(--porsche-space-sm);
-    backdrop-filter: blur(20px);
-    height: calc(100vh - 2rem);
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  /* Custom scrollbar for sidebar */
-  .porsche-sidebar::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .porsche-sidebar::-webkit-scrollbar-track {
-    background: hsla(0, 0%, 0%, 0.1);
-    border-radius: 3px;
-  }
-
-  .porsche-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 3px;
-  }
-
-  .porsche-sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-  }
-
-  .porsche-sidebar .porsche-logo {
-    color: var(--porsche-white);
-    font-weight: var(--porsche-font-weight-bold);
-    font-size: 1.5rem;
-    letter-spacing: -0.02em;
-  }
-
-  .porsche-nav-item {
-    font-family: var(--porsche-font);
-    font-weight: var(--porsche-font-weight-medium);
-    color: rgba(255, 255, 255, 0.8);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: var(--porsche-radius-md);
-    margin: 0.125rem 0;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .porsche-nav-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background: var(--porsche-accent);
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
-  }
-
-  .porsche-nav-item:hover,
-  .porsche-nav-item.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--porsche-white);
-    transform: translateX(2px);
-  }
-
-  .porsche-nav-item:hover::before,
-  .porsche-nav-item.active::before {
-    transform: scaleY(1);
-  }
-
-  /* Sidebar visible state */
-  .porsche-sidebar.sidenav-show,
-  .porsche-sidebar[aria-expanded="true"] {
-    transform: translateX(0) !important;
-  }
-
-  /* Desktop sidebar */
-  @media (min-width: 1280px) {
-    .porsche-sidebar {
-      transform: translateX(0) !important;
-      position: fixed !important;
-      z-index: 10 !important;
-    }
-
-    .porsche-main {
-      margin-left: 0 !important;
-    }
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 1279px) {
-    .porsche-sidebar {
-      transform: translateX(-100%) !important;
-      z-index: 999 !important;
-      width: 280px !important;
-      max-width: 75vw !important;
-    }
-
-    .porsche-sidebar.sidenav-show,
-    .porsche-sidebar[aria-expanded="true"] {
-      transform: translateX(0) !important;
-    }
-
-    .porsche-main {
-      margin-left: 0 !important;
-      width: 100% !important;
-      padding-left: 0.5rem !important;
-      padding-right: 0.5rem !important;
-    }
-  }
-
-  /* Tablet responsive */
-  @media (max-width: 1023px) {
-    .porsche-sidebar {
-      width: 280px !important;
-      max-width: 70vw !important;
-    }
-
-    .porsche-main {
-      padding-left: 0.75rem !important;
-      padding-right: 0.75rem !important;
-    }
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 767px) {
-    .porsche-sidebar {
-      width: 280px !important;
-      max-width: 80vw !important;
-    }
-
-    .porsche-main {
-      padding-left: 0.5rem !important;
-      padding-right: 0.5rem !important;
-    }
-  }
-
-  /* Overlay for mobile */
-  .sidenav-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 998;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .sidenav-overlay.show {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  /* FORCE SIDEBAR VISIBLE ALWAYS like dashboard - ONLY ON DESKTOP */
-  @media (min-width: 1280px) {
-    aside.sidebar-enhanced {
-      transform: translateX(0) !important;
-      width: 16rem !important;
-      max-width: 16rem !important;
-    }
-  }
-
-  /* FontAwesome fixes */
-  .fa,
-  .fas,
-  .far,
-  .fal,
-  .fab {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome" !important;
-    font-weight: 900 !important;
-    font-style: normal !important;
-    display: inline-block !important;
-    text-rendering: auto !important;
-    -webkit-font-smoothing: antialiased !important;
-  }
-
-  /* Fallback for specific icons */
-  .fa-home::before {
-    content: "\f015" !important;
-  }
-
-  .fa-calendar-alt::before {
-    content: "\f073" !important;
-  }
-
-  .fa-file-alt::before {
-    content: "\f15c" !important;
-  }
-
-  .fa-newspaper::before {
-    content: "\f1ea" !important;
-  }
-
-  .fa-users::before {
-    content: "\f0c0" !important;
-  }
-
-  .fa-headset::before {
-    content: "\f590" !important;
-  }
-
-  .fa-handshake::before {
-    content: "\f2b5" !important;
-  }
-
-  .fa-tags::before {
-    content: "\f02c" !important;
-  }
-
-  .fa-user::before {
-    content: "\f007" !important;
-  }
-
-  .fa-sign-out-alt::before {
-    content: "\f2f5" !important;
-  }
-
-  /* Navbar improvements */
-  .porsche-navbar {
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: var(--porsche-space-sm) var(--porsche-space-lg);
-    border-radius: var(--porsche-radius-lg);
-    margin: var(--porsche-space-sm);
-    z-index: 50;
-    position: relative;
-  }
-
-  /* Main content area adjustments */
-  .main-content {
-    margin-left: 0;
-    transition: margin-left 0.3s ease;
-    background: transparent;
-    width: 100%;
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
-
-  /* Ensure main container doesn't cause horizontal scroll */
-  main {
-    overflow-x: hidden;
-  }
-
-  /* Breadcrumb styling */
-  .breadcrumb {
-    background: transparent !important;
-    padding: var(--porsche-space-sm) 0;
-  }
-
-  .breadcrumb a {
-    color: var(--porsche-white) !important;
-    opacity: 0.8 !important;
-    text-decoration: none;
-    transition: opacity 0.3s ease;
-  }
-
-  .breadcrumb a:hover {
-    opacity: 1 !important;
-  }
-
-  .breadcrumb li {
-    color: var(--porsche-white) !important;
-    font-weight: var(--porsche-font-weight-medium);
-  }
-
-  .breadcrumb .breadcrumb-title {
-    color: white !important;
-    font-weight: var(--porsche-font-weight-bold);
-    margin-top: var(--porsche-space-xs);
-  }
-
-  /* Estilos para la sección Nosotros */
+  /* Estilos específicos para la sección "Nosotros" y Tarjetas de Líderes */
   .nosotros-section {
-    padding: 4rem 1.5rem 4rem 0;
+    padding: 2rem 0;
     background: transparent;
-    min-height: 100vh;
-  }
-
-  .nosotros-container {
-    max-width: 1200px;
-    margin: 0 auto;
   }
 
   .nosotros-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
 
   .nosotros-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
     margin-bottom: 1rem;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.05em;
+    background: linear-gradient(to right, white, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .nosotros-subtitle {
     font-size: 1.125rem;
-    color: #64748b;
-    max-width: 600px;
+    color: #94a3b8;
+    max-width: 700px;
     margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.8;
   }
 
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2rem;
   }
 
   .leader-card {
     position: relative;
-    background: var(--porsche-white);
-    border-radius: var(--porsche-radius-xl);
+    background: #1e1e1e;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: var(--porsche-shadow-large);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    cursor: pointer;
-    height: 400px;
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 450px;
   }
 
   .leader-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-12px) scale(1.02);
+    border-color: rgba(199, 37, 43, 0.3);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   }
 
   .card-image {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .leader-card:hover .card-image {
+    transform: scale(1.1);
+    filter: brightness(0.4) blur(4px);
   }
 
   .card-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg,
-        rgba(199, 37, 43, 0.9) 0%,
-        rgba(199, 37, 43, 0.7) 50%,
-        rgba(0, 0, 0, 0.6) 100%);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(199, 37, 43, 0.2) 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 2.5rem;
     text-align: center;
+    opacity: 0;
+    transition: all 0.4s ease;
   }
 
   .leader-card:hover .card-overlay {
     opacity: 1;
   }
 
-  .leader-card:hover .card-image {
-    filter: blur(3px);
-    transform: scale(1.05);
-  }
-
   .leader-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #ffffff;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: white;
     margin-bottom: 0.5rem;
     transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.4s ease 0.1s;
   }
 
   .leader-position {
     font-size: 1rem;
-    color: #f1f5f9;
-    margin-bottom: 1rem;
+    color: #ef4444;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
     transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transition-delay: 0.1s;
+    transition: transform 0.4s ease 0.2s;
   }
 
   .leader-description {
-    font-size: 0.9rem;
-    color: #e2e8f0;
-    line-height: 1.5;
-    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 2rem;
     transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transition-delay: 0.2s;
+    transition: transform 0.4s ease 0.3s;
   }
 
   .action-button {
-    background: #ffffff;
-    color: #C7252B;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    transform: translateY(20px);
-    opacity: 0;
-    transition-delay: 0.3s;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-  }
-
-  .action-button:hover {
     background: #C7252B;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(199, 37, 43, 0.4);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transform: translateY(20px);
+    transition: all 0.3s ease 0.4s;
   }
 
   .leader-card:hover .leader-name,
@@ -1003,7 +196,12 @@
   .leader-card:hover .leader-description,
   .leader-card:hover .action-button {
     transform: translateY(0);
-    opacity: 1;
+  }
+
+  .action-button:hover {
+    background: white;
+    color: #C7252B;
+    transform: scale(1.05);
   }
 
   .card-footer {
@@ -1011,11 +209,9 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 1.5rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-    color: #ffffff;
-    opacity: 1;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    transition: opacity 0.3s ease;
   }
 
   .leader-card:hover .card-footer {
@@ -1023,155 +219,92 @@
   }
 
   .footer-name {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
     margin-bottom: 0.25rem;
-    color: #C7252B;
   }
 
   .footer-position {
     font-size: 0.9rem;
-    color: #cbd5e1;
-  }
-
-  /* Estilos para secciones bloqueadas */
-  .restricted-section {
-    position: relative;
-    filter: blur(3px);
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .restricted-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    border-radius: inherit;
-    backdrop-filter: blur(5px);
-  }
-
-  .restricted-message {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    text-align: center;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    max-width: 300px;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .nosotros-title {
-      font-size: 2rem;
-    }
-
-    .cards-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .leader-card {
-      height: 350px;
-    }
-  }
-
-  /* ANTI-SCROLL HORIZONTAL RULES */
-  html,
-  body {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-  }
-
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
-  .main-content,
-  #mainContent,
-  main {
-    overflow-x: hidden !important;
-    max-width: 100% !important;
-  }
-
-  /* Prevent any container from causing horizontal scroll */
-  .container,
-  .w-full,
-  .flex,
-  .grid {
-    max-width: 100% !important;
-  }
-
-  /* Ensure navbar doesn't cause overflow */
-  nav,
-  .navbar,
-  .porsche-navbar {
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+    color: #94a3b8;
   }
 </style>
 </head>
 
-<body
-  class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default text-slate-500 overflow-x-hidden">
+<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default overflow-x-hidden"
+  style="background: var(--claut-bg-main); background-image: radial-gradient(ellipse at 60% 0%, rgba(199, 37, 43, 0.05) 0%, transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(15, 23, 42, 0.02) 0%, transparent 50%), radial-gradient(ellipse at 90% 90%, rgba(199, 37, 43, 0.05) 0%, transparent 45%); background-attachment: fixed; color: var(--claut-text-primary);">
+  <!-- Background Scroll Image - Fixed position behind everything -->
+  <section class="scroll-image-section"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; background: var(--claut-bg-main); overflow: hidden;">
+    <div class="image-motion" style="transform-origin: 50% 0; transform: rotateX(90deg); width: 100%; height: 100%;">
+      <picture>
+        <img src="./css/moveimage.png" alt="Colaboración empresarial"
+          style="width: 100%; height: 100%; object-fit: cover;">
+      </picture>
+    </div>
+  </section>
+
   <!-- Header Horizontal Premium con Menú Integrado -->
   <header class="claut-header">
     <!-- Logo area con logo existente -->
-    <a href="#" class="claut-header-logo">
+    <a href="dashboard.html" class="claut-header-logo">
       <img src="./assets/img/apple-icon.png" alt="Clúster Logo" />
     </a>
 
     <!-- Navegación horizontal principal -->
     <nav class="claut-header-nav" id="clautMainNav">
       <a href="dashboard.html" class="claut-nav-item">
-        <i class="fas fa-home text-white"></i>
-        <span class="text-white">Inicio</span>
+        <i class="fas fa-home"></i>
+        <span>Inicio</span>
       </a>
       <a href="./descuentos.html" class="claut-nav-item">
-        <i class="fas fa-tags text-white"></i>
-        <span class="text-white">Descuentos</span>
+        <i class="fas fa-tags"></i>
+        <span>Descuentos</span>
       </a>
       <a href="./boletines.html" class="claut-nav-item">
-        <i class="fas fa-newspaper text-white"></i>
-        <span class="text-white">Boletines</span>
+        <i class="fas fa-newspaper"></i>
+        <span>Boletines</span>
       </a>
       <a href="./comites.html" class="claut-nav-item">
-        <i class="fas fa-users text-white"></i>
-        <span class="text-white">Comites</span>
+        <i class="fas fa-users"></i>
+        <span>Comites</span>
       </a>
       <a href="./contacto.html" class="claut-nav-item active">
-        <i class="fas fa-headset text-white"></i>
-        <span class="text-white">Contacto</span>
+        <i class="fas fa-headset"></i>
+        <span>Contacto</span>
       </a>
       <a href="./eventos.html" class="claut-nav-item">
-        <i class="fas fa-calendar-alt text-white"></i>
-        <span class="text-white">Eventos</span>
+        <i class="fas fa-calendar-alt"></i>
+        <span>Eventos</span>
       </a>
       <a href="./empresas-convenio.html" class="claut-nav-item">
-        <i class="fas fa-handshake text-white"></i>
-        <span class="text-white">Socios</span>
+        <i class="fas fa-handshake"></i>
+        <span>Socios</span>
       </a>
     </nav>
 
     <!-- Actions area -->
     <div class="claut-header-actions">
 
+      <!-- Botón mensajes -->
+      <button class="claut-header-btn" id="headerMessagesBtn" title="Centro de Mensajes">
+        <i class="fas fa-envelope"></i>
+        <span id="headerMessageCount"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+      </button>
 
       <!-- Menú usuario -->
       <div class="relative">
-        <a href="./profile.html" class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
+        <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
           <i class="fas fa-user-circle text-lg"></i>
-        </a>
+        </button>
       </div>
 
+      <!-- Botón toggle menú móvil -->
+      <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </header>
 
@@ -1179,61 +312,69 @@
   <nav class="claut-bottom-nav">
     <div class="claut-nav-container">
       <div class="claut-nav-curve"></div>
+
       <a href="dashboard.html" class="claut-nav-link authenticated" data-section="inicio">
         <i class="fas fa-home"></i>
         <span>Inicio</span>
       </a>
+
       <a href="./descuentos.html" class="claut-nav-link authenticated" data-section="descuentos">
         <i class="fas fa-tags"></i>
         <span>Descuentos</span>
       </a>
+
       <a href="./boletines.html" class="claut-nav-link authenticated" data-section="boletines">
         <i class="fas fa-newspaper"></i>
         <span>Boletines</span>
       </a>
+
       <a href="./comites.html" class="claut-nav-link authenticated" data-section="comite">
         <i class="fas fa-users"></i>
         <span>Comité</span>
       </a>
+
       <a href="./contacto.html" class="claut-nav-link authenticated active" data-section="contacto">
         <i class="fas fa-headset"></i>
         <span>Contacto</span>
       </a>
+
       <a href="./eventos.html" class="claut-nav-link authenticated" data-section="eventos">
         <i class="fas fa-calendar-alt"></i>
         <span>Eventos</span>
       </a>
+
       <a href="./empresas-convenio.html" class="claut-nav-link authenticated" data-section="convenios">
         <i class="fas fa-handshake"></i>
         <span>Convenios</span>
       </a>
+
     </div>
   </nav>
 
-  <main class="porsche-main relative h-full transition-all duration-200 ease-in-out overflow-x-hidden"
-    style="margin-top: 70px; margin-left: 0; padding-bottom: 100px; min-height: 100vh;">
+  <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
+    style="margin-top: var(--header-height); margin-left: 0; padding: var(--space-2) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
     <!-- Contenido principal con restricción de autenticación -->
-    <div id="mainContent" class="overflow-x-hidden">
-      <!-- Navbar -->
+    <div id="mainContent" class="main-content-wrapper relative z-10">
+      <!-- Navbar (Sub-header Glassmorphism) como en dashboard.html -->
       <nav
-        class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-1 mx-0 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
-        navbar-main navbar-scroll="false">
-        <div class="flex items-center justify-between w-full px-4 py-0 mx-auto flex-wrap-inherit">
+        class="porsche-navbar relative flex flex-wrap items-center justify-between transition-all ease-in duration-250 lg:flex-nowrap lg:justify-start"
+        navbar-main navbar-scroll="false" style="display: flex;">
+        <div class="flex items-center justify-between w-full px-6 py-0 mx-auto flex-wrap-inherit">
           <nav>
             <!-- breadcrumb -->
             <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
-              <li class="text-sm leading-normal text-white">
-                <a class="opacity-60 text-white" href="javascript:;">Intranet</a>
+              <li class="text-sm leading-normal">
+                <a class="opacity-60" href="javascript:;">Intranet</a>
               </li>
-              <li
-                class="text-white text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/']"
-                aria-current="page">Atención Directa</li>
+              <li class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/']"
+                aria-current="page">Contacto</li>
             </ol>
             <!-- Mostrar saludo con usuario logueado -->
             <div id="welcomeMessage" class="mb-2">
-              <h6 class="porsche-welcome mb-0 capitalize" id="welcomeText">Bienvenido a Clúster Intranet</h6>
+              <h2 class="porsche-welcome mb-0 capitalize text-white">Atención Directa</h2>
             </div>
           </nav>
+
           <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
             <div class="flex items-center md:ml-auto md:pr-4">
               <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
@@ -1255,46 +396,22 @@
                   <span class="hidden sm:inline">Iniciar Sesión</span>
                 </a>
               </li>
-              <!-- Buzón de Mensajes -->
-              <!-- User Dropdown Menu -->
-              <li class="flex items-center relative">
-                <div class="relative">
-                  <button
-                    class="flex items-center px-3 py-1 text-sm font-bold text-white transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in border-white/20 bg-white/10 hover:scale-102 hover:border-white/40 active:opacity-85"
-                    onclick="toggleUserMenu()" id="userMenuBtn">
-                    <i class="fas fa-user text-white mr-2"></i>
-                    <span class="hidden sm:inline text-white" id="userDisplayName">Usuario</span>
-                    <i class="fas fa-chevron-down text-white ml-2 text-xs"></i>
-                  </button>
-                  <!-- User Dropdown -->
-                  <div
-                    class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 hidden"
-                    id="userDropdown" style="top: 100%;">
-                    <div class="px-4 py-2 border-b border-gray-200">
-                      <p class="text-sm font-medium text-gray-900" id="dropdownUserName">Usuario</p>
-                      <p class="text-xs text-gray-500" id="dropdownUserRole">Rol</p>
-                    </div>
-                    <a href="profile.html" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <i class="fas fa-user-circle mr-3 text-gray-400"></i>
-                      Mi Perfil
-                    </a>
-                    <button onclick="handleLogout()"
-                      class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                      <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
-                      Cerrar Sesión
-                    </button>
-                  </div>
-                </div>
+              <!-- Botón Panel de Administración (solo para admins) -->
+              <li class="flex items-center pl-4 hidden" id="adminPanelButton">
+                <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                  class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
+                  title="Panel de Administración">
+                  <i class="fas fa-cogs mr-2"></i>
+                  <span class="hidden lg:inline">Admin Panel</span>
+                </a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
-
-      <!-- end Navbar -->
       <!-- Sección Nosotros -->
-      <section class="nosotros-section">
-        <div class="nosotros-container">
+      <section class="nosotros-section" style="margin-top: 40px;">
+        <div class="nosotros-container" style="max-width: 1200px; margin: 0 auto;">
           <div class="nosotros-header">
             <h2 class="nosotros-title">Nuestro Equipo Directivo</h2>
             <p class="nosotros-subtitle">
@@ -1503,6 +620,7 @@
     });
   </script>
 
+  <script src="assets/js/loading-screen.js"></script>
 </body>
 <!-- plugin for charts  -->
 <script src="./assets/js/plugins/chartjs.min.js" async></script>
@@ -1517,701 +635,106 @@
   }
 </script>
 
-<!-- NAVBAR FUNCTIONALITY FROM DASHBOARD -->
+
 <script>
-  // Configurar eventos para los botones de logout y navbar
+  // Consolidated Authentication & Navigation Logic
   document.addEventListener('DOMContentLoaded', function () {
-    // Botón de logout del sidebar
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', function () {
-        if (window.authSessionManager) {
-          window.authSessionManager.logout();
-        } else if (window.logout) {
-          window.logout();
-        }
-      });
-    }
+    const authManager = {
+      detectSession: function () {
+        const sources = [
+          localStorage.getItem('userData'),
+          sessionStorage.getItem('userSession'),
+          localStorage.getItem('currentUser')
+        ];
 
-    // User Menu Functionality
-    function toggleUserMenu() {
-      const dropdown = document.getElementById('userDropdown');
-      dropdown.classList.toggle('hidden');
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function (event) {
-      const userMenu = document.getElementById('userMenuBtn');
-      const dropdown = document.getElementById('userDropdown');
-
-      if (!userMenu.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.classList.add('hidden');
-      }
-    });
-
-    // Logout functionality
-    function handleLogout() {
-      if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-        // Clear user data
-        localStorage.removeItem('userData');
-        localStorage.removeItem('currentUser');
-        sessionStorage.clear();
-
-        // Redirect to login page
-        window.location.href = './index.php';
-      }
-    }
-
-    // User display functionality is now handled by displayUserInfo function
-  });
-</script>
-
-<!-- USER DETECTION AND AUTHENTICATION -->
-<script>
-  // DETECCIÓN DE SESIÓN Y USUARIO LOGGEADO
-  function detectUserSession() {
-    console.log('🔍 Iniciando detección de sesión...');
-
-    // Verificar múltiples fuentes de datos de sesión
-    const sessionSources = [
-      localStorage.getItem('userData'),
-      localStorage.getItem('currentUser'),
-      sessionStorage.getItem('userSession'),
-      localStorage.getItem('userInfo'),
-      sessionStorage.getItem('loginData')
-    ];
-
-    // Buscar datos válidos en alguna fuente
-    let userData = null;
-    for (const source of sessionSources) {
-      if (source) {
-        try {
-          userData = JSON.parse(source);
-          if (userData && (userData.nombre || userData.name || userData.email)) {
-            console.log('👤 Usuario detectado desde storage:', userData);
-            break;
-          }
-        } catch (e) {
-          // Si no es JSON, podría ser un string simple
-          if (source.length > 0) {
-            userData = { nombre: source };
-            console.log('👤 Usuario detectado como string:', source);
-            break;
+        let userData = null;
+        for (const source of sources) {
+          if (source) {
+            try {
+              userData = JSON.parse(source);
+              if (userData && (userData.nombre || userData.email)) break;
+            } catch (e) { continue; }
           }
         }
-      }
-    }
 
-    // Si no hay datos en storage, verificar si hay sesión PHP activa
-    if (!userData) {
-      checkPHPSession();
-    } else {
-      displayUserInfo(userData);
-    }
-  }
+        if (userData) {
+          this.displayUser(userData);
+        } else {
+          this.checkPHP();
+        }
+      },
 
-  async function checkPHPSession() {
-    try {
-      console.log('🔍 Verificando sesión PHP...');
-
-      // Probar múltiples endpoints para verificar sesión
-      const sessionEndpoints = [
-        './assets/conexion/check-session.php',
-        './api/auth/session.php?action=check',
-        './login/check-session.php'
-      ];
-
-      let sessionFound = false;
-      let userData = null;
-
-      for (const endpoint of sessionEndpoints) {
+      checkPHP: async function () {
         try {
-          console.log(`📡 Probando endpoint: ${endpoint}`);
-          const response = await fetch(endpoint, {
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          });
-
+          const response = await fetch('./assets/conexion/check-session.php', { credentials: 'include' });
           if (response.ok) {
             const data = await response.json();
             if (data.success && data.user) {
-              console.log('✅ Sesión PHP activa:', data.user);
-              userData = data.user;
-              sessionFound = true;
-              break;
+              this.displayUser(data.user);
+              localStorage.setItem('userData', JSON.stringify(data.user));
             }
           }
-        } catch (e) {
-          console.log(`❌ Error en ${endpoint}: ${e.message}`);
-          continue;
-        }
-      }
+        } catch (e) { console.log('PHP Session check failed'); }
+      },
 
-      if (sessionFound && userData) {
-        displayUserInfo(userData);
-        localStorage.setItem('userData', JSON.stringify(userData));
-      } else {
-        console.log('❌ No hay sesión PHP activa');
-        checkRecentLogin();
-      }
-    } catch (error) {
-      console.log('⚠️ Error verificando sesión PHP:', error);
-      checkRecentLogin();
-    }
-  }
+      displayUser: function (data) {
+        const name = data.nombre || data.name || 'Usuario';
+        const empresa = data.nombre_empresa || data.empresa || 'CLAUT';
 
-  function checkRecentLogin() {
-    // Verificar si hay un login reciente
-    const recentLogin = sessionStorage.getItem('recentLogin');
-    const urlParams = new URLSearchParams(window.location.search);
-    const loginSuccess = urlParams.get('login') === 'success';
-
-    if (recentLogin || loginSuccess) {
-      console.log('🎉 Login reciente detectado');
-
-      let userData = null;
-      try {
-        const sessionData = sessionStorage.getItem('userSession');
-        const localData = localStorage.getItem('userData');
-        userData = sessionData ? JSON.parse(sessionData) : (localData ? JSON.parse(localData) : null);
-        console.log('📖 Datos de usuario recuperados:', userData);
-      } catch (error) {
-        console.log('⚠️ Error recuperando datos de usuario:', error);
-      }
-
-      if (!userData) {
-        userData = {
-          nombre: 'Usuario',
-          apellido: 'Loggeado',
-          email: 'usuario@ejemplo.com',
-          nombre_empresa: 'CLAUT Metropolitano'
+        const els = {
+          name: document.getElementById('userDisplayName'),
+          empresa: document.getElementById('dropdownUserRole'),
+          welcome: document.getElementById('welcomeText')
         };
-        console.log('📋 Usando datos por defecto');
+
+        if (els.name) els.name.textContent = name;
+        if (els.empresa) els.empresa.textContent = empresa;
+        if (els.welcome) els.welcome.textContent = `Bienvenido, ${name}`;
       }
+    };
 
-      displayUserInfo(userData);
+    const navManager = {
+      init: function () {
+        this.setupScroll();
+        this.setupSync();
+        this.setupAnimations();
+      },
 
-      sessionStorage.removeItem('recentLogin');
-
-      if (loginSuccess) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    } else if (document.cookie.includes('PHPSESSID')) {
-      console.log('🍪 Cookie PHP encontrada, asumiendo usuario loggeado');
-      displayUserInfo({ nombre: 'Usuario Loggeado', nombre_empresa: 'CLAUT Metropolitano' });
-    } else {
-      showLoginPrompt();
-    }
-  }
-
-  function displayUserInfo(userData) {
-    console.log('📊 Mostrando información del usuario:', userData);
-
-    // Extraer datos del usuario
-    const nombre = userData.nombre || userData.name || userData.email || 'Usuario';
-    const apellido = userData.apellido || userData.lastname || '';
-    const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
-    const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
-    const email = userData.email || '';
-    const rol = userData.rol || empresa;
-
-    // Actualizar elementos del navbar (dropdown)
-    const userDisplayName = document.getElementById('userDisplayName');
-    const dropdownUserName = document.getElementById('dropdownUserName');
-    const dropdownUserRole = document.getElementById('dropdownUserRole');
-
-    if (userDisplayName) userDisplayName.textContent = nombreCompleto;
-    if (dropdownUserName) dropdownUserName.textContent = nombreCompleto;
-    if (dropdownUserRole) dropdownUserRole.textContent = empresa;
-
-    // Actualizar elementos de UI (sidebar)
-    const userName = document.getElementById('userName');
-    const userRole = document.getElementById('userRole');
-    const userInfo = document.getElementById('userInfo');
-    const welcomeText = document.getElementById('welcomeText');
-
-    if (userName) userName.textContent = nombreCompleto;
-    if (userRole) userRole.textContent = rol;
-    if (userInfo) userInfo.classList.remove('hidden');
-    if (welcomeText) welcomeText.textContent = `Bienvenido, ${nombre}`;
-
-    // Mostrar elementos de usuario autenticado
-    const loginMenuItem = document.getElementById('loginMenuItem');
-    const userMenuDropdown = document.getElementById('userMenuDropdown');
-    const messageCenterButton = document.getElementById('messageCenterButton');
-    const logoutMenuItem = document.getElementById('logoutMenuItem');
-
-    // Elementos del sidebar
-    const loginNavItem = document.getElementById('loginNavItem');
-    const signupNavItem = document.getElementById('signupNavItem');
-
-    if (loginMenuItem) loginMenuItem.style.display = 'none';
-    if (userMenuDropdown) userMenuDropdown.classList.remove('hidden');
-    if (messageCenterButton) messageCenterButton.classList.remove('hidden');
-    if (logoutMenuItem) logoutMenuItem.classList.remove('hidden');
-
-    // Ocultar elementos de no autenticado en sidebar
-    if (loginNavItem) loginNavItem.classList.add('hidden');
-    if (signupNavItem) signupNavItem.classList.add('hidden');
-
-    // Guardar datos globalmente
-    window.currentUser = userData;
-
-    console.log('✅ UI actualizada para usuario autenticado');
-  }
-
-  function showLoginPrompt() {
-    console.log('🔒 Mostrando estado no autenticado');
-
-    // Ocultar elementos de usuario autenticado
-    const userInfo = document.getElementById('userInfo');
-    const userMenuDropdown = document.getElementById('userMenuDropdown');
-    const messageCenterButton = document.getElementById('messageCenterButton');
-    const logoutMenuItem = document.getElementById('logoutMenuItem');
-
-    // Mostrar elementos de login
-    const loginMenuItem = document.getElementById('loginMenuItem');
-
-    // Elementos del sidebar
-    const loginNavItem = document.getElementById('loginNavItem');
-    const signupNavItem = document.getElementById('signupNavItem');
-
-    if (userInfo) userInfo.classList.add('hidden');
-    if (userMenuDropdown) userMenuDropdown.classList.add('hidden');
-    if (messageCenterButton) messageCenterButton.classList.add('hidden');
-    if (logoutMenuItem) logoutMenuItem.classList.add('hidden');
-    if (loginMenuItem) loginMenuItem.style.display = 'block';
-
-    // Mostrar elementos de no autenticado en sidebar
-    if (loginNavItem) loginNavItem.classList.remove('hidden');
-    if (signupNavItem) signupNavItem.classList.remove('hidden');
-  }
-
-  // Funciones globales
-  window.detectUserSession = detectUserSession;
-  window.displayUserInfo = displayUserInfo;
-  window.showLoginPrompt = showLoginPrompt;
-
-  // Ejecutar detección de sesión al cargar
-  setTimeout(detectUserSession, 300);
-</script>
-
-<!-- Navigation JavaScript - Consistent across all pages -->
-<script>
-  // Navigation functionality
-  document.addEventListener('DOMContentLoaded', function () {
-    // Header navigation scroll effect
-    const header = document.querySelector('.claut-header');
-    const headerNav = document.querySelector('.claut-header-nav');
-
-    if (header && headerNav) {
-      let scrollTimer = null;
-
-      window.addEventListener('scroll', function () {
-        const scrollY = window.scrollY;
-
-        if (scrollY > 50) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-
-        clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(function () {
-          header.classList.remove('scrolling');
-        }, 150);
-
-        header.classList.add('scrolling');
-      });
-    }
-
-    // Synchronize header and bottom navigation
-    const headerNavLinks = document.querySelectorAll('.claut-header-nav .claut-nav-item');
-    const bottomNavLinks = document.querySelectorAll('.claut-bottom-nav .claut-nav-link');
-    const navCurve = document.querySelector('.claut-nav-curve');
-
-    function setActiveNav(activeLink) {
-      // Remover clase active de todos los enlaces del bottom nav
-      bottomNavLinks.forEach(link => link.classList.remove('active'));
-      // Agregar clase active al enlace clickeado
-      activeLink.classList.add('active');
-      // Posicionar la curva
-      if (navCurve) {
-        const linkIndex = Array.from(bottomNavLinks).indexOf(activeLink);
-        const container = activeLink.closest('.claut-nav-container');
-        const containerWidth = container.offsetWidth;
-        const linkWidth = activeLink.offsetWidth;
-        const leftOffset = (containerWidth / bottomNavLinks.length) * linkIndex + (linkWidth / 2);
-        navCurve.style.left = leftOffset + 'px';
-      }
-    }
-
-    function syncNavigation(targetHref) {
-      // Update header navigation
-      headerNavLinks.forEach(link => {
-        if (link.href.includes(targetHref)) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-
-      // Update bottom navigation
-      bottomNavLinks.forEach(link => {
-        if (link.href.includes(targetHref)) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-    }
-
-    // Event listeners para bottom nav
-    bottomNavLinks.forEach((link, index) => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        // Solo hacer la animación, no navegar
-        setActiveNav(link);
-        // Navegar después de un pequeño delay para mostrar la animación
-        setTimeout(() => {
-          const href = this.getAttribute('href');
-          if (href && href !== '#') {
-            window.location.href = href;
-          }
-        }, 200);
-      });
-    });
-
-    // Handle header navigation clicks
-    headerNavLinks.forEach(link => {
-      link.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href && href !== '#') {
-          syncNavigation(href);
-        }
-      });
-    });
-
-    // GSAP animations for navigation entrance
-    if (typeof gsap !== 'undefined') {
-      // Header navigation animation
-      gsap.fromTo('.claut-header-nav .claut-nav-item', {
-        rotationY: -180,
-        scale: 0.5,
-        opacity: 0,
-        y: -30
-      }, {
-        rotationY: 0,
-        scale: 1,
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
-        delay: 0.2
-      });
-
-      // Bottom navigation animation
-      gsap.fromTo('.claut-bottom-nav', {
-        y: 100,
-        opacity: 0
-      }, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "back.out(1.7)",
-        delay: 0.5
-      });
-      // Animación escalonada de los iconos
-      gsap.fromTo('.claut-bottom-nav .claut-nav-link i', {
-        scale: 0,
-        rotation: -180
-      }, {
-        scale: 1,
-        rotation: 0,
-        duration: 0.6,
-        ease: "back.out(2.5)",
-        stagger: 0.1,
-        delay: 1
-      });
-    }
-
-    // Bottom navigation touch interactions
-    bottomNavLinks.forEach(link => {
-      link.addEventListener('touchstart', function () {
-        this.style.transform = 'scale(0.95)';
-      });
-
-      link.addEventListener('touchend', function () {
-        this.style.transform = 'scale(1)';
-      });
-    });
-
-    // Función para sincronizar navegación al cargar la página
-    function syncNavigationOnLoad() {
-      const currentPage = window.location.pathname;
-      let activeBottomLink = null;
-      let activeHeaderLink = null;
-
-      // Determinar qué enlace debe estar activo basado en la página actual
-      if (currentPage.includes('dashboard') || currentPage === '/' || currentPage.includes('index')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="inicio"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="dashboard"]');
-      } else if (currentPage.includes('descuentos')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="descuentos"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="descuentos"]');
-      } else if (currentPage.includes('boletines')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="boletines"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="boletines"]');
-      } else if (currentPage.includes('comite')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="comite"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="comite"]');
-      } else if (currentPage.includes('contacto')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="contacto"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="contacto"]');
-      } else if (currentPage.includes('eventos')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="eventos"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="eventos"]');
-      } else if (currentPage.includes('convenio')) {
-        activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="convenios"]');
-        activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="convenio"]');
-      }
-
-      // Activar los enlaces correspondientes
-      if (activeBottomLink) {
-        activeBottomLink.classList.add('active');
-        setActiveNav(activeBottomLink);
-      }
-      if (activeHeaderLink) {
-        activeHeaderLink.classList.add('active');
-      }
-    }
-
-    // Inicializar navegación sincronizada
-    syncNavigationOnLoad();
-
-    // Handle responsive navigation visibility
-    function handleNavigationVisibility() {
-      const header = document.querySelector('.claut-header');
-      const bottomNav = document.querySelector('.claut-bottom-nav');
-
-      if (window.innerWidth <= 1024) {
-        if (header) header.style.display = 'none';
-        if (bottomNav) bottomNav.style.display = 'block';
-      } else {
-        if (header) header.style.display = 'block';
-        if (bottomNav) bottomNav.style.display = 'none';
-      }
-    }
-
-    // Initial check
-    handleNavigationVisibility();
-
-    // Listen for resize events
-    window.addEventListener('resize', handleNavigationVisibility);
-
-    // Navigation item hover effects (desktop only)
-    if (window.innerWidth > 1024) {
-      headerNavLinks.forEach(item => {
-        item.addEventListener('mouseenter', function () {
-          this.style.transform = 'translateY(-2px)';
+      setupScroll: function () {
+        const header = document.querySelector('.claut-header');
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 50) header.classList.add('scrolled');
+          else header.classList.remove('scrolled');
         });
+      },
 
-        item.addEventListener('mouseleave', function () {
-          this.style.transform = 'translateY(0)';
-        });
-      });
-    }
+      setupSync: function () {
+        const path = window.location.pathname;
+        const current = path.split('/').pop() || 'index.html';
 
-    // Configuración del menú móvil
-    function setupMobileMenu() {
-      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-      const headerNav = document.querySelector('.claut-header-nav');
-
-      if (mobileMenuBtn && headerNav) {
-        mobileMenuBtn.addEventListener('click', function () {
-          headerNav.classList.toggle('show');
-
-          // Cambiar ícono del botón
-          const icon = this.querySelector('i');
-          if (headerNav.classList.contains('show')) {
-            icon.className = 'fas fa-times';
+        document.querySelectorAll('.claut-nav-item, .claut-nav-link').forEach(link => {
+          if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
           } else {
-            icon.className = 'fas fa-bars';
+            link.classList.remove('active');
           }
         });
+      },
 
-        // Cerrar menú al hacer clic en un enlace
-        const navLinks = headerNav.querySelectorAll('.claut-nav-item');
-        navLinks.forEach(link => {
-          link.addEventListener('click', () => {
-            headerNav.classList.remove('show');
-            const icon = mobileMenuBtn.querySelector('i');
-            icon.className = 'fas fa-bars';
+      setupAnimations: function () {
+        if (typeof gsap !== 'undefined') {
+          gsap.from('.claut-header-nav .claut-nav-item', {
+            y: -20, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power2.out"
           });
-        });
-      }
-    }
-
-    // Configuración de botones del header
-    function setupHeaderButtons() {
-      // Botón de mensajes
-      const messagesBtn = document.getElementById('headerMessagesBtn');
-      if (messagesBtn) {
-        messagesBtn.addEventListener('click', function () {
-          // Aquí se podría implementar la lógica del centro de mensajes
-          console.log('Centro de mensajes clicked');
-        });
-      }
-
-      // Botón de usuario
-      const userMenuBtn = document.getElementById('headerUserMenuBtn');
-      if (userMenuBtn) {
-        userMenuBtn.addEventListener('click', function () {
-          // Aquí se podría implementar la lógica del menú de usuario
-          console.log('User menu clicked');
-        });
-      }
-    }
-
-    // Inicializar funciones
-    setupMobileMenu();
-    setupHeaderButtons();
-  });
-
-  // Legacy sidebar code - removed, keeping reference structure
-  document.addEventListener('DOMContentLoaded', function () {
-    // Old sidebar references removed
-
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-
-    // Prevent body scroll when sidebar is open
-    function preventBodyScroll(prevent) {
-      if (prevent) {
-        document.body.style.overflow = 'hidden';
-        document.body.style.height = '100vh';
-      } else {
-        document.body.style.overflow = '';
-        document.body.style.height = '';
-      }
-    }
-
-    // Show sidebar
-    function showSidebar() {
-      if (sidebar) {
-        sidebar.setAttribute('aria-expanded', 'true');
-        sidebar.classList.add('sidenav-show');
-        preventBodyScroll(true);
-      }
-      if (overlay) {
-        overlay.classList.add('show');
-      }
-    }
-
-    // Hide sidebar
-    function hideSidebar() {
-      if (sidebar) {
-        sidebar.setAttribute('aria-expanded', 'false');
-        sidebar.classList.remove('sidenav-show');
-        preventBodyScroll(false);
-      }
-      if (overlay) {
-        overlay.classList.remove('show');
-      }
-    }
-
-    // Menu toggle button click
-    if (menuToggle) {
-      menuToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (sidebar && sidebar.classList.contains('sidenav-show')) {
-          hideSidebar();
-        } else {
-          showSidebar();
+          gsap.from('.claut-bottom-nav', {
+            y: 50, opacity: 0, duration: 0.5, ease: "power2.out", delay: 0.3
+          });
         }
-      });
-    }
-
-    // Close button click
-    if (closeSidebarBtn) {
-      closeSidebarBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        hideSidebar();
-      });
-    }
-
-    // Overlay click
-    if (overlay) {
-      overlay.addEventListener('click', function () {
-        hideSidebar();
-      });
-    }
-
-    // Touch events for swipe gestures
-    if (sidebar) {
-      // Touch start
-      sidebar.addEventListener('touchstart', function (e) {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-      }, { passive: true });
-
-      // Touch move
-      sidebar.addEventListener('touchmove', function (e) {
-        if (!isDragging) return;
-        currentX = e.touches[0].clientX;
-        const deltaX = currentX - startX;
-
-        // If swiping left more than 50px, close sidebar
-        if (deltaX < -50) {
-          hideSidebar();
-          isDragging = false;
-        }
-      }, { passive: true });
-
-      // Touch end
-      sidebar.addEventListener('touchend', function () {
-        isDragging = false;
-      }, { passive: true });
-    }
-
-    // Handle window resize
-    function handleResize() {
-      if (window.innerWidth >= 1280) {
-        // Desktop: ensure proper state
-        if (sidebar) {
-          sidebar.classList.remove('sidenav-show');
-          sidebar.setAttribute('aria-expanded', 'false');
-        }
-        if (overlay) {
-          overlay.classList.remove('show');
-        }
-        preventBodyScroll(false);
       }
-    }
+    };
 
-    // Debounced resize handler
-    let resizeTimeout;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleResize, 150);
-    });
-
-    // Close sidebar on escape key
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('sidenav-show')) {
-        hideSidebar();
-      }
-    });
-
-    // Initial setup
-    handleResize();
+    authManager.detectSession();
+    navManager.init();
   });
 </script>
 

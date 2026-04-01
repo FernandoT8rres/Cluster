@@ -8,7 +8,7 @@ define('CLAUT_ACCESS', true);
 
 // Headers CORS
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -90,7 +90,7 @@ function handleGet($db) {
         
     } else {
         // Obtener todas las empresas
-        $sql = "SELECT id, nombre_empresa, nombre, descripcion, logo_url, sitio_web, telefono, email, direccion, categoria, descuento, beneficios, fecha_inicio_convenio, fecha_fin_convenio, activo, destacado, created_at, updated_at, fecha_registro, sector, estado, fecha_convenio, contacto_nombre, contacto_cargo, contacto_telefono, contacto_email, descuento_porcentaje, condiciones FROM empresas_convenio WHERE activo = 1 ORDER BY COALESCE(nombre, nombre_empresa)";
+        $sql = "SELECT e.id, e.nombre_empresa, e.nombre, e.descripcion, e.logo_url, e.sitio_web, e.telefono, e.email, e.direccion, e.categoria, e.descuento, e.beneficios, e.fecha_inicio_convenio, e.fecha_fin_convenio, e.activo, e.destacado, e.created_at, e.updated_at, e.fecha_registro, e.sector, e.estado, e.fecha_convenio, e.contacto_nombre, e.contacto_cargo, e.contacto_telefono, e.contacto_email, e.descuento_porcentaje, e.condiciones, e.admin_usuario_id, CONCAT(u.nombre, ' ', u.apellidos) AS admin_nombre FROM empresas_convenio e LEFT JOIN usuarios_perfil u ON e.admin_usuario_id = u.id WHERE e.activo = 1 ORDER BY COALESCE(e.nombre, e.nombre_empresa)";
         
         if ($limit && is_numeric($limit)) {
             $sql .= " LIMIT " . (int)$limit;
@@ -141,7 +141,8 @@ function handlePost($db) {
         'direccion' => 'string|max:255',
         'logo' => 'string|max:500',
         'contacto_telefono' => 'string|min:10|max:15',
-        'contacto_email' => 'email|max:255'
+        'contacto_email' => 'email|max:255',
+        'admin_usuario_id' => 'int|min:1'
     ]);
     
     if (!$validation['valid']) {
@@ -157,13 +158,14 @@ function handlePost($db) {
         'direccion' => $validation['data']['direccion'] ?? '',
         'logo_url' => $validation['data']['logo'] ?? '',
         'contacto_telefono' => $validation['data']['contacto_telefono'] ?? '',
-        'contacto_email' => $validation['data']['contacto_email'] ?? ''
+        'contacto_email' => $validation['data']['contacto_email'] ?? '',
+        'admin_usuario_id' => $validation['data']['admin_usuario_id'] ?? null
     ];
     // ============================================
     
     // Insertar empresa
-    $sql = "INSERT INTO empresas_convenio (nombre, descripcion, sitio_web, telefono, email, direccion, logo_url, contacto_telefono, contacto_email)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO empresas_convenio (nombre, descripcion, sitio_web, telefono, email, direccion, logo_url, contacto_telefono, contacto_email, admin_usuario_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $empresaId = $db->insert($sql, array_values($datos));
     
@@ -227,7 +229,8 @@ function handlePut($db) {
         'logo_url' => 'string|max:500',
         'activo' => 'int|in:0,1',
         'contacto_telefono' => 'string|min:10|max:15',
-        'contacto_email' => 'email|max:255'
+        'contacto_email' => 'email|max:255',
+        'admin_usuario_id' => 'int|min:1'
     ]);
     
     if (!$validation['valid']) {
@@ -241,7 +244,7 @@ function handlePut($db) {
     $campos = [];
     $valores = [];
     
-    $camposPermitidos = ['nombre', 'descripcion', 'sitio_web', 'telefono', 'email', 'direccion', 'logo_url', 'activo', 'contacto_telefono', 'contacto_email'];
+    $camposPermitidos = ['nombre', 'descripcion', 'sitio_web', 'telefono', 'email', 'direccion', 'logo_url', 'activo', 'contacto_telefono', 'contacto_email', 'admin_usuario_id'];
     
     foreach ($camposPermitidos as $campo) {
         if (isset($cleanData[$campo])) {

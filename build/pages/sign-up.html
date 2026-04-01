@@ -11,786 +11,773 @@
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Font Awesome Icons -->
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         crossorigin="anonymous" />
-    <!-- Nucleo Icons -->
-    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- Main Styling -->
+    <!-- GSAP for Premium Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- Main Styling (Argon + Tailwind) -->
     <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+    <!-- Responsive Sign-in/Sign-up Styles -->
+    <link href="../assets/css/responsive-signin.css" rel="stylesheet" />
+
     <style>
-        .error-message {
-            background-color: #fee2e2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
+        :root {
+            --porsche-accent: #C7252B;
+            --porsche-black: #000000;
+            --porsche-charcoal: #111111;
+            --porsche-gray: #f8fafc;
+        }
+
+        .split-layout-signup {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+
+        .signup-form-container {
+            padding: 4rem 6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .signup-banner-container {
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: url('../assets/img/banner-login-premium.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6));
+            backdrop-filter: blur(2px);
+        }
+
+        .porsche-input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .porsche-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            background-color: var(--porsche-gray) !important;
+            border: 1.5px solid #edf2f7 !important;
+            border-radius: 12px !important;
             font-size: 0.875rem;
+            font-weight: 500;
+            color: #1e293b;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .success-message {
-            background-color: #dcfce7;
-            border: 1px solid #bbf7d0;
-            color: #16a34a;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
+        .porsche-input:focus {
+            border-color: var(--porsche-accent) !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(199, 37, 43, 0.08) !important;
+            outline: none;
+        }
+
+        .porsche-input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .porsche-input:focus+.porsche-input-icon,
+        .porsche-input:focus-within+.porsche-input-icon {
+            color: var(--porsche-accent);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            margin-left: 0.25rem;
+        }
+
+        .porsche-btn-submit {
+            background-color: #111827;
+            color: #ffffff;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: 0.875rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
+        .porsche-btn-submit:hover {
+            background-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
+        .porsche-btn-submit:active {
+            transform: translateY(0);
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+        .glass-badge {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .banner-content-card {
+            position: relative;
+            z-index: 10;
+            max-width: 480px;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .reveal-anim {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @media (max-width: 1024px) {
+            .split-layout-signup {
+                grid-template-columns: 1fr;
+            }
+
+            .signup-banner-container {
+                display: none;
+            }
+
+            .signup-form-container {
+                padding: 3rem 1.5rem;
             }
         }
 
-        .password-strength {
-            height: 4px;
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            transition: all 0.3s;
+        .error-field {
+            color: #ef4444;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            margin-left: 0.5rem;
         }
 
-        .strength-weak {
-            background-color: #ef4444;
-            width: 33%;
+        /* Custom Scrollbar */
+        .signup-form-container::-webkit-scrollbar {
+            width: 5px;
         }
 
-        .strength-medium {
-            background-color: #f59e0b;
-            width: 66%;
+        .signup-form-container::-webkit-scrollbar-track {
+            background: transparent;
         }
 
-        .strength-strong {
-            background-color: #10b981;
-            width: 100%;
+        .signup-form-container::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .signup-form-container::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e1;
         }
     </style>
 </head>
 
-<body class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
+<body class="m-0 font-sans antialiased font-normal text-start text-base leading-default text-slate-500 bg-white">
 
-    <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="spinner"></div>
-    </div>
+    <main class="split-layout-signup">
 
-    <div class="container sticky top-0 z-sticky">
-        <div class="flex flex-wrap -mx-3">
-            <div class="w-full max-w-full px-3 flex-0">
-            </div>
-        </div>
-        <main class="mt-0 transition-all duration-200 ease-in-out">
-            <section class="min-h-screen flex items-center justify-center py-8">
-                <div class="w-full max-w-lg p-6 bg-white rounded-xl shadow">
-                    <div class="text-center mb-6">
-                        <img src="../assets/img/apple-icon.png" alt="Logo" class="mx-auto mb-4"
-                            style="max-width: 150px;">
-                        <h4 class="font-bold text-lg">Crear Cuenta</h4>
-                        <p class="text-sm text-slate-600">Únete a la plataforma Clúster</p>
-                    </div>
+        <!-- LADO IZQUIERDO: Formulario -->
+        <div class="signup-form-container" id="signupContent">
 
-                    <!-- Mensajes de error/éxito -->
-                    <div id="message-container"></div>
+            <div class="max-w-md mx-auto w-full">
+                <!-- Branding -->
+                <div class="mb-10 text-center lg:text-left reveal-anim">
+                    <img src="../assets/img/logo-ct-dark.png" alt="Logo Claut" class="h-10 mb-8 mx-auto lg:mx-0">
+                    <h1 class="text-3xl font-black text-slate-900 leading-tight mb-2">Únete al Clúster</h1>
+                    <p class="text-slate-500 font-medium">Expande tu red profesional en el sector automotriz.</p>
+                </div>
 
-                    <form id="registerForm" action="../login/register.php" method="POST">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
+                <div id="message-container"></div>
+
+                <form id="registerForm" class="space-y-4" action="../login/register.php" method="POST">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="reveal-anim">
+                            <label class="form-label">Nombre</label>
+                            <div class="porsche-input-group">
+                                <i class="fas fa-user porsche-input-icon"></i>
                                 <input type="text" name="nombre" id="nombre" placeholder="Nombre" required
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                    class="porsche-input">
                                 <div class="error-field" id="nombre-error"></div>
                             </div>
-                            <div>
+                        </div>
+                        <div class="reveal-anim">
+                            <label class="form-label">Apellidos</label>
+                            <div class="porsche-input-group">
+                                <i class="fas fa-id-card porsche-input-icon"></i>
                                 <input type="text" name="apellidos" id="apellidos" placeholder="Apellidos" required
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                                    class="porsche-input">
                                 <div class="error-field" id="apellidos-error"></div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="mb-4">
-                            <input type="email" name="email" id="email" placeholder="Email" required
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                    <div class="reveal-anim">
+                        <label class="form-label">Correo Corporativo</label>
+                        <div class="porsche-input-group">
+                            <i class="fas fa-envelope porsche-input-icon"></i>
+                            <input type="email" name="email" id="email" placeholder="usuario@claut.com" required
+                                class="porsche-input">
                             <div class="error-field" id="email-error"></div>
                         </div>
+                    </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <input type="tel" name="telefono" id="telefono" placeholder="Teléfono (opcional)"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="telefono-error"></div>
-                            </div>
-                            <div>
-                                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento"
-                                    placeholder="Fecha de Nacimiento"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="fecha_nacimiento-error"></div>
-                            </div>
+                    <div class="reveal-anim">
+                        <label class="form-label">Teléfono / WhatsApp</label>
+                        <div class="porsche-input-group">
+                            <i class="fas fa-phone porsche-input-icon"></i>
+                            <input type="tel" name="telefono" id="telefono" placeholder="55 0000 0000"
+                                class="porsche-input">
+                            <div class="error-field" id="telefono-error"></div>
+                        </div>
+                    </div>
+
+                    <!-- Perfil Profesional Section -->
+                    <div class="reveal-anim pt-4">
+                        <div class="flex items-center gap-4 mb-5">
+                            <span
+                                class="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Perfil
+                                Profesional</span>
+                            <div class="h-px bg-slate-100 flex-1"></div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="porsche-input-group mb-4">
+                            <i class="fas fa-user-tag porsche-input-icon"></i>
                             <select name="rol" id="rol" required onchange="toggleEmpresaFields()"
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Selecciona tu tipo de cuenta</option>
-                                <option value="empleado">Empleado CLAUT</option>
-                                <option value="empresa">Representante de Empresa</option>
+                                class="porsche-input appearance-none">
+                                <option value="">Selecciona tu perfil</option>
+                                <option value="empleado">Staff CLAUT</option>
+                                <option value="empresa">Socio / Empresa</option>
                             </select>
+                            <i
+                                class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
                             <div class="error-field" id="rol-error"></div>
                         </div>
 
-                        <!-- Campos para empresa (ocultos por defecto) -->
-                        <div id="empresaFields" class="mb-4 hidden">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Empresa asociada</label>
-                            <select name="empresa_id" id="empresa_id"
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Selecciona tu empresa</option>
-                                <!-- Las opciones se cargarán dinámicamente -->
-                            </select>
-                            <div class="error-field" id="empresa_id-error"></div>
-                            <p class="text-xs text-gray-500 mt-1">¿No encuentras tu empresa? <a href="#"
-                                    class="text-blue-600 hover:text-blue-800" onclick="showNewEmpresaForm()">Registrar
-                                    nueva empresa</a></p>
-                        </div>
-
-                        <!-- Campo nombre de empresa -->
-                        <div class="mb-4">
-                            <input type="text" name="nombre_empresa" id="nombre_empresa" placeholder="Nombre de Empresa"
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                            <div class="error-field" id="nombre_empresa-error"></div>
-                        </div>
-
-                        <!-- Campos de dirección -->
-                        <div class="mb-4">
-                            <input type="text" name="direccion" id="direccion" placeholder="Dirección (opcional)"
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                            <div class="error-field" id="direccion-error"></div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad (opcional)"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="ciudad-error"></div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="porsche-input-group">
+                                <i class="fas fa-briefcase porsche-input-icon"></i>
+                                <input type="text" name="cargo" id="cargo" placeholder="Cargo / Puesto"
+                                    class="porsche-input">
+                                <div class="error-field" id="cargo-error"></div>
                             </div>
-                            <div>
-                                <input type="text" name="estado" id="estado" placeholder="Estado (opcional)"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="estado-error"></div>
+                            <div class="porsche-input-group">
+                                <i class="fas fa-sitemap porsche-input-icon"></i>
+                                <input type="text" name="departamento" id="departamento" placeholder="Departamento"
+                                    class="porsche-input">
+                                <div class="error-field" id="departamento-error"></div>
                             </div>
-                            <div>
-                                <input type="text" name="codigo_postal" id="codigo_postal"
-                                    placeholder="Código Postal (opcional)"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="codigo_postal-error"></div>
+                            <div class="porsche-input-group mb-6">
+                                <i class="fas fa-calendar-day porsche-input-icon"></i>
+                                <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="porsche-input"
+                                    style="padding-left: 3rem;">
+                                <br>
+                                <label id="fecha_label"
+                                    class="absolute -top-6 left-1 text-[9px] font-bold text-slate-400 uppercase">Fecha
+                                    de Fundacion De La Empresa</label>
+                                <div class="error-field" id="fecha_nacimiento-error"></div>
+                            </div>
+
+                            <!-- Campos Condicionales de Empresa -->
+                            <div id="empresaFields" class="hidden space-y-4 mb-6">
+                                <div class="porsche-input-group">
+                                    <i class="fas fa-building porsche-input-icon"></i>
+                                    <select name="empresa_id" id="empresa_id" class="porsche-input appearance-none">
+                                        <option value="">Cargando empresas...</option>
+                                    </select>
+                                    <i
+                                        class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                                    <div class="error-field" id="empresa_id-error"></div>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-2 px-2">
+                                    ¿No encuentras tu empresa?
+                                    <a href="#" class="text-porsche-accent font-bold hover:underline"
+                                        onclick="showNuevaEmpresaForm()">Regístrala aquí</a>
+                                </p>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <input type="text" name="pais" id="pais" placeholder="País (opcional)" value="México"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="pais-error"></div>
+                        <!-- Ubicación Section -->
+                        <div class="reveal-anim pt-4">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Ubicación</span>
+                                <div class="h-px bg-slate-100 flex-1"></div>
                             </div>
-                            <div>
-                                <input type="tel" name="telefono_emergencia" id="telefono_emergencia"
-                                    placeholder="Teléfono(opcional)"
-                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                                <div class="error-field" id="telefono_emergencia-error"></div>
+
+                            <div class="porsche-input-group">
+                                <i class="fas fa-map-marker-alt porsche-input-icon"></i>
+                                <input type="text" name="direccion" id="direccion"
+                                    placeholder="Dirección / Calle y Número" class="porsche-input">
+                                <div class="error-field" id="direccion-error"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad" class="porsche-input"
+                                    style="padding-left: 1.25rem;">
+                                <input type="text" name="estado" id="estado" placeholder="Estado" class="porsche-input"
+                                    style="padding-left: 1.25rem;">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="text" name="codigo_postal" id="codigo_postal" placeholder="Código Postal"
+                                    class="porsche-input" style="padding-left: 1.25rem;">
+                                <input type="text" name="pais" id="pais" value="México" class="porsche-input"
+                                    style="padding-left: 1.25rem;">
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <input type="text" name="contacto_emergencia" id="contacto_emergencia"
-                                placeholder="Segundo Contacto(opcional)"
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                            <div class="error-field" id="contacto_emergencia-error"></div>
+                        <!-- Datos Emergencia & Bio Section -->
+                        <div class="reveal-anim pt-4">
+                            <div class="flex items-center gap-4 mb-5">
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Adicionales</span>
+                                <div class="h-px bg-slate-100 flex-1"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="porsche-input-group mb-0">
+                                    <i class="fas fa-phone-slash porsche-input-icon"></i>
+                                    <input type="tel" name="telefono_emergencia" id="telefono_emergencia"
+                                        placeholder="Tel. Emergencia" class="porsche-input">
+                                </div>
+                                <div class="porsche-input-group mb-0">
+                                    <i class="fas fa-user-shield porsche-input-icon"></i>
+                                    <input type="text" name="contacto_emergencia" id="contacto_emergencia"
+                                        placeholder="Nombre Emergencia" class="porsche-input">
+                                </div>
+                            </div>
+
+                            <div class="porsche-input-group">
+                                <textarea name="biografia" id="biografia"
+                                    placeholder="Biografía o información adicional..." rows="3" class="porsche-input"
+                                    style="padding-left: 1.25rem; height: auto;"></textarea>
+                            </div>
                         </div>
 
-                        <div class="mb-4">
-                            <textarea name="biografia" id="biografia" placeholder="Información adicional (opcional)"
-                                rows="3"
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                            <div class="error-field" id="biografia-error"></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="reveal-anim">
+                                <label class="form-label">Contraseña</label>
+                                <div class="porsche-input-group">
+                                    <i class="fas fa-lock porsche-input-icon"></i>
+                                    <input type="password" name="password" id="password" placeholder="••••••••" required
+                                        class="porsche-input">
+                                    <div class="error-field" id="password-error"></div>
+                                </div>
+                            </div>
+                            <div class="reveal-anim">
+                                <label class="form-label">Repetir Contraseña</label>
+                                <div class="porsche-input-group">
+                                    <i class="fas fa-shield-check porsche-input-icon"></i>
+                                    <input type="password" name="confirm_password" id="confirm_password"
+                                        placeholder="••••••••" required class="porsche-input">
+                                    <div class="error-field" id="confirm_password-error"></div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-4">
-                            <input type="password" name="password" id="password" placeholder="Contraseña" required
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                            <div class="password-strength" id="password-strength"></div>
-                            <div class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres, incluye mayúsculas, minúsculas
-                                y números</div>
-                            <div class="error-field" id="password-error"></div>
-                        </div>
-
-                        <div class="mb-4">
-                            <input type="password" name="confirm_password" id="confirm_password"
-                                placeholder="Confirmar Contraseña" required
-                                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-                            <div class="error-field" id="confirm_password-error"></div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="accept_terms" id="accept_terms" required class="mr-2" />
-                                <span class="text-sm">Acepto los <a href="#" class="text-blue-500 hover:text-blue-600"
-                                        onclick="alert('Términos y condiciones: Al usar esta plataforma aceptas nuestras políticas de uso y privacidad.'); return false;">términos
-                                        y condiciones</a></span>
+                        <div class="reveal-anim pt-2">
+                            <label class="flex items-start gap-3 cursor-pointer group">
+                                <div class="mt-1 flex-shrink-0">
+                                    <input type="checkbox" name="accept_terms" id="accept_terms" required
+                                        class="w-4 h-4 rounded text-porsche-accent border-slate-300 focus:ring-porsche-accent">
+                                </div>
+                                <span class="text-xs text-slate-500 leading-tight">
+                                    Acepto los <a href="#" class="text-slate-900 font-bold hover:underline"
+                                        onclick="alert('Políticas de Privacidad Clúster'); return false;">Términos y
+                                        Condiciones</a> y la Política de Privacidad del Clúster.
+                                </span>
                             </label>
                             <div class="error-field" id="accept_terms-error"></div>
                         </div>
 
-                        <div class="text-center">
-                            <button type="submit" id="registerBtn"
-                                class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                <span id="btnText">Crear Cuenta</span>
-                                <span id="btnSpinner" class="spinner hidden"></span>
+                        <div class="pt-6 reveal-anim">
+                            <button type="submit" id="registerBtn" class="porsche-btn-submit">
+                                <span id="btnText">Registrar mi Cuenta</span>
+                                <div id="btnSpinner"
+                                    class="hidden w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin">
+                                </div>
                             </button>
                         </div>
-                    </form>
 
-                    <p class="text-sm mt-4 text-center">¿Ya tienes una cuenta? <a href="sign-in.html"
-                            class="text-blue-500 font-semibold hover:text-blue-600">Iniciar Sesión</a></p>
-                </div>
-            </section>
-        </main>
+                        <div class="text-center mt-8 reveal-anim">
+                            <p class="text-sm text-slate-400">
+                                ¿Ya tienes cuenta?
+                                <a href="sign-in.html"
+                                    class="text-slate-900 font-bold hover:text-porsche-accent transition-colors">Inicia
+                                    Sesión</a>
+                            </p>
+                        </div>
 
-        <footer class="py-12">
-            <div class="container">
-                <div class="flex flex-wrap -mx-3">
-                    <div class="w-8/12 max-w-full px-3 mx-auto mt-1 text-center flex-0">
-                        <p class="mb-0 text-slate-400">
-                            Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
-                            Clúster.
-                        </p>
-                    </div>
-                </div>
+                </form>
             </div>
-        </footer>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const registerForm = document.getElementById('registerForm');
-                const registerBtn = document.getElementById('registerBtn');
-                const btnText = document.getElementById('btnText');
-                const btnSpinner = document.getElementById('btnSpinner');
-                const messageContainer = document.getElementById('message-container');
-                const passwordField = document.getElementById('password');
-                const passwordStrength = document.getElementById('password-strength');
+        </div>
 
-                // Verificador de fortaleza de contraseña
+        <!-- LADO DERECHO: Banner -->
+        <div class="signup-banner-container">
+            <div class="banner-overlay"></div>
+
+            <div class="banner-content-card reveal-anim">
+                <div class="glass-badge mb-8">
+                    <i class="fas fa-shield-check text-porsche-accent"></i>
+                    Validación Institucional
+                </div>
+                <h2 class="text-4xl font-black text-white leading-tight mb-6">
+                    Forma parte del ecosistema <span class="text-porsche-accent">Automotriz</span> más grande de México.
+                </h2>
+                <p class="text-slate-100/80 text-lg leading-relaxed mb-8 text-white">
+                    Accede a beneficios exclusivos, eventos de alto impacto y una red de socios estratégicos en la
+                    industria.
+                </p>
+            </div>
+
+            <!-- Estética Porsche sutil -->
+            <div
+                class="absolute bottom-10 right-10 text-white/5 text-8xl font-black italic tracking-tighter uppercase pointer-events-none">
+                Elite
+            </div>
+        </div>
+
+    </main>
+
+    <script src="../assets/js/loading-screen.js"></script>
+
+    <!-- Core Scripts -->
+    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1"></script>
+    <script src="../assets/js/loading-screen.js"></script>
+
+    <script>
+        // === GSAP PREMIUM ANIMATIONS ===
+        function initPremiumAnimations() {
+            if (typeof gsap !== 'undefined') {
+                const tl = gsap.timeline();
+
+                tl.to(".reveal-anim", {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    stagger: 0.12,
+                    ease: "power3.out"
+                });
+
+                // Scroll parallax para el fondo
+                document.addEventListener('mousemove', (e) => {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 30;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 30;
+                    gsap.to("#bg-visuals", { x: x, y: y, duration: 2, ease: "power2.out" });
+                });
+            }
+        }
+
+        // Logic Initialization
+        document.addEventListener('DOMContentLoaded', function () {
+            initPremiumAnimations();
+
+            // Custom checkbox logic
+            const checkbox = document.getElementById('accept_terms');
+            const customBox = document.querySelector('.checkbox-custom');
+            const checkIcon = customBox ? customBox.querySelector('i') : null;
+
+            if (checkbox && customBox) {
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        customBox.classList.add('bg-porsche-accent', 'border-porsche-accent');
+                        if (checkIcon) checkIcon.classList.remove('opacity-0');
+                    } else {
+                        customBox.classList.remove('bg-porsche-accent', 'border-porsche-accent');
+                        if (checkIcon) checkIcon.classList.add('opacity-0');
+                    }
+                });
+            }
+
+            const registerForm = document.getElementById('registerForm');
+            const registerBtn = document.getElementById('registerBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const messageContainer = document.getElementById('message-container');
+            const passwordField = document.getElementById('password');
+            const passwordStrength = document.getElementById('password-strength');
+
+            // Verificador de fortaleza de contraseña
+            if (passwordField) {
                 passwordField.addEventListener('input', function () {
                     const password = this.value;
                     const strength = calculatePasswordStrength(password);
                     updatePasswordStrength(strength);
                 });
+            }
 
-                // Manejar envío del formulario
+            // Manejar envío del formulario
+            if (registerForm) {
                 registerForm.addEventListener('submit', function (e) {
                     e.preventDefault();
-
-                    // Limpiar errores previos
                     clearErrors();
-
-                    // Obtener datos del formulario
                     const formData = new FormData(registerForm);
                     const data = Object.fromEntries(formData.entries());
 
-                    // Validar formulario
-                    if (!validateForm(data)) {
-                        return;
-                    }
-
-                    // Mostrar estado de carga
+                    if (!validateForm(data)) return;
                     setLoadingState(true);
 
-                    // Enviar solicitud
+                    console.log('--- Intentando Registro ---');
                     fetch('../api/auth/register.php', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         credentials: 'include',
                         body: JSON.stringify(data)
                     })
-                        .then(response => response.json())
+                        .then(async response => {
+                            const text = await response.text();
+                            console.log('Respuesta cruda del servidor:', text);
+
+                            try {
+                                return JSON.parse(text);
+                            } catch (e) {
+                                console.error('Error parseando JSON:', e);
+                                throw new Error('La respuesta del servidor no es válida (Formato JSON incorrecto).');
+                            }
+                        })
                         .then(data => {
                             if (data.success) {
-                                showMessage('Cuenta creada exitosamente. Redirigiendo al login...', 'success');
-                                setTimeout(() => {
-                                    window.location.href = './sign-in.html?success=1';
-                                }, 2000);
+                                showMessage('✅ Cuenta creada exitosamente. Redirigiendo...', 'success');
+                                setTimeout(() => { window.location.href = './sign-in.html?success=1'; }, 2000);
                             } else {
-                                if (data.errors) {
-                                    Object.keys(data.errors).forEach(field => {
-                                        showFieldError(field, data.errors[field]);
-                                    });
+                                // Soporte para múltiples formatos de errores (legacy, API Validator, custom)
+                                const errors = data.validation_errors || data.errors;
+                                if (errors) {
+                                    Object.keys(errors).forEach(field => showFieldError(field, errors[field]));
+                                    showMessage('❌ Falta información obligatoria o hay errores en el formulario.', 'error');
                                 } else {
-                                    showMessage(data.message || 'Error al crear la cuenta.', 'error');
+                                    showMessage(data.message || data.error || '❌ Error al crear la cuenta.', 'error');
                                 }
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
-                            showMessage('Error de conexión. Por favor, intenta nuevamente.', 'error');
+                            console.error('Error completo:', error);
+                            showMessage(error.message || '❌ Error de conexión. Intenta nuevamente.', 'error');
                         })
-                        .finally(() => {
-                            setLoadingState(false);
-                        });
+                        .finally(() => setLoadingState(false));
                 });
+            }
 
-                function validateForm(data) {
-                    let isValid = true;
+            // Helper functions
+            function validateForm(data) {
+                let isValid = true;
+                if (!data.nombre || data.nombre.length < 2) { showFieldError('nombre', 'Mínimo 2 caracteres'); isValid = false; }
+                if (!data.apellidos || data.apellidos.length < 2) { showFieldError('apellidos', 'Mínimo 2 caracteres'); isValid = false; }
+                if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { showFieldError('email', 'Email inválido'); isValid = false; }
+                if (!data.rol) { showFieldError('rol', 'Selecciona un tipo'); isValid = false; }
+                if (data.rol === 'empresa' && !data.empresa_id) { showFieldError('empresa_id', 'Selecciona empresa'); isValid = false; }
+                if (!data.password || data.password.length < 8) { showFieldError('password', 'Mínimo 8 caracteres, letras y números'); isValid = false; }
+                if (data.password !== data.confirm_password) { showFieldError('confirm_password', 'Las contraseñas no coinciden'); isValid = false; }
+                if (!data.accept_terms) { showFieldError('accept_terms', 'Debes aceptar los términos'); isValid = false; }
+                return isValid;
+            }
 
-                    // Validar nombre
-                    if (!data.nombre || data.nombre.length < 2) {
-                        showFieldError('nombre', 'El nombre debe tener al menos 2 caracteres.');
-                        isValid = false;
-                    }
+            function calculatePasswordStrength(password) {
+                let score = 0;
+                if (password.length >= 8) score++;
+                if (/[A-Z]/.test(password)) score++;
+                if (/[a-z]/.test(password)) score++;
+                if (/\d/.test(password)) score++;
+                return score;
+            }
 
-                    // Validar apellidos
-                    if (!data.apellidos || data.apellidos.length < 2) {
-                        showFieldError('apellidos', 'Los apellidos deben tener al menos 2 caracteres.');
-                        isValid = false;
-                    }
+            function updatePasswordStrength(strength) {
+                if (!passwordStrength) return;
+                passwordStrength.style.width = (strength * 25) + '%';
+                if (strength <= 2) passwordStrength.style.backgroundColor = '#C7252B';
+                else if (strength <= 3) passwordStrength.style.backgroundColor = '#fbbf24';
+                else passwordStrength.style.backgroundColor = '#10b981';
+            }
 
-                    // Validar email
-                    if (!data.email) {
-                        showFieldError('email', 'El email es requerido.');
-                        isValid = false;
-                    } else if (!isValidEmail(data.email)) {
-                        showFieldError('email', 'Por favor, ingresa un email válido.');
-                        isValid = false;
-                    }
-
-                    // Validar teléfono (opcional)
-                    if (data.telefono && !isValidPhone(data.telefono)) {
-                        showFieldError('telefono', 'Por favor, ingresa un teléfono válido.');
-                        isValid = false;
-                    }
-
-                    // Validar rol
-                    if (!data.rol) {
-                        showFieldError('rol', 'Por favor, selecciona un tipo de cuenta.');
-                        isValid = false;
-                    }
-
-                    // Validar empresa si es rol empresa
-                    if (data.rol === 'empresa' && !data.empresa_id) {
-                        showFieldError('empresa_id', 'Debes seleccionar una empresa para el rol de empresa.');
-                        isValid = false;
-                    }
-
-                    // Validar contraseña
-                    if (!data.password) {
-                        showFieldError('password', 'La contraseña es requerida.');
-                        isValid = false;
-                    } else if (!isValidPassword(data.password)) {
-                        showFieldError('password', 'La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números.');
-                        isValid = false;
-                    }
-
-                    // Validar confirmación de contraseña
-                    if (data.password !== data.confirm_password) {
-                        showFieldError('confirm_password', 'Las contraseñas no coinciden.');
-                        isValid = false;
-                    }
-
-                    // Validar términos
-                    if (!data.accept_terms) {
-                        showFieldError('accept_terms', 'Debes aceptar los términos y condiciones.');
-                        isValid = false;
-                    }
-
-                    return isValid;
+            function showFieldError(fieldId, message) {
+                const errorDiv = document.getElementById(fieldId + '-error');
+                const field = document.getElementById(fieldId);
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.style.color = '#ef4444';
                 }
+                if (field) field.style.borderColor = '#ef4444';
+            }
 
-                function isValidEmail(email) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    return emailRegex.test(email);
-                }
+            function clearErrors() {
+                document.querySelectorAll('.error-field').forEach(el => el.textContent = '');
+                document.querySelectorAll('.porsche-input').forEach(el => el.style.borderColor = 'rgba(255,255,255,0.1)');
+                if (messageContainer) messageContainer.innerHTML = '';
+            }
 
-                function isValidPhone(phone) {
-                    const phoneRegex = /^\+?[\d\s\-\(\)]{8,}$/;
-                    return phoneRegex.test(phone);
-                }
+            function showMessage(message, type) {
+                if (!messageContainer) return;
+                const cls = type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400';
+                messageContainer.innerHTML = `<div class="p-4 rounded-xl border border-white/10 ${cls} mb-6 animation-fade-in">${message}</div>`;
+            }
 
-                function isValidPassword(password) {
-                    const hasMinLength = password.length >= 8;
-                    const hasUppercase = /[A-Z]/.test(password);
-                    const hasLowercase = /[a-z]/.test(password);
-                    const hasNumbers = /\d/.test(password);
-
-                    return hasMinLength && hasUppercase && hasLowercase && hasNumbers;
-                }
-
-                function calculatePasswordStrength(password) {
-                    let score = 0;
-
-                    if (password.length >= 8) score++;
-                    if (/[A-Z]/.test(password)) score++;
-                    if (/[a-z]/.test(password)) score++;
-                    if (/\d/.test(password)) score++;
-                    if (/[^A-Za-z0-9]/.test(password)) score++;
-
-                    return score;
-                }
-
-                function updatePasswordStrength(strength) {
-                    passwordStrength.className = 'password-strength';
-
-                    if (strength <= 2) {
-                        passwordStrength.classList.add('strength-weak');
-                    } else if (strength <= 3) {
-                        passwordStrength.classList.add('strength-medium');
-                    } else {
-                        passwordStrength.classList.add('strength-strong');
-                    }
-                }
-
-                function showFieldError(fieldId, message) {
-                    const errorDiv = document.getElementById(fieldId + '-error');
-                    if (errorDiv) {
-                        errorDiv.textContent = message;
-                        errorDiv.style.color = '#dc2626';
-                        errorDiv.style.fontSize = '0.875rem';
-                        errorDiv.style.marginTop = '0.25rem';
-
-                        const field = document.getElementById(fieldId);
-                        if (field) {
-                            field.classList.add('border-red-500');
-                        }
-                    }
-                }
-
-                function clearErrors() {
-                    const errorFields = document.querySelectorAll('.error-field');
-                    errorFields.forEach(field => {
-                        field.textContent = '';
-                    });
-
-                    const inputs = document.querySelectorAll('input, select');
-                    inputs.forEach(input => {
-                        input.classList.remove('border-red-500');
-                    });
-
-                    messageContainer.innerHTML = '';
-                }
-
-                function showMessage(message, type) {
-                    const messageClass = type === 'error' ? 'error-message' : 'success-message';
-                    messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
-                }
-
-                function setLoadingState(loading) {
-                    if (loading) {
-                        registerBtn.classList.add('loading');
-                        btnText.classList.add('hidden');
-                        btnSpinner.classList.remove('hidden');
-                    } else {
-                        registerBtn.classList.remove('loading');
-                        btnText.classList.remove('hidden');
-                        btnSpinner.classList.add('hidden');
-                    }
-                }
-
-                // Cargar empresas al cargar la página
-                loadEmpresas();
-            });
-
-            // Funciones para manejo de empresas
-            function toggleEmpresaFields() {
-                const rol = document.getElementById('rol').value;
-                const empresaFields = document.getElementById('empresaFields');
-                const empresaSelect = document.getElementById('empresa_id');
-
-                if (rol === 'empresa') {
-                    empresaFields.classList.remove('hidden');
-                    empresaSelect.required = true;
+            function setLoadingState(loading) {
+                if (!registerBtn) return;
+                if (loading) {
+                    registerBtn.disabled = true;
+                    btnText.classList.add('hidden');
+                    btnSpinner.classList.remove('hidden');
                 } else {
-                    empresaFields.classList.add('hidden');
-                    empresaSelect.required = false;
-                    empresaSelect.value = '';
-                }
-            }
-
-            async function loadEmpresas() {
-                const empresaSelect = document.getElementById('empresa_id');
-                empresaSelect.innerHTML = '<option value="">Cargando empresas...</option>';
-
-                try {
-                    console.log('🔄 Cargando empresas desde API...');
-
-                    // Usar directamente empresas-simple.php que tiene mejores datos
-                    const response = await fetch('../api/empresas-simple.php?action=listar');
-                    const result = await response.json();
-
-                    console.log('📋 Respuesta API:', result);
-
-                    if (result.success && result.data && result.data.empresas) {
-                        empresaSelect.innerHTML = '<option value="">Selecciona tu empresa</option>';
-
-                        let empresasValidas = 0;
-                        result.data.empresas.forEach(empresa => {
-                            console.log('🔍 Procesando empresa:', {
-                                id: empresa.id,
-                                nombre_mostrar: empresa.nombre_mostrar,
-                                nombre: empresa.nombre,
-                                nombre_empresa: empresa.nombre_empresa,
-                                descripcion: empresa.descripcion
-                            });
-
-                            // Determinar el mejor nombre disponible con validación estricta
-                            let nombreMostrar = null;
-
-                            // Priorizar campos que tengan contenido real (no vacío, no null, no undefined)
-                            if (empresa.nombre_mostrar && empresa.nombre_mostrar.trim() && empresa.nombre_mostrar.trim() !== 'null') {
-                                nombreMostrar = empresa.nombre_mostrar.trim();
-                            } else if (empresa.nombre && empresa.nombre.trim() && empresa.nombre.trim() !== 'null') {
-                                nombreMostrar = empresa.nombre.trim();
-                            } else if (empresa.nombre_empresa && empresa.nombre_empresa.trim() && empresa.nombre_empresa.trim() !== 'null') {
-                                nombreMostrar = empresa.nombre_empresa.trim();
-                            } else if (empresa.descripcion && empresa.descripcion.trim() && empresa.descripcion.trim() !== 'null') {
-                                // Solo usar descripción como último recurso y limitar caracteres
-                                nombreMostrar = empresa.descripcion.trim().substring(0, 50);
-                            }
-
-                            // Si no encontramos nombre válido, crear uno genérico
-                            if (!nombreMostrar) {
-                                nombreMostrar = `Empresa ID ${empresa.id}`;
-                            }
-
-                            const option = document.createElement('option');
-                            option.value = empresa.id;
-                            option.textContent = nombreMostrar;
-                            empresaSelect.appendChild(option);
-                            empresasValidas++;
-
-                            console.log(`✅ Empresa agregada: ID ${empresa.id} - "${nombreMostrar}"`);
-                        });
-
-                        console.log(`✅ Total empresas válidas cargadas: ${empresasValidas}`);
-
-                        if (empresasValidas === 0) {
-                            empresaSelect.innerHTML = '<option value="">No hay empresas disponibles</option>';
-                            console.warn('⚠️ No se encontraron empresas con nombres válidos');
-                        }
-
-                    } else {
-                        console.error('❌ Respuesta API inválida:', result);
-                        empresaSelect.innerHTML = '<option value="">Error cargando empresas</option>';
-                    }
-
-                } catch (error) {
-                    console.error('❌ Error cargando empresas:', error);
-                    empresaSelect.innerHTML = '<option value="">Error de conexión</option>';
-
-                    // Intentar fallback con empresas_convenio.php
-                    try {
-                        console.log('🔄 Intentando fallback...');
-                        const fallbackResponse = await fetch('../api/empresas_convenio.php?activo=1');
-                        const fallbackResult = await fallbackResponse.json();
-
-                        if (fallbackResult.success && fallbackResult.data) {
-                            empresaSelect.innerHTML = '<option value="">Selecciona tu empresa</option>';
-
-                            fallbackResult.data.forEach(empresa => {
-                                const nombreMostrar = empresa.nombre_empresa || empresa.descripcion || `Empresa ID ${empresa.id}`;
-
-                                if (nombreMostrar && nombreMostrar.trim() !== '') {
-                                    const option = document.createElement('option');
-                                    option.value = empresa.id;
-                                    option.textContent = nombreMostrar.trim();
-                                    empresaSelect.appendChild(option);
-                                }
-                            });
-
-                            console.log('✅ Fallback exitoso');
-                        }
-                    } catch (fallbackError) {
-                        console.error('❌ Fallback también falló:', fallbackError);
-                    }
-                }
-            }
-
-            function showNewEmpresaForm() {
-                // Crear modal dinámico para nueva empresa
-                const modalHtml = `
-        <div id="modalNuevaEmpresa" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                <div class="flex items-center justify-between p-6 border-b">
-                    <h3 class="text-lg font-medium text-gray-900">Registrar Nueva Empresa</h3>
-                    <button onclick="closeNuevaEmpresaForm()" class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-                <form id="formNuevaEmpresa" class="p-6 space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Empresa *</label>
-                            <input type="text" name="nombre_empresa" required 
-                                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-                            <select name="categoria" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">Seleccionar categoría</option>
-                                <option value="Tecnología">Tecnología</option>
-                                <option value="Salud">Salud</option>
-                                <option value="Educación">Educación</option>
-                                <option value="Finanzas">Finanzas</option>
-                                <option value="Comercio">Comercio</option>
-                                <option value="Servicios">Servicios</option>
-                                <option value="Manufactura">Manufactura</option>
-                                <option value="Alimentación">Alimentación</option>
-                                <option value="Deportes">Deportes</option>
-                                <option value="Otros">Otros</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                        <textarea name="descripcion" rows="3" 
-                                  placeholder="Describe brevemente la empresa y sus servicios..."
-                                  class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email de Contacto</label>
-                            <input type="email" name="email" 
-                                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                            <input type="tel" name="telefono" 
-                                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
-                        <input type="url" name="sitio_web" placeholder="https://empresa.com" 
-                               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                        <textarea name="direccion" rows="2" 
-                                  class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                    </div>
-                    
-                    <div class="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
-                        La empresa será registrada como "pendiente" y requerirá aprobación de un administrador antes de estar disponible.
-                    </div>
-                    
-                    <div class="flex items-center justify-end space-x-3 pt-4 border-t">
-                        <button type="button" onclick="closeNuevaEmpresaForm()" 
-                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                            Cancelar
-                        </button>
-                        <button type="submit" 
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            <span id="btnRegistrarText">Registrar Empresa</span>
-                            <span id="btnRegistrarSpinner" class="spinner hidden ml-2"></span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>`;
-
-                // Agregar modal al DOM
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-                // Configurar evento del formulario
-                document.getElementById('formNuevaEmpresa').addEventListener('submit', handleNuevaEmpresaSubmit);
-            }
-
-            function closeNuevaEmpresaForm() {
-                const modal = document.getElementById('modalNuevaEmpresa');
-                if (modal) {
-                    modal.remove();
-                }
-            }
-
-            async function handleNuevaEmpresaSubmit(e) {
-                e.preventDefault();
-
-                const btnText = document.getElementById('btnRegistrarText');
-                const btnSpinner = document.getElementById('btnRegistrarSpinner');
-
-                // Estado de carga
-                btnText.classList.add('hidden');
-                btnSpinner.classList.remove('hidden');
-
-                const formData = new FormData(e.target);
-                const empresaData = {
-                    nombre_empresa: formData.get('nombre_empresa'),
-                    descripcion: formData.get('descripcion'),
-                    email: formData.get('email'),
-                    telefono: formData.get('telefono'),
-                    sitio_web: formData.get('sitio_web'),
-                    direccion: formData.get('direccion'),
-                    categoria: formData.get('categoria'),
-                    activo: 0, // Pendiente de aprobación
-                    destacado: 0
-                };
-
-                try {
-                    const response = await fetch('../api/empresas_convenio.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(empresaData)
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        alert(`✅ Empresa "${empresaData.nombre_empresa}" registrada exitosamente.\n\nLa empresa está pendiente de aprobación por un administrador.`);
-                        closeNuevaEmpresaForm();
-                        // Recargar lista de empresas
-                        loadEmpresas();
-                    } else {
-                        alert(`❌ Error al registrar empresa: ${result.message}`);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('❌ Error de conexión al registrar la empresa. Intenta nuevamente.');
-                } finally {
-                    // Restaurar estado del botón
+                    registerBtn.disabled = false;
                     btnText.classList.remove('hidden');
                     btnSpinner.classList.add('hidden');
                 }
             }
 
-        </script>
+            loadEmpresas();
+        });
 
-        <!-- plugin for scrollbar -->
-        <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
-        <!-- main script file -->
-        <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+        // Business Logic
+        function toggleEmpresaFields() {
+            const rol = document.getElementById('rol').value;
+            const empresaFields = document.getElementById('empresaFields');
+            const fechaLabel = document.getElementById('fecha_label');
+
+            if (empresaFields) empresaFields.classList.toggle('hidden', rol !== 'empresa');
+
+            // Cambio dinámico de etiqueta usando el mismo campo de BD
+            if (fechaLabel) {
+                fechaLabel.textContent = rol === 'empresa' ? 'Fecha de Fundación de la Empresa' : 'Fecha de Nacimiento';
+            }
+        }
+
+        async function loadEmpresas() {
+            const select = document.getElementById('empresa_id');
+            if (!select) return;
+            select.innerHTML = '<option value="">Cargando empresas...</option>';
+            try {
+                const response = await fetch('../api/empresas-simple.php?action=listar');
+                const result = await response.json();
+                if (result.success && result.data && result.data.empresas) {
+                    select.innerHTML = '<option value="">Selecciona tu empresa</option>';
+                    result.data.empresas.forEach(emp => {
+                        const opt = document.createElement('option');
+                        opt.value = emp.id;
+                        opt.textContent = emp.nombre || emp.nombre_mostrar || `ID ${emp.id}`;
+                        select.appendChild(opt);
+                    });
+                }
+            } catch (e) { console.error('Error cargando empresas:', e); }
+        }
+
+        // Funion para nueva empresa modal
+        function showNuevaEmpresaForm() {
+            const modalHtml = `
+                <div id="modalNuevaEmpresa" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+                    <div class="bg-white w-full max-w-lg rounded-[2rem] p-8 shadow-2xl reveal-anim" style="opacity: 1; transform: translateY(0);">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-slate-900">Registrar Nueva Empresa</h2>
+                            <button onclick="closeNuevaEmpresaForm()" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
+                        </div>
+                        <form id="formNuevaEmpresa" class="space-y-4">
+                            <input type="text" name="nombre" placeholder="Nombre de la Empresa *" required class="porsche-input w-full p-4 rounded-xl outline-none">
+                            <div class="grid grid-cols-2 gap-4">
+                                <select name="sector" class="porsche-input w-full p-4 rounded-xl outline-none">
+                                    <option value="Automotriz">Automotriz</option>
+                                    <option value="Servicios">Servicios</option>
+                                    <option value="Academia">Academia</option>
+                                    <option value="Gobierno">Gobierno</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+                            <textarea name="descripcion" placeholder="Descripción de la empresa..." rows="3" class="porsche-input w-full p-4 rounded-xl outline-none"></textarea>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="email" name="email" placeholder="Email de contacto" class="porsche-input w-full p-4 rounded-xl outline-none">
+                                <input type="tel" name="telefono" placeholder="Teléfono" class="porsche-input w-full p-4 rounded-xl outline-none">
+                            </div>
+
+                            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                                <p class="text-[11px] text-amber-700 leading-relaxed font-medium">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    La empresa quedará en estado "pendiente" hasta que un administrador valide los datos y autorice su ingreso al padrón oficial.
+                                </p>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="button" onclick="closeNuevaEmpresaForm()" class="flex-1 py-4 text-slate-500 font-bold hover:text-slate-700 transition-colors border border-slate-200 rounded-xl">Cancelar</button>
+                                <button type="submit" class="flex-1 py-4 bg-porsche-accent text-white font-bold rounded-xl shadow-lg shadow-porsche-accent/20">Registrar Empresa</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('formNuevaEmpresa').addEventListener('submit', handleNuevaEmpresaSubmit);
+        }
+
+        function closeNuevaEmpresaForm() {
+            const m = document.getElementById('modalNuevaEmpresa');
+            if (m) m.remove();
+        }
+
+        async function handleNuevaEmpresaSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.activo = 0;
+            data.destacado = 0;
+
+            try {
+                const response = await fetch('../api/empresas_convenio.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const res = await response.json();
+                if (res.success) {
+                    alert('✅ Empresa registrada con éxito. Pendiente de validación administrativa.');
+                    closeNuevaEmpresaForm();
+                    loadEmpresas();
+                } else {
+                    alert('❌ Error: ' + (res.message || 'No se pudo completar el registro'));
+                }
+            } catch (err) { alert('❌ Error de red al registrar empresa'); }
+        }
+    </script>
 </body>
 
 </html>

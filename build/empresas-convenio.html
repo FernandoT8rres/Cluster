@@ -2316,22 +2316,7 @@
                         </div>
                     </div>
 
-                    <!-- Carrusel de logos de empresas socias -->
-                    <div id="carouselTrack" class="carousel-track">
-                        <p class="loading-message" style="color:#64748b; text-align:center; padding:2rem;">
-                            <i class="fas fa-spinner fa-spin mr-2"></i>Cargando empresas...
-                        </p>
-                    </div>
-
-                    <!-- Navegación del carrusel -->
-                    <div style="display:flex; justify-content:center; gap:12px; margin-top:1.5rem; position:relative; z-index:10;">
-                        <button class="carousel-nav-btn prev" onclick="navegarCarrusel(-1)" title="Anterior">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="carousel-nav-btn next" onclick="navegarCarrusel(1)" title="Siguiente">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
+                    <!-- Carrusel de logos eliminado por redundancia con carrusel Evervault -->
 
                     <div class="text-center pb-0" style="margin-top:1.5rem;">
                         <div
@@ -2443,13 +2428,11 @@
             },
 
             showModal: function (empresaOrTitulo, descripcion, logoUrl, descuento, sector) {
-                // Soporte para ambos formatos: objeto empresa completo o parámetros individuales
+                // Soporte para ambos formatos
                 let empresa;
                 if (typeof empresaOrTitulo === 'object') {
-                    // Nuevo formato: objeto empresa completo
                     empresa = empresaOrTitulo;
                 } else {
-                    // Formato antiguo: parámetros individuales (para compatibilidad)
                     empresa = {
                         nombre: empresaOrTitulo,
                         descripcion: descripcion,
@@ -2459,188 +2442,187 @@
                     };
                 }
 
-                console.log('🎭 showModal called with empresa completa:', empresa);
+                console.log('🎭 showModal called with premium redesign:', empresa);
 
-                // Eliminar modal anterior
                 if (this.currentModal) {
                     this.currentModal.remove();
                 }
 
-                // Crear modal con estilos inline para garantizar visibilidad
                 const modal = document.createElement('div');
+                modal.id = 'empresaPremiumModal';
                 modal.style.cssText = `
                     position: fixed;
                     top: 0;
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    z-index: 9999;
+                    z-index: 10000;
                     display: flex;
-                    align-items: center;
+                    align-items: flex-start;
                     justify-content: center;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    backdrop-filter: blur(4px);
+                    background-color: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(10px);
+                    padding-top: 100px; /* Evitar navbar */
+                    padding-bottom: 40px;
+                    padding-left: 20px;
+                    padding-right: 20px;
+                    overflow-y: auto;
                 `;
+
                 modal.onclick = (e) => {
                     if (e.target === modal) this.closeModal();
                 };
 
+                // Formatear sitio web
+                const websiteUrl = empresa.sitio_web ? (empresa.sitio_web.startsWith('http') ? empresa.sitio_web : 'https://' + empresa.sitio_web) : null;
+                const cleanWebsite = empresa.sitio_web ? empresa.sitio_web.replace(/^https?:\/\//, '') : '';
+
                 modal.innerHTML = `
-                    <div class="modal-content bg-white rounded-2xl shadow-2xl overflow-y-auto" style="width: calc(100vw - 200px); max-height: calc(100vh - 200px);">
-                        <!-- Header -->
-                        <div class="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-6 rounded-t-2xl">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-building text-2xl text-blue-300"></i>
-                                    <h2 class="text-2xl font-bold">${empresa.nombre || 'Empresa'}</h2>
-                                </div>
-                                <button onclick="modalHandler.closeModal()" 
-                                        class="text-white/70 hover:text-white hover:bg-white/20 rounded-lg p-2 transition-all">
-                                    <i class="fas fa-times text-xl"></i>
-                                </button>
-                            </div>
-                        </div>
+                    <style>
+                        .porsche-modal-glass {
+                            background: linear-gradient(145deg, rgba(30, 33, 38, 0.98), rgba(15, 17, 21, 0.95));
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                            border-radius: 24px;
+                            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+                            width: 100%;
+                            max-width: 1100px;
+                            overflow: hidden;
+                            position: relative;
+                            animation: pmSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                        }
                         
-                        <!-- Content -->
-                        <div class="p-6">
-                            <!-- Logo centrado -->
-                            ${empresa.logo_url ? `
-                            <div class="text-center mb-4">
-                                <img src="${empresa.logo_url}" 
-                                     alt="Logo de ${empresa.nombre}"
-                                     class="mx-auto w-32 h-24 object-contain rounded-lg shadow-md border border-gray-200 bg-white p-2"
-                                     onerror="this.src='https://via.placeholder.com/128x96/1e293b/ffffff?text=${encodeURIComponent(empresa.nombre || 'Logo')}'">
-                            </div>
-                            ` : ''}
-                            
-                            <!-- Badges en línea -->
-                            <div class="flex flex-wrap gap-2 justify-center mb-4">
-                                ${empresa.sector ? `
-                                    <span class="inline-block bg-gradient-to-r from-slate-700 to-slate-800 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                                        <i class="fas fa-industry mr-1"></i>${empresa.sector}
-                                    </span>
-                                ` : ''}
-                                
-                                ${empresa.descuento_porcentaje && parseFloat(empresa.descuento_porcentaje) > 0 ? `
-                                    <span class="inline-block bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                                        <i class="fas fa-tag mr-1"></i>${empresa.descuento_porcentaje}% de descuento
-                                    </span>
-                                ` : ''}
-                                
-                                ${empresa.estado ? `
-                                    <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                                        <i class="fas fa-check-circle mr-1"></i>${empresa.estado}
-                                    </span>
-                                ` : ''}
-                            </div>
-                            
-                            <!-- Descripción -->
-                            ${empresa.descripcion ? `
-                            <div class="mb-4">
-                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
-                                    <i class="fas fa-info-circle text-blue-600"></i>
-                                    Información de la empresa
-                                </h3>
-                                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                                    <p class="text-slate-700 leading-relaxed text-sm">${empresa.descripcion}</p>
+                        .modal-split {
+                            display: flex;
+                            flex-direction: column;
+                            height: 100%;
+                            max-height: 75vh;
+                        }
+                        
+                        @media (min-width: 768px) {
+                            .modal-split { flex-direction: row; }
+                            .modal-left { width: 38%; border-right: 1px solid rgba(255,255,255,0.05); }
+                            .modal-right { width: 62%; }
+                        }
+                        
+                        .modal-left {
+                            padding: 40px;
+                            background: rgba(255,255,255,0.02);
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 30px;
+                            overflow-y: auto;
+                        }
+                        
+                        .modal-right {
+                            padding: 40px;
+                            overflow-y: auto;
+                            background: transparent;
+                        }
+                        
+                        .porsche-btn-action {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 10px;
+                            padding: 14px 24px;
+                            border-radius: 12px;
+                            font-weight: 600;
+                            transition: all 0.3s;
+                            text-decoration: none !important;
+                            border: 1px solid rgba(255,255,255,0.1);
+                            width: 100%;
+                        }
+                        
+                        .btn-red { background: #C7252B; color: white !important; }
+                        .btn-red:hover { background: #E53E3E; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(199,37,43,0.4); }
+                        
+                        .btn-glass { background: rgba(255,255,255,0.05); color: #e2e8f0 !important; }
+                        .btn-glass:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); color: white !important; }
+                        
+                        .section-divider {
+                            height: 1px;
+                            background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+                            margin: 25px 0;
+                        }
+                        
+                        .custom-scroll::-webkit-scrollbar { width: 6px; }
+                        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+                        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+                        
+                        @keyframes pmSlideIn { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+                    </style>
+
+                    <div class="porsche-modal-glass">
+                        <button onclick="modalHandler.closeModal()" style="position: absolute; top: 20px; right: 20px; z-index: 10; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <div class="modal-split">
+                            <!-- Lado Izquierdo: Identidad -->
+                            <div class="modal-left custom-scroll">
+                                <div style="background: white; padding: 25px; border-radius: 20px; width: 100%; display: flex; justify-content: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
+                                    <img src="${empresa.logo_url}" alt="${empresa.nombre}" style="max-width: 100%; max-height: 150px; object-fit: contain;">
+                                </div>
+
+                                <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                    ${empresa.sector ? `<div style="display: flex; align-items: center; gap: 10px; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;"><i class="fas fa-industry text-blue-400"></i> ${empresa.sector}</div>` : ''}
+                                    ${empresa.estado ? `<div style="display: flex; align-items: center; gap: 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 10px 15px; border-radius: 10px; font-size: 14px; font-weight: 600;"><div style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; animation: pulse 2s infinite;"></div> Estado: ${empresa.estado}</div>` : ''}
+                                    ${empresa.descuento_porcentaje ? `<div style="display: flex; align-items: center; gap: 10px; background: rgba(199, 37, 43, 0.1); border: 1px solid rgba(199, 37, 43, 0.2); color: #fca5a5; padding: 10px 15px; border-radius: 10px; font-size: 14px; font-weight: 600;"><i class="fas fa-tag"></i> Descuento: ${empresa.descuento_porcentaje}% OFF</div>` : ''}
+                                    ${empresa.fecha_convenio ? `<div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 12px; padding: 5px 10px;"><i class="fas fa-calendar-alt"></i> Afiliado desde: ${new Date(empresa.fecha_convenio).toLocaleDateString('es-MX', { year: 'numeric', month: 'short' })}</div>` : ''}
+                                </div>
+
+                                <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                                    ${empresa.telefono ? `<a href="tel:${empresa.telefono}" class="porsche-btn-action btn-red"><i class="fas fa-phone"></i> LLAMAR AHORA</a>` : ''}
+                                    ${empresa.email ? `<a href="mailto:${empresa.email}" class="porsche-btn-action btn-glass"><i class="fas fa-envelope"></i> ENVIAR CORREO</a>` : ''}
+                                    ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" class="porsche-btn-action btn-glass"><i class="fas fa-external-link-alt"></i> SITIO WEB</a>` : ''}
                                 </div>
                             </div>
-                            ` : ''}
-                            
-                            <!-- Información de Contacto -->
-                            ${empresa.contacto_persona || empresa.contacto_telefono || empresa.contacto_email || empresa.telefono || empresa.email || empresa.sitio_web || empresa.direccion ? `
-                            <div class="mb-4">
-                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
-                                    <i class="fas fa-address-card text-blue-600"></i>
-                                    Información de Contacto
-                                </h3>
-                                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200 space-y-2">
-                                    ${empresa.contacto_persona ? `
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-user text-slate-600 w-4"></i>
-                                            <span class="text-slate-700"><strong>Contacto:</strong> ${empresa.contacto_persona}</span>
-                                        </div>
-                                    ` : ''}
-                                    ${empresa.contacto_telefono ? `
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-phone text-slate-600 w-4"></i>
-                                            <a href="tel:${empresa.contacto_telefono}" class="text-blue-600 hover:underline">${empresa.contacto_telefono}</a>
-                                        </div>
-                                    ` : empresa.telefono ? `
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-phone text-slate-600 w-4"></i>
-                                            <a href="tel:${empresa.telefono}" class="text-blue-600 hover:underline">${empresa.telefono}</a>
-                                        </div>
-                                    ` : ''}
-                                    ${empresa.contacto_email ? `
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-envelope text-slate-600 w-4"></i>
-                                            <a href="mailto:${empresa.contacto_email}" class="text-blue-600 hover:underline">${empresa.contacto_email}</a>
-                                        </div>
-                                    ` : empresa.email ? `
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-envelope text-slate-600 w-4"></i>
-                                            <a href="mailto:${empresa.email}" class="text-blue-600 hover:underline">${empresa.email}</a>
-                                        </div>
-                                    ` : ''}
-                                    ${empresa.sitio_web ? `
-                                        <div class="flex items-center gap-2 text-sm">
-                                            <i class="fas fa-globe text-slate-600 w-4"></i>
-                                            <a href="${empresa.sitio_web}" target="_blank" class="text-blue-600 hover:underline">${empresa.sitio_web}</a>
-                                        </div>
-                                    ` : ''}
+
+                            <!-- Lado Derecho: Contenido Detallado -->
+                            <div class="modal-right custom-scroll">
+                                <h2 style="font-size: 36px; font-weight: 800; color: white; margin-bottom: 5px; line-height: 1.1;">${empresa.nombre}</h2>
+                                <p style="color: #64748b; font-size: 16px; font-weight: 500; margin-bottom: 30px;">Directorio de Socios Estratégicos</p>
+
+                                <div class="section-divider"></div>
+
+                                <div>
+                                    <h3 style="font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-info-circle text-blue-400"></i> Perfil Corporativo</h3>
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; color: #cbd5e1; line-height: 1.8; text-align: justify; font-size: 15px;">
+                                        ${empresa.descripcion || 'Esta empresa colabora activamente con el Clúster Automotriz para fortalecer la cadena de valor regional.'}
+                                    </div>
+                                </div>
+
+                                ${empresa.beneficios ? `
+                                <div style="margin-top: 35px;">
+                                    <h3 style="font-size: 14px; color: #c084fc; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-gift"></i> Beneficios Clúster</h3>
+                                    <div style="background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.1); border-radius: 16px; padding: 20px; color: #d8b4fe; font-size: 14px; line-height: 1.6; white-space: pre-line;">
+                                        ${empresa.beneficios}
+                                    </div>
+                                </div>` : ''}
+
+                                <div style="margin-top: 35px; display: grid; grid-template-cols: 1fr 1fr; gap: 20px;">
                                     ${empresa.direccion ? `
-                                        <div class="flex items-start gap-2 text-sm">
-                                            <i class="fas fa-map-marker-alt text-slate-600 w-4 mt-1"></i>
-                                            <span class="text-slate-700">${empresa.direccion}</span>
-                                        </div>
-                                    ` : ''}
+                                    <div style="grid-column: span 2;">
+                                        <h3 style="font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marker-alt text-rose-400"></i> Ubicación</h3>
+                                        <div style="color: #cbd5e1; font-size: 14px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">${empresa.direccion}</div>
+                                    </div>` : ''}
+                                    
+                                    ${empresa.contacto_nombre ? `
+                                    <div style="grid-column: span 2; margin-top: 20px; background: linear-gradient(to right, rgba(16, 185, 129, 0.05), transparent); border-left: 3px solid #10b981; padding: 20px; border-radius: 0 16px 16px 0;">
+                                        <h3 style="font-size: 13px; color: #10b981; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px;">Enlace Comercial Directo</h3>
+                                        <div style="font-size: 18px; font-weight: 700; color: white;">${empresa.contacto_nombre}</div>
+                                        ${empresa.contacto_telefono ? `<div style="color: #94a3b8; font-size: 14px; margin-top: 5px;"><i class="fas fa-phone-alt mr-2"></i> ${empresa.contacto_telefono}</div>` : ''}
+                                        ${empresa.contacto_email ? `<div style="color: #94a3b8; font-size: 14px; margin-top: 3px;"><i class="fas fa-envelope mr-2"></i> ${empresa.contacto_email}</div>` : ''}
+                                    </div>` : ''}
                                 </div>
+
+                                ${empresa.condiciones ? `
+                                <div style="margin-top: 35px; opacity: 0.8;">
+                                    <h3 style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px;">Términos y Condiciones</h3>
+                                    <p style="font-size: 12px; color: #475569; font-style: italic;">${empresa.condiciones}</p>
+                                </div>` : ''}
                             </div>
-                            ` : ''}
-                            
-                            <!-- Beneficios -->
-                            ${empresa.beneficios ? `
-                            <div class="mb-4">
-                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
-                                    <i class="fas fa-gift text-blue-600"></i>
-                                    Beneficios de Socio
-                                </h3>
-                                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                                    <p class="text-slate-700 text-sm whitespace-pre-line">${empresa.beneficios}</p>
-                                </div>
-                            </div>
-                            ` : ''}
-                            
-                            <!-- Condiciones -->
-                            ${empresa.condiciones ? `
-                            <div class="mb-4">
-                                <h3 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
-                                    <i class="fas fa-file-contract text-blue-600"></i>
-                                    Términos y Condiciones
-                                </h3>
-                                <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
-                                    <p class="text-slate-700 text-sm whitespace-pre-line">${empresa.condiciones}</p>
-                                </div>
-                            </div>
-                            ` : ''}
-                            
-                            <!-- Fecha de Convenio -->
-                            ${empresa.fecha_convenio ? `
-                            <div class="text-center text-sm text-slate-600">
-                                <i class="fas fa-calendar-check mr-1"></i>
-                                Convenio desde: ${new Date(empresa.fecha_convenio).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })}
-                            </div>
-                            ` : ''}
-                        </div>
-                        
-                        <!-- Footer -->
-                        <div class="bg-slate-50 px-6 py-4 rounded-b-2xl border-t border-slate-200">
-                            <button onclick="modalHandler.closeModal()" 
-                                    class="w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white py-2.5 px-6 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg text-sm">
-                                <i class="fas fa-times-circle mr-2"></i>
-                                Cerrar
-                            </button>
                         </div>
                     </div>
                 `;
@@ -2648,8 +2630,6 @@
                 document.body.appendChild(modal);
                 document.body.style.overflow = 'hidden';
                 this.currentModal = modal;
-
-                console.log('✅ Modal mostrado correctamente con todos los campos de BD');
             },
 
             closeModal: function () {
@@ -2989,333 +2969,22 @@
 
         function mostrarInfoEmpresaCarruselCompleta(nombre, descripcion, logoUrl, telefono, email, sitioWeb, sector, contactoPersona, contactoTelefono, contactoEmail) {
             console.log('📋 Mostrando información completa de empresa desde carrusel:', nombre);
-
-            // Limpiar cualquier modal existente
-            const existingModal = document.getElementById('empresaCarouselModal');
-            if (existingModal) {
-                existingModal.remove();
+            if (window.modalHandler) {
+                window.modalHandler.showModal({
+                    nombre: nombre,
+                    descripcion: descripcion !== 'Sin descripción' ? descripcion : '',
+                    logo_url: logoUrl,
+                    telefono: telefono !== 'No disponible' ? telefono : '',
+                    email: email !== 'No disponible' ? email : '',
+                    sitio_web: sitioWeb !== '#' && sitioWeb !== 'No disponible' ? sitioWeb : '',
+                    sector: sector !== 'No especificado' ? sector : '',
+                    contacto_nombre: contactoPersona !== 'No especificado' ? contactoPersona : '',
+                    contacto_telefono: contactoTelefono !== 'No disponible' ? contactoTelefono : '',
+                    contacto_email: contactoEmail !== 'No disponible' ? contactoEmail : ''
+                });
+            } else {
+                console.error('modalHandler no está disponible');
             }
-
-            const modal = document.createElement('div');
-            modal.id = 'empresaCarouselModal';
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                backdrop-filter: blur(10px);
-            `;
-
-            // Crear botones de contacto dinámicamente
-            let botonesContacto = '';
-
-            // Botones de contacto específico
-            if (contactoTelefono && contactoTelefono !== 'No disponible') {
-                botonesContacto += `
-                    <a href="tel:${contactoTelefono}" style="
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.75rem 1.5rem;
-                        background: linear-gradient(135deg, #6366f1, #4f46e5);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 12px;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        transition: all 0.2s ease;
-                        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <i class="fas fa-phone"></i>
-                        Contacto: ${contactoTelefono}
-                    </a>
-                `;
-            }
-
-            if (contactoEmail && contactoEmail !== 'No disponible') {
-                botonesContacto += `
-                    <a href="mailto:${contactoEmail}" style="
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.75rem 1.5rem;
-                        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 12px;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        transition: all 0.2s ease;
-                        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <i class="fas fa-envelope"></i>
-                        Contacto: ${contactoEmail}
-                    </a>
-                `;
-            }
-
-            // Botones generales
-            if (telefono !== 'No disponible') {
-                botonesContacto += `
-                    <a href="tel:${telefono}" style="
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.75rem 1.5rem;
-                        background: linear-gradient(135deg, #10b981, #059669);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 12px;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        transition: all 0.2s ease;
-                        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <i class="fas fa-phone"></i>
-                        Teléfono General
-                    </a>
-                `;
-            }
-
-            if (email !== 'No disponible') {
-                botonesContacto += `
-                    <a href="mailto:${email}" style="
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.75rem 1.5rem;
-                        background: linear-gradient(135deg, #f59e0b, #d97706);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 12px;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        transition: all 0.2s ease;
-                        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <i class="fas fa-envelope"></i>
-                        Email General
-                    </a>
-                `;
-            }
-
-            if (sitioWeb !== '#' && sitioWeb !== 'No disponible') {
-                const webUrl = sitioWeb.startsWith('http') ? sitioWeb : `https://${sitioWeb}`;
-                botonesContacto += `
-                    <a href="${webUrl}" target="_blank" style="
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 0.5rem;
-                        padding: 0.75rem 1.5rem;
-                        background: linear-gradient(135deg, #c7252b, #a02226);
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 12px;
-                        font-family: 'Poppins', sans-serif;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        transition: all 0.2s ease;
-                        box-shadow: 0 4px 12px rgba(199, 37, 43, 0.3);
-                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <i class="fas fa-globe"></i>
-                        Sitio Web
-                    </a>
-                `;
-            }
-
-            modal.innerHTML = `
-                <div style="
-                    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
-                    border-radius: 24px;
-                    padding: 3rem;
-                    max-width: 700px;
-                    max-height: 90vh;
-                    overflow-y: auto;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    position: relative;
-                ">
-                    <button onclick="this.closest('#empresaCarouselModal').remove()" style="
-                        position: absolute;
-                        top: 1rem;
-                        right: 1rem;
-                        background: rgba(239, 68, 68, 0.1);
-                        border: none;
-                        border-radius: 50%;
-                        width: 40px;
-                        height: 40px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        cursor: pointer;
-                        color: #ef4444;
-                        font-size: 1.2rem;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
-                        ✕
-                    </button>
-
-                    <div style="display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; margin-bottom: 2rem;">
-                        <div style="text-align: center;">
-                            <img src="${logoUrl}" alt="${nombre}" style="
-                                width: 200px;
-                                height: 150px;
-                                object-fit: contain;
-                                border-radius: 16px;
-                                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-                                background: white;
-                                padding: 1rem;
-                            ">
-                        </div>
-
-                        <div>
-                            <h2 style="
-                                font-family: 'Poppins', sans-serif;
-                                font-size: 1.8rem;
-                                font-weight: 700;
-                                color: #1f2937;
-                                margin-bottom: 0.5rem;
-                                line-height: 1.2;
-                            ">${nombre}</h2>
-
-                            <div style="
-                                display: inline-block;
-                                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-                                color: white;
-                                padding: 0.3rem 0.8rem;
-                                border-radius: 20px;
-                                font-size: 0.8rem;
-                                font-weight: 600;
-                                margin-bottom: 1rem;
-                                font-family: 'Poppins', sans-serif;
-                            ">${sector}</div>
-
-                            <p style="
-                                font-family: 'Poppins', sans-serif;
-                                color: #6b7280;
-                                font-size: 1rem;
-                                line-height: 1.6;
-                                margin-bottom: 1.5rem;
-                            ">${descripcion}</p>
-
-                            <div style="
-                                background: rgba(59, 130, 246, 0.05);
-                                border: 1px solid rgba(59, 130, 246, 0.1);
-                                border-radius: 12px;
-                                padding: 1rem;
-                            ">
-                                <h3 style="
-                                    font-family: 'Poppins', sans-serif;
-                                    font-size: 1rem;
-                                    font-weight: 600;
-                                    color: #1f2937;
-                                    margin-bottom: 0.75rem;
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 0.5rem;
-                                ">
-                                    <i class="fas fa-address-book" style="color: #3b82f6;"></i>
-                                    Información de Contacto
-                                </h3>
-
-                                <div style="display: grid; gap: 0.5rem; font-size: 0.9rem; font-family: 'Poppins', sans-serif;">
-                                    ${contactoPersona && contactoPersona !== 'No especificado' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-user" style="color: #8b5cf6; width: 16px;"></i>
-                                            <span style="font-weight: 600;">Persona de Contacto:</span>
-                                            <span>${contactoPersona}</span>
-                                        </div>
-                                    ` : ''}
-
-                                    ${contactoTelefono && contactoTelefono !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-phone" style="color: #10b981; width: 16px;"></i>
-                                            <span style="font-weight: 600;">Teléfono de Contacto:</span>
-                                            <a href="tel:${contactoTelefono}" style="color: #3b82f6; text-decoration: none;">${contactoTelefono}</a>
-                                        </div>
-                                    ` : ''}
-
-                                    ${contactoEmail && contactoEmail !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-envelope" style="color: #f59e0b; width: 16px;"></i>
-                                            <span style="font-weight: 600;">Correo de Contacto:</span>
-                                            <a href="mailto:${contactoEmail}" style="color: #3b82f6; text-decoration: none;">${contactoEmail}</a>
-                                        </div>
-                                    ` : ''}
-
-                                    ${email !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-envelope" style="color: #f59e0b; width: 16px;"></i>
-                                            <span style="font-weight: 600;">Email General:</span>
-                                            <a href="mailto:${email}" style="color: #3b82f6; text-decoration: none;">${email}</a>
-                                        </div>
-                                    ` : ''}
-
-                                    ${telefono !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-phone" style="color: #10b981; width: 16px;"></i>
-                                            <span style="font-weight: 600;">Teléfono General:</span>
-                                            <a href="tel:${telefono}" style="color: #3b82f6; text-decoration: none;">${telefono}</a>
-                                        </div>
-                                    ` : ''}
-
-                                    ${sitioWeb !== '#' && sitioWeb !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-globe" style="color: #8b5cf6; width: 16px;"></i>
-                                            <span style="font-weight: 600;">Sitio Web:</span>
-                                            <a href="${sitioWeb.startsWith('http') ? sitioWeb : 'https://' + sitioWeb}" target="_blank" style="color: #3b82f6; text-decoration: none;">${sitioWeb}</a>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="
-                        display: flex;
-                        justify-content: center;
-                        gap: 1rem;
-                        flex-wrap: wrap;
-                        border-top: 1px solid rgba(156, 163, 175, 0.2);
-                        padding-top: 1.5rem;
-                        margin-top: 1.5rem;
-                    ">
-                        ${botonesContacto}
-
-                        <button onclick="this.closest('#empresaCarouselModal').remove()" style="
-                            padding: 0.75rem 2rem;
-                            background: linear-gradient(135deg, #6b7280, #4b5563);
-                            color: white;
-                            border: none;
-                            border-radius: 12px;
-                            font-family: 'Poppins', sans-serif;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: all 0.2s ease;
-                            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
-                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            // Animar entrada
-            setTimeout(() => {
-                modal.style.opacity = '1';
-            }, 100);
         }
 
         function inicializarAnimacionesCarrusel() {
@@ -3743,528 +3412,23 @@
         }
 
         // Función simplificada para mostrar información de empresa con diseño cristal
+        // Función simplificada para mostrar información de empresa con diseño cristal
         function mostrarInfoEmpresa(nombre, descripcion, sitioWeb, logoUrl, email, telefono, contactoPersona, contactoTelefono, contactoEmail) {
             console.log('📋 Mostrando información:', nombre);
-
-            // Limpiar cualquier modal existente
-            const existingModal = document.getElementById('empresaInfoModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            // Crear modal con diseño cristal futurista
-            const modalHTML = `
-                <div id="empresaInfoModal" style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.8);
-                    backdrop-filter: blur(10px);
-                    z-index: 9999;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    animation: modalFadeIn 0.3s ease-out;
-                ">
-                    <div style="
-                        background-image: url('${logoUrl}');
-                        background-size: cover;
-                        background-position: center;
-                        background-repeat: no-repeat;
-                        border-radius: 24px;
-                        max-width: 600px;
-                        width: 90%;
-                        margin: 20px;
-                        padding: 0;
-                        overflow: hidden;
-                        box-shadow: 0 32px 64px rgba(0,0,0,0.4);
-                        position: relative;
-                        backdrop-filter: blur(20px);
-                        border: 1px solid rgba(255,255,255,0.1);
-                        animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-                    ">
-                        <!-- Overlay cristal para legibilidad -->
-                        <div style="
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            background: linear-gradient(135deg,
-                                rgba(255,255,255,0.1) 0%,
-                                rgba(255,255,255,0.05) 50%,
-                                rgba(0,0,0,0.3) 100%
-                            );
-                            backdrop-filter: blur(15px);
-                            border-radius: 24px;
-                        "></div>
-
-                        <!-- Contenido principal -->
-                        <div style="position: relative; z-index: 10;">
-                            <!-- Header futurista -->
-                            <div style="
-                                background: linear-gradient(135deg,
-                                    rgba(0,0,0,0.8) 0%,
-                                    rgba(30,30,30,0.9) 100%
-                                );
-                                color: white;
-                                padding: 32px 24px;
-                                text-align: center;
-                                border-radius: 24px 24px 0 0;
-                                backdrop-filter: blur(20px);
-                                border-bottom: 1px solid rgba(255,255,255,0.1);
-                            ">
-                                <div style="
-                                    width: 100px;
-                                    height: 100px;
-                                    margin: 0 auto 20px;
-                                    border-radius: 20px;
-                                    background: rgba(255,255,255,0.1);
-                                    padding: 12px;
-                                    backdrop-filter: blur(10px);
-                                    border: 2px solid rgba(255,255,255,0.2);
-                                    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-                                ">
-                                    <img src="${logoUrl}" alt="${nombre}" style="
-                                        width: 100%;
-                                        height: 100%;
-                                        object-fit: contain;
-                                        border-radius: 12px;
-                                        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-                                    ">
-                                </div>
-                                <h3 style="
-                                    margin: 0;
-                                    font-size: 28px;
-                                    font-weight: 700;
-                                    color: white;
-                                    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-                                    letter-spacing: 1px;
-                                ">${nombre}</h3>
-                                <button onclick="cerrarInfoModal()" style="
-                                    position: absolute;
-                                    top: 20px;
-                                    right: 20px;
-                                    background: rgba(255,255,255,0.1);
-                                    border: 1px solid rgba(255,255,255,0.2);
-                                    color: white;
-                                    width: 40px;
-                                    height: 40px;
-                                    border-radius: 50%;
-                                    cursor: pointer;
-                                    transition: all 0.3s ease;
-                                    backdrop-filter: blur(10px);
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    font-size: 16px;
-                                " onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='scale(1.1)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='scale(1)'">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-
-                            <!-- Contenido con efecto cristal -->
-                            <div style="
-                                background: linear-gradient(135deg,
-                                    rgba(255,255,255,0.15) 0%,
-                                    rgba(255,255,255,0.05) 100%
-                                );
-                                backdrop-filter: blur(20px);
-                                padding: 32px 24px;
-                                border-radius: 0 0 24px 24px;
-                            ">
-                                <!-- Sección Descripción -->
-                                <div style="
-                                    margin-bottom: 24px;
-                                    background: rgba(255,255,255,0.1);
-                                    backdrop-filter: blur(15px);
-                                    border-radius: 16px;
-                                    padding: 20px;
-                                    border: 1px solid rgba(255,255,255,0.1);
-                                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 12px 0;
-                                        color: white;
-                                        font-weight: 600;
-                                        font-size: 18px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 8px;
-                                    ">
-                                        <i class="fas fa-info-circle" style="color: #60a5fa;"></i>Descripción
-                                    </h4>
-                                    <p style="
-                                        margin: 0;
-                                        color: rgba(255,255,255,0.9);
-                                        line-height: 1.6;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                        font-size: 16px;
-                                    ">${descripcion}</p>
-                                </div>
-
-                                <!-- Sección Información de Contacto -->
-                                ${(contactoPersona && contactoPersona !== 'No especificado') || (contactoTelefono && contactoTelefono !== 'No disponible') || (contactoEmail && contactoEmail !== 'No disponible') ? `
-                                <div style="
-                                    margin-bottom: 24px;
-                                    background: rgba(255,255,255,0.1);
-                                    backdrop-filter: blur(15px);
-                                    border-radius: 16px;
-                                    padding: 20px;
-                                    border: 1px solid rgba(255,255,255,0.1);
-                                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 16px 0;
-                                        color: white;
-                                        font-weight: 600;
-                                        font-size: 18px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 8px;
-                                    ">
-                                        <i class="fas fa-address-card" style="color: #8b5cf6;"></i>Información de Contacto
-                                    </h4>
-                                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                                        ${contactoPersona && contactoPersona !== 'No especificado' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-user" style="color: #8b5cf6; width: 16px;"></i>
-                                            <span style="color: rgba(255,255,255,0.9); font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">${contactoPersona}</span>
-                                        </div>
-                                        ` : ''}
-                                        ${contactoTelefono && contactoTelefono !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-phone" style="color: #10b981; width: 16px;"></i>
-                                            <a href="tel:${contactoTelefono}" style="
-                                                color: #60a5fa;
-                                                text-decoration: none;
-                                                font-weight: 500;
-                                                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                                font-size: 16px;
-                                                transition: color 0.3s ease;
-                                            " onmouseover="this.style.color='#93c5fd'" onmouseout="this.style.color='#60a5fa'">
-                                                ${contactoTelefono}
-                                            </a>
-                                        </div>
-                                        ` : ''}
-                                        ${contactoEmail && contactoEmail !== 'No disponible' ? `
-                                        <div style="display: flex; align-items: center; gap: 0.5rem; color: #374151;">
-                                            <i class="fas fa-envelope" style="color: #f59e0b; width: 16px;"></i>
-                                            <a href="mailto:${contactoEmail}" style="
-                                                color: #60a5fa;
-                                                text-decoration: none;
-                                                font-weight: 500;
-                                                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                                font-size: 16px;
-                                                transition: color 0.3s ease;
-                                            " onmouseover="this.style.color='#93c5fd'" onmouseout="this.style.color='#60a5fa'">
-                                                ${contactoEmail}
-                                            </a>
-                                        </div>
-                                        ` : ''}
-                                    </div>
-                                </div>
-                                ` : ''}
-
-                                ${sitioWeb && sitioWeb !== '#' ? `
-                                <!-- Sección Sitio Web -->
-                                <div style="
-                                    margin-bottom: 24px;
-                                    background: rgba(255,255,255,0.1);
-                                    backdrop-filter: blur(15px);
-                                    border-radius: 16px;
-                                    padding: 20px;
-                                    border: 1px solid rgba(255,255,255,0.1);
-                                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 12px 0;
-                                        color: white;
-                                        font-weight: 600;
-                                        font-size: 18px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 8px;
-                                    ">
-                                        <i class="fas fa-globe" style="color: #34d399;"></i>Sitio Web
-                                    </h4>
-                                    <a href="${sitioWeb}" target="_blank" style="
-                                        color: #60a5fa;
-                                        text-decoration: none;
-                                        font-weight: 500;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                        font-size: 16px;
-                                        transition: color 0.3s ease;
-                                    " onmouseover="this.style.color='#93c5fd'" onmouseout="this.style.color='#60a5fa'">
-                                        ${sitioWeb} <i class="fas fa-external-link-alt" style="font-size: 12px; margin-left: 4px;"></i>
-                                    </a>
-                                </div>
-                                ` : ''}
-
-                                <!-- Sección Email -->
-                                ${email && email !== 'No disponible' ? `
-                                <div style="
-                                    margin-bottom: 24px;
-                                    background: rgba(255,255,255,0.1);
-                                    backdrop-filter: blur(15px);
-                                    border-radius: 16px;
-                                    padding: 20px;
-                                    border: 1px solid rgba(255,255,255,0.1);
-                                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 12px 0;
-                                        color: white;
-                                        font-weight: 600;
-                                        font-size: 18px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 8px;
-                                    ">
-                                        <i class="fas fa-envelope" style="color: #f59e0b;"></i>Email General
-                                    </h4>
-                                    <a href="mailto:${email}" style="
-                                        color: #60a5fa;
-                                        text-decoration: none;
-                                        font-weight: 500;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                        font-size: 16px;
-                                        transition: color 0.3s ease;
-                                    " onmouseover="this.style.color='#93c5fd'" onmouseout="this.style.color='#60a5fa'">
-                                        ${email}
-                                    </a>
-                                </div>
-                                ` : ''}
-
-                                <!-- Sección Teléfono -->
-                                ${telefono && telefono !== 'No disponible' ? `
-                                <div style="
-                                    margin-bottom: 24px;
-                                    background: rgba(255,255,255,0.1);
-                                    backdrop-filter: blur(15px);
-                                    border-radius: 16px;
-                                    padding: 20px;
-                                    border: 1px solid rgba(255,255,255,0.1);
-                                    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-                                ">
-                                    <h4 style="
-                                        margin: 0 0 12px 0;
-                                        color: white;
-                                        font-weight: 600;
-                                        font-size: 18px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 8px;
-                                    ">
-                                        <i class="fas fa-phone" style="color: #10b981;"></i>Teléfono General
-                                    </h4>
-                                    <a href="tel:${telefono}" style="
-                                        color: #60a5fa;
-                                        text-decoration: none;
-                                        font-weight: 500;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                        font-size: 16px;
-                                        transition: color 0.3s ease;
-                                    " onmouseover="this.style.color='#93c5fd'" onmouseout="this.style.color='#60a5fa'">
-                                        ${telefono}
-                                    </a>
-                                </div>
-                                ` : ''}
-
-                                <!-- Botones futuristas -->
-                                <div style="display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap;">
-                                    ${sitioWeb && sitioWeb !== '#' ? `
-                                    <a href="${sitioWeb}" target="_blank" style="
-                                        flex: 1;
-                                        min-width: 140px;
-                                        background: linear-gradient(135deg, #C7252B 0%, #a02226 100%);
-                                        color: white;
-                                        padding: 14px 20px;
-                                        border-radius: 12px;
-                                        text-decoration: none;
-                                        text-align: center;
-                                        font-weight: 600;
-                                        border: none;
-                                        cursor: pointer;
-                                        box-shadow: 0 8px 32px rgba(199, 37, 43, 0.3);
-                                        backdrop-filter: blur(10px);
-                                        border: 1px solid rgba(255,255,255,0.1);
-                                        transition: all 0.3s ease;
-                                        font-size: 14px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 40px rgba(199, 37, 43, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(199, 37, 43, 0.3)'">
-                                        <i class="fas fa-external-link-alt" style="margin-right: 6px;"></i>Sitio Web
-                                    </a>
-                                    ` : ''}
-                                    ${email && email !== 'No disponible' ? `
-                                    <a href="mailto:${email}" style="
-                                        flex: 1;
-                                        min-width: 140px;
-                                        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-                                        color: white;
-                                        padding: 14px 20px;
-                                        border-radius: 12px;
-                                        text-decoration: none;
-                                        text-align: center;
-                                        font-weight: 600;
-                                        border: none;
-                                        cursor: pointer;
-                                        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
-                                        backdrop-filter: blur(10px);
-                                        border: 1px solid rgba(255,255,255,0.1);
-                                        transition: all 0.3s ease;
-                                        font-size: 14px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 40px rgba(245, 158, 11, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(245, 158, 11, 0.3)'">
-                                        <i class="fas fa-envelope" style="margin-right: 6px;"></i>Email General
-                                    </a>
-                                    ` : ''}
-                                    ${telefono && telefono !== 'No disponible' ? `
-                                    <a href="tel:${telefono}" style="
-                                        flex: 1;
-                                        min-width: 140px;
-                                        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                                        color: white;
-                                        padding: 14px 20px;
-                                        border-radius: 12px;
-                                        text-decoration: none;
-                                        text-align: center;
-                                        font-weight: 600;
-                                        border: none;
-                                        cursor: pointer;
-                                        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
-                                        backdrop-filter: blur(10px);
-                                        border: 1px solid rgba(255,255,255,0.1);
-                                        transition: all 0.3s ease;
-                                        font-size: 14px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 40px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(16, 185, 129, 0.3)'">
-                                        <i class="fas fa-phone" style="margin-right: 6px;"></i>Teléfono General
-                                    </a>
-                                    ` : ''}
-                                    ${contactoTelefono && contactoTelefono !== 'No disponible' ? `
-                                    <a href="tel:${contactoTelefono}" style="
-                                        flex: 1;
-                                        min-width: 140px;
-                                        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-                                        color: white;
-                                        padding: 14px 20px;
-                                        border-radius: 12px;
-                                        text-decoration: none;
-                                        text-align: center;
-                                        font-weight: 600;
-                                        border: none;
-                                        cursor: pointer;
-                                        box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
-                                        backdrop-filter: blur(10px);
-                                        border: 1px solid rgba(255,255,255,0.1);
-                                        transition: all 0.3s ease;
-                                        font-size: 14px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 40px rgba(99, 102, 241, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(99, 102, 241, 0.3)'">
-                                        <i class="fas fa-phone" style="margin-right: 6px;"></i>Contacto: ${contactoTelefono}
-                                    </a>
-                                    ` : ''}
-                                    ${contactoEmail && contactoEmail !== 'No disponible' ? `
-                                    <a href="mailto:${contactoEmail}" style="
-                                        flex: 1;
-                                        min-width: 140px;
-                                        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                                        color: white;
-                                        padding: 14px 20px;
-                                        border-radius: 12px;
-                                        text-decoration: none;
-                                        text-align: center;
-                                        font-weight: 600;
-                                        border: none;
-                                        cursor: pointer;
-                                        box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
-                                        backdrop-filter: blur(10px);
-                                        border: 1px solid rgba(255,255,255,0.1);
-                                        transition: all 0.3s ease;
-                                        font-size: 14px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 40px rgba(139, 92, 246, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(139, 92, 246, 0.3)'">
-                                        <i class="fas fa-envelope" style="margin-right: 6px;"></i>Contacto: ${contactoEmail}
-                                    </a>
-                                    ` : ''}
-                                    <button onclick="cerrarInfoModal()" style="
-                                        flex: 1;
-                                        min-width: 100px;
-                                        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-                                        color: white;
-                                        padding: 14px 20px;
-                                        border-radius: 12px;
-                                        border: 1px solid rgba(255,255,255,0.2);
-                                        font-weight: 600;
-                                        cursor: pointer;
-                                        backdrop-filter: blur(10px);
-                                        transition: all 0.3s ease;
-                                        font-size: 14px;
-                                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                                    " onmouseover="this.style.background='linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)'; this.style.transform='translateY(0)'">
-                                        <i class="fas fa-times" style="margin-right: 6px;"></i>Cerrar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <style>
-                    @keyframes modalFadeIn {
-                        from {
-                            opacity: 0;
-                        }
-                        to {
-                            opacity: 1;
-                        }
-                    }
-
-                    @keyframes modalSlideIn {
-                        from {
-                            opacity: 0;
-                            transform: scale(0.8) translateY(30px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: scale(1) translateY(0);
-                        }
-                    }
-                </style>
-            `;
-
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            document.body.style.overflow = 'hidden';
-
-            // Cerrar con click fuera
-            document.getElementById('empresaInfoModal').addEventListener('click', function (e) {
-                if (e.target.id === 'empresaInfoModal') {
-                    cerrarInfoModal();
-                }
-            });
-
-            // Cerrar con Escape
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    cerrarInfoModal();
-                }
-            });
-        }
-
-        // Función para cerrar modal
-        function cerrarInfoModal() {
-            const modal = document.getElementById('empresaInfoModal');
-            if (modal) {
-                modal.remove();
-                document.body.style.overflow = 'auto';
+            if (window.modalHandler) {
+                window.modalHandler.showModal({
+                    nombre: nombre,
+                    descripcion: descripcion !== 'Sin descripción' ? descripcion : '',
+                    logo_url: logoUrl,
+                    sitio_web: sitioWeb !== '#' && sitioWeb !== 'No disponible' ? sitioWeb : '',
+                    email: email !== 'No disponible' ? email : '',
+                    telefono: telefono !== 'No disponible' ? telefono : '',
+                    contacto_nombre: contactoPersona !== 'No especificado' ? contactoPersona : '',
+                    contacto_telefono: contactoTelefono !== 'No disponible' ? contactoTelefono : '',
+                    contacto_email: contactoEmail !== 'No disponible' ? contactoEmail : ''
+                });
+            } else {
+                console.error('modalHandler no está disponible');
             }
         }
 
@@ -4353,16 +3517,7 @@
                 setTimeout(hideAllRestrictionOverlays, i * 1000);
             }
 
-            // Debug: Verificar si empresasViewer está disponible
-            setTimeout(() => {
-                console.log('🔍 Verificando empresasViewer:', window.empresasViewer);
-                if (!window.empresasViewer) {
-                    console.error('❌ empresasViewer no está disponible');
-                    setupModalFallback();
-                } else {
-                    console.log('✅ empresasViewer está disponible');
-                }
-            }, 2000);
+            // Comprobación de empresasViewer eliminada porque interfería con modalHandler unificado.
         });
 
         // Función para ocultar todos los overlays de restricción
@@ -4399,116 +3554,7 @@
             }
         }
 
-        // Función fallback para manejo de modales si empresasViewer falla
-        function setupModalFallback() {
-            console.log('🔧 Configurando fallback para modales...');
-
-            // Crear un manejador de modal simple
-            window.modalHandler = {
-                openModal: function (empresaId) {
-                    console.log('📱 Abriendo modal fallback para empresa:', empresaId);
-
-                    // Buscar datos de la empresa desde el DOM
-                    const empresaCard = document.querySelector(`[onclick*="${empresaId}"]`);
-                    if (!empresaCard) {
-                        console.error('❌ No se encontró la tarjeta de empresa');
-                        return;
-                    }
-
-                    const empresaContainer = empresaCard.closest('.empresa-card');
-                    if (!empresaContainer) {
-                        console.error('❌ No se encontró el contenedor de empresa');
-                        return;
-                    }
-
-                    // Extraer información del DOM
-                    const titulo = empresaContainer.querySelector('.empresa-titulo')?.textContent || 'Empresa';
-                    const descripcion = empresaContainer.querySelector('.empresa-descripcion')?.textContent || 'Sin descripción';
-                    const logoImg = empresaContainer.querySelector('.empresa-logo');
-                    const logoUrl = logoImg?.src || 'https://via.placeholder.com/400x250/6366f1/ffffff?text=Empresa';
-
-                    // Crear modal simple
-                    this.createAndShowModal(empresaId, titulo, descripcion, logoUrl);
-                },
-
-                createAndShowModal: function (empresaId, titulo, descripcion, logoUrl) {
-                    // Eliminar modal anterior si existe
-                    const existingModal = document.getElementById('fallbackModal');
-                    if (existingModal) {
-                        existingModal.remove();
-                    }
-
-                    // Crear nuevo modal
-                    const modal = document.createElement('div');
-                    modal.id = 'fallbackModal';
-                    modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
-                    modal.style.backdropFilter = 'blur(4px)';
-
-                    modal.innerHTML = `
-                        <div class="modal-content max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl">
-                            <div class="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-6 flex items-center justify-between rounded-t-lg">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-building text-2xl text-blue-300"></i>
-                                    <h2 class="text-2xl font-bold">${titulo}</h2>
-                                </div>
-                                <button onclick="document.getElementById('fallbackModal').remove(); document.body.style.overflow='auto';" 
-                                        class="text-white/70 hover:text-white hover:bg-white/20 rounded-lg p-2 transition-all">
-                                    <i class="fas fa-times text-xl"></i>
-                                </button>
-                            </div>
-                            <div class="p-8">
-                                <div class="grid md:grid-cols-3 gap-8">
-                                    <div class="md:col-span-1">
-                                        <div class="text-center mb-6">
-                                            <img src="${logoUrl}" 
-                                                 alt="Logo de ${titulo}"
-                                                 class="mx-auto w-40 h-28 object-contain rounded-lg shadow-lg border-2 border-gray-200 bg-white p-2"
-                                                 onerror="this.src='https://via.placeholder.com/160x112/6366f1/ffffff?text=${encodeURIComponent(titulo)}'">
-                                        </div>
-                                    </div>
-                                    <div class="md:col-span-2">
-                                        <div class="mb-8">
-                                            <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                                <i class="fas fa-info-circle text-blue-600"></i>
-                                                Acerca de la empresa
-                                            </h3>
-                                            <div class="bg-gradient-to-br from-gray-50 to-slate-100 rounded-xl p-6">
-                                                <p class="text-gray-700 leading-relaxed text-justify">${descripcion}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mt-8 pt-6 border-t-2 border-gray-200 text-center">
-                                    <p class="text-gray-600 text-sm mb-4">Para más información, contacte directamente con la empresa</p>
-                                    <button onclick="document.getElementById('fallbackModal').remove(); document.body.style.overflow='auto';" 
-                                            class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
-                                        Cerrar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    document.body.appendChild(modal);
-                    document.body.style.overflow = 'hidden';
-
-                    console.log('✅ Modal fallback creado y mostrado');
-                }
-            };
-
-            // Reemplazar las llamadas onclick en todos los botones
-            setTimeout(() => {
-                const buttons = document.querySelectorAll('[onclick*="empresasViewer.openModal"]');
-                buttons.forEach(button => {
-                    const onclick = button.getAttribute('onclick');
-                    const empresaId = onclick.match(/openModal\((\d+)\)/)?.[1];
-                    if (empresaId) {
-                        button.setAttribute('onclick', `modalHandler.openModal(${empresaId})`);
-                        console.log('🔧 Botón actualizado para empresa:', empresaId);
-                    }
-                });
-            }, 500);
-        }
+        // Función setupModalFallback eliminada debido a que sobrescribía destructivamente a modalHandler.
     </script>
 
     <!-- SISTEMA DE DETECCIÓN DE SESIÓN DE USUARIO -->

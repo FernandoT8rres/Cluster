@@ -1086,6 +1086,13 @@ try {
             document.getElementById('edit_biografia').value = usuario.biografia || '';
             document.getElementById('edit_empresa_id').value = usuario.empresa_id || '';
             
+            // Cambio dinámico de etiqueta en el modal
+            const labelFecha = document.querySelector('label[for="edit_fecha_nacimiento"]') || 
+                               document.getElementById('edit_fecha_nacimiento').previousElementSibling;
+            if (labelFecha) {
+                labelFecha.textContent = usuario.rol === 'empresa' ? 'Fecha de Fundación de la Empresa' : 'Fecha de Nacimiento';
+            }
+            
             // Limpiar campos de contraseña
             document.getElementById('nueva_password').value = '';
             document.getElementById('confirmar_password').value = '';
@@ -1264,7 +1271,7 @@ try {
         function getFieldDisplayName(field) {
             const fieldNames = {
                 'phone': 'Teléfono',
-                'birthDate': 'Fecha Nacimiento',
+                'birthDate': 'Fecha de Fundación / Nacimiento',
                 'department': 'Departamento',
                 'position': 'Cargo',
                 'bio': 'Biografía',
@@ -1389,7 +1396,7 @@ try {
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Fecha de Nacimiento</label>
+                        <label id="lbl_fecha_edit" style="display: block; margin-bottom: 5px; font-weight: bold;">Fecha de Nacimiento</label>
                         <input type="date" id="edit_fecha_nacimiento" name="fecha_nacimiento" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
                     </div>
 

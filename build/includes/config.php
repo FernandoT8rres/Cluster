@@ -23,31 +23,21 @@ ini_set('session.cookie_secure', 0); // Cambiar a 1 en HTTPS
 
 // Configuración de la base de datos
 class DatabaseConfig {
-    // Configuración local (desarrollo)
-    const LOCAL_CONFIG = [
-        'host' => '127.0.0.1',
-        'username' => 'u695712029_claut_fer',
-        'password' => 'CLAUT@admin_fernando!7',
-        'database' => 'u695712029_claut_intranet',
-        'charset' => 'utf8mb4'
-    ];
-    
-    // Configuración de producción
-    const PRODUCTION_CONFIG = [
-        'host' => '127.0.0.1',
-        'username' => 'u695712029_claut_fer',
-        'password' => 'CLAUT@admin_fernando!7',
-        'database' => 'u695712029_claut_intranet',
-        'charset' => 'utf8mb4'
-    ];
-    
     public static function getConfig() {
-        // Detectar ambiente (cambiar según necesidad)
-        $isProduction = isset($_SERVER['HTTP_HOST']) && 
-                       (strpos($_SERVER['HTTP_HOST'], 'localhost') === false && 
-                        strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false);
+        // Cargar variables de entorno
+        $envLoaderPath = __DIR__ . '/../config/env-loader.php';
+        if (file_exists($envLoaderPath)) {
+            require_once $envLoaderPath;
+            try { EnvLoader::load(); } catch (Exception $e) {}
+        }
         
-        return $isProduction ? self::PRODUCTION_CONFIG : self::LOCAL_CONFIG;
+        return [
+            'host' => class_exists('EnvLoader') ? EnvLoader::get('DB_HOST', '127.0.0.1') : '127.0.0.1',
+            'username' => class_exists('EnvLoader') ? EnvLoader::get('DB_USER', '') : '',
+            'password' => class_exists('EnvLoader') ? EnvLoader::get('DB_PASS', '') : '',
+            'database' => class_exists('EnvLoader') ? EnvLoader::get('DB_NAME', '') : '',
+            'charset' => 'utf8mb4'
+        ];
     }
 }
 

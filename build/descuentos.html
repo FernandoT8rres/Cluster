@@ -47,229 +47,16 @@
       }
     }
   </script>
+
+  <link rel="stylesheet" href="./assets/css/layout/header-navbar.css" />
+
   <style>
-    /* Porsche-inspired Design System */
-    :root {
-      /* Primary Colors - Inspired by Porsche */
-      --porsche-black: #1a1a1a;
-      --porsche-charcoal: #2d2d2d;
-      --porsche-silver: #8a8a8a;
-      --porsche-white: #ffffff;
-      --porsche-light-gray: #f5f5f5;
-      --porsche-accent: #c9302c;
-      /* Clúster red for brand consistency */
-
-      /* Typography */
-      --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --porsche-font-weight-light: 300;
-      --porsche-font-weight-regular: 400;
-      --porsche-font-weight-medium: 500;
-      --porsche-font-weight-semibold: 600;
-      --porsche-font-weight-bold: 700;
-
-      /* Spacing */
-      --porsche-space-xs: 0.5rem;
-      --porsche-space-sm: 1rem;
-      --porsche-space-md: 1.5rem;
-      --porsche-space-lg: 2rem;
-      --porsche-space-xl: 3rem;
-
-      /* Shadows */
-      --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
-      --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
-
-      /* Border Radius */
-      --porsche-radius-sm: 4px;
-      --porsche-radius-md: 8px;
-      --porsche-radius-lg: 12px;
-      --porsche-radius-xl: 16px;
-    }
-
-    /* Global Typography Enhancement */
-    * {
-      font-family: var(--porsche-font) !important;
-    }
-
-    body {
-      font-weight: var(--porsche-font-weight-regular);
-      line-height: 1.6;
-      letter-spacing: -0.01em;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* Anti-scroll horizontal rules */
-    html,
-    body {
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-    }
-
-    * {
-      box-sizing: border-box !important;
-    }
-
-    .main-content,
-    .container,
-    .row,
-    .col {
-      overflow-x: hidden !important;
-      max-width: 100% !important;
-    }
-
-
-
-
-
-
-    /* FontAwesome fixes */
-    .fa,
-    .fas,
-    .far,
-    .fal,
-    .fab {
-      font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome" !important;
-      font-weight: 900 !important;
-      font-style: normal !important;
-      display: inline-block !important;
-      text-rendering: auto !important;
-      -webkit-font-smoothing: antialiased !important;
-    }
-
-    /* Fallback for specific icons */
-    .fa-home::before {
-      content: "\f015" !important;
-    }
-
-    .fa-calendar-alt::before {
-      content: "\f073" !important;
-    }
-
-    .fa-file-alt::before {
-      content: "\f15c" !important;
-    }
-
-    .fa-newspaper::before {
-      content: "\f1ea" !important;
-    }
-
-    .fa-users::before {
-      content: "\f0c0" !important;
-    }
-
-    .fa-headset::before {
-      content: "\f590" !important;
-    }
-
-    .fa-handshake::before {
-      content: "\f2b5" !important;
-    }
-
-    .fa-tags::before {
-      content: "\f02c" !important;
-    }
-
-    .fa-user::before {
-      content: "\f007" !important;
-    }
-
-    .fa-sign-out-alt::before {
-      content: "\f2f5" !important;
-    }
-
-    /* Navbar improvements */
-    .porsche-navbar {
-      background: rgba(26, 26, 26, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: var(--porsche-space-sm) var(--porsche-space-lg);
-      border-radius: var(--porsche-radius-lg);
-      margin: var(--porsche-space-sm);
-      z-index: 50;
-      position: relative;
-    }
-
-    /* Main content area adjustments */
-    .main-content {
-      margin-left: 0;
-      transition: margin-left 0.3s ease;
-      background: transparent;
-      width: 100%;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* Ensure main container doesn't cause horizontal scroll */
-    main {
-      overflow-x: hidden;
-    }
-
-    /* Breadcrumb styling */
-    .breadcrumb {
-      background: transparent !important;
-      padding: var(--porsche-space-sm) 0;
-    }
-
-    .breadcrumb a {
-      color: var(--porsche-white) !important;
-      opacity: 0.8 !important;
-      text-decoration: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .breadcrumb a:hover {
-      opacity: 1 !important;
-    }
-
-    .breadcrumb li {
-      color: var(--porsche-white) !important;
-      font-weight: var(--porsche-font-weight-medium);
-    }
-
-    .breadcrumb .breadcrumb-title {
-      color: white !important;
-      font-weight: var(--porsche-font-weight-bold);
-      margin-top: var(--porsche-space-xs);
-    }
-
-    /* Porsche-inspired Card System for Descuentos */
-    .porsche-card {
-      background: var(--porsche-white);
-      border-radius: var(--porsche-radius-lg);
-      box-shadow: var(--porsche-shadow-medium);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      overflow: visible;
-      perspective: 1000px;
-    }
-
-    .porsche-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .porsche-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--porsche-shadow-large);
-    }
-
-    .porsche-card:hover::before {
-      opacity: 1;
-    }
-
     /* Estilos para efecto flip en tarjetas de descuentos */
     .descuento-card {
       min-height: auto;
       height: auto;
+      background: white;
+      border-radius: 12px;
     }
 
     .descuento-front,
@@ -306,77 +93,15 @@
       white-space: normal !important;
     }
 
-    /* Estilos para secciones bloqueadas */
-    .restricted-section {
-      position: relative;
-      filter: blur(3px);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .restricted-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      border-radius: inherit;
-      backdrop-filter: blur(5px);
-    }
-
-    .restricted-message {
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      max-width: 300px;
-    }
-
     /* Content styling improvements */
     .descuentos-content {
       background: transparent;
     }
 
     .descuentos-info-card {
-      background: var(--porsche-white);
-      border-radius: var(--porsche-radius-lg);
-      box-shadow: var(--porsche-shadow-medium);
-    }
-
-    /* Estilos para la animación horizontal de descuentos */
-    .animation-controls .control-btn {
-      padding: 10px 20px;
-      background: rgba(201, 48, 44, 0.2);
-      border: none;
-      border-radius: 25px;
-      color: #c9302c;
-      font-weight: bold;
-      cursor: pointer;
-      backdrop-filter: blur(5px);
-      transition: all 0.3s ease;
-      font-size: 14px;
-    }
-
-    .animation-controls .control-btn:hover {
-      background: rgba(201, 48, 44, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(201, 48, 44, 0.2);
-    }
-
-    .speed-indicator-discount {
-      color: #c9302c;
-      font-size: 16px;
-      font-weight: 600;
-      background: rgba(201, 48, 44, 0.1);
-      padding: 8px 16px;
-      border-radius: 20px;
-      display: inline-block;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .discount-container {
@@ -434,1266 +159,221 @@
       z-index: 0;
       pointer-events: none;
     }
-
-    /* ========== NAVIGATION STYLES FROM DASHBOARD ========== */
-
-    /* Variables CSS para navegación */
-    :root {
-      --header-height: 70px;
-      --claut-red: #C7252B;
-      --claut-red-rgb: 199, 37, 43;
-      --claut-text-primary: #ffffff;
-      --claut-text-secondary: rgba(255, 255, 255, 0.8);
-      --claut-text-tertiary: rgba(255, 255, 255, 0.6);
-      --claut-bg-main: #1a1a1a;
-      --claut-bg-surface: rgba(26, 26, 26, 0.95);
-      --claut-bg-nav: rgba(26, 26, 26, 0.98);
-      --claut-border-light: rgba(255, 255, 255, 0.1);
-      --claut-border-medium: rgba(255, 255, 255, 0.15);
-      --claut-shadow-red: 0 4px 12px rgba(var(--claut-red-rgb), 0.3);
-      --transition-fast: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-      --transition-normal: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-      --space-12: 3rem;
-    }
-
-    /* Header Horizontal Premium con Menú Integrado */
-    .claut-header {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0;
-      right: 0;
-      height: var(--header-height);
-      background: var(--claut-bg-surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--claut-border-light);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--space-6);
-      z-index: 9999;
-      transition: var(--transition-normal);
-      box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.2),
-        0 4px 12px rgba(0, 0, 0, 0.15),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-      will-change: transform, backdrop-filter;
-      transform: translateY(0px) !important;
-    }
-
-    /* Header scroll effects */
-    .claut-header.scrolled {
-      background: rgba(26, 26, 26, 0.98) !important;
-      box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.4),
-        0 8px 24px rgba(0, 0, 0, 0.25),
-        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-      backdrop-filter: blur(25px) !important;
-      -webkit-backdrop-filter: blur(25px) !important;
-      position: fixed !important;
-      top: 0 !important;
-    }
-
-    /* Logo area - usando el logo existente del sidebar */
-    .claut-header-logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-weight: 700;
-      font-size: 1.25rem;
-      color: var(--claut-text-primary);
-      text-decoration: none;
-      padding: var(--space-2) var(--space-3);
-      border-radius: 12px;
-      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .claut-header-logo:hover {
-      color: var(--claut-red);
-      background: rgba(var(--claut-red-rgb, 199, 37, 43), 0.08);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(var(--claut-red-rgb, 199, 37, 43), 0.15);
-    }
-
-    .claut-header-logo:hover img {
-      transform: scale(1.05) rotate(2deg);
-      filter: brightness(1.1);
-    }
-
-    .claut-header-logo img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Navegación horizontal principal */
-    .claut-header-nav {
-      display: none;
-      flex: 1;
-      justify-content: center;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 0 var(--space-6);
-    }
-
-    .claut-nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: var(--space-2) var(--space-3);
-      text-decoration: none;
-      color: var(--claut-text-tertiary);
-      border-radius: 12px;
-      transition: var(--transition-normal);
-      position: relative;
-      min-width: 60px;
-      text-align: center;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .claut-nav-item i {
-      font-size: 18px;
-      margin-bottom: 2px;
-      transition: var(--transition-fast);
-    }
-
-    .claut-nav-item span {
-      font-size: 11px;
-      font-weight: 600;
-      line-height: 1;
-      transition: var(--transition-fast);
-      opacity: 0.9;
-    }
-
-    .claut-nav-item:hover {
-      color: var(--claut-text-secondary);
-      background: rgba(255, 255, 255, 0.05);
-      transform: translateY(-2px);
-    }
-
-    .claut-nav-item:hover i {
-      color: var(--claut-red);
-      transform: scale(1.1);
-    }
-
-    .claut-nav-item.active {
-      color: var(--claut-red);
-      background: rgba(var(--claut-red-rgb), 0.1);
-      box-shadow: var(--claut-shadow-red);
-    }
-
-    .claut-nav-item.active i {
-      color: var(--claut-red);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .claut-nav-item.active span {
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Actions area */
-    .claut-header-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
-
-    .claut-header-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--claut-border-light);
-      border-radius: 10px;
-      color: var(--claut-text-tertiary);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      position: relative;
-    }
-
-    .claut-header-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 1);
-      transform: scale(1.05);
-    }
-
-    .claut-header-btn.active {
-      background: var(--claut-red);
-      color: var(--claut-text-primary);
-      box-shadow: var(--claut-shadow-red);
-    }
-
-    /* Responsive navigation */
-    @media (min-width: 768px) {
-      .claut-header-nav {
-        display: flex;
-      }
-    }
-
-    /* Mobile menu button */
-    @media (max-width: 767px) {
-      .claut-mobile-menu-btn {
-        display: flex !important;
-      }
-
-      .claut-header-nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--claut-bg-nav);
-        border-top: 1px solid var(--claut-border-light);
-        flex-direction: column;
-        padding: var(--space-4);
-        gap: var(--space-2);
-        transform: translateY(-10px);
-        opacity: 0;
-        visibility: hidden;
-        transition: all var(--transition-normal);
-      }
-
-      .claut-header-nav.show {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-
-    /* Menú curvo animado en la parte inferior */
-    .claut-bottom-nav {
-      position: fixed !important;
-      bottom: 0 !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
-      width: 95% !important;
-      max-width: 600px !important;
-      height: 70px !important;
-      background: var(--claut-bg-surface) !important;
-      border-radius: 35px 35px 0 0 !important;
-      border: 1px solid var(--claut-border-medium) !important;
-      border-bottom: none !important;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3), 0 -8px 40px rgba(0, 0, 0, 0.2) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
-    .claut-bottom-nav::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 100%;
-      background: linear-gradient(180deg, var(--claut-bg-surface) 0%, var(--claut-bg-secondary) 100%);
-      opacity: 0.8;
-      z-index: -1;
-    }
-
-    .claut-nav-container {
-      position: relative !important;
-      width: 100% !important;
-      height: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-evenly !important;
-      padding: 0 8px !important;
-      box-sizing: border-box !important;
-      overflow-x: auto !important;
-      scrollbar-width: none !important;
-      -ms-overflow-style: none !important;
-    }
-
-    .claut-nav-container::-webkit-scrollbar {
-      display: none !important;
-    }
-
-    .claut-nav-link {
-      position: relative !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 48px !important;
-      height: 48px !important;
-      text-decoration: none !important;
-      color: var(--claut-text-tertiary) !important;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
-      border-radius: 50% !important;
-      z-index: 2 !important;
-      flex: 0 0 auto !important;
-      margin: 0 2px !important;
-    }
-
-    .claut-nav-link i {
-      font-size: 18px;
-      transition: all 0.3s ease;
-    }
-
-    .claut-nav-link span {
-      font-size: 9px;
-      margin-top: 1px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .claut-nav-link.active {
-      color: var(--claut-red);
-      transform: translateY(-10px);
-    }
-
-    .claut-nav-link.active i {
-      color: var(--claut-red);
-      transform: scale(1.2);
-    }
-
-    .claut-nav-link.active span {
-      opacity: 1;
-      transform: translateY(0);
-      color: var(--claut-red);
-    }
-
-    .claut-nav-link:hover {
-      color: var(--claut-text-secondary);
-      transform: translateY(-5px) scale(1.05);
-    }
-
-    .claut-nav-link:hover i {
-      color: var(--claut-red);
-      transform: scale(1.15);
-    }
-
-    .claut-nav-link:hover span {
-      opacity: 0.8;
-      transform: translateY(-2px);
-    }
-
-    /* Elemento curva decorativo */
-    .claut-nav-curve {
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      transform: translateX(-50%) scale(0);
-      width: 60px;
-      height: 60px;
-      background: var(--claut-red);
-      border-radius: 50%;
-      opacity: 0.2;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      z-index: 0;
-    }
-
-    .claut-nav-link.active~.claut-nav-curve {
-      transform: translateX(-50%) scale(1);
-    }
-
-    /* Responsivo */
-    @media (max-width: 768px) {
-      .claut-bottom-nav {
-        width: 95%;
-        height: 65px;
-      }
-
-      .claut-nav-link {
-        width: 55px;
-        height: 55px;
-      }
-
-      .claut-nav-link i {
-        font-size: 20px;
-      }
-    }
-
-    /* Ajuste para el contenido principal para evitar superposición con el menú inferior */
-    .main-content {
-      padding-bottom: 90px;
-    }
-
-    /* Navbar improvements */
-    .porsche-navbar {
-      background: rgba(26, 26, 26, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: var(--porsche-space-sm) var(--porsche-space-lg);
-      border-radius: var(--porsche-radius-lg);
-      margin: var(--porsche-space-sm);
-      z-index: 50;
-      position: relative;
-    }
-
-    /* Control de visibilidad entre header y bottom nav */
-    @media (max-width: 1024px) {
-      .claut-header-nav {
-        display: none !important;
-      }
-
-      .claut-bottom-nav {
-        display: flex !important;
-      }
-
-      /* Mantener los botones de acción del header visibles */
-      .claut-header-actions {
-        display: flex !important;
-      }
-
-      /* Ajustar el header para que sea más compacto en mobile */
-      .claut-header {
-        padding: 0 var(--space-4) !important;
-      }
-    }
-
-    @media (min-width: 1025px) {
-      .claut-header-nav {
-        display: flex !important;
-      }
-
-      .claut-bottom-nav {
-        display: none !important;
-      }
-
-      .claut-header-actions {
-        display: flex !important;
-      }
-    }
-
-    /* ===== COMPREHENSIVE RESPONSIVE DESIGN ===== */
-
-    /* Extra Large Desktop (1400px+) */
-    @media (min-width: 1400px) {
-      .claut-header {
-        max-width: 1400px;
-        margin: 0 auto;
-      }
-
-      .main-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 2rem;
-      }
-
-      .porsche-navbar {
-        padding-left: 2rem;
-        padding-right: 2rem;
-      }
-
-      .discount-container {
-        height: 500px !important;
-      }
-
-      .discount-line {
-        gap: 3rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 3rem !important;
-      }
-
-      .text-2xl {
-        font-size: 3rem !important;
-      }
-
-      .grid.grid-cols-1.md\\:grid-cols-2 {
-        grid-template-columns: repeat(3, 1fr) !important;
-      }
-    }
-
-    /* Large Desktop (1200px - 1399px) */
-    @media (min-width: 1200px) and (max-width: 1399px) {
-      .main-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-      }
-
-      .porsche-navbar {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-
-      .discount-container {
-        height: 450px !important;
-      }
-
-      .discount-line {
-        gap: 2.5rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 2.5rem !important;
-      }
-
-      .text-2xl {
-        font-size: 2.5rem !important;
-      }
-    }
-
-    /* Standard Desktop (1024px - 1199px) */
-    @media (min-width: 1024px) and (max-width: 1199px) {
-      .main-content {
-        padding: 0 1.5rem;
-      }
-
-      .porsche-navbar {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-
-      .discount-container {
-        height: 400px !important;
-      }
-
-      .discount-line {
-        gap: 2rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 2rem !important;
-      }
-
-      .text-2xl {
-        font-size: 2.25rem !important;
-      }
-
-      .breadcrumb {
-        margin-right: 2rem !important;
-      }
-    }
-
-    /* Tablet Landscape (768px - 1023px) */
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .main-content {
-        padding: 0 1rem;
-        margin-top: 80px;
-      }
-
-      .porsche-navbar {
-        padding-left: 1rem;
-        padding-right: 1rem;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .porsche-navbar .flex.items-center.justify-between {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-      }
-
-      .breadcrumb {
-        text-align: center;
-        margin: 0 !important;
-      }
-
-      .breadcrumb-title {
-        text-align: center;
-      }
-
-      .discount-container {
-        height: 350px !important;
-        margin: 0 -1rem;
-      }
-
-      .discount-line {
-        gap: 1.5rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 1.5rem !important;
-        margin: 0 0.5rem;
-      }
-
-      .text-2xl {
-        font-size: 2rem !important;
-        text-align: center;
-      }
-
-      .mb-6.text-center.mb-12 {
-        margin-bottom: 2rem !important;
-        padding: 0 1rem;
-      }
-
-      .grid.grid-cols-1.md\\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-        gap: 2rem !important;
-      }
-
-      /* User menu adjustments */
-      .hidden.sm\\:inline {
-        display: none !important;
-      }
-
-      #userMenuBtn {
-        padding: 0.5rem !important;
-        width: auto;
-      }
-
-      #userDropdown {
-        right: 0;
-        left: auto;
-        transform: translateX(0);
-        width: 200px;
-      }
-    }
-
-    /* Tablet Portrait (640px - 767px) */
-    @media (min-width: 640px) and (max-width: 767px) {
-      body {
-        padding-bottom: 120px !important;
-      }
-
-      .main-content {
-        padding: 0 0.75rem;
-        margin-top: 90px;
-      }
-
-      .claut-header {
-        padding: 0 0.75rem;
-        height: 80px;
-      }
-
-      .claut-header-logo img {
-        height: 35px;
-      }
-
-      .porsche-navbar {
-        display: none !important;
-        /* Hide desktop navbar */
-      }
-
-      .discount-container {
-        height: 300px !important;
-        margin: 0 -0.75rem;
-      }
-
-      .discount-line {
-        gap: 1rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 1.25rem !important;
-        margin: 0 0.25rem;
-        border-radius: 0.75rem;
-      }
-
-      .text-2xl {
-        font-size: 1.75rem !important;
-        text-align: center;
-        line-height: 1.3;
-      }
-
-      .mb-6.text-center.mb-12 {
-        margin-bottom: 1.5rem !important;
-        padding: 0 0.75rem;
-      }
-
-      .mb-6.text-center.mb-12 p {
-        font-size: 0.95rem;
-        line-height: 1.4;
-      }
-
-      .grid.grid-cols-1.md\\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-        gap: 1.5rem !important;
-      }
-
-      .descuentos-info-card h2 {
-        font-size: 1.2rem;
-      }
-
-      .descuentos-info-card h3 {
-        font-size: 1rem;
-      }
-
-      /* Show mobile bottom nav */
-      .claut-bottom-nav {
-        display: block !important;
-      }
-    }
-
-    /* Mobile Large (480px - 639px) */
-    @media (min-width: 480px) and (max-width: 639px) {
-      body {
-        padding-bottom: 100px !important;
-      }
-
-      .main-content {
-        padding: 0 0.5rem;
-        margin-top: 80px;
-      }
-
-      .claut-header {
-        padding: 0 0.5rem;
-        height: 70px;
-      }
-
-      .claut-header-logo img {
-        height: 30px;
-      }
-
-      .claut-header-actions {
-        display: none !important;
-      }
-
-      .porsche-navbar {
-        display: none !important;
-      }
-
-      .discount-container {
-        height: 250px !important;
-        margin: 0 -0.5rem;
-        border-radius: 0.5rem;
-      }
-
-      .discount-line {
-        gap: 0.75rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 1rem !important;
-        margin: 0;
-        border-radius: 0.5rem;
-      }
-
-      .text-2xl {
-        font-size: 1.5rem !important;
-        text-align: center;
-        line-height: 1.3;
-        margin-bottom: 0.75rem;
-      }
-
-      .mb-6.text-center.mb-12 {
-        margin-bottom: 1rem !important;
-        padding: 0 0.5rem;
-      }
-
-      .mb-6.text-center.mb-12 p {
-        font-size: 0.9rem;
-        line-height: 1.4;
-      }
-
-      .grid.grid-cols-1.md\\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-      }
-
-      .descuentos-info-card h2 {
-        font-size: 1.1rem;
-        margin-bottom: 0.75rem;
-      }
-
-      .descuentos-info-card h3 {
-        font-size: 0.95rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .descuentos-info-card ul li {
-        font-size: 0.85rem;
-        line-height: 1.4;
-      }
-
-      .descuentos-info-card p {
-        font-size: 0.85rem;
-        line-height: 1.4;
-      }
-
-      /* Show mobile bottom nav */
-      .claut-bottom-nav {
-        display: block !important;
-        height: 60px !important;
-        max-width: 95% !important;
-      }
-
-      .claut-nav-link {
-        width: 40px !important;
-        height: 40px !important;
-      }
-
-      .claut-nav-link i {
-        font-size: 1rem !important;
-      }
-    }
-
-    /* Mobile Small (320px - 479px) */
-    @media (max-width: 479px) {
-      body {
-        padding-bottom: 90px !important;
-      }
-
-      .main-content {
-        padding: 0 0.25rem;
-        margin-top: 70px;
-      }
-
-      .claut-header {
-        padding: 0 0.25rem;
-        height: 60px;
-      }
-
-      .claut-header-logo {
-        flex-shrink: 0;
-      }
-
-      .claut-header-logo img {
-        height: 25px;
-      }
-
-      .claut-header-actions {
-        display: none !important;
-      }
-
-      .claut-header-nav {
-        display: none !important;
-      }
-
-      .porsche-navbar {
-        display: none !important;
-      }
-
-      .discount-container {
-        height: 200px !important;
-        margin: 0 -0.25rem;
-        border-radius: 0.375rem;
-      }
-
-      .discount-line {
-        gap: 0.5rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 0.75rem !important;
-        margin: 0;
-        border-radius: 0.375rem;
-      }
-
-      .text-2xl {
-        font-size: 1.25rem !important;
-        text-align: center;
-        line-height: 1.2;
-        margin-bottom: 0.5rem;
-      }
-
-      .mb-6.text-center.mb-12 {
-        margin-bottom: 0.75rem !important;
-        padding: 0 0.25rem;
-      }
-
-      .mb-6.text-center.mb-12 h1 {
-        margin-bottom: 0.5rem;
-      }
-
-      .mb-6.text-center.mb-12 p {
-        font-size: 0.8rem;
-        line-height: 1.3;
-      }
-
-      .grid.grid-cols-1.md\\:grid-cols-2 {
-        grid-template-columns: 1fr !important;
-        gap: 0.75rem !important;
-      }
-
-      .descuentos-info-card h2 {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .descuentos-info-card h3 {
-        font-size: 0.9rem;
-        margin-bottom: 0.4rem;
-      }
-
-      .descuentos-info-card ul li {
-        font-size: 0.8rem;
-        line-height: 1.3;
-        margin-bottom: 0.25rem;
-      }
-
-      .descuentos-info-card p {
-        font-size: 0.8rem;
-        line-height: 1.3;
-        margin-bottom: 0.5rem;
-      }
-
-      .descuentos-info-card .fas.fa-info-circle {
-        font-size: 1.25rem;
-        margin-right: 0.5rem;
-      }
-
-      .descuentos-info-card .flex.items-center {
-        margin-bottom: 0.75rem;
-      }
-
-      /* Show mobile bottom nav */
-      .claut-bottom-nav {
-        display: block !important;
-        height: 50px !important;
-        max-width: 98% !important;
-        border-radius: 25px 25px 0 0 !important;
-      }
-
-      .claut-nav-link {
-        width: 35px !important;
-        height: 35px !important;
-      }
-
-      .claut-nav-link i {
-        font-size: 0.9rem !important;
-      }
-
-      .claut-nav-link span {
-        font-size: 0.65rem !important;
-      }
-    }
-
-    /* Landscape orientation adjustments for mobile */
-    @media (max-width: 767px) and (orientation: landscape) {
-      .discount-container {
-        height: 150px !important;
-      }
-
-      .text-2xl {
-        font-size: 1.25rem !important;
-        margin-bottom: 0.5rem !important;
-      }
-
-      .mb-6.text-center.mb-12 {
-        margin-bottom: 0.5rem !important;
-      }
-
-      .descuentos-info-card {
-        padding: 0.75rem !important;
-      }
-
-      body {
-        padding-bottom: 70px !important;
-      }
-
-      .claut-bottom-nav {
-        height: 45px !important;
-      }
-    }
-
-    /* High DPI displays optimization */
-    @media (-webkit-min-device-pixel-ratio: 2),
-    (min-resolution: 192dpi) {
-      .claut-header-logo img {
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-      }
-
-      #discountParticleCanvas {
-        image-rendering: pixelated;
-      }
-    }
-
-    /* Touch device optimizations */
-    @media (pointer: coarse) {
-
-      .claut-nav-link,
-      button,
-      .discount-card {
-        min-height: 44px;
-        min-width: 44px;
-        touch-action: manipulation;
-      }
-
-      .claut-nav-link:hover {
-        background-color: rgba(199, 37, 43, 0.1);
-      }
-    }
-
-    /* Print styles */
-    @media print {
-
-      .claut-header,
-      .claut-bottom-nav,
-      .porsche-navbar,
-      #discountParticleCanvas {
-        display: none !important;
-      }
-
-      body {
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      .main-content {
-        margin: 0 !important;
-        padding: 1rem !important;
-      }
-
-      .discount-container {
-        height: auto !important;
-        overflow: visible !important;
-      }
-
-      .descuentos-info-card {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-    }
-
-    /* Reduced motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-
-      .discount-stream,
-      .discount-line,
-      .transition-all,
-      .duration-200,
-      .duration-250 {
-        transition: none !important;
-        animation: none !important;
-      }
-
-      #discountParticleCanvas {
-        display: none !important;
-      }
-    }
-
-    /* Dark mode adjustments */
-    @media (prefers-color-scheme: dark) {
-      .descuentos-info-card {
-        background-color: #1f2937;
-        color: #f9fafb;
-        border-color: #374151;
-      }
-
-      .text-gray-800 {
-        color: #f9fafb !important;
-      }
-
-      .text-gray-700 {
-        color: #d1d5db !important;
-      }
-
-      .text-gray-600 {
-        color: #9ca3af !important;
-      }
-
-      .bg-white {
-        background-color: #1f2937 !important;
-      }
-    }
   </style>
+
 </head>
 
-<body
-  class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default text-slate-500 overflow-x-hidden">
+<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default">
 
   <!-- Header Horizontal Premium con Menú Integrado -->
   <header class="claut-header">
     <!-- Logo area con logo existente -->
     <a href="#" class="claut-header-logo">
       <img src="./assets/img/apple-icon.png" alt="Clúster Logo" />
+      <span style="margin-left:8px; font-weight:700; color:white; font-size:1.1rem;"></span>
     </a>
 
     <!-- Navegación horizontal principal -->
     <nav class="claut-header-nav" id="clautMainNav">
       <a href="dashboard.html" class="claut-nav-item">
-        <i class="fas fa-home text-white"></i>
-        <span class="text-white">Inicio</span>
+        <i class="fas fa-home"></i>
+        <span>Inicio</span>
       </a>
-      <a href="./descuentos.html" class="claut-nav-item">
-        <i class="fas fa-tags text-white"></i>
-        <span class="text-white">Descuentos</span>
+      <a href="./descuentos.html" class="claut-nav-item active">
+        <i class="fas fa-tags"></i>
+        <span>Descuentos</span>
       </a>
       <a href="./boletines.html" class="claut-nav-item">
-        <i class="fas fa-newspaper text-white"></i>
-        <span class="text-white">Boletines</span>
+        <i class="fas fa-newspaper"></i>
+        <span>Boletines</span>
       </a>
-      <a href="./comites.html" class="claut-nav-item active">
-        <i class="fas fa-users text-white"></i>
-        <span class="text-white">Comites</span>
+      <a href="./comites.html" class="claut-nav-item">
+        <i class="fas fa-users"></i>
+        <span>Comites</span>
       </a>
       <a href="./contacto.html" class="claut-nav-item">
-        <i class="fas fa-headset text-white"></i>
-        <span class="text-white">Contacto</span>
+        <i class="fas fa-headset"></i>
+        <span>Contacto</span>
       </a>
       <a href="./eventos.html" class="claut-nav-item">
-        <i class="fas fa-calendar-alt text-white"></i>
-        <span class="text-white">Eventos</span>
+        <i class="fas fa-calendar-alt"></i>
+        <span>Eventos</span>
       </a>
       <a href="./empresas-convenio.html" class="claut-nav-item">
-        <i class="fas fa-handshake text-white"></i>
-        <span class="text-white">Socios</span>
+        <i class="fas fa-handshake"></i>
+        <span>Socios</span>
       </a>
     </nav>
 
     <!-- Actions area -->
     <div class="claut-header-actions">
 
-
       <!-- Menú usuario -->
       <div class="relative">
-        <a href="./profile.html" class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
+        <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
           <i class="fas fa-user-circle text-lg"></i>
-        </a>
+        </button>
       </div>
+
+      <!-- Botón toggle menú móvil -->
+      <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </header>
 
   <!-- end header -->
 
-  <main class="relative h-full transition-all duration-200 ease-in-out rounded-xl overflow-x-hidden"
-    style="margin-top: 70px; margin-left: 0; padding-bottom: 100px; min-height: 100vh;">
-    <!-- Contenido principal con restricción de autenticación -->
-    <div id="mainContent" class="">
-      <!-- Navbar -->
-      <nav
-        class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-2 mx-0 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
-        navbar-main navbar-scroll="false">
-        <div class="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
-          <nav>
-            <!-- breadcrumb -->
-            <ol class="breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
-              <li class="text-sm leading-normal">
-                <a class="text-white opacity-50" href="javascript:;">Intranet</a>
-              </li>
-              <li
-                class="text-sm pl-2 capitalize leading-normal text-white before:float-left before:pr-2 before:text-white before:content-['/']"
-                aria-current="page">Descuentos</li>
-            </ol>
-            <h6 class="breadcrumb-title mb-0 font-bold text-white capitalize">Descuentos</h6>
-          </nav>
+  <!-- Background Scroll Image - Fixed position behind everything -->
+  <section class="scroll-image-section"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; background: var(--claut-bg-main); overflow: hidden;">
+    <div class="image-motion" style="transform-origin: 50% 0; transform: rotateX(90deg); width: 100%; height: 100%;">
+      <picture>
+        <img src="./css/moveimage.png" alt="Colaboración empresarial"
+          style="width: 100%; height: 100%; object-fit: cover;">
+      </picture>
+    </div>
+  </section>
 
-          <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
-            <div class="flex items-center md:ml-auto md:pr-4">
-              <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
-                <!-- User Dropdown Menu -->
-                <li class="flex items-center relative">
-                  <div class="relative">
-                    <button
-                      class="flex items-center px-3 py-1 text-sm font-bold text-white transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in border-white/20 bg-white/10 hover:scale-102 hover:border-white/40 active:opacity-85"
-                      onclick="toggleUserMenu()" id="userMenuBtn">
-                      <i class="fas fa-user text-white mr-2"></i>
-                      <span class="hidden sm:inline text-white" id="userDisplayName">Usuario</span>
-                      <i class="fas fa-chevron-down text-white ml-2 text-xs"></i>
-                    </button>
-                    <!-- User Dropdown -->
-                    <div
-                      class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 hidden"
-                      id="userDropdown" style="top: 100%;">
-                      <div class="px-4 py-2 border-b border-gray-200">
-                        <p class="text-sm font-medium text-gray-900" id="dropdownUserName">Usuario</p>
-                        <p class="text-xs text-gray-500" id="dropdownUserRole">Rol</p>
-                      </div>
-                      <a href="profile.html"
-                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-user-circle mr-3 text-gray-400"></i>
-                        Mi Perfil
-                      </a>
-                      <button onclick="handleLogout()"
-                        class="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                        <i class="fas fa-sign-out-alt mr-3 text-red-500"></i>
-                        Cerrar Sesión
-                      </button>
+  <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
+    style="margin-top: 1rem; margin-left: 0; padding: var(--space-4) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
+    <!-- Contenido principal con restricción de autenticación -->
+    <div class="main-content-wrapper relative z-10">
+      <div id="mainContent" class="">
+        <!-- Navbar (oculto - usando header horizontal) -->
+        <nav
+          class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-1 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
+          navbar-main navbar-scroll="false"
+          style="display: flex; margin-top: 80px; margin-left: 120px; margin-right: 120px; z-index: 999999; position: relative;">
+          <div class="flex items-center justify-between w-full px-6 py-0 mx-auto flex-wrap-inherit">
+            <nav>
+              <!-- breadcrumb -->
+              <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+                <li class="text-sm leading-normal">
+                  <a class="opacity-60 text-white" href="javascript:;">Intranet</a>
+                </li>
+                <li
+                  class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/'] text-white"
+                  aria-current="page">Descuentos</li>
+              </ol>
+              <!-- Mostrar saludo con usuario logueado -->
+              <div id="welcomeMessage" class="mb-2">
+                <h6 class="porsche-welcome mb-0 capitalize text-white" id="welcomeText">Descuentos</h6>
+              </div>
+            </nav>
+
+            <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+              <div class="flex items-center md:ml-auto md:pr-4">
+                <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
+                  <!-- Mostrar información del usuario autenticado -->
+                  <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
+                    <div class="flex flex-col">
+                      <span id="userName" class="text-sm font-semibold"></span>
+                      <span id="userRole" class="text-xs opacity-75"></span>
                     </div>
                   </div>
+                </div>
+              </div>
+              <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
+                <!-- Menú para usuarios no autenticados -->
+                <li class="flex items-center" id="loginMenuItem">
+                  <a href="./pages/sign-in.html"
+                    class="apple-nav-link block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75">
+                    <i class="fa fa-user sm:mr-1"></i>
+                    <span class="hidden sm:inline">Iniciar Sesión</span>
+                  </a>
+                </li>
+                <!-- Botón Panel de Administración (solo para admins) -->
+                <li class="flex items-center pl-4 hidden" id="adminPanelButton">
+                  <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                    class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
+                    title="Panel de Administración">
+                    <i class="fas fa-cogs mr-2"></i>
+                    <span class="hidden lg:inline">Admin Panel</span>
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      <!-- end Navbar -->
-      <!-- Descuentos -->
-      <div class="descuentos-content main-content">
-        <!-- Contenedor principal de descuentos -->
-        <div class="pr-6 pt-6 pb-6 pl-0 bg-transparent rounded-2xl">
-          <div class="mb-6 text-center mb-12">
-            <h1 class="text-2xl font-bold mb-2 text-black">Descuentos Disponibles</h1>
-            <p class="opacity-80 text-black">Aprovecha estos descuentos exclusivos para empleados de Clúster</p>
-          </div>
+        <!-- end Navbar -->
+        <!-- Main content con spacing Apple -->
+        <div class="w-full apple-space-responsive content-gradient-container"
+          style="max-width: 100%; margin: 0 auto; padding: 0 var(--space-8); position: relative;">
+          <!-- Unified gradient background for seamless transitions -->
+          <div class="unified-gradient-background"></div>
 
-          <!-- Contenedor de animación horizontal -->
-          <div class="discount-container relative w-full overflow-hidden" style="height: 400px;">
-            <canvas id="discountParticleCanvas"
-              class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
-
-            <!-- Stream de tarjetas -->
-            <div class="discount-stream absolute w-full h-full flex items-center" id="discountStream">
-              <div class="discount-line flex items-center gap-8" id="discountLine">
-                <!-- Los descuentos se cargarán dinámicamente desde la base de datos -->
+          <!-- Descuentos -->
+          <div class="descuentos-content main-content">
+            <!-- Contenedor principal de descuentos -->
+            <div class="pr-6 pt-6 pb-6 pl-0 bg-transparent rounded-2xl">
+              <div class="mb-6 text-center mb-12">
+                <h1 class="text-2xl font-bold mb-2 text-white">Descuentos Disponibles</h1>
+                <p class="opacity-80 text-white">Aprovecha estos descuentos exclusivos para empleados de Clúster</p>
               </div>
-            </div>
-          </div>
+              <!-- Contenedor de animación horizontal -->
+              <div class="discount-container relative w-full overflow-hidden" style="height: 400px;">
+                <canvas id="discountParticleCanvas"
+                  class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
 
-          <!-- Sección de información adicional -->
-          <div class="mt-8 porsche-card descuentos-info-card rounded-lg shadow-md p-6">
-            <div class="flex items-center mb-4">
-              <i class="fas fa-info-circle text-clúster-red text-2xl mr-3"></i>
-              <h2 class="text-xl font-semibold text-gray-800">Información Importante</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 class="font-medium text-gray-700 mb-2">Términos y Condiciones:</h3>
-                <ul class="text-sm text-gray-600 space-y-1">
-                  <li>• Los descuentos son exclusivos para miembros-socios activos de Clúster</li>
-                  <li>• Debes presentar tu credencial vigente</li>
-                  <li>• No se pueden combinar con otras promociones</li>
-                  <li>• Los descuentos pueden estar sujetos a cambios</li>
-                </ul>
+                <!-- Stream de tarjetas -->
+                <div class="discount-stream absolute w-full h-full flex items-center" id="discountStream">
+                  <div class="discount-line flex items-center gap-8" id="discountLine">
+                    <!-- Los descuentos se cargarán dinámicamente desde la base de datos -->
+                  </div>
+                </div>
               </div>
-              <div>
-                <h3 class="font-medium text-gray-700 mb-2">¿Necesitas ayuda?</h3>
-                <p class="text-sm text-gray-600 mb-2">Si tienes problemas para aplicar algún descuento,
-                  contacta al departamento de Recursos Humanos:</p>
-                <div class="flex items-center text-sm text-clúster-red">
-                  <i class="fas fa-envelope mr-2"></i>
-                  <span>atencion@clautedomex.mx</span>
+
+              <!-- Sección de información adicional -->
+              <div class="mt-8 porsche-card descuentos-info-card rounded-lg shadow-md p-6">
+                <div class="flex items-center mb-4">
+                  <i class="fas fa-info-circle text-clúster-red text-2xl mr-3"></i>
+                  <h2 class="text-xl font-semibold text-gray-800">Información Importante</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 class="font-medium text-gray-700 mb-2">Términos y Condiciones:</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                      <li>• Los descuentos son exclusivos para miembros-socios activos de Clúster</li>
+                      <li>• Debes presentar tu credencial vigente</li>
+                      <li>• No se pueden combinar con otras promociones</li>
+                      <li>• Los descuentos pueden estar sujetos a cambios</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 class="font-medium text-gray-700 mb-2">¿Necesitas ayuda?</h3>
+                    <p class="text-sm text-gray-600 mb-2">Si tienes problemas para aplicar algún descuento,
+                      contacta al departamento de Recursos Humanos:</p>
+                    <div class="flex items-center text-sm text-clúster-red">
+                      <i class="fas fa-envelope mr-2"></i>
+                      <span>atencion@clautedomex.mx</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <footer class="pt-4">
-        <div class="w-full px-6 mx-auto">
-          <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
-            <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
-              <div class="text-sm leading-normal text-center text-slate-500 lg:text-left">
-                © 2025, Todos Los Derechos Reservados <i class=""></i>
-                <a href="" class="font-semibold text-slate-700 dark:text-white" target="_blank">Clúster</a>
+        </div>
+        <footer class="pt-4">
+          <div class="w-full px-6 mx-auto">
+            <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
+              <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
+                <div class="text-sm leading-normal text-center text-slate-500 lg:text-left text-white">
+                  © 2025, Todos Los Derechos Reservados <i class=""></i>
+                  <a href="" class="font-semibold text-slate-700 text-white" target="_blank">Clúster</a>
+                </div>
+              </div>
+              <div class="w-full max-w-full px-3 mt-0 shrink-0 lg:w-1/2 lg:flex-none">
+                <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
+                </ul>
               </div>
             </div>
-            <div class="w-full max-w-full px-3 mt-0 shrink-0 lg:w-1/2 lg:flex-none">
-              <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
-                <li class="nav-item">
-                  <a href=""
-                    class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500"
-                    target="_blank">Clúster Metropolitano</a>
-                </li>
-                <li class="nav-item">
-                  <a href=""
-                    class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500"
-                    target="_blank">Nosotros</a>
-                </li>
-
-              </ul>
-            </div>
           </div>
-        </div>
-      </footer>
-    </div>
-    <!-- end cards -->
+        </footer>
+      </div>
+      <!-- end cards -->
     </div>
 
 
@@ -1712,6 +392,7 @@
           </button>
         </div>
       </div>
+    </div>
     </div>
   </main>
   <!-- Message Center and User Management Scripts -->
@@ -1819,6 +500,8 @@
     });
   </script>
 
+  <script src="assets/js/loading-screen.js"></script>
+  <script src="./assets/js/layout/header-navbar.js"></script>
 </body>
 <!-- plugin for charts  -->
 <script src="./assets/js/plugins/chartjs.min.js" async></script>
@@ -1880,7 +563,7 @@
     }
   }
 
-  // Función displayUserInfo completa (copiada de dashboard.html)
+  // Función displayUserInfo completa (basada en dashboard.html)
   function displayUserInfo(userData) {
     console.log('📊 Mostrando información del usuario:', userData);
 
@@ -1893,15 +576,43 @@
     const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
     const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
     const email = userData.email || '';
+    const rol = userData.rol || userData.role || '';
 
-    // Actualizar elementos del navbar
-    const userDisplayName = document.getElementById('userDisplayName');
-    const dropdownUserName = document.getElementById('dropdownUserName');
-    const dropdownUserRole = document.getElementById('dropdownUserRole');
+    // Actualizar saludo
+    const welcomeText = document.getElementById('welcomeText');
+    if (welcomeText) {
+      welcomeText.textContent = `Bienvenido, ${nombreCompleto}`;
+    }
 
-    if (userDisplayName) userDisplayName.textContent = nombreCompleto;
-    if (dropdownUserName) dropdownUserName.textContent = nombreCompleto;
-    if (dropdownUserRole) dropdownUserRole.textContent = empresa;
+    // Actualizar nombre de usuario en el navbar
+    const userNameElement = document.getElementById('userName');
+    const userRoleElement = document.getElementById('userRole');
+    const userInfoDiv = document.getElementById('userInfo');
+
+    if (userNameElement) userNameElement.textContent = nombreCompleto;
+    if (userRoleElement) userRoleElement.textContent = empresa;
+    if (userInfoDiv) {
+      userInfoDiv.classList.remove('hidden');
+      userInfoDiv.classList.add('flex');
+    }
+
+    // Detectar si el usuario es administrador
+    const isAdmin = (
+      rol === 'admin' ||
+      rol === 'administrator' ||
+      rol === 'administrador' ||
+      userData.is_admin === true ||
+      userData.admin === true
+    );
+
+    const adminButton = document.getElementById('adminPanelButton');
+    if (adminButton) {
+      if (isAdmin) {
+        adminButton.classList.remove('hidden');
+      } else {
+        adminButton.classList.add('hidden');
+      }
+    }
 
     // Mostrar elementos autenticados y ocultar login
     showAuthenticatedElements();
@@ -2227,6 +938,7 @@
   </div>
 </nav>
 
+<script src="assets/js/loading-screen.js"></script>
 </body>
 
 </html>

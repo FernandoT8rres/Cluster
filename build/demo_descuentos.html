@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .modal-backdrop { backdrop-filter: blur(5px); }
-        .slide-in { animation: slideIn 0.3s ease-out; }
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
         }
 
         /* Mejorar scroll del modal */
@@ -267,7 +279,7 @@
                 gap: 0.5rem !important;
             }
 
-            .flex.items-center.space-x-4 > * {
+            .flex.items-center.space-x-4>* {
                 margin: 0 !important;
             }
 
@@ -314,6 +326,7 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-100">
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidenav-overlay" id="sidenavOverlay"></div>
@@ -324,19 +337,20 @@
         aria-expanded="false">
         <div class="h-48 py-6 relative mb-4">
             <!-- Botón de cerrar para todas las pantallas -->
-            <button class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
-                    id="sidebarCloseBtn"
-                    sidenav-close
-                    aria-label="Cerrar menú">
+            <button
+                class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-50 p-3 bg-black/30 rounded-lg hover:bg-black/50 transition-all"
+                id="sidebarCloseBtn" sidenav-close aria-label="Cerrar menú">
                 <i class="fas fa-times"></i>
             </button>
 
             <a class="porsche-logo block px-6 py-4 m-0 text-center whitespace-nowrap" href="dashboard.html"
-              target="_blank">
+                target="_blank">
                 <img src="../assets/img/apple-icon.png"
-                  class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
-                  alt="main_logo" />
-                <span class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster Admin</span>
+                    class="block mx-auto h-32 w-32 max-w-full transition-all duration-200 ease-nav-brand mb-4"
+                    alt="main_logo" />
+                <span
+                    class="block text-lg transition-all duration-200 ease-nav-brand text-white font-semibold mb-4">Clúster
+                    Admin</span>
             </a>
         </div>
 
@@ -470,17 +484,18 @@
     </aside>
 
     <!-- Header -->
-    <header class="main-content bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
+    <header class="main-content bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
+        style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
         <div class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <!-- Hamburger Menu Button for All Screens -->
-                    <button class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
-                            id="hamburgerBtn"
-                            sidenav-trigger
-                            aria-label="Abrir menú de navegación">
+                    <button
+                        class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
+                        id="hamburgerBtn" sidenav-trigger aria-label="Abrir menú de navegación">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                     <div>
@@ -490,7 +505,8 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <span id="userInfo" class="text-sm"></span>
-                    <button onclick="location.href='descuentos.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
+                    <button onclick="location.href='descuentos.html'"
+                        class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
                         <i class="fas fa-arrow-left mr-2"></i>Volver a Descuentos
                     </button>
                 </div>
@@ -543,26 +559,31 @@
         <div class="bg-white rounded-lg shadow p-4 mb-6">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center space-x-4">
-                    <button onclick="showCreateModal()" class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                    <button onclick="showCreateModal()"
+                        class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
+                        style="background: #C7252B;">
                         <i class="fas fa-plus mr-2"></i>Crear Descuento
                     </button>
-                    <button onclick="reloadDescuentos()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                    <button onclick="reloadDescuentos()"
+                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
                         <i class="fas fa-sync-alt mr-2"></i>Actualizar
                     </button>
                 </div>
 
                 <div class="flex items-center space-x-4">
                     <input type="text" id="searchInput" placeholder="Buscar descuentos..."
-                           class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
 
-                    <select id="filterEstado" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <select id="filterEstado"
+                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         <option value="">Todos los estados</option>
                         <option value="activo">Activo</option>
                         <option value="inactivo">Inactivo</option>
                         <option value="expirado">Expirado</option>
                     </select>
 
-                    <select id="filterEmpresa" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <select id="filterEmpresa"
+                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         <option value="">Todas las empresas</option>
                     </select>
                 </div>
@@ -575,15 +596,24 @@
                 <table class="w-full">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descuento</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vigencia</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usos</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Título</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Empresa</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Descuento</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Código</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Vigencia</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Estado</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Usos</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="descuentosTableBody" class="bg-white divide-y divide-gray-200">
@@ -607,12 +637,14 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-                        <input type="text" id="titulo" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <input type="text" id="titulo" required
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                        <textarea id="descripcion" rows="3" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                        <textarea id="descripcion" rows="3"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
                     </div>
 
                     <!-- Selector de tipo de empresa -->
@@ -621,12 +653,12 @@
                         <div class="flex items-center space-x-6">
                             <label class="flex items-center">
                                 <input type="radio" name="tipoEmpresa" value="existente" id="empresaExistente" checked
-                                       class="h-4 w-4 border-gray-300" style="color: #C7252B; accent-color: #C7252B;">
+                                    class="h-4 w-4 border-gray-300" style="color: #C7252B; accent-color: #C7252B;">
                                 <span class="ml-2 text-sm text-gray-700">Empresa en convenio existente</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="radio" name="tipoEmpresa" value="nueva" id="empresaNueva"
-                                       class="h-4 w-4 border-gray-300" style="color: #C7252B; accent-color: #C7252B;">
+                                    class="h-4 w-4 border-gray-300" style="color: #C7252B; accent-color: #C7252B;">
                                 <span class="ml-2 text-sm text-gray-700">Escribir nombre de empresa</span>
                             </label>
                         </div>
@@ -635,56 +667,108 @@
                     <!-- Selector de empresa existente -->
                     <div id="selectorEmpresaExistente">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Empresa en Convenio *</label>
-                        <select id="empresaOferente" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <select id="empresaOferente"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                             <option value="">Cargando empresas...</option>
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Se mostrarán solo las empresas activas con convenio vigente</p>
+                        <p class="text-xs text-gray-500 mt-1">Se mostrarán solo las empresas activas con convenio
+                            vigente</p>
                     </div>
 
                     <!-- Input para empresa nueva -->
                     <div id="inputEmpresaNueva" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Empresa *</label>
                         <input type="text" id="nombreEmpresaNueva" placeholder="Escribe el nombre de la empresa"
-                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         <p class="text-xs text-gray-500 mt-1">Para empresas que no están en convenio con Clúster</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Código de Descuento</label>
-                        <input type="text" id="codigoDescuento" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <input type="text" id="codigoDescuento"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Porcentaje (%)</label>
-                            <input type="number" id="porcentajeDescuento" step="0.01" min="0" max="100" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <input type="number" id="porcentajeDescuento" step="0.01" min="0" max="100"
+                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Monto ($)</label>
-                            <input type="number" id="montoDescuento" step="0.01" min="0" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <input type="number" id="montoDescuento" step="0.01" min="0"
+                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio *</label>
-                            <input type="date" id="fechaInicio" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <input type="date" id="fechaInicio"
+                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin *</label>
-                            <input type="date" id="fechaFin" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <input type="date" id="fechaFin"
+                                class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Usos Máximos</label>
-                        <input type="number" id="usosMaximos" min="1" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <input type="number" id="usosMaximos" min="1"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                         <p class="text-xs text-gray-500 mt-1">Dejar vacío para usos ilimitados</p>
                     </div>
 
+                    <!-- ===== BOTÓN DE ACCIÓN ===== -->
+                    <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-mouse-pointer text-red-500 mr-2"></i>
+                            <label class="text-sm font-semibold text-gray-700">Botón de Acción</label>
+                            <span class="ml-2 text-xs text-gray-500">(opcional)</span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Tipo de acción</label>
+                                <select id="accionTipo" onchange="onAccionTipoChange()"
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm">
+                                    <option value="ninguno">Sin botón de acción</option>
+                                    <option value="link">🔗 Link externo (URL)</option>
+                                    <option value="telefono">📞 Llamar por teléfono</option>
+                                    <option value="email">✉️ Enviar email</option>
+                                    <option value="whatsapp">💬 WhatsApp</option>
+                                    <option value="mapa">📍 Mapa / Dirección</option>
+                                </select>
+                            </div>
+
+                            <div id="accionValorGroup" class="hidden">
+                                <label class="block text-xs font-medium text-gray-600 mb-1"
+                                    id="accionValorLabel">Valor</label>
+                                <input type="text" id="accionValor"
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                                    placeholder="">
+                            </div>
+
+                            <div id="accionEtiquetaGroup" class="hidden">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Etiqueta del botón <span
+                                        class="text-gray-400">(opcional)</span></label>
+                                <input type="text" id="accionEtiqueta"
+                                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                                    placeholder="Ej: Visitar sitio, Llamar ahora...">
+                                <p class="text-xs text-gray-400 mt-1">Si se deja vacío, se usará una etiqueta por
+                                    defecto.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ===== FIN BOTÓN DE ACCIÓN ===== -->
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                        <select id="estado" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <select id="estado"
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
                             <option value="activo">Activo</option>
                             <option value="inactivo">Inactivo</option>
                         </select>
@@ -692,10 +776,13 @@
                 </form>
 
                 <div class="px-6 py-4 border-t flex justify-end space-x-3">
-                    <button type="button" onclick="hideModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                    <button type="button" onclick="hideModal()"
+                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
                         Cancelar
                     </button>
-                    <button type="submit" form="descuentoForm" id="saveButton" class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition" style="background: #C7252B;">
+                    <button type="submit" form="descuentoForm" id="saveButton"
+                        class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition"
+                        style="background: #C7252B;">
                         Guardar
                     </button>
                 </div>
@@ -716,10 +803,12 @@
                     <p class="text-sm text-gray-500">Esta acción no se puede deshacer.</p>
                 </div>
                 <div class="px-6 py-4 border-t flex justify-end space-x-3">
-                    <button onclick="hideDeleteModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                    <button onclick="hideDeleteModal()"
+                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
                         Cancelar
                     </button>
-                    <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                    <button onclick="confirmDelete()"
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
                         Eliminar
                     </button>
                 </div>
@@ -740,7 +829,7 @@
         let empresas = [];
 
         // Inicializar cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadEmpresas();
             loadDescuentos();
             setupEventListeners();
@@ -1217,6 +1306,34 @@
             }
         }
 
+        // Manejar cambio en el selector de tipo de acción
+        function onAccionTipoChange() {
+            const tipo = document.getElementById('accionTipo').value;
+            const valorGroup = document.getElementById('accionValorGroup');
+            const etiquetaGroup = document.getElementById('accionEtiquetaGroup');
+            const valorLabel = document.getElementById('accionValorLabel');
+            const valorInput = document.getElementById('accionValor');
+
+            const placeholders = {
+                link: { label: 'URL del sitio', placeholder: 'https://ejemplo.com' },
+                telefono: { label: 'Número de teléfono', placeholder: 'Ej: +52 55 1234 5678' },
+                email: { label: 'Dirección de email', placeholder: 'contacto@empresa.com' },
+                whatsapp: { label: 'Número de WhatsApp', placeholder: 'Ej: 5215512345678 (con código país)' },
+                mapa: { label: 'Dirección o lugar', placeholder: 'Ej: Av. Insurgentes 123, CDMX' }
+            };
+
+            if (tipo === 'ninguno') {
+                valorGroup.classList.add('hidden');
+                etiquetaGroup.classList.add('hidden');
+            } else {
+                const cfg = placeholders[tipo] || { label: 'Valor', placeholder: '' };
+                valorLabel.textContent = cfg.label;
+                valorInput.placeholder = cfg.placeholder;
+                valorGroup.classList.remove('hidden');
+                etiquetaGroup.classList.remove('hidden');
+            }
+        }
+
         // Mostrar modal de crear
         function showCreateModal() {
             editingId = null;
@@ -1230,6 +1347,12 @@
 
             // Configurar campos de empresa
             setupEmpresaToggle();
+
+            // Resetear campos del botón de acción
+            document.getElementById('accionTipo').value = 'ninguno';
+            document.getElementById('accionValor').value = '';
+            document.getElementById('accionEtiqueta').value = '';
+            onAccionTipoChange();
 
             // Establecer fecha por defecto
             const today = new Date().toISOString().split('T')[0];
@@ -1260,6 +1383,13 @@
                     document.getElementById('fechaFin').value = descuento.fecha_fin;
                     document.getElementById('usosMaximos').value = descuento.usos_maximos || '';
                     document.getElementById('estado').value = descuento.estado;
+
+                    // Poblar campos del botón de acción
+                    const accionTipoSelect = document.getElementById('accionTipo');
+                    accionTipoSelect.value = descuento.accion_tipo || 'ninguno';
+                    document.getElementById('accionValor').value = descuento.accion_valor || '';
+                    document.getElementById('accionEtiqueta').value = descuento.accion_etiqueta || '';
+                    onAccionTipoChange(); // mostrar/ocultar grupos según el tipo cargado
 
                     document.getElementById('descuentoModal').classList.remove('hidden');
                 }
@@ -1309,6 +1439,11 @@
             formData.append('fecha_fin', document.getElementById('fechaFin').value);
             formData.append('usos_maximos', document.getElementById('usosMaximos').value);
             formData.append('estado', document.getElementById('estado').value);
+
+            // Campos del botón de acción
+            formData.append('accion_tipo', document.getElementById('accionTipo').value);
+            formData.append('accion_valor', document.getElementById('accionValor').value);
+            formData.append('accion_etiqueta', document.getElementById('accionEtiqueta').value);
 
             if (editingId) {
                 formData.append('_method', 'PUT');
@@ -1511,7 +1646,7 @@
             const toastDiv = toast.querySelector('div');
             let bgColor = 'bg-green-500'; // success por defecto
 
-            switch(type) {
+            switch (type) {
                 case 'error':
                     bgColor = 'bg-red-500';
                     break;
@@ -1704,7 +1839,7 @@
             console.log('Adding click event to hamburger button');
             hamburgerBtn.addEventListener('click', toggleSidebar);
 
-            hamburgerBtn.addEventListener('touchstart', function(e) {
+            hamburgerBtn.addEventListener('touchstart', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 toggleSidebar(e);
@@ -1712,19 +1847,19 @@
 
             if (overlay) {
                 overlay.addEventListener('click', closeSidebarInternal);
-                overlay.addEventListener('touchstart', function(e) {
+                overlay.addEventListener('touchstart', function (e) {
                     e.preventDefault();
                     closeSidebarInternal();
                 }, { passive: false });
             }
 
             if (closeBtn) {
-                closeBtn.addEventListener('click', function(e) {
+                closeBtn.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     closeSidebarInternal();
                 });
-                closeBtn.addEventListener('touchstart', function(e) {
+                closeBtn.addEventListener('touchstart', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     closeSidebarInternal();
@@ -1732,14 +1867,14 @@
             }
 
             // Close on escape key
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {
                     closeSidebarInternal();
                 }
             });
 
             // Handle window resize - Keep sidebar closed on all screen sizes
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 // Optional: could add logic here if needed
             });
 
@@ -1747,12 +1882,12 @@
             let touchStartX = 0;
             let touchStartY = 0;
 
-            sidebar.addEventListener('touchstart', function(e) {
+            sidebar.addEventListener('touchstart', function (e) {
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
             }, { passive: true });
 
-            sidebar.addEventListener('touchmove', function(e) {
+            sidebar.addEventListener('touchmove', function (e) {
                 if (!touchStartX) return;
 
                 const currentX = e.touches[0].clientX;
@@ -1769,7 +1904,7 @@
             }, { passive: true });
 
             // Keyboard navigation in sidebar
-            sidebar.addEventListener('keydown', function(e) {
+            sidebar.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {
                     closeSidebarInternal();
                 }
@@ -1809,5 +1944,7 @@
 
     <!-- Auth Session Script -->
     <script src="./js/auth-session.js"></script>
+  <script src="assets/js/loading-screen.js"></script>
 </body>
+
 </html>

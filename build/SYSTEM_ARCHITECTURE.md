@@ -279,7 +279,7 @@ require_once 'middleware/security-headers.php';
 | Tabla | Descripción | Campos Clave |
 |-------|-------------|--------------|
 | `usuarios` | Usuarios del sistema | id, email, password_hash, rol, estado |
-| `empresas` | Empresas en convenio | id, nombre, rut, estado, categoria |
+| `empresas_convenio` | Empresas en convenio | id, nombre, rut, estado, categoria |
 | `eventos` | Eventos y actividades | id, titulo, fecha, organizador_id |
 | `boletines` | Boletines informativos | id, titulo, contenido, estado, autor_id |
 | `comites` | Comités activos | id, nombre, presidente_id, estado |
@@ -295,7 +295,8 @@ erDiagram
     USUARIOS ||--o{ EVENTOS : organiza
     USUARIOS ||--o{ BOLETINES : escribe
     USUARIOS ||--o{ COMITES : preside
-    EMPRESAS ||--o{ DESCUENTOS : ofrece
+    USUARIOS ||--o{ EMPRESAS_CONVENIO : administra
+    EMPRESAS_CONVENIO ||--o{ DESCUENTOS : ofrece
     COMITES ||--o{ COMITE_MIEMBROS : tiene
     USUARIOS ||--o{ COMITE_MIEMBROS : participa
 ```
@@ -406,26 +407,26 @@ sequenceDiagram
 **Archivo:** `.env` (crear)
 
 ```env
-# Database
+# Database — copiar de .env.example y completar con valores reales
 DB_HOST=127.0.0.1
-DB_NAME=u695712029_claut_intranet
-DB_USER=u695712029_claut_fer
-DB_PASS=CLAUT@admin_fernando!7
+DB_NAME=your_db_name
+DB_USER=your_db_user
+DB_PASS=your_db_password
 
 # Application
 APP_ENV=production
 APP_DEBUG=false
-ADMIN_EMAIL=admin@claut.com
+ADMIN_EMAIL=admin@tudominio.com
 
-# Security
-JWT_SECRET=random_secret_key_here
+# Security — generar con: openssl rand -hex 32
+JWT_SECRET=your_random_jwt_secret_here
 SESSION_LIFETIME=3600
 
 # Email (para alertas)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=alerts@claut.com
-SMTP_PASS=password
+SMTP_USER=alerts@tudominio.com
+SMTP_PASS=your_smtp_password
 ```
 
 ---
@@ -539,5 +540,10 @@ error_reporting = E_ALL
 ---
 
 **Mantenido por:** Equipo de Desarrollo Claut  
-**Última revisión:** 29 de enero de 2026  
-**Versión del documento:** 1.0
+**Última revisión:** 26 de marzo de 2026  
+**Versión del documento:** 2.1
+
+### Cambios v2.1 (Marzo 2026)
+- Credenciales hardcodeadas en sección `.env` reemplazadas por placeholders seguros
+- Actualizado mapa de APIs: `empresas-simple.php` es el endpoint activo para el módulo de empresas
+- Añadida referencia a skills reutilizables en `.agents/workflows/`

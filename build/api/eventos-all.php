@@ -5,7 +5,7 @@
 
 // Headers CORS
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -14,17 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Configuración independiente para eventos
+// Configuración unificada a través de config/database.php
+require_once __DIR__ . '/../config/database.php';
+
 try {
-    $pdo = new PDO(
-        "mysql:host=127.0.0.1;dbname=u695712029_claut_intranet;charset=utf8mb4",
-        'u695712029_claut_fer',
-        'CLAUT@admin_fernando!7',
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_TIMEOUT => 30,
-        ]
-    );
+    $pdo = Database::getInstance()->getConnection();
 
     // Consulta SIN filtros para obtener TODOS los eventos
     $sql = "SELECT * FROM eventos ORDER BY fecha_inicio ASC";

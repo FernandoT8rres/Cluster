@@ -5,7 +5,7 @@
  */
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -14,24 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 function conectarBD() {
-    $configs = [
-        ['127.0.0.1', 'u695712029_claut_fer', 'CLAUT@admin_fernando!7', 'u695712029_claut_intranet']
-    ];
-    
-    foreach ($configs as $config) {
-        try {
-            $pdo = new PDO(
-                "mysql:host={$config[0]};dbname={$config[3]};charset=utf8mb4",
-                $config[1],
-                $config[2],
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-            );
-            return $pdo;
-        } catch (PDOException $e) {
-            continue;
-        }
-    }
-    throw new Exception("Error de conexión a BD");
+    require_once __DIR__ . '/../config/database.php';
+    return Database::getInstance()->getConnection();
 }
 
 try {

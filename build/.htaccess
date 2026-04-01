@@ -69,16 +69,12 @@ RewriteRule .* - [L]
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # CORS para API — restringido a dominio propio y localhost dev
-    # SECURITY: NO usar "*" en producción — permite peticiones cross-origin desde cualquier origen
-    SetEnvIf Origin "^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$" CORS_ORIGIN=$0
-    SetEnvIf Origin "^https?://intranet\.clautmetropolitano\.mx$" CORS_ORIGIN=$0
-    Header always set Access-Control-Allow-Origin "%{CORS_ORIGIN}e" env=CORS_ORIGIN
+    # CORS — solo dominio de producción Hostinger
+    # SECURITY: Sin localhost — la app solo corre en intranet.clautmetropolitano.mx
+    Header always set Access-Control-Allow-Origin "https://intranet.clautmetropolitano.mx"
     Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
     Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
     Header always set Access-Control-Allow-Credentials "true"
-    # Vary header para que los proxies/CDN cacheen correctamente por Origin
-    Header always append Vary Origin
 </IfModule>
 
 # ==== REGLAS PARA PRETTY URLs ====

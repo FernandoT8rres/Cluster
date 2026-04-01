@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
+    <link rel="icon" type="image/png" href="./assets/img/favicon.png" />
+    <title>Clúster Intranet - Master Calendar Console</title>
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- FullCalendar v6 -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/es.global.min.js'></script>
+
+    <style>
+        :root {
+            --porsche-black: #09090b;
+            --porsche-accent: #C7252B;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 280px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--porsche-black);
+            background-image: radial-gradient(at 0% 0%, rgba(199, 37, 43, 0.05) 0px, transparent 50%);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- NOTION STYLE CALENDAR OVERRIDES --- */
+        #admin-master-calendar {
+            background: transparent;
+            height: calc(100vh - 120px) !important;
+        }
+
+        .fc {
+            --fc-border-color: rgba(255, 255, 255, 0.05);
+            --fc-page-bg-color: transparent;
+            --fc-neutral-bg-color: rgba(255, 255, 255, 0.02);
+            --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.05);
+            --fc-today-bg-color: rgba(199, 37, 43, 0.05);
+        }
+
+        /* Post-it Style Events */
+        .fc-event {
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 4px 8px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            cursor: pointer !important;
+            overflow: hidden;
+        }
+
+        .fc-event:hover {
+            transform: translateY(-2px) scale(1.02) !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+            z-index: 50 !important;
+        }
+
+        .fc-v-event .fc-event-main {
+            color: #fff !important;
+            font-weight: 700 !important;
+            font-size: 0.75rem !important;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .fc-event-title-container {
+            line-height: 1.2 !important;
+        }
+
+        /* Time Grid Styling */
+        .fc-timegrid-slot {
+            height: 3em !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+        }
+
+        .fc-col-header-cell {
+            padding: 1rem 0 !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: none !important;
+        }
+
+        .fc-col-header-cell-cushion {
+            color: #94a3b8 !important;
+            text-transform: uppercase !important;
+            font-size: 0.7rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.1em !important;
+            text-decoration: none !important;
+        }
+
+        /* Sidebar Styling (Simplified for Calendar) */
+        .side-nav {
+            width: var(--sidebar-width);
+            height: 100vh;
+            border-right: 1px solid var(--glass-border);
+            background: var(--porsche-black);
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 40;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-console {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .porsche-btn {
+            background: var(--porsche-accent);
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px -5px rgba(199, 37, 43, 0.3);
+        }
+
+        .porsche-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(199, 37, 43, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="side-nav p-6 flex flex-col">
+        <div class="mb-10 px-4">
+            <img src="./assets/img/logo-ct.png" class="h-10 opacity-90" alt="CLAUT Logo">
+        </div>
+        
+        <div class="space-y-2 flex-grow">
+            <a href="admin-panel.html" class="flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all">
+                <i class="fas fa-arrow-left"></i>
+                <span class="font-bold text-sm uppercase tracking-wider">Volver al Panel</span>
+            </a>
+            
+            <div class="pt-8 pb-4">
+                <p class="text-[10px] text-slate-600 font-bold uppercase tracking-[3px] px-4">Herramientas Master</p>
+            </div>
+            
+            <a href="#" class="flex items-center gap-4 px-4 py-3 bg-red-600/10 text-red-500 rounded-xl border border-red-600/20">
+                <i class="fas fa-calendar-days"></i>
+                <span class="font-bold text-sm uppercase tracking-wider">Console Master</span>
+            </a>
+        </div>
+
+        <div class="mt-auto p-4 glass-panel border-none bg-white/5">
+            <p class="text-[10px] text-slate-500 mb-2">MODO ADMINISTRADOR</p>
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center font-bold text-xs">FT</div>
+                <div>
+                    <p class="text-[11px] font-bold">Fernando Torres</p>
+                    <p class="text-[9px] text-slate-500">Master Dev</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Console Area -->
+    <main class="main-content">
+        <header class="header-console">
+            <div>
+                <h1 class="text-xl font-black text-white leading-tight">Master Calendar Console <span class="text-xs text-red-500 ml-2 px-2 py-0.5 bg-red-500/10 rounded-full border border-red-500/20 font-bold">PRO</span></h1>
+                <p class="text-xs text-slate-500 font-medium">Planificación estratégica y gestión visual de agenda 360°</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="flex bg-white/5 rounded-xl p-1 border border-white/10 mr-4">
+                    <button id="viewWeek" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all bg-red-600 text-white">Semanal</button>
+                    <button id="viewMonth" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all text-slate-400 hover:text-white">Mensual</button>
+                </div>
+
+                <button onclick="openQuickEventModal()" class="porsche-btn">
+                    <i class="fas fa-plus"></i> Nuevo Post-it
+                </button>
+            </div>
+        </header>
+
+        <section class="flex-grow p-8">
+            <div class="glass-panel h-full p-6 bg-white/[0.02]">
+                <div id="admin-master-calendar" class="w-full"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Eventos Rápidos -->
+    <div id="quickEventModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="glass-panel w-full max-w-lg p-8 animate-in zoom-in duration-300">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black text-white">Nuevo Evento Post-it</h2>
+                <button onclick="closeQuickEventModal()" class="text-slate-500 hover:text-white transition-all text-xl"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <form id="quickEventForm" class="space-y-6">
+                <input type="hidden" id="event_id">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Título del Evento</label>
+                    <input type="text" name="titulo" id="event_titulo" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-all font-medium">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Inicio</label>
+                        <input type="datetime-local" name="fecha_inicio" id="event_fecha_inicio" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-all text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Fin</label>
+                        <input type="datetime-local" name="fecha_fin" id="event_fecha_fin" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-all text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 ml-1">Categoría / Color</label>
+                    <select name="tipo" id="event_tipo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-all">
+                        <option value="Asamblea" class="bg-zinc-900">Asamblea (Rojo Porsche)</option>
+                        <option value="Networking" class="bg-zinc-900">Networking (Azul Eléctrico)</option>
+                        <option value="Capacitación" class="bg-zinc-900">Capacitación (Verde Emerald)</option>
+                        <option value="Comunidado" class="bg-zinc-900">Comunicado (Naranja Neon)</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeQuickEventModal()" class="flex-1 py-4 font-bold text-slate-400 hover:text-white rounded-xl transition-all">Cancelar</button>
+                    <button type="submit" class="porsche-btn flex-1 justify-center py-4">
+                        <i class="fas fa-save mr-2"></i> Guardar Evento
+                    </button>
+                    <button type="button" id="btnDeleteEvent" class="hidden p-4 bg-white/5 hover:bg-red-600/20 text-red-500 rounded-xl transition-all border border-transparent hover:border-red-600/20">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Master Scripts -->
+    <script src="./js/auth-session.js"></script>
+    <script src="./js/admin-calendar-master.js"></script>
+</body>
+
+</html>
