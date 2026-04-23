@@ -394,15 +394,15 @@
       height: 40vh;
       z-index: 10;
       margin-top: var(--header-height);
-      overflow: hidden;
-      /* Prevenir scroll horizontal */
+      overflow: clip;
+      /* Prevenir scroll horizontal sin afectar sticky */
     }
 
     .container {
       position: relative;
       max-width: 100%;
-      overflow: hidden;
-      /* Prevenir scroll horizontal */
+      overflow: clip;
+      /* Prevenir scroll horizontal sin afectar sticky */
     }
 
     .text-container {
@@ -1142,21 +1142,178 @@
     #eventModal {
       z-index: 9999 !important;
     }
+
+    /* ============================================================
+       RESPONSIVE MASTER — eventos.html
+    ============================================================ */
+    html, body {
+      max-width: 100vw !important;
+      overflow-x: clip !important; /* Clip ensures we don't break sticky contexts */
+    }
+
+    /* --- Main: padding adaptativo, removiendo el inline --- */
+    main.claut-main {
+      padding-top: calc(var(--header-height, 64px) + 1rem) !important;
+      padding-left: clamp(0.75rem, 3vw, 3rem) !important;
+      padding-right: clamp(0.75rem, 3vw, 3rem) !important;
+    }
+
+    /* --- Header y Mobile Menu --- */
+    @media (max-width: 640px) {
+      .claut-header { padding: 0 0.75rem !important; }
+    }
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .claut-header { padding: 0 1rem !important; }
+    }
+
+    .claut-mobile-menu-btn { display: none !important; }
+    @media (max-width: 767px) {
+      .claut-mobile-menu-btn { display: flex !important; }
+    }
+
+    /* --- Sub-navbar breadcrumb: apilar en móvil --- */
+    @media (max-width: 767px) {
+      .porsche-navbar .flex.items-center.justify-between {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.25rem !important;
+      }
+      .porsche-breadcrumb { margin-right: 0 !important; }
+    }
+
+    /* --- Hero adjustments: scale text gracefully --- */
+    @media (max-width: 767px) {
+      header.py-4 .text-5xl, header.py-4 .md\:text-6xl {
+        font-size: 2rem !important;
+        letter-spacing: 0.1em !important;
+      }
+      .text-5xl.md\:text-6xl, .text-4xl.md\:text-5xl {
+        font-size: 2.25rem !important;
+      }
+      .section { padding: 2rem 0 !important; }
+    }
+
+    /* --- Fix Event cards grid --- */
+    @media (max-width: 640px) {
+      :root {
+        --card-height: 250px; /* Force a readable absolute height in mobile */
+      }
+      #event-cards {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+      }
+      .event-card {
+        width: 100% !important;
+        /* IMPORTANTE: NO sobrescribir padding-top porque arruina la cascada del sticky */
+      }
+      .event-card__content {
+        min-height: 200px;
+        padding: 1.5rem !important;
+      }
+      .event-card__title { font-size: 1.25rem !important; }
+      .event-card__description { font-size: 0.95rem !important; }
+    }
+
+    /* ============================================================
+       MENÚ CURVO ANIMADO — CSS completo
+    ============================================================ */
+    .claut-bottom-nav {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 95% !important;
+      max-width: 600px !important;
+      height: 70px !important;
+      background: var(--claut-bg-surface, #252a32) !important;
+      border-radius: 35px 35px 0 0 !important;
+      border: 1px solid rgba(15,23,42,0.12) !important;
+      border-bottom: none !important;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.4) !important;
+      z-index: 9999 !important;
+      overflow: hidden !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: none;
+    }
+    .claut-bottom-nav::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+      background: linear-gradient(180deg, #252a32 0%, #2d333b 100%);
+      opacity: 0.8; z-index: -1;
+    }
+    .claut-nav-container {
+      position: relative !important; width: 100% !important; height: 100% !important;
+      display: flex !important; align-items: center !important;
+      justify-content: space-evenly !important; padding: 0 8px !important;
+      box-sizing: border-box !important; overflow-x: auto !important;
+      scrollbar-width: none !important; -ms-overflow-style: none !important;
+    }
+    .claut-nav-container::-webkit-scrollbar { display: none !important; }
+    .claut-nav-link {
+      position: relative !important; display: flex !important;
+      flex-direction: column !important; align-items: center !important;
+      justify-content: center !important; width: 48px !important;
+      height: 48px !important; text-decoration: none !important;
+      color: #94a3b8 !important;
+      transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55) !important;
+      border-radius: 50% !important; z-index: 2 !important;
+      flex: 0 0 auto !important; margin: 0 2px !important;
+    }
+    .claut-nav-link i { font-size: 18px; transition: all 0.3s ease; }
+    .claut-nav-link span {
+      font-size: 9px; margin-top: 1px; opacity: 0;
+      transform: translateY(10px); transition: all 0.3s ease; font-weight: 500;
+    }
+    .claut-nav-link.active { color: #C7252B !important; transform: translateY(-10px); }
+    .claut-nav-link.active::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%); width: 50px; height: 50px;
+      background: #C7252B; border-radius: 50%; z-index: -1;
+      opacity: 0.2; animation: nav-pulse 2s infinite;
+    }
+    .claut-nav-link.active span { opacity: 1; transform: translateY(0); color: #C7252B; }
+    .claut-nav-link:hover { color: #C7252B !important; transform: translateY(-5px) scale(1.1); }
+    .claut-nav-link:hover span { opacity: 1; transform: translateY(0); }
+    .claut-nav-curve {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; pointer-events: none; z-index: 1;
+    }
+    .claut-nav-curve::before {
+      content: ''; position: absolute; top: 0;
+      left: var(--curve-position, 20%); width: 60px; height: 60px;
+      background: #C7252B; border-radius: 50% 50% 0 0;
+      transform: translateX(-50%) translateY(-30px);
+      transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+      opacity: 0.1; box-shadow: 0 -5px 15px rgba(199,37,43,0.3);
+    }
+    @keyframes nav-pulse {
+      0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+      50%  { transform: translate(-50%,-50%) scale(1.2); opacity: 0.1; }
+      100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+    }
+    @media (max-width: 1024px) {
+      .claut-bottom-nav { display: flex !important; }
+      .claut-header-nav { display: none !important; }
+      .claut-main, main { padding-bottom: 90px !important; }
+    }
+    @media (min-width: 1025px) {
+      .claut-bottom-nav { display: none !important; }
+      .claut-header-nav { display: flex !important; }
+    }
+    @media (max-width: 768px) {
+      .claut-bottom-nav { width: 95%; height: 65px; }
+      .claut-nav-link   { width: 55px; height: 55px; }
+      .claut-nav-link i { font-size: 20px; }
+    }
   </style>
 </head>
 
 <body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default overflow-x-hidden"
   style="background: var(--claut-bg-main); background-image: radial-gradient(ellipse at 60% 0%, rgba(199, 37, 43, 0.05) 0%, transparent 55%), radial-gradient(ellipse at 10% 80%, rgba(15, 23, 42, 0.02) 0%, transparent 50%), radial-gradient(ellipse at 90% 90%, rgba(199, 37, 43, 0.05) 0%, transparent 45%); background-attachment: fixed; color: var(--claut-text-primary);">
 
-  <!-- Background Scroll Image - Fixed position behind everything -->
-  <section class="scroll-image-section"
-    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; background: var(--claut-bg-main); overflow: hidden;">
-    <div class="image-motion" style="transform-origin: 50% 0; transform: rotateX(90deg); width: 100%; height: 100%;">
-      <picture>
-        <img src="./css/moveimage.png" alt="Portal Empresarial" style="width: 100%; height: 100%; object-fit: cover;">
-      </picture>
-    </div>
-  </section>
+  <!-- Background cleanly managed by the body radial gradients -->
 
   <!-- Loading Spinner -->
   <div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -1202,24 +1359,14 @@
       </a>
     </nav>
 
-    <!-- Actions area -->
-    <div class="claut-header-actions">
-      <!-- Botón mensajes -->
-      <button class="claut-header-btn" id="headerMessagesBtn" title="Centro de Mensajes">
-        <i class="fas fa-envelope"></i>
-        <span id="headerMessageCount"
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+    <!-- Actions area con botón hamburger para móvil -->
+    <div class="claut-header-actions" style="display:flex; justify-content:flex-end;">
+      <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta"
+        style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
+        <i class="fas fa-user-circle" style="font-size:1.1rem;"></i>
       </button>
-
-      <!-- Menú usuario -->
-      <div class="relative">
-        <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
-          <i class="fas fa-user-circle text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Botón toggle menú móvil -->
-      <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+      <button class="claut-header-btn claut-mobile-menu-btn" id="mobileMenuBtn" title="Menú"
+        style="display:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
         <i class="fas fa-bars"></i>
       </button>
     </div>
@@ -1262,8 +1409,8 @@
   </nav>
 
   <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
-    style="margin-top: var(--header-height); margin-left: 0; padding: var(--space-2) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
-    <div id="mainContent" class="main-content-wrapper relative z-10">
+    style="margin-top: 0; margin-left: 0; overflow: hidden; z-index: 1; position: relative;">
+    <div id="mainContent" class="main-content-wrapper relative z-10 w-full">
 
       <!-- Navbar (Sub-header Glassmorphism) como en dashboard.html/contacto.html -->
       <nav
@@ -1308,7 +1455,7 @@
               </li>
               <!-- Botón Panel de Administración (solo para admins) -->
               <li class="flex items-center pl-4 hidden" id="adminPanelButton">
-                <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                <a href="./admin-panel.html?login=success"
                   class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
                   title="Panel de Administración">
                   <i class="fas fa-cogs mr-2"></i>
@@ -1324,51 +1471,50 @@
 
       <!-- Events Main Content with Background Sections -->
       <div class="w-full h-full">
-        <!-- Header Section with White Background -->
-        <section class="loop-images" style="--bg: white; min-height: 100vh; position: relative;">
+        <!-- Premium Dark Hero Section -->
+        <section class="relative pt-6 pb-16">
           <!-- Compact Header -->
           <header class="py-4">
             <div class="container">
               <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 opacity-20">Eventos Clúster</h1>
+                <h1 class="text-5xl md:text-6xl font-black text-gray-500 opacity-60 uppercase tracking-[0.2em] mb-4">Eventos Clúster</h1>
               </div>
             </div>
           </header>
 
           <!-- Enhanced Professional Introductory Content -->
           <div class="container relative z-20 pt-2 pb-16">
-            <!-- Hero Section with Professional Typography -->
-            <div class="text-center mb-12">
+            <!-- Hero Section with Profe              <div class="text-center mb-12">
               <div
-                class="inline-flex items-center justify-center px-4 py-2 bg-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6">
+                class="inline-flex items-center justify-center px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full text-red-500 text-sm font-semibold mb-6">
                 <i class="fas fa-calendar-star mr-2"></i>
                 AGENDA EMPRESARIAL 2024
               </div>
 
-              <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-8">
-                <span class="block text-gray-900 mb-2">EXPERIENCIAS QUE</span>
-                <span class="block bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">TRANSFORMAN
+              <h1 class="text-5xl md:text-6xl font-black leading-tight mb-8">
+                <span class="block text-white mb-2 tracking-tight">EXPERIENCIAS QUE</span>
+                <span class="block bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">TRANSFORMAN
                   NEGOCIOS</span>
               </h1>
 
               <div class="max-w-4xl mx-auto">
-                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                  Participa en eventos estratégicamente diseñados para <strong class="text-gray-900">catapultar tu
+                <p class="text-xl text-gray-400 mb-8 leading-relaxed font-light">
+                  Participa en eventos estratégicamente diseñados para <strong class="text-white font-semibold">catapultar tu
                     crecimiento empresarial</strong>
                   y crear conexiones que definirán el futuro de tu negocio.
                 </p>
 
-                <div class="flex items-center justify-center space-x-8 text-sm text-gray-500 mb-12">
-                  <div class="flex items-center">
+                <div class="flex items-center justify-center space-x-8 text-sm text-gray-400 mb-12">
+                  <div class="flex items-center bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
                     <i class="fas fa-users text-red-500 mr-2"></i>
                     <span>+500 Empresarios</span>
                   </div>
-                  <div class="flex items-center">
-                    <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                  <div class="flex items-center bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+                    <i class="fas fa-chart-line text-blue-400 mr-2"></i>
                     <span>Networking Premium</span>
                   </div>
-                  <div class="flex items-center">
-                    <i class="fas fa-trophy text-yellow-500 mr-2"></i>
+                  <div class="flex items-center bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+                    <i class="fas fa-trophy text-yellow-400 mr-2"></i>
                     <span>Eventos Exclusivos</span>
                   </div>
                 </div>
@@ -1376,67 +1522,66 @@
             </div>
 
             <!-- Enhanced Content Blocks -->
-            <div class="max-w-6xl mx-auto mb-12">
+            <div class="max-w-6xl mx-auto mb-12 relative z-20">
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
                 <!-- Left Content -->
-                <div>
+                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-md">
                   <div
-                    class="inline-flex items-center px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-sm font-medium mb-6">
+                    class="inline-flex items-center px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium mb-6">
                     <i class="fas fa-rocket mr-2"></i>
                     IMPULSA TU CRECIMIENTO
                   </div>
-                  <h3 class="text-3xl font-bold text-gray-900 mb-6">Conferencias Magistrales & Talleres Especializados
-                  </h3>
-                  <p class="text-lg text-gray-600 leading-relaxed mb-6">
-                    Desde <span class="text-blue-600 font-semibold">conferencias magistrales</span> con líderes de
+                  <h3 class="text-3xl font-bold text-white mb-6">Conferencias Magistrales & Talleres</h3>
+                  <p class="text-lg text-gray-400 leading-relaxed mb-6 font-light">
+                    Desde <span class="text-blue-400 font-medium">conferencias magistrales</span> con líderes de
                     industria hasta
-                    <span class="text-green-600 font-semibold">talleres especializados</span> en las últimas tendencias
+                    <span class="text-green-400 font-medium">talleres especializados</span> en las últimas tendencias
                     de
-                    innovación y tecnología.
+                    innovación.
                   </p>
-                  <div class="space-y-3">
+                  <div class="space-y-4">
                     <div class="flex items-center">
-                      <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                      <span class="text-gray-700">Estrategias de negocio probadas</span>
+                      <div class="bg-green-500/20 p-2 rounded-lg mr-4"><i class="fas fa-check text-green-400"></i></div>
+                      <span class="text-gray-300">Estrategias de negocio probadas</span>
                     </div>
                     <div class="flex items-center">
-                      <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                      <span class="text-gray-700">Tecnologías emergentes aplicadas</span>
+                      <div class="bg-green-500/20 p-2 rounded-lg mr-4"><i class="fas fa-check text-green-400"></i></div>
+                      <span class="text-gray-300">Tecnologías emergentes aplicadas</span>
                     </div>
                     <div class="flex items-center">
-                      <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                      <span class="text-gray-700">Casos de éxito reales</span>
+                      <div class="bg-green-500/20 p-2 rounded-lg mr-4"><i class="fas fa-check text-green-400"></i></div>
+                      <span class="text-gray-300">Casos de éxito reales</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Right Content -->
-                <div>
+                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-md">
                   <div
-                    class="inline-flex items-center px-3 py-1 bg-purple-50 border border-purple-200 rounded-full text-purple-700 text-sm font-medium mb-6">
+                    class="inline-flex items-center px-3 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium mb-6">
                     <i class="fas fa-handshake mr-2"></i>
                     NETWORKING ESTRATÉGICO
                   </div>
-                  <h3 class="text-3xl font-bold text-gray-900 mb-6">Conexiones de Alto Valor</h3>
-                  <p class="text-lg text-gray-600 leading-relaxed mb-6">
-                    Sumérgete en experiencias de <span class="text-purple-600 font-semibold">networking de alto
-                      valor</span>,
-                    donde cada conversación puede convertirse en una <span class="text-red-600 font-semibold">alianza
+                  <h3 class="text-3xl font-bold text-white mb-6">Conexiones de Alto Valor</h3>
+                  <p class="text-lg text-gray-400 leading-relaxed mb-8 font-light">
+                    Sumérgete en experiencias de <span class="text-purple-400 font-medium">networking exclusivo</span>,
+                    donde cada conversación puede convertirse en una <span class="text-red-400 font-medium">alianza
                       estratégica</span>
-                    que impulse tu crecimiento.
+                    vital para tu empresa.
                   </p>
-                  <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
+                  <div class="bg-black/40 p-6 rounded-2xl border border-white/5">
                     <div class="grid grid-cols-2 gap-4">
-                      <div class="text-center">
-                        <div class="text-2xl font-bold text-red-600">90%</div>
-                        <div class="text-sm text-gray-600">Empresas Participantes</div>
+                      <div class="text-center px-4 border-r border-white/10">
+                        <div class="text-3xl font-black text-red-500 mb-1">90%</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wider">Empresas TOP</div>
                       </div>
-                      <div class="text-center">
-                        <div class="text-2xl font-bold text-blue-600">98%</div>
-                        <div class="text-sm text-gray-600">Satisfacción</div>
+                      <div class="text-center px-4">
+                        <div class="text-3xl font-black text-blue-500 mb-1">98%</div>
+                        <div class="text-xs text-gray-400 uppercase tracking-wider">Satisfacción</div>
                       </div>
                     </div>
                   </div>
+                </div>        </div>
                 </div>
               </div>
             </div>
@@ -1444,91 +1589,63 @@
             <!-- Enhanced Benefits Grid -->
             <div class="max-w-6xl mx-auto mb-10">
               <div class="text-center mb-12">
-                <h3 class="text-3xl font-bold text-gray-900 mb-4">¿Por qué Participar en Nuestros Eventos?</h3>
-                <p class="text-lg text-gray-600">Beneficios exclusivos que marcarán la diferencia en tu trayectoria
-                  empresarial</p>
+                <h3 class="text-4xl font-black text-white mb-4 tracking-tight">¿Por qué Participar en Nuestros Eventos?</h3>
+                <p class="text-lg text-gray-400">Beneficios exclusivos que marcarán la diferencia en tu trayectoria empresarial</p>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div
-                  class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                  <div
-                    class="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div class="group bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 hover:border-red-500/50 hover:bg-white/10 transition-all duration-500 transform hover:-translate-y-2">
+                  <div class="bg-gradient-to-br from-red-500 to-red-600 shadow-lg shadow-red-500/30 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-calendar-check text-white text-2xl"></i>
                   </div>
-                  <h4 class="text-xl font-bold text-gray-900 mb-3">Eventos Exclusivos</h4>
-                  <p class="text-gray-600 leading-relaxed mb-4">Acceso privilegiado a conferencias y talleres de alto
-                    nivel con los mejores expertos de la industria</p>
-                  <div class="flex items-center text-red-600 font-semibold text-sm">
-                    <span>Más información</span>
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                  </div>
+                  <h4 class="text-xl font-bold text-white mb-3">Eventos Exclusivos</h4>
+                  <p class="text-gray-400 leading-relaxed mb-6 font-light">Acceso privilegiado a conferencias y talleres de alto nivel con los mejores expertos de la industria</p>
                 </div>
 
-                <div
-                  class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                  <div
-                    class="bg-gradient-to-br from-blue-500 to-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div class="group bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 hover:border-blue-500/50 hover:bg-white/10 transition-all duration-500 transform hover:-translate-y-2">
+                  <div class="bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-network-wired text-white text-2xl"></i>
                   </div>
-                  <h4 class="text-xl font-bold text-gray-900 mb-3">Networking Premium</h4>
-                  <p class="text-gray-600 leading-relaxed mb-4">Conecta directamente con líderes empresariales y
-                    desarrolla relaciones comerciales estratégicas duraderas</p>
-                  <div class="flex items-center text-blue-600 font-semibold text-sm">
-                    <span>Conectar ahora</span>
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                  </div>
+                  <h4 class="text-xl font-bold text-white mb-3">Networking Premium</h4>
+                  <p class="text-gray-400 leading-relaxed mb-6 font-light">Conecta directamente con líderes empresariales y desarrolla relaciones comerciales estratégicas duraderas</p>
                 </div>
 
-                <div
-                  class="group bg-white p-8 rounded-2xl border border-gray-200 hover:border-green-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                  <div
-                    class="bg-gradient-to-br from-green-500 to-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div class="group bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 hover:border-green-500/50 hover:bg-white/10 transition-all duration-500 transform hover:-translate-y-2">
+                  <div class="bg-gradient-to-br from-green-500 to-green-600 shadow-lg shadow-green-500/30 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <i class="fas fa-lightbulb text-white text-2xl"></i>
                   </div>
-                  <h4 class="text-xl font-bold text-gray-900 mb-3">Innovación Continua</h4>
-                  <p class="text-gray-600 leading-relaxed mb-4">Mantente a la vanguardia con las últimas tendencias
-                    tecnológicas y estrategias empresariales emergentes</p>
-                  <div class="flex items-center text-green-600 font-semibold text-sm">
-                    <span>Explorar tendencias</span>
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                  </div>
+                  <h4 class="text-xl font-bold text-white mb-3">Innovación Continua</h4>
+                  <p class="text-gray-400 leading-relaxed mb-6 font-light">Mantente a la vanguardia con las últimas tendencias tecnológicas y estrategias empresariales emergentes</p>
                 </div>
               </div>
             </div>
 
             <!-- Enhanced Call to Action -->
-            <div class="text-center mb-8">
-              <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl p-8 border border-gray-200">
-                <h3 class="text-3xl font-bold text-gray-900 mb-6">¿Listo para Transformar tu Negocio?</h3>
-                <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                  No te pierdas la oportunidad de formar parte de la comunidad empresarial más dinámica.
-                  Cada evento es una puerta hacia nuevas posibilidades.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <button
-                    class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center">
-                    <i class="fas fa-calendar-plus mr-3 text-xl"></i>
-                    Explora Nuestros Próximos Eventos
-                    <i class="fas fa-arrow-down ml-3 animate-bounce"></i>
-                  </button>
+            <div class="text-center mb-8 relative z-20">
+              <div class="bg-gradient-to-br from-gray-900 to-black rounded-[2.5rem] p-10 border border-white/10 shadow-2xl relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('./css/moveimage.png')] opacity-10 bg-cover bg-center"></div>
+                <div class="relative z-10">
+                  <h3 class="text-4xl font-black text-white mb-6 tracking-tight">¿Listo para Transformar tu Negocio?</h3>
+                  <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto font-light">
+                    No te pierdas la oportunidad de formar parte de la comunidad empresarial más dinámica.
+                    Cada evento es una puerta hacia nuevas posibilidades.
+                  </p>
+                  <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-4 px-10 rounded-full shadow-lg shadow-red-500/20 hover:shadow-red-500/40 transition-all duration-300 transform hover:-translate-y-1 flex items-center tracking-wide">
+                      <i class="fas fa-calendar-plus mr-3 text-xl hover:rotate-12 transition-transform"></i>
+                      Explora Nuestros Próximos Eventos
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Scroll Image Section -->
-        <section class="section2" style="--bg: black;">
-          <div class="image-motion">
-            <picture>
-              <img src="./css/moveimage.png" alt="Colaboración empresarial">
-            </picture>
-          </div>
         </section>
 
         <!-- Events Content Section -->
-        <section style="--bg: black;" class="section3">
+        <section class="section3 relative z-20">
           <div class="container">
             <h1 class="title">Eventos del Clúster</h1>
             <p class="subtitle">Conectando oportunidades de negocio</p>

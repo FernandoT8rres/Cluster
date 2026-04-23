@@ -7,7 +7,7 @@
 // Incluir la configuración de base de datos
 $config_paths = [
     '../config/database.php',
-    '../assets/conexion/database_config.php',
+    '../config/database.php',
     '../api/config.php'
 ];
 

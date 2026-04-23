@@ -10,7 +10,7 @@ define('CLAUT_ACCESS', true);
 error_reporting(0);
 ini_set('display_errors', 0);
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/../utils/api-response.php';
 header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -42,8 +42,12 @@ if (!empty($_SESSION['user_id'])) {
     $user_email = $_SESSION['user_email'] ?? $_SESSION['usuario_email'] ?? null;
 }
 
-$user_rol = $_SESSION['user_rol'] ?? $_SESSION['usuario_rol'] ?? $_SESSION['rol'] ?? 'empleado';
-$method = $_SERVER['REQUEST_METHOD'];
+$user_rol = $_SESSION['user_rol'] 
+         ?? $_SESSION['usuario_rol'] 
+         ?? $_SESSION['rol'] 
+         ?? $_SESSION['user_role']
+         ?? $_SESSION['tipo_usuario']
+         ?? 'empleado';
 
 try {
     $db = Database::getInstance();
@@ -60,36 +64,63 @@ try {
         }
     }
 
-    if (!$user_id) {
-        http_response_code(401);
-        echo json_encode(['error' => 'No autenticado']);
-        exit();
+    // Si no tenemos rol claro, consultar en BD directamente por user_id
+    if ($user_id && $user_rol === 'empleado') {
+        $stmt = $conn->prepare("SELECT rol FROM usuarios_perfil WHERE id = ? LIMIT 1");
+        $stmt->execute([$user_id]);
+        $u = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($u && !empty($u['rol'])) {
+            $user_rol = $u['rol'];
+        }
     }
+
+    if (!$user_id) {
+        ApiResponse::error('No autenticado', 401);
+    }
+
+    $is_admin = in_array($user_rol, ['admin', 'superadmin', 'Administrador', 'root']);
+
+    // Si aún parece empleado, verificar en tabla 'usuarios' también
+    if (!$is_admin && $user_id) {
+        try {
+            $chk = $conn->prepare("SELECT rol FROM usuarios WHERE id = ? LIMIT 1");
+            $chk->execute([$user_id]);
+            $ru = $chk->fetch(PDO::FETCH_ASSOC);
+            if ($ru && in_array($ru['rol'], ['admin', 'superadmin', 'Administrador', 'root'])) {
+                $is_admin = true;
+                $user_rol = $ru['rol'];
+            }
+        } catch (Exception $ignored) {}
+    }
+
+    $method = $_SERVER['REQUEST_METHOD'];
+
 
     switch ($method) {
         case 'GET':
             $estado = $_GET['estado'] ?? null;
-            $is_admin = in_array($user_rol, ['admin', 'superadmin']);
 
             if ($is_admin) {
+                // LEFT JOIN para no perder solicitudes si el user no tiene perfil
                 $sql = "
                     SELECT 
                         s.*,
-                        u.nombre as usuario_nombre,
-                        u.apellidos as usuario_apellido,
-                        u.email as usuario_email,
+                        COALESCE(up.nombre, 'Socio') as usuario_nombre,
+                        COALESCE(up.apellidos, '') as usuario_apellido,
+                        COALESCE(up.email, '') as usuario_email,
                         COALESCE(e.nombre, e.nombre_empresa) as empresa_nombre_existente,
-                        a.nombre as admin_nombre
+                        COALESCE(ap.nombre, 'Admin') as admin_nombre
                     FROM solicitudes_empresa s
-                    INNER JOIN usuarios_perfil u ON s.usuario_id = u.id
+                    LEFT JOIN usuarios_perfil up ON s.usuario_id = up.id
                     LEFT JOIN empresas_convenio e ON s.empresa_id = e.id
-                    LEFT JOIN usuarios_perfil a ON s.admin_id = a.id
+                    LEFT JOIN usuarios_perfil ap ON s.admin_id = ap.id
                 ";
                 $params = [];
                 if ($estado) {
                     $sql .= " WHERE s.estado = ?";
                     $params = [$estado];
                 }
+
             } else {
                 $sql = "
                     SELECT 
@@ -119,16 +150,14 @@ try {
                 }
             }
 
-            echo json_encode(['success' => true, 'solicitudes' => $solicitudes]);
+            ApiResponse::success(['solicitudes' => $solicitudes]);
             break;
 
         case 'POST':
             $data = json_decode(file_get_contents('php://input'), true);
 
             if (!$data || !isset($data['tipo_solicitud'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Datos inválidos']);
-                exit();
+                ApiResponse::error('Datos inválidos', 400);
             }
 
             $tipo = $data['tipo_solicitud'];
@@ -136,28 +165,20 @@ try {
             $datos_empresa = isset($data['datos_empresa']) ? json_encode($data['datos_empresa']) : null;
 
             if (!in_array($tipo, ['crear', 'mostrar', 'actualizar'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Tipo de solicitud inválido. Use: crear, mostrar, actualizar']);
-                exit();
+                ApiResponse::error('Tipo de solicitud inválido. Use: crear, mostrar, actualizar', 400);
             }
 
             if ($tipo === 'mostrar' && !$empresa_id) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Se requiere empresa_id para solicitudes de tipo "mostrar"']);
-                exit();
+                ApiResponse::error('Se requiere empresa_id para solicitudes de tipo "mostrar"', 400);
             }
 
             if (in_array($tipo, ['crear', 'actualizar']) && !$datos_empresa) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Se requieren datos_empresa para este tipo de solicitud']);
-                exit();
+                ApiResponse::error('Se requieren datos_empresa para este tipo de solicitud', 400);
             }
 
             // For 'actualizar', empresa_id is also required
             if ($tipo === 'actualizar' && !$empresa_id) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Se requiere empresa_id para solicitudes de tipo "actualizar"']);
-                exit();
+                ApiResponse::error('Se requiere empresa_id para solicitudes de tipo "actualizar"', 400);
             }
 
             // Check for existing pending request of same type for same company
@@ -169,12 +190,7 @@ try {
                     // Update instead of insert
                     $stmt = $conn->prepare("UPDATE solicitudes_empresa SET datos_empresa = ?, fecha_solicitud = NOW() WHERE id = ?");
                     $stmt->execute([$datos_empresa, $existing['id']]);
-                    echo json_encode([
-                        'success' => true,
-                        'message' => 'Solicitud de cambio actualizada. El administrador revisará tus cambios.',
-                        'solicitud_id' => $existing['id']
-                    ]);
-                    exit();
+                    ApiResponse::success(['solicitud_id' => $existing['id']], 'Solicitud de cambio actualizada. El administrador revisará tus cambios.');
                 }
             }
 
@@ -206,32 +222,22 @@ try {
                     // Notification failure is non-critical
                 }
 
-                echo json_encode([
-                    'success'      => true,
-                    'message'      => 'Solicitud enviada. El administrador revisará tus cambios.',
-                    'solicitud_id' => $solicitud_id
-                ]);
+                ApiResponse::success(['solicitud_id' => $solicitud_id], 'Solicitud enviada. El administrador revisará tus cambios.');
             } else {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error al crear la solicitud']);
+                ApiResponse::error('Error al crear la solicitud', 500);
             }
             break;
 
         case 'PUT':
             // Admin: approve or reject a request
-            $is_admin = in_array($user_rol, ['admin', 'superadmin']);
             if (!$is_admin) {
-                http_response_code(403);
-                echo json_encode(['error' => 'Se requieren permisos de administrador']);
-                exit();
+                ApiResponse::error('Se requieren permisos de administrador', 403);
             }
 
             $data = json_decode(file_get_contents('php://input'), true);
 
             if (!$data || !isset($data['id']) || !isset($data['accion'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Datos inválidos. Se requiere id y accion.']);
-                exit();
+                ApiResponse::error('Datos inválidos. Se requiere id y accion.', 400);
             }
 
             $solicitud_id = intval($data['id']);
@@ -239,9 +245,7 @@ try {
             $notas = $data['notas'] ?? null;
 
             if (!in_array($accion, ['aprobar', 'rechazar'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Acción inválida. Use: aprobar, rechazar']);
-                exit();
+                ApiResponse::error('Acción inválida. Use: aprobar, rechazar', 400);
             }
 
             $stmt = $conn->prepare("SELECT * FROM solicitudes_empresa WHERE id = ?");
@@ -249,15 +253,11 @@ try {
             $solicitud = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$solicitud) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Solicitud no encontrada']);
-                exit();
+                ApiResponse::error('Solicitud no encontrada', 404);
             }
 
             if ($solicitud['estado'] !== 'pendiente') {
-                http_response_code(400);
-                echo json_encode(['error' => 'Esta solicitud ya fue procesada']);
-                exit();
+                ApiResponse::error('Esta solicitud ya fue procesada', 400);
             }
 
             $conn->beginTransaction();
@@ -271,9 +271,9 @@ try {
                         $empresa_id_upd = intval($solicitud['empresa_id']);
 
                         // Map frontend field names to actual DB column names
-                        // (profile.html uses 'contacto_persona' but the table has 'contacto_nombre')
                         $field_map = [
                             'contacto_persona' => 'contacto_nombre',
+                            'whatsapp'         => 'contacto_movil'
                         ];
 
                         // Columns that actually exist in empresas_convenio
@@ -281,15 +281,27 @@ try {
                             'nombre_empresa', 'nombre', 'sector', 'descripcion', 'logo_url',
                             'email', 'telefono', 'sitio_web', 'direccion',
                             'contacto_nombre', 'contacto_telefono', 'contacto_email',
-                            'descuento_porcentaje', 'beneficios', 'condiciones'
+                            'descuento_porcentaje', 'beneficios', 'condiciones', 'fecha_convenio',
+                            'entidad_federativa', 'municipio', 'certificaciones', 'exporta', 
+                            'redes_fb', 'redes_x', 'redes_linkedin', 'redes_instagram',
+                            'contacto_movil', 'contacto_cargo', 'categoria', 'keywords', 'codigo_cupon'
                         ];
+
+                        // Granular logic: if the admin provided a list of fields to approve
+                        $approved_fields = $data['approved_fields'] ?? null;
 
                         $fields = [];
                         $vals   = [];
 
                         foreach ($datos as $key => $value) {
+                            // If granular approval is used, check if this field is in the approved list
+                            if ($approved_fields !== null && !in_array($key, $approved_fields)) {
+                                continue;
+                            }
+
                             // Remap if needed
                             $col = $field_map[$key] ?? $key;
+                            
                             // Only update actual DB columns
                             if (in_array($col, $allowed_db)) {
                                 $fields[] = "`$col` = ?";
@@ -368,11 +380,7 @@ try {
 
                 $conn->commit();
 
-                echo json_encode([
-                    'success'    => true,
-                    'message'    => 'Solicitud ' . $nuevo_estado . ' exitosamente',
-                    'empresa_id' => $empresa_creada_id
-                ]);
+                ApiResponse::success(['empresa_id' => $empresa_creada_id], 'Solicitud ' . $nuevo_estado . ' exitosamente');
 
             } catch (Exception $e) {
                 $conn->rollBack();
@@ -383,9 +391,7 @@ try {
         case 'DELETE':
             $solicitud_id = intval($_GET['id'] ?? 0);
             if (!$solicitud_id) {
-                http_response_code(400);
-                echo json_encode(['error' => 'ID de solicitud requerido']);
-                exit();
+                ApiResponse::error('ID de solicitud requerido', 400);
             }
 
             $stmt = $conn->prepare("SELECT * FROM solicitudes_empresa WHERE id = ? AND usuario_id = ?");
@@ -393,33 +399,27 @@ try {
             $solicitud = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$solicitud) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Solicitud no encontrada']);
-                exit();
+                ApiResponse::error('Solicitud no encontrada', 404);
             }
 
             if ($solicitud['estado'] !== 'pendiente') {
-                http_response_code(400);
-                echo json_encode(['error' => 'Solo puedes cancelar solicitudes pendientes']);
-                exit();
+                ApiResponse::error('Solo puedes cancelar solicitudes pendientes', 400);
             }
 
             $stmt = $conn->prepare("DELETE FROM solicitudes_empresa WHERE id = ?");
             $result = $stmt->execute([$solicitud_id]);
 
-            echo json_encode($result
-                ? ['success' => true, 'message' => 'Solicitud cancelada']
-                : ['error' => 'Error al cancelar']
-            );
+            if ($result) {
+                ApiResponse::success(null, 'Solicitud cancelada');
+            } else {
+                ApiResponse::error('Error al cancelar');
+            }
             break;
 
         default:
-            http_response_code(405);
-            echo json_encode(['error' => 'Método no permitido']);
-            break;
+            ApiResponse::error('Método no permitido', 405);
     }
 
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Error del servidor', 'message' => $e->getMessage()]);
+    ApiResponse::error('Error del servidor', 500, ['error_info' => $e->getMessage()]);
 }

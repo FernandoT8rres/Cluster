@@ -6,9 +6,13 @@ define('CLAUT_ACCESS', true);
 require_once dirname(dirname(__DIR__)) . '/config/session-config.php';
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
+
+// CORS dinámico igual que login-compatible.php para que el browser envíe la cookie
+$origin = $_SERVER['HTTP_ORIGIN'] ?? 'https://intranet.clautmetropolitano.mx';
+header("Access-Control-Allow-Origin: $origin");
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true'); // CRÍTICO: sin esto el browser no manda la cookie de sesión
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -20,37 +24,44 @@ $sessionValid = SessionConfig::init() && SessionConfig::isValid();
 
 try {
     // Verificar si existe sesión activa
-    $isValid = $sessionValid && isset($_SESSION['user_email']) && !empty($_SESSION['user_email']);
+    $isValid = false;
     $userData = null;
 
-    // Verificar variables de sesión (usar las mismas que el sistema actual)
-    if (isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) {
+    // Verificar variables de sesión (usar las mismas que login-compatible.php establece)
+    if ($sessionValid && isset($_SESSION['user_email']) && !empty($_SESSION['user_email'])) {
         $isValid = true;
         $userData = [
-            'email' => $_SESSION['user_email'],
-            'nombre' => $_SESSION['user_nombre'] ?? null,
-            'empresa' => $_SESSION['user_empresa'] ?? null,
-            'rol' => $_SESSION['user_rol'] ?? null
+            'user_id' => $_SESSION['user_id'] ?? null,
+            'email'   => $_SESSION['user_email'],
+            'nombre'  => $_SESSION['user_nombre'] ?? null,
+            'empresa' => $_SESSION['user_nombre_empresa'] ?? null,
+            'rol'     => $_SESSION['user_rol'] ?? null
         ];
+    }
+
+    // Cerrar escritura de sesión antes de responder (fix crítico Hostinger LiteSpeed)
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
     }
 
     // Respuesta exitosa
     http_response_code(200);
     echo json_encode([
-        'success' => true,
-        'valid' => $isValid,
-        'data' => $userData,
-        'session_id' => session_id(),
+        'success'   => true,
+        'valid'     => $isValid,
+        'data'      => $userData,
         'timestamp' => date('Y-m-d H:i:s')
     ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
-    // Error del servidor
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'valid' => false,
-        'error' => 'Error interno del servidor: ' . $e->getMessage()
+        'valid'   => false,
+        'error'   => 'Error interno del servidor'
     ], JSON_UNESCAPED_UNICODE);
 }
 ?>

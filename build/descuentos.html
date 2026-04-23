@@ -51,6 +51,129 @@
   <link rel="stylesheet" href="./assets/css/layout/header-navbar.css" />
 
   <style>
+    /* ============================================================
+       RESPONSIVE MASTER — descuentos.html
+    ============================================================ */
+    html, body {
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+    }
+
+    /* --- Main: padding responsive --- */
+    main.claut-main {
+      padding-top: var(--header-height, 64px) !important;
+      padding-left:  clamp(0.75rem, 3vw, 3rem) !important;
+      padding-right: clamp(0.75rem, 3vw, 3rem) !important;
+      padding-bottom: 2rem !important;
+      margin-top: 0 !important;
+      margin-left: 0 !important;
+      overflow-x: hidden !important;
+    }
+
+    /* --- Navbar interna: sin márgenes laterales fijos --- */
+    nav[navbar-main],
+    .porsche-navbar[navbar-main] {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    @media (min-width: 1025px) {
+      nav[navbar-main],
+      .porsche-navbar[navbar-main] {
+        margin-top: 1.5rem !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      nav[navbar-main],
+      .porsche-navbar[navbar-main] {
+        margin-top: 0.75rem !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+      .porsche-navbar .flex-wrap-inherit {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+      }
+      .porsche-breadcrumb { margin-right: 0 !important; }
+    }
+
+    /* --- Content container: sin padding fijo --- */
+    .content-gradient-container {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* --- Discount container: altura adaptable --- */
+    .discount-container {
+      height: auto !important;
+      min-height: clamp(180px, 40vw, 400px) !important;
+      padding-bottom: 1rem;
+    }
+
+    .discount-stream {
+      position: relative !important;
+      width: 100% !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .discount-line {
+      padding: 1rem 0.5rem !important;
+    }
+
+    /* --- Tarjetas de descuento: ancho adaptable --- */
+    .discount-card-wrapper {
+      width: clamp(260px, 80vw, 350px) !important;
+      flex-shrink: 0 !important;
+    }
+
+    @media (max-width: 480px) {
+      .discount-card-wrapper {
+        width: clamp(220px, 85vw, 300px) !important;
+      }
+      main.claut-main {
+        padding-top: 56px !important;
+      }
+    }
+
+    /* --- Info card: grid 1 columna en móvil (ya tiene md:grid-cols-2) --- */
+    @media (max-width: 640px) {
+      .grid.grid-cols-1.md\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+      }
+      .descuentos-info-card {
+        padding: 1rem !important;
+      }
+    }
+
+    /* --- Contenedor pr-6 pl-0 inicial: ajustar en móvil --- */
+    @media (max-width: 767px) {
+      .pr-6.pt-6.pb-6.pl-0 {
+        padding: 0.75rem 0 !important;
+      }
+    }
+
+    /* --- Mobile menu button --- */
+    .claut-mobile-menu-btn {
+      display: none;
+    }
+    @media (max-width: 767px) {
+      .claut-mobile-menu-btn {
+        display: flex !important;
+      }
+    }
+
+    /* --- Header actions area (reusar del header-navbar.css) --- */
+    .claut-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     /* Estilos para efecto flip en tarjetas de descuentos */
     .descuento-card {
       min-height: auto;
@@ -159,6 +282,137 @@
       z-index: 0;
       pointer-events: none;
     }
+
+    /* ============================================================
+       MENÚ CURVO ANIMADO — Igual que dashboard.html
+    ============================================================ */
+    .claut-bottom-nav {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 95% !important;
+      max-width: 600px !important;
+      height: 70px !important;
+      background: var(--claut-bg-surface, #252a32) !important;
+      border-radius: 35px 35px 0 0 !important;
+      border: 1px solid rgba(15,23,42,0.12) !important;
+      border-bottom: none !important;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.4) !important;
+      z-index: 9999 !important;
+      overflow: hidden !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      display: none; /* visible sólo en móvil/tablet */
+    }
+
+    .claut-bottom-nav::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 100%;
+      background: linear-gradient(180deg, #252a32 0%, #2d333b 100%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    .claut-nav-container {
+      position: relative !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-evenly !important;
+      padding: 0 8px !important;
+      box-sizing: border-box !important;
+      overflow-x: auto !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    .claut-nav-container::-webkit-scrollbar { display: none !important; }
+
+    .claut-nav-link {
+      position: relative !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 48px !important;
+      height: 48px !important;
+      text-decoration: none !important;
+      color: #94a3b8 !important;
+      transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55) !important;
+      border-radius: 50% !important;
+      z-index: 2 !important;
+      flex: 0 0 auto !important;
+      margin: 0 2px !important;
+    }
+    .claut-nav-link i { font-size: 18px; transition: all 0.3s ease; }
+    .claut-nav-link span {
+      font-size: 9px; margin-top: 1px; opacity: 0;
+      transform: translateY(10px); transition: all 0.3s ease; font-weight: 500;
+    }
+    .claut-nav-link.active {
+      color: #C7252B !important;
+      transform: translateY(-10px);
+    }
+    .claut-nav-link.active::before {
+      content: ''; position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 50px; height: 50px;
+      background: #C7252B; border-radius: 50%;
+      z-index: -1; opacity: 0.2;
+      animation: pulse 2s infinite;
+    }
+    .claut-nav-link.active span {
+      opacity: 1; transform: translateY(0); color: #C7252B;
+    }
+    .claut-nav-link:hover {
+      color: #C7252B !important;
+      transform: translateY(-5px) scale(1.1);
+    }
+    .claut-nav-link:hover span { opacity: 1; transform: translateY(0); }
+
+    .claut-nav-curve {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 1;
+    }
+    .claut-nav-curve::before {
+      content: ''; position: absolute; top: 0;
+      left: var(--curve-position, 20%);
+      width: 60px; height: 60px;
+      background: #C7252B; border-radius: 50% 50% 0 0;
+      transform: translateX(-50%) translateY(-30px);
+      transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+      opacity: 0.1;
+      box-shadow: 0 -5px 15px rgba(199,37,43,0.3);
+    }
+
+    @keyframes pulse {
+      0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+      50%  { transform: translate(-50%,-50%) scale(1.2); opacity: 0.1; }
+      100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+    }
+
+    /* Responsive — visible sólo en ≤1024px */
+    @media (max-width: 1024px) {
+      .claut-bottom-nav { display: flex !important; }
+      .claut-header-nav { display: none !important; }
+      .claut-main, main { padding-bottom: 90px !important; }
+    }
+    @media (min-width: 1025px) {
+      .claut-bottom-nav { display: none !important; }
+      .claut-header-nav { display: flex !important; }
+    }
+    @media (max-width: 768px) {
+      .claut-bottom-nav { width: 95%; height: 65px; }
+      .claut-nav-link   { width: 55px; height: 55px; }
+      .claut-nav-link i { font-size: 20px; }
+    }
   </style>
 
 </head>
@@ -205,18 +459,17 @@
       </a>
     </nav>
 
-    <!-- Actions area -->
+
+    <!-- Actions area con botón hamburger para móvil -->
     <div class="claut-header-actions">
-
       <!-- Menú usuario -->
-      <div class="relative">
-        <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
-          <i class="fas fa-user-circle text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Botón toggle menú móvil -->
-      <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+      <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta"
+        style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
+        <i class="fas fa-user-circle" style="font-size:1.1rem;"></i>
+      </button>
+      <!-- Botón hamburger móvil -->
+      <button class="claut-header-btn claut-mobile-menu-btn" id="mobileMenuBtn" title="Menú"
+        style="display:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
         <i class="fas fa-bars"></i>
       </button>
     </div>
@@ -236,7 +489,7 @@
   </section>
 
   <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
-    style="margin-top: 1rem; margin-left: 0; padding: var(--space-4) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
+    style="overflow: hidden; z-index: 1; position: relative;">
     <!-- Contenido principal con restricción de autenticación -->
     <div class="main-content-wrapper relative z-10">
       <div id="mainContent" class="">
@@ -244,7 +497,7 @@
         <nav
           class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-1 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
           navbar-main navbar-scroll="false"
-          style="display: flex; margin-top: 80px; margin-left: 120px; margin-right: 120px; z-index: 999999; position: relative;">
+          style="display: flex; z-index: 999999; position: relative;">
           <div class="flex items-center justify-between w-full px-6 py-0 mx-auto flex-wrap-inherit">
             <nav>
               <!-- breadcrumb -->
@@ -285,7 +538,7 @@
                 </li>
                 <!-- Botón Panel de Administración (solo para admins) -->
                 <li class="flex items-center pl-4 hidden" id="adminPanelButton">
-                  <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                  <a href="./admin-panel.html?login=success"
                     class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
                     title="Panel de Administración">
                     <i class="fas fa-cogs mr-2"></i>
@@ -300,7 +553,7 @@
         <!-- end Navbar -->
         <!-- Main content con spacing Apple -->
         <div class="w-full apple-space-responsive content-gradient-container"
-          style="max-width: 100%; margin: 0 auto; padding: 0 var(--space-8); position: relative;">
+          style="max-width: 100%; margin: 0 auto; position: relative;">
           <!-- Unified gradient background for seamless transitions -->
           <div class="unified-gradient-background"></div>
 
@@ -313,7 +566,7 @@
                 <p class="opacity-80 text-white">Aprovecha estos descuentos exclusivos para empleados de Clúster</p>
               </div>
               <!-- Contenedor de animación horizontal -->
-              <div class="discount-container relative w-full overflow-hidden" style="height: 400px;">
+              <div class="discount-container relative w-full overflow-hidden">
                 <canvas id="discountParticleCanvas"
                   class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"></canvas>
 
@@ -356,22 +609,6 @@
           </div>
 
         </div>
-        <footer class="pt-4">
-          <div class="w-full px-6 mx-auto">
-            <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
-              <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
-                <div class="text-sm leading-normal text-center text-slate-500 lg:text-left text-white">
-                  © 2025, Todos Los Derechos Reservados <i class=""></i>
-                  <a href="" class="font-semibold text-slate-700 text-white" target="_blank">Clúster</a>
-                </div>
-              </div>
-              <div class="w-full max-w-full px-3 mt-0 shrink-0 lg:w-1/2 lg:flex-none">
-                <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
-                </ul>
-              </div>
-            </div>
-          </div>
-        </footer>
       </div>
       <!-- end cards -->
     </div>
@@ -502,6 +739,55 @@
 
   <script src="assets/js/loading-screen.js"></script>
   <script src="./assets/js/layout/header-navbar.js"></script>
+<script type="module" src="dist/claut-core.min.js"></script>
+
+  <!-- Menú curvo animado en la parte inferior -->
+  <nav class="claut-bottom-nav">
+    <div class="claut-nav-container">
+      <div class="claut-nav-curve"></div>
+
+      <a href="dashboard.html" class="claut-nav-link authenticated" data-section="inicio">
+        <i class="fas fa-home"></i>
+        <span>Inicio</span>
+      </a>
+
+      <a href="./descuentos.html" class="claut-nav-link authenticated active" data-section="descuentos">
+        <i class="fas fa-tags"></i>
+        <span>Descuentos</span>
+      </a>
+
+      <a href="./boletines.html" class="claut-nav-link authenticated" data-section="boletines">
+        <i class="fas fa-newspaper"></i>
+        <span>Boletines</span>
+      </a>
+
+      <a href="./comites.html" class="claut-nav-link authenticated" data-section="comite">
+        <i class="fas fa-users"></i>
+        <span>Comité</span>
+      </a>
+
+      <a href="./contacto.html" class="claut-nav-link authenticated" data-section="contacto">
+        <i class="fas fa-headset"></i>
+        <span>Contacto</span>
+      </a>
+
+      <a href="./eventos.html" class="claut-nav-link authenticated" data-section="eventos">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Eventos</span>
+      </a>
+
+      <a href="./empresas-convenio.html" class="claut-nav-link authenticated" data-section="convenios">
+        <i class="fas fa-handshake"></i>
+        <span>Convenios</span>
+      </a>
+
+      <a href="./admin-panel.html" class="claut-nav-link authenticated" data-section="admin"
+        id="adminNavItemBottom" style="display:none;">
+        <i class="fas fa-cogs"></i>
+        <span>Admin</span>
+      </a>
+    </div>
+  </nav>
 </body>
 <!-- plugin for charts  -->
 <script src="./assets/js/plugins/chartjs.min.js" async></script>
@@ -518,153 +804,51 @@
    * Sistema de autenticación simple basado en lo que funciona en dashboard.html
    */
 
-  // DETECCIÓN DE SESIÓN Y USUARIO LOGGEADO (copiado de dashboard.html)
-  function detectUserSession() {
-    console.log('🔍 Iniciando detección de sesión...');
-
-    // Verificar múltiples fuentes de datos de sesión
-    const sessionSources = [
-      localStorage.getItem('userData'),
-      localStorage.getItem('currentUser'),
-      sessionStorage.getItem('userSession'),
-      localStorage.getItem('userInfo'),
-      sessionStorage.getItem('loginData')
-    ];
-
-    // Buscar datos válidos en alguna fuente
-    let userData = null;
-    for (const source of sessionSources) {
-      if (source) {
-        try {
-          userData = JSON.parse(source);
-          if (userData && (userData.nombre || userData.name || userData.email)) {
-            console.log('👤 Usuario detectado desde storage:', userData);
-            break;
-          }
-        } catch (e) {
-          // Si no es JSON, podría ser string simple
-          if (source.length > 0) {
-            userData = { nombre: source };
-            console.log('👤 Usuario detectado como string:', source);
-            break;
-          }
-        }
+  // CORE JS MODULE Integrado
+    function displayUserInfo(userData) {
+      console.log('Mostrando información del usuario (Core Integrado):', userData);
+      const nombre = userData.nombre || userData.name || userData.email || 'Usuario';
+      const apellido = userData.apellido || userData.lastname || '';
+      const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
+      const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
+      const rol = userData.rol || userData.role || 'user';
+      
+      const welcomeText = document.getElementById('welcomeText');
+      if (welcomeText) welcomeText.textContent = `Bienvenido ${nombreCompleto}`;
+      
+      const userNameElement = document.getElementById('userName');
+      const userRoleElement = document.getElementById('userRole');
+      const userInfoDiv = document.getElementById('userInfo');
+      
+      if (userNameElement) userNameElement.textContent = nombreCompleto;
+      if (userRoleElement) userRoleElement.textContent = empresa;
+      if (userInfoDiv) {
+        userInfoDiv.classList.remove('hidden');
+        userInfoDiv.classList.add('flex');
+      }
+      
+      // Ocultar login, mostrar user items
+      const loginMenuItem = document.getElementById('loginMenuItem');
+      const loginNavItem = document.getElementById('loginNavItem');
+      if (loginMenuItem) loginMenuItem.style.display = 'none';
+      if (loginNavItem) loginNavItem.style.display = 'none';
+      
+      const userMenuDropdown = document.getElementById('userMenuDropdown');
+      const logoutMenuItem = document.getElementById('logoutMenuItem');
+      if (userMenuDropdown) userMenuDropdown.classList.remove('hidden');
+      if (logoutMenuItem) logoutMenuItem.classList.remove('hidden');
+      
+      if (typeof initializeMessageCenter === 'function') {
+        initializeMessageCenter();
+      }
+      
+      if (typeof checkAdminAccess === 'function') {
+        checkAdminAccess(rol, userData);
       }
     }
-
-    if (userData) {
-      displayUserInfo(userData);
-      console.log('✅ Usuario autenticado correctamente');
-      return userData;
-    } else {
-      console.log('ℹ️ No hay sesión de usuario detectada');
-      showLoginPrompt();
-      return null;
-    }
-  }
-
-  // Función displayUserInfo completa (basada en dashboard.html)
-  function displayUserInfo(userData) {
-    console.log('📊 Mostrando información del usuario:', userData);
-
-    // Establecer usuario globalmente
-    window.currentUser = userData;
-
-    // Extraer datos del usuario
-    const nombre = userData.nombre || userData.name || userData.email || 'Usuario';
-    const apellido = userData.apellido || userData.lastname || '';
-    const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
-    const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
-    const email = userData.email || '';
-    const rol = userData.rol || userData.role || '';
-
-    // Actualizar saludo
-    const welcomeText = document.getElementById('welcomeText');
-    if (welcomeText) {
-      welcomeText.textContent = `Bienvenido, ${nombreCompleto}`;
-    }
-
-    // Actualizar nombre de usuario en el navbar
-    const userNameElement = document.getElementById('userName');
-    const userRoleElement = document.getElementById('userRole');
-    const userInfoDiv = document.getElementById('userInfo');
-
-    if (userNameElement) userNameElement.textContent = nombreCompleto;
-    if (userRoleElement) userRoleElement.textContent = empresa;
-    if (userInfoDiv) {
-      userInfoDiv.classList.remove('hidden');
-      userInfoDiv.classList.add('flex');
-    }
-
-    // Detectar si el usuario es administrador
-    const isAdmin = (
-      rol === 'admin' ||
-      rol === 'administrator' ||
-      rol === 'administrador' ||
-      userData.is_admin === true ||
-      userData.admin === true
-    );
-
-    const adminButton = document.getElementById('adminPanelButton');
-    if (adminButton) {
-      if (isAdmin) {
-        adminButton.classList.remove('hidden');
-      } else {
-        adminButton.classList.add('hidden');
-      }
-    }
-
-    // Mostrar elementos autenticados y ocultar login
-    showAuthenticatedElements();
-
-    console.log('✅ Interfaz actualizada para usuario autenticado');
-  }
-
-  function showAuthenticatedElements() {
-    // Elementos de usuario autenticado
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const profileMenuItem = document.getElementById('profileMenuItem');
-    const logoutMenuItem = document.getElementById('logoutMenuItem');
-
-    // Elementos de login
-    const loginNavItem = document.getElementById('loginNavItem');
-    const signupNavItem = document.getElementById('signupNavItem');
-
-    // Mostrar elementos autenticados
-    if (userMenuBtn) userMenuBtn.style.display = 'flex';
-    if (profileMenuItem) profileMenuItem.classList.remove('hidden');
-    if (logoutMenuItem) logoutMenuItem.classList.remove('hidden');
-
-    // Ocultar elementos de login
-    if (loginNavItem) loginNavItem.classList.add('hidden');
-    if (signupNavItem) signupNavItem.classList.add('hidden');
-  }
-
-  /**
-   * Mostrar formulario de login
-   */
-  function showLoginPrompt() {
-    // Elementos de usuario autenticado
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const profileMenuItem = document.getElementById('profileMenuItem');
-    const logoutMenuItem = document.getElementById('logoutMenuItem');
-
-    // Elementos de login
-    const loginNavItem = document.getElementById('loginNavItem');
-    const signupNavItem = document.getElementById('signupNavItem');
-
-    // Ocultar elementos autenticados
-    if (userMenuBtn) userMenuBtn.style.display = 'none';
-    if (profileMenuItem) profileMenuItem.classList.add('hidden');
-    if (logoutMenuItem) logoutMenuItem.classList.add('hidden');
-
-    // Mostrar elementos de login
-    if (loginNavItem) loginNavItem.classList.remove('hidden');
-    if (signupNavItem) signupNavItem.classList.remove('hidden');
-  }
-
-  // Ejecutar detección de sesión al cargar (como en dashboard.html)
-  setTimeout(detectUserSession, 300);
+    
+    window.displayUserInfo = displayUserInfo;
+    
 
 </script>
 
@@ -689,8 +873,15 @@
         }
       });
     }
-
+     // Menu usuario - Redirigir al perfil
+      const headerUserMenuBtn = document.getElementById('headerUserMenuBtn');
+      if (headerUserMenuBtn) {
+        headerUserMenuBtn.addEventListener('click', () => {
+          window.location.href = './profile.html';
+        });
+      }
   });
+  
 </script>
 
 <script>
@@ -896,49 +1087,8 @@
   });
 </script>
 
-<!-- Menú curvo animado en la parte inferior -->
-<nav class="claut-bottom-nav">
-  <div class="claut-nav-container">
-    <div class="claut-nav-curve"></div>
-
-    <a href="dashboard.html" class="claut-nav-link authenticated" data-section="inicio">
-      <i class="fas fa-home"></i>
-      <span>Inicio</span>
-    </a>
-
-    <a href="./descuentos.html" class="claut-nav-link authenticated active" data-section="descuentos">
-      <i class="fas fa-tags"></i>
-      <span>Descuentos</span>
-    </a>
-
-    <a href="./boletines.html" class="claut-nav-link authenticated" data-section="boletines">
-      <i class="fas fa-newspaper"></i>
-      <span>Boletines</span>
-    </a>
-
-    <a href="./comites.html" class="claut-nav-link authenticated" data-section="comite">
-      <i class="fas fa-users"></i>
-      <span>Comité</span>
-    </a>
-
-    <a href="./contacto.html" class="claut-nav-link authenticated" data-section="contacto">
-      <i class="fas fa-headset"></i>
-      <span>Contacto</span>
-    </a>
-
-    <a href="./eventos.html" class="claut-nav-link authenticated" data-section="eventos">
-      <i class="fas fa-calendar-alt"></i>
-      <span>Eventos</span>
-    </a>
-
-    <a href="./empresas-convenio.html" class="claut-nav-link authenticated" data-section="convenios">
-      <i class="fas fa-handshake"></i>
-      <span>Convenios</span>
-    </a>
-  </div>
-</nav>
-
 <script src="assets/js/loading-screen.js"></script>
+<script type="module" src="dist/claut-core.min.js"></script>
 </body>
 
 </html>

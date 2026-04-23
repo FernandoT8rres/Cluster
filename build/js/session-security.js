@@ -28,12 +28,13 @@ class SessionSecurity {
         this.startInactivityTimer();
 
         // Iniciar validador periódico de sesión después de un margen de gracia
-        // para dar tiempo a que los scripts de autenticación asíncronos (auth-session.js) terminen
+        // NOTA: auth-session.js es asíncrono y puede tardar varios segundos en terminar.
+        // Un margen de 3s era insuficiente en Hostinger (LiteSpeed). Se aumentó a 8s.
         setTimeout(() => {
             // console.log('🔍 Iniciando validador de sesión tras margen de gracia...');
             this.validateSession();
             this.startSessionValidator();
-        }, 3000);
+        }, 8000);
 
         // console.log(`✅ Seguridad configurada: ${this.inactivityTimeout}min inactividad, verificación cada ${this.checkInterval}s`);
     }
@@ -73,7 +74,7 @@ class SessionSecurity {
     }
 
     validateSession() {
-        // Método 1: Verificar datos locales (compatible con sistema actual)
+        // Método 1: Verificar datos locales (fuente de verdad: auth-session.js ya validó con el servidor)
         const hasLocalSession = this.checkLocalSession();
 
         if (!hasLocalSession) {
@@ -82,11 +83,14 @@ class SessionSecurity {
             return;
         }
 
-        // Método 2: Verificar con el servidor (opcional)
-        this.checkServerSession();
+        // Método 2: checkServerSession() DESACTIVADO intencionalmente.
+        // auth-session.js ya hace la validación de servidor autoritativa.
+        // Una segunda llamada a validate-session.php crea race condition y
+        // puede devolver falso negativo causando redirect incorrecto en dashboard.
+        // this.checkServerSession();
 
-        // Método 3: Verificar restricciones de acceso por página
-        this.checkPageRestrictions();
+        // Método 3: checkPageRestrictions() DESACTIVADO — no se usa en producción.
+        // this.checkPageRestrictions();
     }
 
     checkLocalSession() {
@@ -107,7 +111,7 @@ class SessionSecurity {
     checkServerSession() {
         fetch(this.apiValidationUrl, {
             method: 'GET',
-            credentials: 'same-origin',
+            credentials: 'include', // FIX: 'same-origin' no enviaba la cookie en Hostinger
             headers: {
                 'Content-Type': 'application/json'
             }

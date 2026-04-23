@@ -1,1115 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
     <link rel="icon" type="image/png" href="./assets/img/favicon.png" />
-    <title>Socios - Clúster Intranet</title>
-    <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-    <!-- Font Awesome Icons - Multiple sources for reliability -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" />
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <!-- Fallback para Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/js/all.min.js"></script>
-    <!-- CSS local para iconos como último recurso -->
-    <style>
-        /* Fix para prevenir scroll horizontal */
-        html {
-            overflow-x: hidden !important;
-            max-width: 100vw !important;
-        }
+    <title>Directorio de Socios - Clúster Intranet</title>
 
-        body {
-            overflow-x: hidden !important;
-            max-width: 100vw !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .container {
-            max-width: 100% !important;
-            margin: 0 auto !important;
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }
-    </style>
-
-    <!-- Nucleo Icons -->
-    <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- GSAP Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Porsche-inspired Typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Popper -->
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <!-- Main Styling -->
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Stylesheets -->
     <link href="./assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
-
-    <!-- Porsche-inspired header-navbar CSS -->
     <link rel="stylesheet" href="./assets/css/layout/header-navbar.css">
 
-    <!-- Estilos específicos de empresas -->
-    <link rel="stylesheet" href="./css/estilos-empresas.css">
-
     <style>
-        /* Porsche-inspired Design System */
         :root {
-            /* Primary Colors - Inspired by Porsche */
-            --porsche-black: #1a1a1a;
-            --porsche-charcoal: #2d2d2d;
-            --porsche-silver: #8a8a8a;
-            --porsche-white: #ffffff;
-            --porsche-light-gray: #f5f5f5;
-            --porsche-accent: #c9302c;
-            /* Clúster red for brand consistency */
-
-            /* Typography */
-            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --porsche-font-weight-light: 300;
-            --porsche-font-weight-regular: 400;
-            --porsche-font-weight-medium: 500;
-            --porsche-font-weight-semibold: 600;
-            --porsche-font-weight-bold: 700;
-
-            /* Spacing */
-            --porsche-space-xs: 0.5rem;
-            --porsche-space-sm: 1rem;
-            --porsche-space-md: 1.5rem;
-            --porsche-space-lg: 2rem;
-            --porsche-space-xl: 3rem;
-
-            /* Shadows */
-            --porsche-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --porsche-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --porsche-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
-
-            /* Border Radius */
-            --porsche-radius-sm: 4px;
-            --porsche-radius-md: 8px;
-            --porsche-radius-lg: 12px;
-            --porsche-radius-xl: 16px;
-        }
-
-        /* Global Typography Enhancement */
-        * {
-            font-family: var(--porsche-font) !important;
+            --porsche-red: #d5001c;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-text: rgba(255, 255, 255, 0.9);
         }
 
         body {
-            font-weight: var(--porsche-font-weight-regular);
-            line-height: 1.6;
-            letter-spacing: -0.01em;
+            font-family: 'Inter', sans-serif;
+            color: #f8fafc;
+            overflow-x: hidden;
         }
 
-        /* Porsche-inspired Card System */
-        .porsche-card {
-            background: var(--porsche-white);
-            border-radius: var(--porsche-radius-lg);
-            box-shadow: var(--porsche-shadow-medium);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .porsche-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--porsche-accent), var(--porsche-charcoal));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .porsche-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--porsche-shadow-large);
-        }
-
-        .porsche-card:hover::before {
-            opacity: 1;
-        }
-
-        /* Claut Navigation System */
-
-        /* Diseño moderno de tarjetas 3x3 con alta visibilidad */
-        .empresa-card {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            position: relative;
-            border: 2px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12),
-                0 4px 12px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            height: 280px;
-            display: flex;
-            flex-direction: column;
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+        }
+
+        /* Interactive Carousel */
+        .carousel-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            padding: 2rem 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(30, 41, 59, 0.5) 50%, rgba(15, 23, 42, 0) 100%);
+        }
+
+        .carousel-track {
+            display: flex;
+            width: max-content;
+            animation: scroll var(--time, 30s) linear infinite;
+        }
+
+        .carousel-item {
+            flex: 0 0 auto;
+            width: 180px;
+            height: 100px;
+            margin: 0 1.5rem;
+            background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel-item:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 20px 35px -12px rgba(213, 0, 28, 0.3);
+            border: 2px solid var(--porsche-red);
+        }
+
+        .carousel-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-item:hover img {
+            transform: scale(1.05);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(calc(-1 * 180px * var(--total, 10)));
+            }
+        }
+
+        .carousel-track:hover {
+            animation-play-state: paused;
+        }
+
+        /* Filter Controls */
+        .filter-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--porsche-red);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(213, 0, 28, 0.1);
+        }
+
+        /* Company Card Grid - Using Tailwind JS classes instead of dark overrides */
+        .empresa-card {
+            border-radius: 1.25rem;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .empresa-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            border-color: var(--porsche-accent);
         }
 
-        /* Rainbow Border Animation - DISABLED */
-        .empresa-card {
-            position: relative;
-            container-type: inline-size;
-        }
-
-        /* Removed rainbow border effect for cleaner appearance */
-        /*
-        .empresa-card::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: conic-gradient(from 0deg,
-                    #ff006e,
-                    #fb5607,
-                    #ffbe0b,
-                    #8338ec,
-                    #3a86ff,
-                    #06ffa5,
-                    #ff006e);
-            border-radius: inherit;
-            z-index: -1;
-            animation: rainbow-rotate 3s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .empresa-card:hover::before {
-            opacity: 1;
-        }
-
-        @keyframes rainbow-rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        */
-
-        .empresa-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 18px;
-            z-index: 0;
-        }
-
-        .empresa-card-content {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            padding: 0;
-            z-index: 1;
-        }
-
-        /* Header con fondo fijo optimizado para visibilidad */
-        .empresa-card-header {
-            height: 160px;
-            background: linear-gradient(135deg,
-                    rgba(255, 255, 255, 0.95) 0%,
-                    rgba(248, 250, 252, 0.9) 50%,
-                    rgba(241, 245, 249, 0.95) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 2px solid rgba(226, 232, 240, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        /* Logo de empresa optimizado */
-        .empresa-logo {
-            width: 140px;
-            height: 100px;
-            object-fit: contain;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
-            background: #ffffff !important;
-            /* Solid white - no transparency */
-            padding: 8px;
-            /* REMOVED: backdrop-filter that caused transparency */
-            border: 1px solid rgba(200, 200, 200, 0.3);
-            opacity: 1 !important;
-            /* Force 100% opacity */
-        }
-
-        .empresa-card:hover .empresa-logo {
-            transform: scale(1.05);
-            filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.15));
-        }
-
-        /* Información de la empresa */
-        .empresa-card-info {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .empresa-nombre {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-            line-height: 1.3;
-            text-align: center;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .empresa-sector {
-            font-size: 12px;
-            color: #64748b;
-            text-align: center;
-            background: #f1f5f9;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin: 0 auto;
-            display: inline-block;
-            font-weight: 500;
-        }
-
-        /* Botón de información flotante moderno */
-        .info-button {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            background: linear-gradient(135deg, var(--porsche-accent) 0%, #b12a28 100%);
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: 600;
-            opacity: 0;
-            transform: scale(0.8) translateY(10px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 15;
-            pointer-events: none;
-            box-shadow: 0 8px 25px rgba(199, 37, 43, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .empresa-card:hover .info-button {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: all;
-        }
-
-        .info-button:hover {
-            background: linear-gradient(135deg, #b12a28 0%, #8d1f22 100%);
-            transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 12px 35px rgba(199, 37, 43, 0.4);
-        }
-
-        /* Overlay que aparece en hover */
-        .empresa-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 80%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 5;
-        }
-
-        .empresa-card:hover .empresa-overlay {
-            opacity: 1;
-        }
-
-        /* Header de la tarjeta */
-        .empresa-header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            color: white;
-            padding: 12px 16px;
-            margin: -4px -4px 0 -4px;
-            border-radius: 12px 12px 0 0;
-        }
-
-        /* Título de empresa */
-        .empresa-titulo {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        /* Descripción */
-        .empresa-descripcion {
-            color: #64748b;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            height: 2.8rem;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        /* Badge de descuento */
-        .descuento-badge {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Sector badge */
-        .sector-badge {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
+        .badge {
             font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        /* Estado badge */
-        .estado-activo {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.65rem;
             font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
         }
 
-        /* Info grid */
-        .empresa-info-grid {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 16px;
-            align-items: start;
+        .badge-sector {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
-        /* Botón ver más */
-        .btn-ver-mas {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            width: 100%;
-            margin-top: 12px;
+        .badge-status {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
 
-        .btn-ver-mas:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -8px rgba(59, 130, 246, 0.5);
-        }
-
-        /* Modal mejorado */
-        .modal-backdrop {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Loading skeleton mejorado */
-        .skeleton-card {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            border-radius: 20px;
-            overflow: hidden;
-            animation: shimmer 1.5s infinite;
-            height: 280px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        @keyframes shimmer {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* Responsive mejorado */
-        @media (max-width: 768px) {
-            .empresa-card {
-                height: 260px;
-                margin-bottom: 20px;
-            }
-
-            .empresa-card-header {
-                height: 140px;
-            }
-
-            .empresa-logo {
-                width: 120px;
-                height: 80px;
-            }
-
-            .empresa-nombre {
-                font-size: 14px;
-                min-height: 35px;
-            }
-
-            .empresa-sector {
-                font-size: 11px;
-                padding: 3px 10px;
-            }
-
-            .info-button {
-                padding: 10px 14px;
-                font-size: 12px;
-                bottom: 12px;
-                right: 12px;
-            }
-        }
-
-        /* Responsive para tarjetas verticales 3x3 */
-        @media (max-width: 768px) {
-            .empresa-card {
-                height: 260px;
-                margin-bottom: 20px;
-            }
-
-            .empresa-card-header {
-                height: 140px;
-            }
-
-            .empresa-logo {
-                width: 120px;
-                height: 80px;
-            }
-
-            .empresa-nombre {
-                font-size: 14px;
-                min-height: 35px;
-            }
-
-            .empresa-sector {
-                font-size: 11px;
-                padding: 3px 10px;
-            }
-
-            .info-button {
-                padding: 10px 14px;
-                font-size: 12px;
-                bottom: 12px;
-                right: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .empresa-card {
-                height: 240px;
-            }
-
-            .empresa-card-header {
-                height: 120px;
-            }
-
-            .empresa-logo {
-                width: 100px;
-                height: 70px;
-            }
-
-            .empresa-card-info {
-                padding: 16px;
-            }
-
-            .empresa-nombre {
-                font-size: 13px;
-                min-height: 30px;
-            }
-        }
-
-        /* Animaciones */
-        .animate-fade-in {
-            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Filtros con mejor estilo */
-        .filter-container {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Header mejorado */
-        .page-header {
-            background: black;
-            color: white;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            padding: 24px;
-        }
-
-        /* Fila de 3 empresas horizontales */
-        .empresa-fila-3x3 {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 24px;
-            border: 1px solid rgba(226, 232, 240, 0.5);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        /* Modal Enhancements */
+        #empresaModal {
             transition: all 0.3s ease;
         }
 
-        .empresa-fila-3x3:hover {
-            background: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
+        #modalContenido {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
         }
 
-        /* Mejorar contraste en el fondo */
-        #empresasContainer {
-            background: linear-gradient(135deg,
-                    rgba(241, 245, 249, 0.4) 0%,
-                    rgba(226, 232, 240, 0.3) 50%,
-                    rgba(203, 213, 225, 0.4) 100%);
-            border-radius: 20px;
-            padding: 30px 20px;
-            backdrop-filter: blur(20px);
+        #modalContenido::-webkit-scrollbar {
+            width: 6px;
         }
 
-        /* ========== EVERVAULT CAROUSEL STYLES ========== */
-
-        .evervault-control-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .empresa-card-line:active {
-            cursor: grabbing;
-        }
-
-        .empresa-card-line.dragging {
-            cursor: grabbing;
-        }
-
-        .empresa-card-wrapper {
-            position: relative;
-            width: 400px;
-            height: 350px;
-            /* Increased for better logo visibility */
-            flex-shrink: 0;
-        }
-
-        .empresa-card {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 350px;
-            /* Increased for better logo visibility */
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .empresa-card-normal {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 0;
-            color: white;
-            z-index: 2;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 1;
-        }
-
-        .empresa-card-normal:hover {
-            transform: scale(1.02);
-        }
-
-        .empresa-card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 15px;
-            transition: all 0.5s ease;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); /* Resalta el logo en fondos oscuros */
-            background: transparent; /* Fondo transparente para mostrar el efecto glass behind */
-            padding: 15px; /* Menor padding para maximizar visibilidad del logo */
-            opacity: 1;
-            z-index: 1;
-        }
-
-        .empresa-card-image:hover {
-            /* Removed filter for clean logo display */
-            transform: scale(1.05);
-            /* Slight zoom on hover */
-        }
-
-        .empresa-card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            /* Overlay only at bottom 30% with minimal opacity */
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 30%, transparent 50%);
-            padding: 20px;
-            z-index: 3;
-            /* Limit height to bottom portion only */
-            max-height: 35%;
-        }
-
-        .empresa-card-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .empresa-card-sector {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 8px;
-        }
-
-        .empresa-card-discount {
-            display: inline-block;
-            background: linear-gradient(135deg, #c9302c 0%, #a12622 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .empresa-card-ascii {
-            background: transparent;
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 250px;
-            border-radius: 15px;
-            overflow: hidden;
-            clip-path: inset(0 calc(100% - var(--clip-left, 0%)) 0 0);
-        }
-
-        .ascii-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            color: rgba(220, 210, 255, 0.6);
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            line-height: 13px;
-            overflow: hidden;
-            white-space: pre;
-            animation: glitch 0.1s infinite linear alternate-reverse;
-            margin: 0;
-            padding: 0;
-            text-align: left;
-            vertical-align: top;
-            box-sizing: border-box;
-            -webkit-mask-image: linear-gradient(to right,
-                    rgba(0, 0, 0, 1) 0%,
-                    rgba(0, 0, 0, 0.8) 30%,
-                    rgba(0, 0, 0, 0.6) 50%,
-                    rgba(0, 0, 0, 0.4) 80%,
-                    rgba(0, 0, 0, 0.2) 100%);
-            mask-image: linear-gradient(to right,
-                    rgba(0, 0, 0, 1) 0%,
-                    rgba(0, 0, 0, 0.8) 30%,
-                    rgba(0, 0, 0, 0.6) 50%,
-                    rgba(0, 0, 0, 0.4) 80%,
-                    rgba(0, 0, 0, 0.2) 100%);
-        }
-
-        @keyframes glitch {
-            0% {
-                opacity: 1;
-            }
-
-            15% {
-                opacity: 0.9;
-            }
-
-            16% {
-                opacity: 1;
-            }
-
-            49% {
-                opacity: 0.8;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            99% {
-                opacity: 0.9;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .scan-effect {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
-            animation: scanEffect 0.6s ease-out;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        @keyframes scanEffect {
-            0% {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-        }
-
-        /* Claut Navigation Variables */
-        :root {
-            --header-height: 70px;
-            --bottom-nav-height: 80px;
-            --claut-primary: #1a1a1a;
-            --claut-primary-rgb: 26, 26, 26;
-            --claut-secondary: #2d2d2d;
-            --claut-red: #c9302c;
-            --claut-red-rgb: 199, 37, 43;
-            --claut-bg-surface: rgba(26, 26, 26, 0.95);
-            --claut-bg-secondary: rgba(45, 45, 45, 0.9);
-            --claut-bg-nav: rgba(26, 26, 26, 0.98);
-            --claut-text-primary: rgba(255, 255, 255, 1);
-            --claut-text-secondary: rgba(255, 255, 255, 0.9);
-            --claut-text-tertiary: rgba(255, 255, 255, 0.7);
-            --claut-border-light: rgba(255, 255, 255, 0.1);
-            --claut-border-medium: rgba(255, 255, 255, 0.15);
-            --claut-shadow-red: 0 4px 12px rgba(var(--claut-red-rgb), 0.3);
-            --transition-fast: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-            --transition-normal: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            --space-1: 0.25rem;
-            --space-2: 0.5rem;
-            --space-3: 0.75rem;
-            --space-4: 1rem;
-            --space-6: 1.5rem;
-            --space-8: 2rem;
-            --space-12: 3rem;
-
-            --claut-nav-height: 5rem;
-            --claut-nav-bg: rgba(26, 26, 26, 0.95);
-            --claut-nav-border: rgba(255, 255, 255, 0.1);
-            --claut-nav-text: rgba(255, 255, 255, 0.9);
-            --claut-nav-text-hover: #ffffff;
-            --claut-nav-accent: #c9302c;
-            --claut-nav-radius: 1rem;
-            --claut-nav-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
-            --claut-nav-backdrop: blur(20px);
-        }
-
-        /* Header Horizontal Premium con Menú Integrado */
-        .claut-header {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100% !important;
-            height: var(--header-height);
-            background: var(--claut-bg-surface);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--claut-border-light);
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0 var(--space-6);
-            z-index: 99999 !important;
-            transition: var(--transition-normal);
-            box-shadow:
-                0 1px 3px rgba(0, 0, 0, 0.2),
-                0 4px 12px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-            will-change: transform, backdrop-filter;
-            transform: translateY(0px) !important;
-            overflow: visible !important;
-        }
-
-        /* Header scroll effects */
-        .claut-header.scrolled {
-            background: rgba(26, 26, 26, 0.98) !important;
-            box-shadow:
-                0 2px 8px rgba(0, 0, 0, 0.4),
-                0 8px 24px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            backdrop-filter: blur(25px) !important;
-            -webkit-backdrop-filter: blur(25px) !important;
-            position: fixed !important;
-            top: 0 !important;
-        }
-
-        /* Navegación horizontal principal */
-        .claut-header-nav {
-            display: none;
-            flex: 1;
-            justify-content: center;
-            align-items: center;
-            gap: var(--space-2);
-            padding: 0 var(--space-6);
-        }
-
-        /* Logo area - usando el logo existente del sidebar */
-        .claut-header-logo {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            text-decoration: none;
-            color: var(--claut-text-primary);
-            font-weight: var(--apple-font-semibold);
-            transition: all var(--transition-normal);
-            padding: var(--space-2) var(--space-3);
-            border-radius: var(--radius-md);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            overflow: hidden;
-        }
-
-        .claut-header-logo:hover {
-            color: var(--claut-red);
-            background: rgba(var(--claut-red-rgb, 199, 37, 43), 0.08);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(var(--claut-red-rgb, 199, 37, 43), 0.15);
-        }
-
-        .claut-header-logo:hover img {
-            transform: scale(1.05) rotate(2deg);
-            filter: brightness(1.1);
-        }
-
-        .claut-header-logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            transition: all var(--transition-normal);
-            object-fit: cover;
-        }
-
-        /* Actions area */
-        .claut-header-actions {
-            display: flex !important;
-            align-items: center !important;
-            gap: var(--space-3);
-            z-index: inherit;
-            position: relative;
-            height: 100%;
-        }
-
-        .claut-header-btn {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--claut-border-light);
+        #modalContenido::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            color: var(--claut-text-tertiary);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            position: relative !important;
-            z-index: inherit;
-            overflow: visible !important;
         }
 
-        .claut-header-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 1);
-            transform: scale(1.05);
+        /* ============================================================
+           RESPONSIVE MASTER — empresas-convenio.html
+        ============================================================ */
+        html, body {
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
         }
 
-        .claut-header-btn.active {
-            background: var(--claut-red);
-            color: var(--claut-text-primary);
-            box-shadow: var(--claut-shadow-red);
+        /* --- Main: padding adaptativo --- */
+        main.claut-main {
+            padding-top: calc(var(--header-height, 64px) + 1rem) !important;
+            padding-left: clamp(0.75rem, 3vw, 3rem) !important;
+            padding-right: clamp(0.75rem, 3vw, 3rem) !important;
+            overflow-x: hidden !important;
         }
 
-        .claut-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: var(--space-2) var(--space-3);
-            text-decoration: none;
-            color: var(--claut-text-tertiary);
-            border-radius: 12px;
-            transition: var(--transition-normal);
-            position: relative;
-            min-width: 60px;
-            text-align: center;
-            font-size: 0.875rem;
-            font-weight: 500;
+        /* --- Header y Mobile Menu --- */
+        @media (max-width: 640px) {
+            .claut-header { padding: 0 0.75rem !important; }
+        }
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .claut-header { padding: 0 1rem !important; }
         }
 
-        .claut-nav-item i {
-            font-size: 18px;
-            margin-bottom: 2px;
-            transition: var(--transition-fast);
+        .claut-mobile-menu-btn { display: none !important; }
+        @media (max-width: 767px) {
+            .claut-mobile-menu-btn { display: flex !important; }
         }
 
-        .claut-nav-item span {
-            font-size: 11px;
-            font-weight: 600;
-            line-height: 1;
-            transition: var(--transition-fast);
-            opacity: 0.9;
+        /* --- Sub-navbar breadcrumb: apilar en móvil --- */
+        @media (max-width: 767px) {
+            .porsche-navbar .flex.items-center.justify-between {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.25rem !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .porsche-breadcrumb { margin-right: 0 !important; }
         }
 
-        .claut-nav-item:hover {
-            color: var(--claut-text-secondary);
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
+        /* --- Hero y Carousel en móvil --- */
+        @media (max-width: 767px) {
+            .max-w-7xl.mx-auto.mb-12.text-center h2 {
+                font-size: 2.25rem !important;
+                line-height: 1.2 !important;
+            }
+            .carousel-container { padding: 1rem 0 !important; height: 160px !important; }
+            .carousel-item { width: 140px !important; height: 80px !important; margin: 0 1rem !important; }
         }
 
-        .claut-nav-item:hover i {
-            color: var(--claut-red);
-            transform: scale(1.1);
+        /* --- Barra de Filtros: Apilar en móvil --- */
+        @media (max-width: 1024px) {
+            .glass-panel.flex-col.lg\:flex-row {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .w-full.lg\:w-48 { width: 100% !important; }
         }
 
-        .claut-nav-item.active {
-            color: var(--claut-red);
-            background: rgba(var(--claut-red-rgb), 0.1);
-            box-shadow: var(--claut-shadow-red);
+        /* Responsive Grid fixes */
+        @media (max-width: 640px) {
+            #empresasContainer { gap: 1rem !important; }
+            section.max-w-7xl { padding-bottom: 2rem !important; }
         }
 
-        .claut-nav-item.active i {
-            color: var(--claut-red);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .claut-nav-item.active span {
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .claut-header-user {
-            display: flex;
-            align-items: center;
-        }
-
-        .claut-logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
-            background: transparent;
-            color: var(--claut-nav-text);
-            border: 1px solid var(--claut-nav-border);
-            border-radius: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-            font-size: 0.875rem;
-        }
-
-        .claut-logout-btn:hover {
-            color: var(--claut-nav-text-hover);
-            border-color: var(--claut-nav-accent);
-            background: rgba(201, 48, 44, 0.1);
-        }
-
-        /* Bottom Navigation (Mobile/Tablet ≤1024px) */
+        /* ============================================================
+           MENÚ CURVO ANIMADO — CSS completo
+        ============================================================ */
         .claut-bottom-nav {
             position: fixed !important;
             bottom: 0 !important;
@@ -1118,867 +250,121 @@
             width: 95% !important;
             max-width: 600px !important;
             height: 70px !important;
-            background: var(--claut-bg-surface) !important;
+            background: var(--claut-bg-surface, #252a32) !important;
             border-radius: 35px 35px 0 0 !important;
-            border: 1px solid var(--claut-border-medium) !important;
+            border: 1px solid rgba(15,23,42,0.12) !important;
             border-bottom: none !important;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3), 0 -8px 40px rgba(0, 0, 0, 0.2) !important;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.4) !important;
+            z-index: 9999 !important;
+            overflow: hidden !important;
             backdrop-filter: blur(20px) !important;
             -webkit-backdrop-filter: blur(20px) !important;
             margin: 0 !important;
             padding: 0 !important;
             display: none;
         }
-
         .claut-bottom-nav::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            background: linear-gradient(180deg, var(--claut-bg-surface) 0%, var(--claut-bg-secondary) 100%);
-            opacity: 0.8;
-            z-index: -1;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+            background: linear-gradient(180deg, #252a32 0%, #2d333b 100%);
+            opacity: 0.8; z-index: -1;
         }
-
         .claut-nav-container {
-            position: relative !important;
-            width: 100% !important;
-            height: 100% !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-evenly !important;
-            padding: 0 8px !important;
-            box-sizing: border-box !important;
-            overflow-x: auto !important;
-            scrollbar-width: none !important;
-            -ms-overflow-style: none !important;
+            position: relative !important; width: 100% !important; height: 100% !important;
+            display: flex !important; align-items: center !important;
+            justify-content: space-evenly !important; padding: 0 8px !important;
+            box-sizing: border-box !important; overflow-x: auto !important;
+            scrollbar-width: none !important; -ms-overflow-style: none !important;
         }
-
-        .claut-nav-container::-webkit-scrollbar {
-            display: none !important;
-        }
-
-        .claut-bottom-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0.75rem 1rem;
-        }
-
+        .claut-nav-container::-webkit-scrollbar { display: none !important; }
         .claut-nav-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.25rem;
-            color: var(--claut-nav-text);
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 0.5rem;
-            border-radius: 0.75rem;
-            min-width: 3.5rem;
-            text-align: center;
+            position: relative !important; display: flex !important;
+            flex-direction: column !important; align-items: center !important;
+            justify-content: center !important; width: 48px !important;
+            height: 48px !important; text-decoration: none !important;
+            color: #94a3b8 !important;
+            transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55) !important;
+            border-radius: 50% !important; z-index: 2 !important;
+            flex: 0 0 auto !important; margin: 0 2px !important;
         }
-
-        .claut-nav-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 0.75rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
+        .claut-nav-link i { font-size: 18px; transition: all 0.3s ease; }
         .claut-nav-link span {
-            font-size: 0.75rem;
-            font-weight: 500;
-            opacity: 0.8;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 9px; margin-top: 1px; opacity: 0;
+            transform: translateY(10px); transition: all 0.3s ease; font-weight: 500;
         }
-
-        .claut-nav-link:hover {
-            color: var(--claut-nav-text-hover);
-            transform: translateY(-2px);
+        .claut-nav-link.active { color: #C7252B !important; transform: translateY(-10px); }
+        .claut-nav-link.active::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%); width: 50px; height: 50px;
+            background: #C7252B; border-radius: 50%; z-index: -1;
+            opacity: 0.2; animation: nav-pulse 2s infinite;
         }
-
-        .claut-nav-link:hover .claut-nav-icon {
-            background: rgba(255, 255, 255, 0.1);
+        .claut-nav-link.active span { opacity: 1; transform: translateY(0); color: #C7252B; }
+        .claut-nav-link:hover { color: #C7252B !important; transform: translateY(-5px) scale(1.1); }
+        .claut-nav-link:hover span { opacity: 1; transform: translateY(0); }
+        .claut-nav-curve {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; pointer-events: none; z-index: 1;
         }
-
-        .claut-nav-link:hover span {
-            opacity: 1;
+        .claut-nav-curve::before {
+            content: ''; position: absolute; top: 0;
+            left: var(--curve-position, 86%); width: 60px; height: 60px;
+            background: #C7252B; border-radius: 50% 50% 0 0;
+            transform: translateX(-50%) translateY(-30px);
+            transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+            opacity: 0.1; box-shadow: 0 -5px 15px rgba(199,37,43,0.3);
         }
-
-        .claut-nav-link.active {
-            color: var(--claut-nav-text-hover);
+        @keyframes nav-pulse {
+            0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+            50%  { transform: translate(-50%,-50%) scale(1.2); opacity: 0.1; }
+            100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
         }
-
-        .claut-nav-link.active .claut-nav-icon {
-            background: var(--claut-nav-accent);
-            box-shadow: 0 4px 12px rgba(201, 48, 44, 0.4);
-        }
-
-        .claut-nav-link.active span {
-            opacity: 1;
-            color: var(--claut-nav-accent);
-        }
-
-        /* Responsive navigation */
-        @media (min-width: 768px) {
-            .claut-header-nav {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .claut-mobile-menu-btn {
-                display: flex !important;
-            }
-
-            .claut-header-nav {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--claut-bg-surface);
-                backdrop-filter: blur(20px);
-                border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-                padding: var(--space-4);
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: all var(--transition-normal);
-            }
-
-            .claut-header-nav.show {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-
-        /* Control de visibilidad entre header y bottom nav */
         @media (max-width: 1024px) {
-            .claut-header-nav {
-                display: none !important;
-            }
-
-            .claut-bottom-nav {
-                display: flex !important;
-            }
-
-            /* Mantener los botones de acción del header visibles */
-            .claut-header-actions {
-                display: flex !important;
-            }
-
-            /* Ajustar el header para que sea más compacto en mobile */
-            .claut-header {
-                padding: 0 var(--space-4) !important;
-            }
+            .claut-bottom-nav { display: flex !important; }
+            .claut-header-nav { display: none !important; }
+            .claut-main, main { padding-bottom: 90px !important; }
         }
-
         @media (min-width: 1025px) {
-            .claut-header-nav {
-                display: flex !important;
-            }
-
-            .claut-bottom-nav {
-                display: none !important;
-            }
-
-            .claut-header-actions {
-                display: flex !important;
-            }
+            .claut-bottom-nav { display: none !important; }
+            .claut-header-nav { display: flex !important; }
         }
-
-        /* Scroll Effects */
-        .claut-nav-scrolled {
-            background: rgba(26, 26, 26, 0.98);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Touch Enhancements */
-        @media (hover: none) and (pointer: coarse) {
-            .claut-nav-link {
-                min-height: 44px;
-            }
-
-            .claut-nav-link.touching {
-                transform: scale(0.95);
-            }
-        }
-
-        /* Bottom navigation responsive design */
-        @media (max-width: 480px) {
-            .claut-bottom-nav {
-                width: 95%;
-                height: 65px;
-            }
-
-            .claut-nav-link {
-                width: 55px;
-                height: 55px;
-            }
-
-            .claut-nav-link i {
-                font-size: 20px;
-            }
-        }
-
-        /* Ajuste para el contenido principal para evitar superposición con el menú inferior */
-        .main-content {
-            padding-bottom: 90px;
-        }
-
-        /* Animation Classes */
-        .claut-nav-animate-in {
-            animation: clautNavSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes clautNavSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Content Layout Adjustments */
-        .claut-main {
-            transition: all 0.3s ease;
-            min-height: 100vh;
-        }
-
-        @media (min-width: 1025px) {
-            .claut-main {
-                padding-top: 6rem;
-                padding-bottom: 2rem;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .claut-main {
-                padding-top: 2rem;
-                padding-bottom: 8rem;
-            }
-        }
-
-        .porsche-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--porsche-light-gray);
-            border-top: 3px solid var(--porsche-accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ==================== ESTILOS CARRUSEL INFINITO DE EMPRESAS ==================== */
-        section {
-            position: relative;
-            min-height: 100svh;
-            width: 100%;
-            background-color: var(--bg);
-            overflow: visible;
-        }
-
-        section.section2 {
-            height: min-content;
-        }
-
-        .loop-images {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        .carousel-track {
-            --left: -400rem;
-            min-width: calc(15rem * var(--total));
-            height: 40rem;
-            position: relative;
-        }
-
-        .carousel-track .carousel-item {
-            position: absolute;
-            width: 40rem;
-            height: 40rem;
-            left: 100%;
-            display: flex;
-            justify-content: center;
-            perspective: 1000px;
-            transform-style: preserve-3d;
-            animation: scroll-left var(--time) linear infinite;
-            animation-delay: calc(var(--time) / var(--total) * (var(--i) - 1) - var(--time));
-            will-change: left, animation-play-state;
-            transition: left 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                animation-delay 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            cursor: pointer;
-            z-index: 1;
-        }
-
-        /* Mejores transiciones para control manual */
-        .carousel-track .carousel-item.manual-control {
-            transition: left 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
-            animation-play-state: paused;
-        }
-
-        .carousel-track .carousel-item.paused {
-            animation-play-state: paused;
-        }
-
-        /* First child normal behavior - removed debug override */
-
-        .carousel-track .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background-color: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            transform: rotateY(-45deg);
-            transition: 0.5s ease-in-out;
-            mask: linear-gradient(black 70%, transparent 100%);
-        }
-
-        .carousel-track .carousel-item:hover img {
-            transform: rotateY(0deg) translateY(-1rem);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
-        }
-
-        .carousel-track .carousel-item::after {
-            content: attr(data-empresa-name);
-            position: absolute;
-            bottom: -3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #374151;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1.4rem;
-            text-align: center;
-            white-space: nowrap;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .carousel-track .carousel-item:hover::after {
-            opacity: 1;
-            bottom: -2rem;
-        }
-
-        /* Información de contacto flotante en las tarjetas */
-        .empresa-info-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-            color: white;
-            opacity: 0;
-            transform: translateY(100%);
-            transition: all 0.4s ease;
-            border-radius: 0 0 20px 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .carousel-track .carousel-item:hover .empresa-info-overlay {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .empresa-info-content {
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .empresa-info-content h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .empresa-sector {
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            display: inline-block;
-        }
-
-        .contacto-rapido {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .contacto-rapido span {
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.75rem;
-            padding: 0.3rem 0.6rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: all 0.2s ease;
-        }
-
-        .contacto-rapido span:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-
-        .contacto-rapido .telefono {
-            border-color: rgba(16, 185, 129, 0.5);
-        }
-
-        .contacto-rapido .email {
-            border-color: rgba(245, 158, 11, 0.5);
-        }
-
-        .contacto-rapido .web {
-            border-color: rgba(139, 92, 246, 0.5);
-        }
-
-        .contacto-rapido .persona {
-            border-color: rgba(99, 102, 241, 0.5);
-        }
-
-        .contacto-rapido i {
-            font-size: 0.7rem;
-        }
-
-
-        /* Botones de navegación del carrusel */
-        .carousel-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 60px;
-            height: 60px;
-            background: rgba(199, 37, 43, 0.9);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .carousel-nav-btn:hover {
-            background: #C7252B;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .carousel-nav-btn:active {
-            transform: translateY(-50%) scale(0.95);
-            background: #A01E23;
-        }
-
-        .carousel-nav-btn.prev {
-            left: 2rem;
-        }
-
-        .carousel-nav-btn.next {
-            right: 2rem;
-        }
-
-        /* Feedback visual cuando se hace clic */
-        .carousel-nav-btn.clicked {
-            background: #C7252B !important;
-            transform: translateY(-50%) scale(1.2) !important;
-            transition: all 0.2s ease !important;
-        }
-
-        @keyframes scroll-left {
-            to {
-                left: var(--left);
-            }
-        }
-
-        .image-motion {
-            width: 100%;
-            height: 100%;
-            border-radius: inherit;
-            object-position: center;
-            transform: rotatex(90deg);
-            transform-origin: 50% 0;
-        }
-
-        .image-motion picture {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        .image-motion picture img {
-            width: 100%;
-            object-fit: cover;
-            background-color: white;
-        }
-
-        /* DISABLED - ASCII card no longer used */
-        .empresa-card-ascii {
-            display: none !important;
-            /* Completely hidden */
-            pointer-events: none !important;
-            /* No click blocking */
-        }
-
-        .ascii-content {
-            display: none !important;
-        }
-
-        .scroll-down {
-            position: absolute;
-            bottom: 5rem;
-            left: 0;
-            right: 0;
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            font-size: 1.25rem;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            font-weight: 600;
-            z-index: 10;
-        }
-
-        .scroll-down .arrow {
-            display: block;
-            font-size: 2rem;
-            margin-top: 1rem;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-10px);
-            }
-
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .section3 {
-            --bg-color: #000000;
-            --text-primary: #ccc;
-            --text-secondary: #aaa;
-            --text-white: #ffffff;
-            --accent-primary: #ff6b6b;
-            --accent-secondary: #ff8a80;
-            --accent-tertiary: #ffab40;
-            --accent-quaternary: #ff7043;
-            --accent-quinary: #ff5722;
-            --border-radius: 25px;
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-white);
-            padding: 6rem 2rem;
-            min-height: 100vh;
-            background: var(--bg-color);
-            overflow: hidden;
-        }
-
-        .section3 .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: auto;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section3 .title {
-            font-size: 5rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            margin-bottom: 2.5rem;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 25%, var(--accent-tertiary) 50%, var(--accent-quaternary) 75%, var(--accent-quinary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-            letter-spacing: -2px;
-            position: relative;
-        }
-
-        .section3 .title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 2px;
-        }
-
-        .section3 .subtitle {
-            position: relative;
-            width: fit-content;
-            margin-inline: auto;
-            font-size: 1.6rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 300;
-            color: var(--text-primary);
-            margin-bottom: 2rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-
-        .section3 .subtitle::before,
-        .section3 .subtitle::after {
-            content: '◆';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent-primary);
-            font-size: 1.2rem;
-        }
-
-        .section3 .subtitle::before {
-            left: -30px;
-        }
-
-        .section3 .subtitle::after {
-            right: -30px;
-        }
-
-        .section3 .text-content {
-            margin-bottom: 6rem;
-            position: relative;
-        }
-
-        .section3 .text {
-            font-size: 1.3rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 400;
-            color: var(--text-primary);
-            line-height: 1.9;
-            margin-bottom: 2.5rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-        }
-
-        .section3 .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            margin-top: 5rem;
-        }
-
-        .section3 .feature {
-            background: linear-gradient(145deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 138, 128, 0.05) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            border-radius: var(--border-radius);
-            padding: 3.5rem 2.5rem;
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .section3 .feature::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.2), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .section3 .feature:hover {
-            transform: translateY(-15px) scale(1.02);
-            background: linear-gradient(145deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 138, 128, 0.1) 100%);
-            border-color: rgba(255, 107, 107, 0.6);
-        }
-
-        .section3 .feature:hover::before {
-            left: 100%;
-        }
-
-        .section3 .feature h3 {
-            font-size: 1.8rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            color: var(--text-white);
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--text-white) 0%, var(--accent-primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section3 .feature p {
-            font-size: 1.1rem;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 300;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
         @media (max-width: 768px) {
-            .carousel-track .carousel-item {
-                width: 30rem;
-                height: 30rem;
-            }
-
-            .empresa-info-content {
-                padding: 1rem;
-            }
-
-            .empresa-info-content h3 {
-                font-size: 1rem;
-            }
-
-            .empresa-sector {
-                font-size: 0.7rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .contacto-rapido {
-                gap: 0.3rem;
-            }
-
-            .contacto-rapido span {
-                font-size: 0.65rem;
-                padding: 0.2rem 0.4rem;
-            }
-
-            .section3 {
-                padding: 4rem 1rem;
-            }
-
-            .section3 .title {
-                font-size: 3.5rem;
-                letter-spacing: -1px;
-            }
-
-            .section3 .title::after {
-                width: 60px;
-                height: 3px;
-            }
-
-            .section3 .subtitle {
-                font-size: 1.2rem;
-                margin-bottom: 3rem;
-                letter-spacing: 2px;
-            }
-
-            .section3 .subtitle::before,
-            .section3 .subtitle::after {
-                display: none;
-            }
-
-            .section3 .text-content {
-                margin-bottom: 4rem;
-            }
-
-            .section3 .text {
-                font-size: 1.1rem;
-                text-align: center;
-            }
-
-            .section3 .features {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                margin-top: 3rem;
-            }
-
-            .section3 .feature {
-                padding: 2.5rem 2rem;
-            }
-
-            .section3 .feature h3 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .section3 .feature p {
-                font-size: 1rem;
-            }
+            .claut-bottom-nav { width: 95%; height: 65px; }
+            .claut-nav-link   { width: 55px; height: 55px; }
+            .claut-nav-link i { font-size: 20px; }
         }
     </style>
 </head>
 
-<body class="porsche-layout m-0 font-sans text-base antialiased font-normal leading-default text-slate-500">
+<body class="antialiased font-sans flex flex-col min-h-screen relative">
 
-    <!-- Loading Screen -->
-    <div class="loading-container" id="loadingScreen">
-        <div class="loading-ring"></div>
-        <div class="loading-ring"></div>
-        <div class="loading-ring"></div>
-        <img class="loading-logo" src="./assets/img/logo-claut-blanco.png" alt="Clúster">
-        <p class="loading-text">CLAUT INTRANET</p>
-    </div>
+    <!-- Background Scroll Image - Fixed position behind everything -->
+    <section class="scroll-image-section"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -10; background: var(--claut-bg-main); overflow: hidden;">
+        <div class="image-motion"
+            style="transform-origin: 50% 0; transform: rotateX(90deg); width: 100%; height: 100%;">
+            <picture>
+                <img src="./css/moveimage.png" alt="Colaboración empresarial"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </picture>
+        </div>
+    </section>
 
+    <!-- Header Horizontal Premium con Menú Integrado -->
     <header class="claut-header">
-
+        <!-- Logo area con logo existente -->
         <a href="#" class="claut-header-logo">
-            <img src="./assets/img/logo-claut-blanco.png" alt="Clúster Logo" class="h-8 w-auto object-contain">
+            <img src="./assets/img/apple-icon.png" alt="Clúster Logo" />
+            <span style="margin-left:8px; font-weight:700; color:white; font-size:1.1rem;"></span>
         </a>
 
+        <!-- Navegación horizontal principal -->
         <nav class="claut-header-nav" id="clautMainNav">
             <a href="dashboard.html" class="claut-nav-item">
                 <i class="fas fa-home"></i>
                 <span>Inicio</span>
             </a>
             <a href="./descuentos.html" class="claut-nav-item">
-                <i class="fas fa-tag"></i>
+                <i class="fas fa-tags"></i>
                 <span>Descuentos</span>
             </a>
             <a href="./boletines.html" class="claut-nav-item">
@@ -1987,7 +373,7 @@
             </a>
             <a href="./comites.html" class="claut-nav-item">
                 <i class="fas fa-users"></i>
-                <span>Comités</span>
+                <span>Comites</span>
             </a>
             <a href="./contacto.html" class="claut-nav-item">
                 <i class="fas fa-headset"></i>
@@ -2001,69 +387,176 @@
                 <i class="fas fa-handshake"></i>
                 <span>Socios</span>
             </a>
-            <a href="./admin-panel.html" class="claut-nav-item" id="adminNavItem" style="display: none;">
-                <i class="fas fa-cog"></i>
-                <span>Admin</span>
-            </a>
         </nav>
 
-        <!-- Actions area -->
-        <div class="claut-header-actions">
-
-            <!-- Botón mensajes -->
-            <button class="claut-header-btn" id="headerMessagesBtn" title="Centro de Mensajes">
-                <i class="fas fa-envelope"></i>
-                <span id="headerMessageCount"
-                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+        <!-- Actions area con botón hamburger para móvil -->
+        <div class="claut-header-actions" style="display:flex; justify-content:flex-end;">
+            <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta"
+                style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
+                <i class="fas fa-user-circle" style="font-size:1.1rem;"></i>
             </button>
-
-            <!-- Menú usuario -->
-            <div class="relative">
-                <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
-                    <i class="fas fa-user-circle text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Botón toggle menú móvil -->
-            <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+            <button class="claut-header-btn claut-mobile-menu-btn" id="mobileMenuBtn" title="Menú"
+                style="display:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </header>
 
-    <!-- Breadcrumb / Porsche Navbar section -->
-    <div class="porsche-navbar relative flex flex-wrap items-center justify-between transition-all ease-in duration-250 lg:flex-nowrap lg:justify-start w-full" navbar-main>
-        <div class="w-full max-w-full px-6 py-0 mx-auto flex-wrap-inherit flex items-center justify-between py-1 lg:py-2">
-            <nav>
-                <!-- breadcrumb -->
-                <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
-                    <li class="text-sm leading-normal">
-                        <a class="opacity-60 text-white" href="javascript:;">Intranet</a>
-                    </li>
-                    <li class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/'] text-white" aria-current="page">Socios</li>
-                </ol>
-                <!-- Mostrar saludo con usuario logueado -->
-                <div id="welcomeMessage" class="mb-2">
-                    <h6 class="porsche-welcome mb-0 capitalize text-white" id="welcomeText">Bienvenido a Clúster Intranet</h6>
-                </div>
-            </nav>
-            <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
-                <div class="flex items-center md:ml-auto md:pr-4">
-                    <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
-                        <!-- Mostrar información del usuario autenticado -->
-                        <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
-                            <div class="flex flex-col">
-                                <span id="userName" class="text-sm font-semibold"></span>
-                                <span id="userRole" class="text-xs opacity-75"></span>
+    <!-- main-scroll-container with layout properly scoped by responsive CSS -->
+    <main class="claut-main relative transition-all duration-200 ease-in-out z-10" style="margin-left: 0; overflow-x: hidden;">
+
+        <!-- Internal Navbar / Breadcrumb -->
+        <nav class="porsche-navbar relative flex flex-wrap items-center justify-between px-0 py-1 transition-all ease-in shadow-none duration-250 rounded-2xl lg:flex-nowrap lg:justify-start"
+            navbar-main navbar-scroll="false"
+            style="display: flex; margin-bottom: 20px; z-index: 999; position: relative;">
+            <div class="flex items-center justify-between w-full px-6 py-0 mx-auto flex-wrap-inherit">
+                <nav>
+                    <!-- breadcrumb -->
+                    <ol class="porsche-breadcrumb flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+                        <li class="text-sm leading-normal">
+                            <span class="opacity-60 text-gray-400">Intranet</span>
+                        </li>
+                        <li class="text-sm pl-2 capitalize leading-normal before:float-left before:pr-2 before:content-['/'] text-gray-300"
+                            aria-current="page">Socios</li>
+                    </ol>
+                    <!-- Mostrar saludo con usuario logueado -->
+                    <div id="welcomeMessage" class="mb-2">
+                        <h6 class="porsche-welcome mb-0 capitalize text-white" id="welcomeText">Socios Estratégicos</h6>
+                    </div>
+                </nav>
+
+                <div class="flex items-center mt-2 grow sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto">
+                    <div class="flex items-center md:ml-auto md:pr-4">
+                        <div class="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease">
+                            <!-- Mostrar información del usuario autenticado -->
+                            <div id="userInfo" class="apple-user-info text-white text-sm mr-4 hidden items-center">
+                                <div class="flex flex-col">
+                                    <span id="userName" class="text-sm font-semibold"></span>
+                                    <span id="userRole" class="text-xs opacity-75"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
+                        <!-- Menú para usuarios no autenticados -->
+                        <li class="flex items-center hidden" id="loginMenuItem" style="display: none;">
+                            <a href="./pages/sign-in.html"
+                                class="apple-nav-link block px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75">
+                                <i class="fa fa-user sm:mr-1"></i>
+                                <span class="hidden sm:inline">Iniciar Sesión</span>
+                            </a>
+                        </li>
+                        <!-- Botón Panel de Administración (solo para admins) -->
+                        <li class="flex items-center pl-4 hidden" id="adminPanelButton">
+                            <a href="./admin-panel.html?login=success"
+                                class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
+                                title="Panel de Administración">
+                                <i class="fas fa-cogs mr-2"></i>
+                                <span class="hidden lg:inline">Admin Panel</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
+        </nav>
 
-    <!-- Bottom Navigation (Mobile/Tablet ≤768px) -->
+
+        <!-- Hero Section -->
+        <section class="max-w-7xl mx-auto mb-12 text-center">
+            <h2 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tighter">
+                Nuestros <span class="text-red-500">Socios</span> Estratégicos
+            </h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                Explora el ecosistema industrial más fuerte de la región. Conecta con empresas líderes y accede a
+                beneficios exclusivos del convenio Clúster.
+            </p>
+        </section>
+
+        <!-- Carousel Interactivo -->
+        <section class="mb-20 overflow-hidden">
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Dinámico vía JS -->
+                    <div class="flex items-center justify-center h-full w-full">
+                        <i class="fas fa-circle-notch fa-spin text-red-500 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Directorio Section -->
+        <section class="max-w-7xl mx-auto">
+
+            <!-- Barra de Filtros -->
+            <div class="glass-panel p-6 mb-12 flex flex-col lg:flex-row gap-6 items-end">
+                <div class="flex-1 w-full">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Búsqueda
+                        directa</label>
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        <input type="text" id="busquedaEmpresa" placeholder="Nombre, producto o servicio..."
+                            class="filter-input w-full pl-12">
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-48">
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Sector</label>
+                    <select id="filtroSector" class="filter-input w-full appearance-none">
+                        <option value="">Todos los sectores</option>
+                    </select>
+                </div>
+
+                <div class="w-full lg:w-48">
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Estado</label>
+                    <select id="filtroEstado" class="filter-input w-full appearance-none">
+                        <option value="">Todos los estados</option>
+                    </select>
+                </div>
+
+                <div class="w-full lg:w-48">
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Municipio</label>
+                    <input type="text" id="filtroMunicipio" placeholder="Ej. Monterrey" class="filter-input w-full">
+                </div>
+
+
+
+                <div class="flex gap-2">
+                    <button id="btnActualizarEmpresas"
+                        class="h-12 w-12 flex items-center justify-center bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contador -->
+            <div class="mb-6 flex justify-between items-center px-2">
+                <p id="contadorEmpresas" class="text-sm font-medium text-gray-400">Cargando empresas...</p>
+                <div class="flex items-center gap-4 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                    <span>Vista: Grilla</span>
+                    <div class="h-4 w-[1px] bg-white/10"></div>
+                    <select id="ordenarPor"
+                        class="bg-transparent border-none text-gray-400 focus:ring-0 cursor-pointer">
+                        <option value="nombre">Orden Alfabético</option>
+                        <option value="sector">Por Sector</option>
+                        <option value="fecha">Más Recientes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grid de Resultados -->
+            <div id="empresasContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Skeleton Loader -->
+                <div class="h-64 glass-panel animate-pulse"></div>
+                <div class="h-64 glass-panel animate-pulse"></div>
+                <div class="h-64 glass-panel animate-pulse hidden md:block"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Menú curvo animado en la parte inferior -->
     <nav class="claut-bottom-nav">
         <div class="claut-nav-container">
             <div class="claut-nav-curve"></div>
@@ -2072,7 +565,7 @@
                 <span>Inicio</span>
             </a>
             <a href="./descuentos.html" class="claut-nav-link authenticated" data-section="descuentos">
-                <i class="fas fa-tag"></i>
+                <i class="fas fa-tags"></i>
                 <span>Descuentos</span>
             </a>
             <a href="./boletines.html" class="claut-nav-link authenticated" data-section="boletines">
@@ -2081,7 +574,7 @@
             </a>
             <a href="./comites.html" class="claut-nav-link authenticated" data-section="comite">
                 <i class="fas fa-users"></i>
-                <span>Comités</span>
+                <span>Comité</span>
             </a>
             <a href="./contacto.html" class="claut-nav-link authenticated" data-section="contacto">
                 <i class="fas fa-headset"></i>
@@ -2091,1926 +584,49 @@
                 <i class="fas fa-calendar-alt"></i>
                 <span>Eventos</span>
             </a>
-            <a href="./empresas-convenio.html" class="claut-nav-link authenticated" data-section="convenios">
+            <a href="./empresas-convenio.html" class="claut-nav-link authenticated active" data-section="convenios">
                 <i class="fas fa-handshake"></i>
-                <span>Socios</span>
-            </a>
-            <a href="./admin-panel.html" class="claut-nav-link authenticated" data-section="admin" id="adminNavItemBottom" style="display: none;">
-                <i class="fas fa-cog"></i>
-                <span>Admin</span>
+                <span>Convenios</span>
             </a>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="claut-main relative transition-all duration-200 ease-in-out">
-        <!-- Contenido principal con restricción de autenticación -->
-        <div id="mainContent" class="main-content">
+    <!-- SCRIPTS -->
+    <script src="./js/empresas-convenio-mejorado.js"></script>
 
-            <!-- Content -->
-            <div class="w-full">
-                <!-- Header Section with White Background -->
-                <section class="loop-images"
-                    style="--bg: white; min-height: auto; position: relative; padding: 140px 0 0 0;">
-                    <!-- Compact Header -->
-                    <header class="py-4">
-                        <div class="container">
-                            <div class="text-center">
-                                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 opacity-20">Socios Comerciales
-                                </h1>
-                            </div>
-                        </div>
-                    </header>
-                    <!-- Enhanced Professional Introductory Content -->
-                    <div class="container relative z-20 pt-2 pb-8">
-                        <!-- Hero Section with Professional Typography -->
-                        <div class="text-center mb-12">
-                            <div
-                                class="inline-flex items-center justify-center px-4 py-2 bg-red-50 border border-red-200 rounded-full text-red-700 text-sm font-semibold mb-6">
-                                <i class="fas fa-building mr-2"></i>
-                                DIRECTORIO EMPRESARIAL CLÚSTER
-                            </div>
-
-                            <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-8">
-                                <span class="block text-gray-900 mb-2">EMPRESAS QUE</span>
-                                <span
-                                    class="block bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">CONECTAN
-                                    & CRECEN</span>
-                            </h1>
-
-                            <div class="max-w-4xl mx-auto">
-                                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                                    Accede al directorio más completo de <strong class="text-gray-900">empresas
-                                        verificadas</strong>
-                                    y establece <strong class="text-red-600">alianzas corporativas</strong> de alto
-                                    valor.
-                                </p>
-
-                                <div class="flex items-center justify-center space-x-8 text-sm text-gray-500 mb-12">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-users text-red-500 mr-2"></i>
-                                        <span>Empresas Socio</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-chart-line text-blue-500 mr-2"></i>
-                                        <span>Networking Premium</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-trophy text-yellow-500 mr-2"></i>
-                                        <span>Alianzas Exclusivas</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Enhanced Content Blocks - Centered Professional Design -->
-                        <div class="max-w-5xl mx-auto mb-16">
-                            <!-- Centered Content with Professional Layout -->
-                            <div class="text-center mb-12">
-                                <!-- Primary Section Badge -->
-                                <div class="flex justify-center mb-6">
-                                    <div
-                                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-full text-red-700 text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300">
-                                        <i class="fas fa-rocket mr-3 text-red-600"></i>
-                                        IMPULSA TU CRECIMIENTO
-                                    </div>
-                                </div>
-
-                                <!-- Centered Title -->
-                                <h3
-                                    class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-8 leading-tight">
-                                    Directorio Corporativo & Alianzas Estratégicas
-                                </h3>
-
-                                <!-- Centered Description -->
-                                <p class="text-xl text-gray-600 leading-relaxed mb-8 max-w-4xl mx-auto">
-                                    Desde <span class="text-red-600 font-semibold">empresas certificadas</span>
-                                    organizadas por sector hasta
-                                    <span class="text-red-600 font-semibold">alianzas corporativas</span> que
-                                    impulsen tu crecimiento empresarial.
-                                </p>
-
-                                <!-- Secondary Section Badge -->
-                                <div class="flex justify-center mb-10">
-                                    <div
-                                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-300 rounded-full text-gray-800 text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300">
-                                        <i class="fas fa-handshake mr-3 text-red-600"></i>
-                                        NETWORKING ESTRATÉGICO
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Enhanced Benefits Grid - Modern Design Inspired by Reference -->
-                        <div class="max-w-7xl mx-auto px-6 lg:px-8 mb-20">
-                            <!-- Header Section -->
-                            <div class="text-center mb-16">
-                                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                                    <span
-                                        class="bg-gradient-to-r from-gray-900 via-red-600 to-gray-900 bg-clip-text text-transparent">
-                                        ¿Por qué Aliarte con Nuestros Socios Comerciales?
-                                    </span>
-                                </h2>
-                                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                                    Beneficios exclusivos que marcarán la diferencia en tu crecimiento empresarial
-                                </p>
-                            </div>
-
-                            <!-- Modern Horizontal Cards Grid - 3 Rows -->
-                            <div class="max-w-5xl mx-auto space-y-6">
-                                <!-- Card 1: Alianzas Estratégicas -->
-                                <div
-                                    class="group bg-white p-6 rounded-2xl border border-gray-200 hover:border-red-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1">
-                                    <div class="flex items-center">
-                                        <!-- Icon Container -->
-                                        <div
-                                            class="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <i class="fas fa-handshake text-white text-2xl"></i>
-                                        </div>
-
-                                        <!-- Content -->
-                                        <div class="flex-grow">
-                                            <h4
-                                                class="text-xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors duration-300">
-                                                Alianzas Estratégicas
-                                            </h4>
-                                            <p class="text-gray-600 leading-relaxed mb-3 text-sm lg:text-base">
-                                                Acceso privilegiado a socios comerciales certificados y verificados con
-                                                los mejores estándares de la industria
-                                            </p>
-                                        </div>
-
-                                        <!-- CTA Button -->
-                                        <div
-                                            class="flex items-center text-red-600 font-semibold text-sm ml-4 group-hover:text-red-700 transition-colors cursor-pointer flex-shrink-0">
-                                            <span class="mr-2">Más información</span>
-                                            <i
-                                                class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Card 2: Networking Premium -->
-                                <div
-                                    class="group bg-white p-6 rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1">
-                                    <div class="flex items-center">
-                                        <!-- Icon Container -->
-                                        <div
-                                            class="bg-gradient-to-br from-blue-500 to-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <i class="fas fa-network-wired text-white text-2xl"></i>
-                                        </div>
-
-                                        <!-- Content -->
-                                        <div class="flex-grow">
-                                            <h4
-                                                class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-                                                Networking Premium
-                                            </h4>
-                                            <p class="text-gray-600 leading-relaxed mb-3 text-sm lg:text-base">
-                                                Conecta directamente con socios comerciales verificados y desarrolla
-                                                relaciones empresariales estratégicas duraderas
-                                            </p>
-                                        </div>
-
-                                        <!-- CTA Button -->
-                                        <div
-                                            class="flex items-center text-blue-600 font-semibold text-sm ml-4 group-hover:text-blue-700 transition-colors cursor-pointer flex-shrink-0">
-                                            <span class="mr-2">Conectar ahora</span>
-                                            <i
-                                                class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Card 3: Crecimiento Empresarial -->
-                                <div
-                                    class="group bg-white p-6 rounded-2xl border border-gray-200 hover:border-green-300 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1">
-                                    <div class="flex items-center">
-                                        <!-- Icon Container -->
-                                        <div
-                                            class="bg-gradient-to-br from-green-500 to-green-600 w-16 h-16 rounded-2xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
-                                            <i class="fas fa-chart-line text-white text-2xl"></i>
-                                        </div>
-
-                                        <!-- Content -->
-                                        <div class="flex-grow">
-                                            <h4
-                                                class="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors duration-300">
-                                                Crecimiento Empresarial
-                                            </h4>
-                                            <p class="text-gray-600 leading-relaxed mb-3 text-sm lg:text-base">
-                                                Mantente a la vanguardia con socios comerciales innovadores y
-                                                estrategias de colaboración empresarial emergentes
-                                            </p>
-                                        </div>
-
-                                        <!-- CTA Button -->
-                                        <div
-                                            class="flex items-center text-green-600 font-semibold text-sm ml-4 group-hover:text-green-700 transition-colors cursor-pointer flex-shrink-0">
-                                            <span class="mr-2">Explorar socios</span>
-                                            <i
-                                                class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Carrusel de logos eliminado por redundancia con carrusel Evervault -->
-
-                    <div class="text-center pb-0" style="margin-top:1.5rem;">
-                        <div
-                            class="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-gray-700 text-sm font-medium shadow-lg hover:bg-white/20 transition-all duration-300 cursor-pointer">
-                            <i class="fas fa-building mr-2 text-red-500"></i>
-                            <span id="contadorEmpresas">Empresas disponibles</span>
-                            <i class="fas fa-chevron-down ml-2 animate-bounce text-red-500"></i>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Scroll Image Section -->
-                <section class="section2" style="--bg: black;">
-                    <div class="image-motion">
-                        <picture>
-                            <img src="./css/moveimage.png" alt="Colaboración empresarial">
-                        </picture>
-                    </div>
-                </section>
-
-
-                <!-- Carrusel de Empresas con Animación Evervault -->
-                <section class="evervault-carousel-section"
-                    style="background: #000000; min-height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-
-                    <!-- Indicador de velocidad -->
-                    <div class="evervault-speed-indicator"
-                        style="position: absolute; top: 20px; right: 20px; color: white; font-size: 16px; background: rgba(0, 0, 0, 0.3); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(5px); z-index: 100;">
-                        Speed: <span id="speedValue">120</span> px/s
-                    </div>
-
-                    <!-- Contenedor principal -->
-                    <div class="evervault-container"
-                        style="position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center;">
-                        <!-- Canvas de partículas (Three.js) -->
-                        <canvas id="empresaParticleCanvas"
-                            style="position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100vw; height: 250px; z-index: 0; pointer-events: none;"></canvas>
-
-                        <!-- Canvas de scanner - HIDDEN -->
-                        <canvas id="empresaScannerCanvas"
-                            style="position: absolute; top: 50%; left: -3px; transform: translateY(-50%); width: 100vw; height: 300px; z-index: 15; pointer-events: none; display: none;"></canvas>
-
-                        <!-- Stream de tarjetas -->
-                        <div class="empresa-card-stream" id="empresaCardStream"
-                            style="position: absolute; width: 100vw; height: 180px; display: flex; align-items: center; overflow: visible;">
-                            <div class="empresa-card-line" id="empresaCardLine"
-                                style="display: flex; align-items: center; gap: 60px; white-space: nowrap; cursor: grab; user-select: none; will-change: transform;">
-                                <!-- Tarjetas generadas dinámicamente -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </main>
-
-
-    <!-- Notificaciones Container -->
-    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
-
-    <!-- Libraries for Carousel Animation -->
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/TextPlugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script src="https://unpkg.com/split-type"></script>
-
-    <!-- Three.js for Evervault Particle System -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <!-- Evervault Carousel Script -->
-    <script src="./js/empresas-evervault.js"></script>
-
-    <!-- Scripts -->
-    <script src="./frontend-integration.js"></script>
-    <script src="./assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
-
-    <!-- Modal Handler - Funciona siempre -->
+    <!-- SISTEMA DE AUTENTICACIÓN -->
     <script>
-        // Crear manejador de modal directo que siempre funcione
-        window.modalHandler = {
-            currentModal: null,
-
-            openModal: function (empresaId) {
-                console.log('🔓 Abriendo modal para empresa:', empresaId);
-
-                // Buscar el botón o tarjeta que se clickeó
-                const button = document.querySelector(`[onclick*="${empresaId}"]`);
-                if (!button) {
-                    console.error('❌ No se encontró el botón');
-                    return;
-                }
-
-                const empresaCard = button.closest('.empresa-card');
-                if (!empresaCard) {
-                    console.error('❌ No se encontró la tarjeta');
-                    return;
-                }
-
-                // Extraer datos
-                const titulo = empresaCard.querySelector('.empresa-titulo')?.textContent?.trim() || 'Empresa';
-                const descripcion = empresaCard.querySelector('.empresa-descripcion')?.textContent?.trim() || 'Sin descripción disponible';
-                const logoImg = empresaCard.querySelector('.empresa-logo');
-                const logoUrl = logoImg?.src || '';
-                const descuentoBadge = empresaCard.querySelector('.descuento-badge')?.textContent?.trim() || '';
-                const sectorBadge = empresaCard.querySelector('.sector-badge')?.textContent?.trim() || '';
-
-                this.showModal(titulo, descripcion, logoUrl, descuentoBadge, sectorBadge);
-            },
-
-            showModal: function (empresaOrTitulo, descripcion, logoUrl, descuento, sector) {
-                // Soporte para ambos formatos
-                let empresa;
-                if (typeof empresaOrTitulo === 'object') {
-                    empresa = empresaOrTitulo;
-                } else {
-                    empresa = {
-                        nombre: empresaOrTitulo,
-                        descripcion: descripcion,
-                        logo_url: logoUrl,
-                        descuento_porcentaje: descuento?.replace('% de descuento', ''),
-                        sector: sector
-                    };
-                }
-
-                console.log('🎭 showModal called with premium redesign:', empresa);
-
-                if (this.currentModal) {
-                    this.currentModal.remove();
-                }
-
-                const modal = document.createElement('div');
-                modal.id = 'empresaPremiumModal';
-                modal.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    z-index: 10000;
-                    display: flex;
-                    align-items: flex-start;
-                    justify-content: center;
-                    background-color: rgba(0, 0, 0, 0.7);
-                    backdrop-filter: blur(10px);
-                    padding-top: 100px; /* Evitar navbar */
-                    padding-bottom: 40px;
-                    padding-left: 20px;
-                    padding-right: 20px;
-                    overflow-y: auto;
-                `;
-
-                modal.onclick = (e) => {
-                    if (e.target === modal) this.closeModal();
-                };
-
-                // Formatear sitio web
-                const websiteUrl = empresa.sitio_web ? (empresa.sitio_web.startsWith('http') ? empresa.sitio_web : 'https://' + empresa.sitio_web) : null;
-                const cleanWebsite = empresa.sitio_web ? empresa.sitio_web.replace(/^https?:\/\//, '') : '';
-
-                modal.innerHTML = `
-                    <style>
-                        .porsche-modal-glass {
-                            background: linear-gradient(145deg, rgba(30, 33, 38, 0.98), rgba(15, 17, 21, 0.95));
-                            border: 1px solid rgba(255, 255, 255, 0.1);
-                            border-radius: 24px;
-                            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
-                            width: 100%;
-                            max-width: 1100px;
-                            overflow: hidden;
-                            position: relative;
-                            animation: pmSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-                        }
-                        
-                        .modal-split {
-                            display: flex;
-                            flex-direction: column;
-                            height: 100%;
-                            max-height: 75vh;
-                        }
-                        
-                        @media (min-width: 768px) {
-                            .modal-split { flex-direction: row; }
-                            .modal-left { width: 38%; border-right: 1px solid rgba(255,255,255,0.05); }
-                            .modal-right { width: 62%; }
-                        }
-                        
-                        .modal-left {
-                            padding: 40px;
-                            background: rgba(255,255,255,0.02);
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            gap: 30px;
-                            overflow-y: auto;
-                        }
-                        
-                        .modal-right {
-                            padding: 40px;
-                            overflow-y: auto;
-                            background: transparent;
-                        }
-                        
-                        .porsche-btn-action {
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 10px;
-                            padding: 14px 24px;
-                            border-radius: 12px;
-                            font-weight: 600;
-                            transition: all 0.3s;
-                            text-decoration: none !important;
-                            border: 1px solid rgba(255,255,255,0.1);
-                            width: 100%;
-                        }
-                        
-                        .btn-red { background: #C7252B; color: white !important; }
-                        .btn-red:hover { background: #E53E3E; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(199,37,43,0.4); }
-                        
-                        .btn-glass { background: rgba(255,255,255,0.05); color: #e2e8f0 !important; }
-                        .btn-glass:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); color: white !important; }
-                        
-                        .section-divider {
-                            height: 1px;
-                            background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
-                            margin: 25px 0;
-                        }
-                        
-                        .custom-scroll::-webkit-scrollbar { width: 6px; }
-                        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-                        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-                        
-                        @keyframes pmSlideIn { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-                    </style>
-
-                    <div class="porsche-modal-glass">
-                        <button onclick="modalHandler.closeModal()" style="position: absolute; top: 20px; right: 20px; z-index: 10; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-                            <i class="fas fa-times"></i>
-                        </button>
-
-                        <div class="modal-split">
-                            <!-- Lado Izquierdo: Identidad -->
-                            <div class="modal-left custom-scroll">
-                                <div style="background: white; padding: 25px; border-radius: 20px; width: 100%; display: flex; justify-content: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
-                                    <img src="${empresa.logo_url}" alt="${empresa.nombre}" style="max-width: 100%; max-height: 150px; object-fit: contain;">
-                                </div>
-
-                                <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
-                                    ${empresa.sector ? `<div style="display: flex; align-items: center; gap: 10px; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;"><i class="fas fa-industry text-blue-400"></i> ${empresa.sector}</div>` : ''}
-                                    ${empresa.estado ? `<div style="display: flex; align-items: center; gap: 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; padding: 10px 15px; border-radius: 10px; font-size: 14px; font-weight: 600;"><div style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; animation: pulse 2s infinite;"></div> Estado: ${empresa.estado}</div>` : ''}
-                                    ${empresa.descuento_porcentaje ? `<div style="display: flex; align-items: center; gap: 10px; background: rgba(199, 37, 43, 0.1); border: 1px solid rgba(199, 37, 43, 0.2); color: #fca5a5; padding: 10px 15px; border-radius: 10px; font-size: 14px; font-weight: 600;"><i class="fas fa-tag"></i> Descuento: ${empresa.descuento_porcentaje}% OFF</div>` : ''}
-                                    ${empresa.fecha_convenio ? `<div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 12px; padding: 5px 10px;"><i class="fas fa-calendar-alt"></i> Afiliado desde: ${new Date(empresa.fecha_convenio).toLocaleDateString('es-MX', { year: 'numeric', month: 'short' })}</div>` : ''}
-                                </div>
-
-                                <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
-                                    ${empresa.telefono ? `<a href="tel:${empresa.telefono}" class="porsche-btn-action btn-red"><i class="fas fa-phone"></i> LLAMAR AHORA</a>` : ''}
-                                    ${empresa.email ? `<a href="mailto:${empresa.email}" class="porsche-btn-action btn-glass"><i class="fas fa-envelope"></i> ENVIAR CORREO</a>` : ''}
-                                    ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" class="porsche-btn-action btn-glass"><i class="fas fa-external-link-alt"></i> SITIO WEB</a>` : ''}
-                                </div>
-                            </div>
-
-                            <!-- Lado Derecho: Contenido Detallado -->
-                            <div class="modal-right custom-scroll">
-                                <h2 style="font-size: 36px; font-weight: 800; color: white; margin-bottom: 5px; line-height: 1.1;">${empresa.nombre}</h2>
-                                <p style="color: #64748b; font-size: 16px; font-weight: 500; margin-bottom: 30px;">Directorio de Socios Estratégicos</p>
-
-                                <div class="section-divider"></div>
-
-                                <div>
-                                    <h3 style="font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-info-circle text-blue-400"></i> Perfil Corporativo</h3>
-                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 25px; color: #cbd5e1; line-height: 1.8; text-align: justify; font-size: 15px;">
-                                        ${empresa.descripcion || 'Esta empresa colabora activamente con el Clúster Automotriz para fortalecer la cadena de valor regional.'}
-                                    </div>
-                                </div>
-
-                                ${empresa.beneficios ? `
-                                <div style="margin-top: 35px;">
-                                    <h3 style="font-size: 14px; color: #c084fc; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-gift"></i> Beneficios Clúster</h3>
-                                    <div style="background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.1); border-radius: 16px; padding: 20px; color: #d8b4fe; font-size: 14px; line-height: 1.6; white-space: pre-line;">
-                                        ${empresa.beneficios}
-                                    </div>
-                                </div>` : ''}
-
-                                <div style="margin-top: 35px; display: grid; grid-template-cols: 1fr 1fr; gap: 20px;">
-                                    ${empresa.direccion ? `
-                                    <div style="grid-column: span 2;">
-                                        <h3 style="font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;"><i class="fas fa-map-marker-alt text-rose-400"></i> Ubicación</h3>
-                                        <div style="color: #cbd5e1; font-size: 14px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">${empresa.direccion}</div>
-                                    </div>` : ''}
-                                    
-                                    ${empresa.contacto_nombre ? `
-                                    <div style="grid-column: span 2; margin-top: 20px; background: linear-gradient(to right, rgba(16, 185, 129, 0.05), transparent); border-left: 3px solid #10b981; padding: 20px; border-radius: 0 16px 16px 0;">
-                                        <h3 style="font-size: 13px; color: #10b981; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px;">Enlace Comercial Directo</h3>
-                                        <div style="font-size: 18px; font-weight: 700; color: white;">${empresa.contacto_nombre}</div>
-                                        ${empresa.contacto_telefono ? `<div style="color: #94a3b8; font-size: 14px; margin-top: 5px;"><i class="fas fa-phone-alt mr-2"></i> ${empresa.contacto_telefono}</div>` : ''}
-                                        ${empresa.contacto_email ? `<div style="color: #94a3b8; font-size: 14px; margin-top: 3px;"><i class="fas fa-envelope mr-2"></i> ${empresa.contacto_email}</div>` : ''}
-                                    </div>` : ''}
-                                </div>
-
-                                ${empresa.condiciones ? `
-                                <div style="margin-top: 35px; opacity: 0.8;">
-                                    <h3 style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px;">Términos y Condiciones</h3>
-                                    <p style="font-size: 12px; color: #475569; font-style: italic;">${empresa.condiciones}</p>
-                                </div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                document.body.appendChild(modal);
-                document.body.style.overflow = 'hidden';
-                this.currentModal = modal;
-            },
-
-            closeModal: function () {
-                if (this.currentModal) {
-                    this.currentModal.remove();
-                    this.currentModal = null;
-                }
-                document.body.style.overflow = 'auto';
-            }
-        };
-
-        // Sobrescribir cualquier referencia a empresasViewer
-        window.empresasViewer = {
-            openModal: function (empresaId) {
-                window.modalHandler.openModal(empresaId);
-            },
-            closeModal: function () {
-                window.modalHandler.closeModal();
-            }
-        };
-
-        console.log('✅ Modal handler inicializado correctamente');
-
-        // Cargar empresas directamente
-        window.loadEmpresas = async function () {
-            console.log('📡 Cargando empresas para carrusel...');
-
-            try {
-                const response = await fetch('./api/empresas-simple.php?action=listar&t=' + Date.now());
-                const result = await response.json();
-
-                console.log('📡 Respuesta de API:', result);
-
-                if (result.success && result.data && result.data.empresas) {
-                    console.log('✅ Empresas cargadas:', result.data.empresas.length);
-                    renderCarruselEmpresas(result.data.empresas);
-                    updateCounter(result.data.empresas.length);
-                } else {
-                    console.log('❌ No hay empresas en la respuesta:', result);
-                    showCarouselError('No hay empresas disponibles');
-                }
-            } catch (error) {
-                console.error('❌ Error cargando empresas:', error);
-                showCarouselError('Error al cargar empresas');
-            }
-        };
-
-        function renderEmpresas(empresas) {
-            const container = document.getElementById('empresasContainer');
-
-            // Agrupar empresas de 3 en 3 en filas horizontales
-            let html = '';
-            for (let i = 0; i < empresas.length; i += 3) {
-                const grupo = empresas.slice(i, i + 3);
-                html += `
-                    <div class="empresa-fila-3x3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-                        ${grupo.map(empresa => createEmpresaCard(empresa)).join('')}
-                    </div>
-                `;
-            }
-
-            container.innerHTML = html;
-        }
-
-        // Función para sanitizar datos para uso en onclick sin alterar la lógica del sistema
-        function sanitizeForOnClick(text) {
-            if (!text) return '';
-            return text.toString()
-                .replace(/\\/g, '\\\\')  // Barras invertidas primero
-                .replace(/'/g, "\\'")    // Comillas simples
-                .replace(/"/g, '\\"')    // Comillas dobles
-                .replace(/\n/g, '\\n')   // Saltos de línea
-                .replace(/\r/g, '\\r')   // Retornos de carro
-                .replace(/\t/g, '\\t');  // Tabulaciones
-        }
-
-        // ==================== FUNCIONES CARRUSEL INFINITO ====================
-
-        // Variables globales para el carrusel híbrido
-        let carouselEmpresas = [];
-        let isManualControl = false;
-        let manualControlTimeout = null;
-        let currentCarouselIndex = 0;
-
-        function renderCarruselEmpresas(empresas) {
-            const carouselTrack = document.getElementById('carouselTrack');
-            if (!carouselTrack) return;
-
-            // Limpiar mensaje de carga
-            const loadingMessage = carouselTrack.querySelector('.loading-message');
-            if (loadingMessage) {
-                loadingMessage.remove();
-            }
-
-            // Guardar empresas globalmente
-            carouselEmpresas = empresas;
-
-            // Duplicar empresas para un carrusel infinito fluido (mínimo 8 elementos)
-            let empresasParaCarrusel = [...empresas];
-            while (empresasParaCarrusel.length < 12) {
-                empresasParaCarrusel = [...empresasParaCarrusel, ...empresas];
-            }
-
-            // Tomar solo las primeras 12 para el carrusel
-            empresasParaCarrusel = empresasParaCarrusel.slice(0, 12);
-
-            // Actualizar variable CSS para el total de elementos
-            carouselTrack.style.setProperty('--total', empresasParaCarrusel.length);
-
-            // Generar elementos del carrusel
-            let carouselHTML = '';
-            empresasParaCarrusel.forEach((empresa, index) => {
-                const logoUrl = empresa.logo_url || `https://via.placeholder.com/400x400/f8fafc/64748b?text=${encodeURIComponent(empresa.nombre || 'Empresa')}`;
-                const nombre = empresa.nombre || empresa.nombre_empresa || 'Empresa';
-                const descripcion = empresa.descripcion || 'Sin descripción disponible';
-                const telefono = empresa.telefono || empresa.phone || empresa.tel || 'No disponible';
-                const contactoTelefono = empresa.contacto_telefono || 'No disponible';
-                const email = empresa.email || empresa.correo_electronico || empresa.correo || 'No disponible';
-                const contactoEmail = empresa.contacto_email || 'No disponible';
-                const contactoPersona = empresa.contacto_persona || empresa.contacto_nombre || 'No especificado';
-                const sitioWeb = empresa.sitio_web || empresa.website || empresa.url || '#';
-                const sector = empresa.sector || empresa.categoria || 'General';
-
-                carouselHTML += `
-                    <div class="carousel-item"
-                         style="--i: ${index + 1};"
-                         data-empresa-name="${nombre}"
-                         onclick="mostrarInfoEmpresaCarruselCompleta('${sanitizeForOnClick(nombre)}', '${sanitizeForOnClick(descripcion)}', '${sanitizeForOnClick(logoUrl)}', '${sanitizeForOnClick(telefono)}', '${sanitizeForOnClick(email)}', '${sanitizeForOnClick(sitioWeb)}', '${sanitizeForOnClick(sector)}', '${sanitizeForOnClick(contactoPersona)}', '${sanitizeForOnClick(contactoTelefono)}', '${sanitizeForOnClick(contactoEmail)}')">
-                        <img src="${logoUrl}"
-                             alt="${nombre}"
-                             onerror="this.src='https://via.placeholder.com/400x400/f8fafc/64748b?text=${encodeURIComponent(nombre.charAt(0))}'">
-
-                        <!-- Información de contacto flotante -->
-                        <div class="empresa-info-overlay">
-                            <div class="empresa-info-content">
-                                <h3>${nombre}</h3>
-                                <p class="empresa-sector">${sector}</p>
-                                <div class="contacto-rapido">
-                                    ${contactoPersona !== 'No especificado' ? `<span class="persona"><i class="fas fa-user"></i> ${contactoPersona}</span>` : ''}
-                                    ${contactoTelefono !== 'No disponible' ? `<span class="telefono"><i class="fas fa-phone"></i> ${contactoTelefono}</span>` : ''}
-                                    ${contactoEmail !== 'No disponible' ? `<span class="email"><i class="fas fa-envelope"></i> ${contactoEmail}</span>` : ''}
-                                    ${sitioWeb !== '#' && sitioWeb !== 'No disponible' ? `<span class="web"><i class="fas fa-globe"></i> Sitio Web</span>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            carouselTrack.innerHTML = carouselHTML;
-
-            // Inicializar el carrusel con tiempo predeterminado si no se especifica
-            if (!carouselTrack.style.getPropertyValue('--time')) {
-                carouselTrack.style.setProperty('--time', '60s');
-            }
-
-            // Verificar que se renderizaron elementos
-            const renderedItems = carouselTrack.querySelectorAll('.carousel-item').length;
-            console.log('🏢 Empresas renderizadas en carrusel:', renderedItems);
-
-            if (renderedItems > 0) {
-                console.log('✅ Empresas cargadas correctamente, iniciando carrusel...');
-
-                // Inicializar el índice del carrusel
-                currentCarouselIndex = 0;
-
-                // Inicializar animaciones GSAP después de un breve delay
-                setTimeout(() => {
-                    inicializarAnimacionesCarrusel();
-                }, 500);
-            } else {
-                console.error('❌ No se renderizaron empresas en el carrusel');
-            }
-        }
-
-        // Funciones de navegación del carrusel híbrido
-        function navigateCarousel(direction) {
-            const carouselItems = document.querySelectorAll('.carousel-item');
-            if (!carouselItems || carouselItems.length === 0) return;
-
-            console.log('🎯 Navegando carrusel:', direction);
-
-            // Feedback visual en el botón clickeado
-            const clickedBtn = direction === 'next' ?
-                document.getElementById('nextBtn') :
-                document.getElementById('prevBtn');
-
-            if (clickedBtn) {
-                clickedBtn.classList.add('clicked');
-                setTimeout(() => {
-                    clickedBtn.classList.remove('clicked');
-                }, 300);
-            }
-
-            // Pausar animaciones automáticas temporalmente
-            pauseCarouselAnimation();
-            isManualControl = true;
-
-            // LÓGICA CORREGIDA: Navegación con índice global
-            if (direction === 'next') {
-                currentCarouselIndex = (currentCarouselIndex + 1) % carouselItems.length;
-            } else if (direction === 'prev') {
-                currentCarouselIndex = (currentCarouselIndex - 1 + carouselItems.length) % carouselItems.length;
-            }
-
-            console.log('📍 Nuevo índice:', currentCarouselIndex);
-
-            // Aplicar nuevas posiciones basadas en el índice actual
-            carouselItems.forEach((item, index) => {
-                // Calcular la nueva posición relativa
-                let offset = (index - currentCarouselIndex + carouselItems.length) % carouselItems.length;
-                let newPosition = offset + 1;
-
-                console.log(`📌 Item ${index}: posición ${newPosition}`);
-
-                // Aplicar nueva posición
-                item.style.setProperty('--i', newPosition);
-
-                // Agregar clase para control manual (mejores transiciones)
-                item.classList.add('manual-control');
-
-                // Forzar recálculo de posición con delay corto
-                setTimeout(() => {
-                    item.style.animationDelay = `calc(var(--time) / var(--total) * (${newPosition} - 1) - var(--time))`;
-                }, 50);
-            });
-
-            // Reanudar animación automática después de 4 segundos (más tiempo para que se complete la transición)
-            clearTimeout(manualControlTimeout);
-            manualControlTimeout = setTimeout(() => {
-                resumeCarouselAnimation();
-                isManualControl = false;
-                console.log('🔄 Animación automática reanudada');
-            }, 4000);
-        }
-
-        function pauseCarouselAnimation() {
-            const carouselItems = document.querySelectorAll('.carousel-item');
-            carouselItems.forEach(item => {
-                item.classList.add('manual-control');
-                item.style.animationPlayState = 'paused';
-            });
-            console.log('⏸️ Animación pausada');
-        }
-
-        function resumeCarouselAnimation() {
-            const carouselItems = document.querySelectorAll('.carousel-item');
-            carouselItems.forEach((item, index) => {
-                // Eliminar clase de control manual
-                item.classList.remove('manual-control');
-                // Restablecer transición por defecto
-                item.style.transition = '';
-                item.style.animationPlayState = 'running';
-
-                // Recalcular animation-delay basado en posición actual
-                const currentI = parseInt(item.style.getPropertyValue('--i')) || (index + 1);
-                const totalItems = carouselItems.length;
-                const timeVar = getComputedStyle(item).getPropertyValue('--time') || '60s';
-                const timeInSeconds = parseFloat(timeVar);
-
-                const newDelay = (timeInSeconds / totalItems * (currentI - 1) - timeInSeconds);
-                item.style.animationDelay = `${newDelay}s`;
-            });
-            console.log('▶️ Animación reanudada con delays recalculados');
-        }
-
-        // Función debug para verificar estado del carrusel
-        function debugCarouselState() {
-            console.log('🔍 === ESTADO DEL CARRUSEL ===');
-            console.log('Índice actual:', currentCarouselIndex);
-            console.log('Control manual activo:', isManualControl);
-
-            const items = document.querySelectorAll('.carousel-item');
-            items.forEach((item, index) => {
-                const i = item.style.getPropertyValue('--i');
-                const animationState = item.style.animationPlayState;
-                const hasManualClass = item.classList.contains('manual-control');
-                console.log(`Item ${index}: --i=${i}, animation=${animationState}, manual=${hasManualClass}`);
-            });
-            console.log('=========================');
-        }
-
-        // Hacer la función debug global para poder llamarla desde la consola
-        window.debugCarousel = debugCarouselState;
-
-        // Agregar navegación con teclado (solo cuando el carrusel está visible)
-        document.addEventListener('keydown', function (event) {
-            const carouselSection = document.querySelector('.loop-images');
-            const isCarouselVisible = carouselSection && carouselSection.offsetParent !== null;
-
-            if (isCarouselVisible) {
-                if (event.key === 'ArrowLeft') {
-                    event.preventDefault();
-                    navigateCarousel('prev');
-                } else if (event.key === 'ArrowRight') {
-                    event.preventDefault();
-                    navigateCarousel('next');
-                } else if (event.key === 'd' && event.ctrlKey) {
-                    // Ctrl+D para debug
-                    event.preventDefault();
-                    debugCarouselState();
-                }
-            }
-        });
-
-        function showCarouselError(message) {
-            const carouselTrack = document.getElementById('carouselTrack');
-            if (!carouselTrack) return;
-
-            carouselTrack.innerHTML = `
-                <div class="loading-message" style="
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    color: #ef4444;
-                    font-family: 'Poppins', sans-serif;
-                    font-size: 1.2rem;
-                    z-index: 10;
-                ">
-                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                    <p>${message}</p>
-                    <button onclick="loadEmpresas()" style="
-                        margin-top: 1rem;
-                        padding: 0.5rem 1rem;
-                        background: #3b82f6;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-family: 'Poppins', sans-serif;
-                    ">Reintentar</button>
-                </div>
-            `;
-        }
-
-        function mostrarInfoEmpresaCarruselCompleta(nombre, descripcion, logoUrl, telefono, email, sitioWeb, sector, contactoPersona, contactoTelefono, contactoEmail) {
-            console.log('📋 Mostrando información completa de empresa desde carrusel:', nombre);
-            if (window.modalHandler) {
-                window.modalHandler.showModal({
-                    nombre: nombre,
-                    descripcion: descripcion !== 'Sin descripción' ? descripcion : '',
-                    logo_url: logoUrl,
-                    telefono: telefono !== 'No disponible' ? telefono : '',
-                    email: email !== 'No disponible' ? email : '',
-                    sitio_web: sitioWeb !== '#' && sitioWeb !== 'No disponible' ? sitioWeb : '',
-                    sector: sector !== 'No especificado' ? sector : '',
-                    contacto_nombre: contactoPersona !== 'No especificado' ? contactoPersona : '',
-                    contacto_telefono: contactoTelefono !== 'No disponible' ? contactoTelefono : '',
-                    contacto_email: contactoEmail !== 'No disponible' ? contactoEmail : ''
-                });
-            } else {
-                console.error('modalHandler no está disponible');
-            }
-        }
-
-        function inicializarAnimacionesCarrusel() {
-            if (typeof gsap === 'undefined') {
-                console.log('⚠️ GSAP no disponible, usando animación CSS básica');
-                return;
-            }
-
-            console.log('🎬 Inicializando animaciones GSAP...');
-
-            gsap.registerPlugin(ScrollTrigger);
-
-            // Inicializar Lenis para scroll suave
-            if (typeof Lenis !== 'undefined') {
-                const lenis = new Lenis();
-                lenis.on('scroll', ScrollTrigger.update);
-                gsap.ticker.add((time) => {
-                    lenis.raf(time * 1000);
-                });
-                gsap.ticker.lagSmoothing(0);
-            }
-
-            // Animar entrada del carrusel
-            gsap.fromTo('.carousel-item', {
-                opacity: 0,
-                scale: 0.8
-            }, {
-                opacity: 1,
-                scale: 1,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'power3.out'
-            });
-
-            // Animación de la imagen con scroll
-            gsap.set('.image-motion', {
-                transform: 'rotatex(90deg)',
-            });
-
-            gsap.to('.image-motion', {
-                transform: 'rotatex(0deg)',
-                scrollTrigger: {
-                    trigger: '.section2',
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: true,
-                    markers: false,
-                },
-            });
-
-            // Animaciones de texto en la sección 3
-            gsap.fromTo('.title', {
-                opacity: 0,
-                y: 50,
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: '.section3',
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'play none none reverse',
-                },
-            });
-
-            gsap.fromTo('.subtitle', {
-                opacity: 0,
-                y: 30,
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                delay: 0.3,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: '.section3',
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'play none none reverse',
-                },
-            });
-
-            // Animar párrafos de texto
-            gsap.fromTo('.text', {
-                opacity: 0,
-                y: 30,
-            }, {
-                opacity: 1,
-                y: 0,
-                stagger: 0.2,
-                duration: 0.8,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: '.text-content',
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'play none none reverse',
-                },
-            });
-
-            // Animar features
-            gsap.fromTo('.feature', {
-                opacity: 0,
-                y: 50,
-                scale: 0.9,
-            }, {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                stagger: 0.2,
-                duration: 0.8,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: '.features',
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'play none none reverse',
-                },
-            });
-
-            console.log('✅ Animaciones GSAP inicializadas correctamente');
-        }
-
-        // Controlador robusto de arrastre para el carrusel (basado en descuentos.html)
-        class CarouselDragController {
-            constructor() {
-                this.carouselTrack = document.getElementById('carouselTrack');
-                if (!this.carouselTrack) return;
-
-                this.carouselItems = [];
-                this.isDragging = false;
-                this.isAnimating = true;
-                this.hasMovedEnough = false;
-
-                this.startX = 0;
-                this.currentX = 0;
-                this.lastMouseX = 0;
-                this.mouseVelocity = 0;
-                this.currentOffset = 0;
-
-                this.minDragDistance = 10;
-                this.velocityMultiplier = 2;
-                this.friction = 0.95;
-
-                this.containerWidth = 0;
-                this.itemWidth = 640; // ancho aproximado de cada item del carrusel
-
-                this.init();
-            }
-
-            init() {
-                this.calculateDimensions();
-                this.setupEventListeners();
-                this.updateCarouselItems();
-                console.log('🖱️ Controlador de arrastre del carrusel inicializado');
-            }
-
-            calculateDimensions() {
-                this.containerWidth = this.carouselTrack.offsetWidth;
-                this.carouselItems = Array.from(this.carouselTrack.querySelectorAll('.carousel-item'));
-            }
-
-            updateCarouselItems() {
-                this.carouselItems = Array.from(this.carouselTrack.querySelectorAll('.carousel-item'));
-            }
-
-            setupEventListeners() {
-                // Mouse events - Permitir todos los clics, solo iniciar arrastre
-                this.carouselTrack.addEventListener('mousedown', (e) => this.startDrag(e));
-                document.addEventListener('mousemove', (e) => this.onDrag(e));
-                document.addEventListener('mouseup', (e) => this.endDrag(e));
-
-                // Touch events
-                this.carouselTrack.addEventListener('touchstart', (e) => this.startDrag(e.touches[0]), { passive: false });
-                document.addEventListener('touchmove', (e) => this.onDrag(e.touches[0]), { passive: false });
-                document.addEventListener('touchend', (e) => this.endDrag(e));
-
-                // Prevent default behaviors solo cuando realmente se arrastra
-                this.carouselTrack.addEventListener('selectstart', (e) => {
-                    if (this.hasMovedEnough) {
-                        e.preventDefault();
-                    }
-                });
-
-                this.carouselTrack.addEventListener('dragstart', (e) => {
-                    if (this.hasMovedEnough) {
-                        e.preventDefault();
-                    }
-                });
-
-                // Cursor management
-                this.carouselTrack.addEventListener('mouseenter', () => {
-                    if (!this.isDragging && !this.hasMovedEnough) {
-                        this.carouselTrack.style.cursor = 'grab';
-                    }
-                });
-
-                this.carouselTrack.addEventListener('mouseleave', () => {
-                    if (!this.isDragging) {
-                        this.carouselTrack.style.cursor = 'default';
-                    }
-                });
-
-                // Resize handling
-                window.addEventListener('resize', () => this.calculateDimensions());
-            }
-
-            startDrag(e) {
-                this.isDragging = true;
-                this.hasMovedEnough = false;
-                this.startX = e.clientX;
-                this.currentX = e.clientX;
-                this.lastMouseX = e.clientX;
-                this.mouseVelocity = 0;
-                this.startTime = Date.now();
-
-                // NO cambiar cursor ni pausar animación hasta que haya movimiento real
-                this.updateCarouselItems();
-
-                // Solo prevenir selección de texto, no el evento completo
-                document.body.style.userSelect = 'none';
-            }
-
-            onDrag(e) {
-                if (!this.isDragging) return;
-
-                this.currentX = e.clientX;
-                const totalMovement = Math.abs(e.clientX - this.startX);
-
-                // Solo pausar animación después de movimiento suficiente
-                if (!this.hasMovedEnough && totalMovement > this.minDragDistance) {
-                    this.hasMovedEnough = true;
-
-                    // AHORA sí, activar el modo arrastre
-                    this.pauseCarouselAnimation();
-                    this.carouselTrack.classList.add('dragging');
-                    this.carouselTrack.style.cursor = 'grabbing';
-
-                    e.preventDefault();
-                    console.log('🖱️ Arrastre activado');
-                }
-
-                if (this.hasMovedEnough) {
-                    e.preventDefault();
-                    const deltaX = e.clientX - this.lastMouseX;
-                    this.mouseVelocity = deltaX * this.velocityMultiplier;
-                    this.lastMouseX = e.clientX;
-
-                    this.applyDragOffset(deltaX);
-                    this.normalizeCarouselPositions();
-                }
-            }
-
-            endDrag(e) {
-                if (!this.isDragging) return;
-
-                const wasDragging = this.hasMovedEnough;
-                const timeElapsed = Date.now() - (this.startTime || 0);
-                const totalMovement = Math.abs(this.currentX - this.startX);
-
-                this.isDragging = false;
-                this.carouselTrack.style.cursor = 'grab';
-                this.carouselTrack.classList.remove('dragging');
-
-                // Si fue un clic rápido sin movimiento, permitir que funcione
-                if (!wasDragging && timeElapsed < 300 && totalMovement < 5) {
-                    // Esto es un clic, no un arrastre - no hacer nada especial
-                    document.body.style.userSelect = '';
-                    this.hasMovedEnough = false;
-                    return;
-                }
-
-                // Reanudar animación después de un breve delay si se movió
-                if (wasDragging) {
-                    // Limpiar posiciones inmediatamente
-                    this.resetCarouselPositions();
-
-                    // Pequeño delay para que el reset sea visible, luego reanudar
-                    setTimeout(() => {
-                        this.resumeCarouselAnimation();
-                    }, 50);
-                } else {
-                    // Si no se movió mucho, limpiar inmediatamente
-                    this.resetCarouselPositions();
-                }
-
-                this.hasMovedEnough = false;
-                document.body.style.userSelect = '';
-            }
-
-            pauseCarouselAnimation() {
-                this.carouselItems.forEach(item => {
-                    item.style.animationPlayState = 'paused';
-                });
-            }
-
-            resumeCarouselAnimation() {
-                this.carouselItems.forEach(item => {
-                    item.style.animationPlayState = 'running';
-                });
-            }
-
-            resetCarouselPositions() {
-                // Resetear todas las posiciones para evitar elementos pegados
-                this.carouselItems.forEach((item, index) => {
-                    // Remover cualquier estilo inline de posición
-                    item.style.left = '';
-                    item.style.transform = '';
-                    // Reactivar las transiciones CSS originales
-                    item.style.transition = 'left 0.3s ease-out';
-
-                    // Forzar repaint del elemento
-                    item.offsetHeight;
-                });
-
-                // Asegurar que se actualicen las posiciones inmediatamente
-                this.updateCarouselItems();
-            }
-
-            applyDragOffset(deltaX) {
-                const displacement = deltaX * 0.8; // Factor de velocidad del arrastre
-
-                this.carouselItems.forEach((item) => {
-                    // Usar transform en lugar de left para mejor rendimiento
-                    const currentTransform = item.style.transform || '';
-                    const translateMatch = currentTransform.match(/translateX\(([^)]+)\)/);
-                    const currentTranslate = translateMatch ? parseFloat(translateMatch[1]) : 0;
-
-                    const newTranslate = currentTranslate + displacement;
-                    item.style.transform = `translateX(${newTranslate}px)`;
-
-                    // Deshabilitar transiciones durante el arrastre
-                    item.style.transition = 'none';
-                });
-            }
-
-            normalizeCarouselPositions() {
-                const containerRect = this.carouselTrack.getBoundingClientRect();
-
-                this.carouselItems.forEach((item) => {
-                    const itemRect = item.getBoundingClientRect();
-
-                    // Si el item sale por la izquierda, moverlo al final
-                    if (itemRect.right < containerRect.left - 100) {
-                        const currentTransform = item.style.transform || '';
-                        const translateMatch = currentTransform.match(/translateX\(([^)]+)\)/);
-                        const currentTranslate = translateMatch ? parseFloat(translateMatch[1]) : 0;
-                        const newTranslate = currentTranslate + this.containerWidth + this.itemWidth;
-                        item.style.transform = `translateX(${newTranslate}px)`;
-                    }
-                    // Si el item sale por la derecha, moverlo al inicio
-                    else if (itemRect.left > containerRect.right + 100) {
-                        const currentTransform = item.style.transform || '';
-                        const translateMatch = currentTransform.match(/translateX\(([^)]+)\)/);
-                        const currentTranslate = translateMatch ? parseFloat(translateMatch[1]) : 0;
-                        const newTranslate = currentTranslate - this.containerWidth - this.itemWidth;
-                        item.style.transform = `translateX(${newTranslate}px)`;
-                    }
-                });
-            }
-
-            destroy() {
-                // Limpiar event listeners si es necesario
-                this.resumeCarouselAnimation();
-                this.carouselTrack?.classList.remove('dragging');
-                document.body.style.userSelect = '';
-            }
-        }
-
-
-        function createEmpresaCard(empresa) {
-            console.log('🏢 Creando tarjeta para:', empresa);
-            const logoUrl = empresa.logo_url || `https://via.placeholder.com/140x100/f3f4f6/6b7280?text=${encodeURIComponent(empresa.nombre || empresa.nombre_empresa || 'Empresa')}`;
-            const nombre = empresa.nombre || empresa.nombre_empresa || empresa.nombre_display || empresa.nombre_mostrar || 'Empresa';
-            const descripcion = empresa.descripcion || 'Sin descripción disponible';
-            const sitioWeb = empresa.sitio_web || '#';
-            const sector = empresa.sector || empresa.categoria || 'Comercio';
-            const email = empresa.email || empresa.correo_electronico || empresa.correo || 'No disponible';
-            const telefono = empresa.telefono || empresa.phone || empresa.tel || 'No disponible';
-            const contactoTelefono = empresa.contacto_telefono || 'No disponible';
-            const contactoEmail = empresa.contacto_email || 'No disponible';
-            const contactoPersona = empresa.contacto_persona || empresa.contacto_nombre || 'No especificado';
-
-            // Sanitizar datos para onclick manteniendo la funcionalidad original
-            const nombreSafe = sanitizeForOnClick(nombre);
-            const descripcionSafe = sanitizeForOnClick(descripcion);
-            const sitioWebSafe = sanitizeForOnClick(sitioWeb);
-            const logoUrlSafe = sanitizeForOnClick(logoUrl);
-            const emailSafe = sanitizeForOnClick(email);
-            const telefonoSafe = sanitizeForOnClick(telefono);
-
-            return `
-                <div class="empresa-card animate-fade-in" data-empresa-id="${empresa.id}" data-nombre="${nombre}" data-descripcion="${descripcion}" data-sitio-web="${sitioWeb}">
-                    <div class="empresa-card-content">
-                        <!-- Header con fondo fijo -->
-                        <div class="empresa-card-header">
-                            <img src="${logoUrl}"
-                                 alt="${nombre}"
-                                 class="empresa-logo"
-                                 onerror="this.src='https://via.placeholder.com/140x100/f3f4f6/6b7280?text=${encodeURIComponent(nombre.charAt(0))}';">
-                        </div>
-
-                        <!-- Información de la empresa -->
-                        <div class="empresa-card-info">
-                            <div class="empresa-nombre">${nombre}</div>
-                            <div class="empresa-sector">${sector}</div>
-                            ${contactoPersona !== 'No especificado' || contactoTelefono !== 'No disponible' || contactoEmail !== 'No disponible' ?
-                    `<div class="contacto-info" style="margin-top: 8px; font-size: 11px; color: #64748b; text-align: center;">
-                                    ${contactoPersona !== 'No especificado' ? `<div style="margin-bottom: 2px;">👤 ${contactoPersona}</div>` : ''}
-                                    ${contactoTelefono !== 'No disponible' ? `<div style="margin-bottom: 2px;">📞 ${contactoTelefono}</div>` : ''}
-                                    ${contactoEmail !== 'No disponible' ? `<div>📧 ${contactoEmail}</div>` : ''}
-                                </div>` : ''
-                }
-                        </div>
-
-                        <!-- Botón de información flotante -->
-                        <button class="info-button" onclick="event.stopPropagation(); mostrarInfoEmpresa('${nombreSafe}', '${descripcionSafe}', '${sitioWebSafe}', '${logoUrlSafe}', '${emailSafe}', '${telefonoSafe}', '${sanitizeForOnClick(contactoPersona)}', '${sanitizeForOnClick(contactoTelefono)}', '${sanitizeForOnClick(contactoEmail)}')">
-                            <i class="fas fa-info-circle mr-1"></i>Ver Información
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Función simplificada para mostrar información de empresa con diseño cristal
-        // Función simplificada para mostrar información de empresa con diseño cristal
-        function mostrarInfoEmpresa(nombre, descripcion, sitioWeb, logoUrl, email, telefono, contactoPersona, contactoTelefono, contactoEmail) {
-            console.log('📋 Mostrando información:', nombre);
-            if (window.modalHandler) {
-                window.modalHandler.showModal({
-                    nombre: nombre,
-                    descripcion: descripcion !== 'Sin descripción' ? descripcion : '',
-                    logo_url: logoUrl,
-                    sitio_web: sitioWeb !== '#' && sitioWeb !== 'No disponible' ? sitioWeb : '',
-                    email: email !== 'No disponible' ? email : '',
-                    telefono: telefono !== 'No disponible' ? telefono : '',
-                    contacto_nombre: contactoPersona !== 'No especificado' ? contactoPersona : '',
-                    contacto_telefono: contactoTelefono !== 'No disponible' ? contactoTelefono : '',
-                    contacto_email: contactoEmail !== 'No disponible' ? contactoEmail : ''
-                });
-            } else {
-                console.error('modalHandler no está disponible');
-            }
-        }
-
-
-        function updateCounter(total) {
-            const contador = document.getElementById('contadorEmpresas');
-            if (contador) {
-                contador.innerHTML = `<i class="fas fa-building mr-2"></i>${total} empresa${total !== 1 ? 's' : ''} disponible${total !== 1 ? 's' : ''}`;
-            }
-        }
-
-        // Cargar empresas al inicializar
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(loadEmpresas, 1000);
-
-            // Inicializar animación de imagen de scroll
-            setTimeout(initializeScrollImageEffect, 500);
-        });
-
-        // Scroll image effect initialization
-        function initializeScrollImageEffect() {
-            console.log('🎬 Initializing scroll image effect for empresas page...');
-
-            // Register ScrollTrigger plugin
-            if (typeof gsap !== 'undefined' && gsap.registerPlugin) {
-                gsap.registerPlugin(ScrollTrigger);
-
-                // Set initial state of the image
-                gsap.set('.image-motion', {
-                    transform: 'rotateX(90deg)',
-                    transformOrigin: '50% 0'
-                });
-
-                // Animate the image on scroll
-                gsap.to('.image-motion', {
-                    transform: 'rotateX(0deg)',
-                    scrollTrigger: {
-                        trigger: '.section2',
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: true
-                    },
-                    ease: 'none'
-                });
-
-                console.log('✅ Scroll image animation initialized');
-            } else {
-                console.warn('⚠️ GSAP or ScrollTrigger not available');
-            }
-        }
-    </script>
-
-    <script>
-        // Función para limpiar filtros
-        function limpiarFiltros() {
-            if (window.empresasViewer) {
-                document.getElementById('busquedaEmpresa').value = '';
-                document.getElementById('filtroEstado').value = 'todas';
-                empresasViewer.renderizarEmpresas();
-                empresasViewer.actualizarContador();
-            }
-        }
-
-        // Inicialización específica de la página
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('Página de Socios cargada correctamente');
-
-            // Verificar si es modo visitante
-            const esVisitante = new URLSearchParams(window.location.search).get('visitante') === 'true' ||
-                localStorage.getItem('visitante_mode') === 'true';
-
-            if (esVisitante) {
-                console.log('🔍 Página cargada en modo visitante');
-                // Ocultar elementos específicos para visitantes si es necesario
-                document.body.classList.add('modo-visitante');
-            }
-
-            // Forzar ocultación de cualquier overlay de restricción
-            hideAllRestrictionOverlays();
-
-            // Detectar sesión de usuario
-            setTimeout(detectUserSession, 300);
-
-            // Verificar y ocultar overlays cada segundo durante los primeros 5 segundos
-            for (let i = 1; i <= 5; i++) {
-                setTimeout(hideAllRestrictionOverlays, i * 1000);
-            }
-
-            // Comprobación de empresasViewer eliminada porque interfería con modalHandler unificado.
-        });
-
-        // Función para ocultar todos los overlays de restricción
-        function hideAllRestrictionOverlays() {
-            // Buscar y ocultar cualquier overlay de restricción
-            const overlays = document.querySelectorAll('[id*="restricted"], [class*="restricted"], [id*="Restricted"], [class*="Restricted"]');
-            overlays.forEach(overlay => {
-                overlay.style.display = 'none';
-                overlay.style.visibility = 'hidden';
-                overlay.classList.add('hidden');
-                console.log('🚫 Overlay de restricción ocultado:', overlay);
-            });
-
-            // Buscar overlays con mensaje de "Acceso Restringido"
-            const restrictedMessages = document.querySelectorAll('*');
-            restrictedMessages.forEach(element => {
-                if (element.textContent && element.textContent.includes('Acceso Restringido')) {
-                    const parent = element.closest('div');
-                    if (parent) {
-                        parent.style.display = 'none';
-                        parent.style.visibility = 'hidden';
-                        parent.classList.add('hidden');
-                        console.log('🚫 Mensaje de restricción ocultado:', parent);
-                    }
-                }
-            });
-
-            // Asegurar que el contenido principal esté visible
-            const mainContent = document.getElementById('mainContent');
-            if (mainContent) {
-                mainContent.style.display = 'block';
-                mainContent.style.visibility = 'visible';
-                mainContent.classList.remove('hidden');
-            }
-        }
-
-        // Función setupModalFallback eliminada debido a que sobrescribía destructivamente a modalHandler.
-    </script>
-
-    <!-- SISTEMA DE DETECCIÓN DE SESIÓN DE USUARIO -->
-    <script>
-        // DETECCIÓN DE SESIÓN Y USUARIO LOGGEADO
-        function detectUserSession() {
-            console.log('🔍 Iniciando detección de sesión...');
-
-            // Verificar múltiples fuentes de datos de sesión
-            const sessionSources = [
-                localStorage.getItem('userData'),
-                localStorage.getItem('currentUser'),
-                sessionStorage.getItem('userSession'),
-                localStorage.getItem('userInfo'),
-                sessionStorage.getItem('loginData')
-            ];
-
-            // Buscar datos válidos en alguna fuente
-            let userData = null;
-            for (const source of sessionSources) {
-                if (source) {
-                    try {
-                        userData = JSON.parse(source);
-                        if (userData && (userData.nombre || userData.name || userData.email)) {
-                            console.log('👤 Usuario detectado desde storage:', userData);
-                            break;
-                        }
-                    } catch (e) {
-                        // Si no es JSON, podría ser un string simple
-                        if (source.length > 0) {
-                            userData = { nombre: source };
-                            console.log('👤 Usuario detectado como string:', source);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // Si no hay datos en storage, verificar si hay sesión PHP activa
-            if (!userData) {
-                checkPHPSession();
-            } else {
-                displayUserInfo(userData);
-            }
-        }
-
-        async function checkPHPSession() {
-            try {
-                const sessionEndpoints = [
-                    './assets/conexion/check-session.php',
-                    './config/check-session.php',
-                    './api/check-session.php'
-                ];
-
-                let sessionFound = false;
-                let userData = null;
-
-                for (const endpoint of sessionEndpoints) {
-                    try {
-                        console.log(`📡 Probando endpoint: ${endpoint}`);
-                        const response = await fetch(endpoint, {
-                            method: 'GET',
-                            credentials: 'include',
-                            headers: {
-                                'Cache-Control': 'no-cache'
-                            }
-                        });
-
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.success && data.user) {
-                                console.log('✅ Sesión PHP activa:', data.user);
-                                userData = data.user;
-                                sessionFound = true;
-                                break;
-                            }
-                        }
-                    } catch (e) {
-                        console.log(`❌ Error en endpoint ${endpoint}:`, e.message);
-                    }
-                }
-
-                if (sessionFound && userData) {
-                    displayUserInfo(userData);
-                    // Guardar en localStorage para próximas visitas
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                } else {
-                    console.log('❌ No hay sesión PHP activa');
-                    checkRecentLogin(); // Verificar si hay login reciente
-                }
-            } catch (error) {
-                console.log('❌ Error verificando sesión PHP:', error);
-                checkRecentLogin();
-            }
-        }
-
-        function checkRecentLogin() {
-            console.log('🔍 Verificando login reciente...');
-
-            // Verificar si hay indicadores de login reciente
-            const recentLoginIndicators = [
-                localStorage.getItem('justLoggedIn'),
-                sessionStorage.getItem('recentLogin'),
-                localStorage.getItem('authToken'),
-                sessionStorage.getItem('loginSuccess')
-            ];
-
-            for (const indicator of recentLoginIndicators) {
-                if (indicator) {
-                    console.log('🕐 Login reciente detectado');
-                    // Intentar detectar usuario nuevamente después de un momento
-                    setTimeout(detectUserSession, 1000);
-                    return;
-                }
-            }
-
-            console.log('ℹ️ No hay sesión de usuario detectada');
-            showLoginPrompt();
-        }
-
         function displayUserInfo(userData) {
-            console.log('📊 Mostrando información del usuario:', userData);
-
-            // Extraer datos del usuario
             const nombre = userData.nombre || userData.name || userData.email || 'Usuario';
             const apellido = userData.apellido || userData.lastname || '';
             const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
-            const rol = userData.rol || userData.role || userData.tipo || 'Usuario';
-            const email = userData.email || '';
+            const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
+            const rol = userData.rol || userData.role || 'user';
 
-            // Actualizar elementos de la interfaz
-            updateWelcomeMessage(nombreCompleto);
-            updateUserInfo(nombreCompleto, rol, email);
-            showAuthenticatedElements();
-
-            console.log(`✅ Usuario ${nombreCompleto} autenticado correctamente`);
-        }
-
-        function updateWelcomeMessage(nombre) {
             const welcomeText = document.getElementById('welcomeText');
-            if (welcomeText) {
-                welcomeText.textContent = `Bienvenido ${nombre}`;
-            }
-        }
+            if (welcomeText) welcomeText.textContent = `Bienvenido ${nombreCompleto}`;
 
-        function updateUserInfo(nombre, rol, email) {
             const userNameElement = document.getElementById('userName');
             const userRoleElement = document.getElementById('userRole');
-            const userEmailElement = document.getElementById('userEmail');
+            const userInfoDiv = document.getElementById('userInfo');
 
-            if (userNameElement) userNameElement.textContent = nombre;
-            if (userRoleElement) userRoleElement.textContent = rol;
-            if (userEmailElement) userEmailElement.textContent = email;
-        }
+            if (userNameElement) userNameElement.textContent = nombreCompleto;
+            if (userRoleElement) userRoleElement.textContent = empresa;
+            if (userInfoDiv) {
+                userInfoDiv.classList.remove('hidden');
+                userInfoDiv.classList.add('flex');
+            }
 
-        function showAuthenticatedElements() {
-            // Ocultar elementos de login y mostrar elementos de usuario autenticado
             const loginMenuItem = document.getElementById('loginMenuItem');
-            const userMenuItem = document.getElementById('userMenuItem');
-            const logoutBtn = document.getElementById('logoutBtn');
-
             if (loginMenuItem) loginMenuItem.style.display = 'none';
-            if (userMenuItem) userMenuItem.style.display = 'block';
-            if (logoutBtn) logoutBtn.style.display = 'block';
-        }
 
-        function showLoginPrompt() {
-            const welcomeText = document.getElementById('welcomeText');
-            if (welcomeText) {
-                welcomeText.textContent = 'Bienvenido a Clúster Intranet';
+            if (typeof checkAdminAccess === 'function') {
+                checkAdminAccess(rol, userData);
             }
-
-            // Mostrar elementos de login
-            const loginMenuItem = document.getElementById('loginMenuItem');
-            const loginNavItem = document.getElementById('loginNavItem');
-
-            if (loginMenuItem) loginMenuItem.style.display = 'block';
-            if (loginNavItem) loginNavItem.style.display = 'block';
         }
-
-        // Funciones globales
-        window.detectUserSession = detectUserSession;
         window.displayUserInfo = displayUserInfo;
-        window.showLoginPrompt = showLoginPrompt;
-
     </script>
-    <!-- Header Integration Scripts -->
-    <script>
-
-        // Header user dropdown toggle
-        (function () {
-            document.addEventListener('DOMContentLoaded', function () {
-                const headerUserMenuBtn = document.getElementById('headerUserMenuBtn');
-                const headerUserDropdown = document.getElementById('headerUserDropdown');
-
-                if (headerUserMenuBtn && headerUserDropdown) {
-                    headerUserMenuBtn.addEventListener('click', function (e) {
-                        e.stopPropagation();
-                        const isVisible = headerUserDropdown.style.display !== 'none';
-                        headerUserDropdown.style.display = isVisible ? 'none' : 'block';
-                    });
-
-                    document.addEventListener('click', function (e) {
-                        if (!headerUserMenuBtn.contains(e.target) && !headerUserDropdown.contains(e.target)) {
-                            headerUserDropdown.style.display = 'none';
-                        }
-                    });
-                }
-
-                const headerLogoutBtn = document.getElementById('headerLogoutBtn');
-                if (headerLogoutBtn) {
-                    headerLogoutBtn.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        if (window.authSessionManager) {
-                            window.authSessionManager.logout();
-                        } else {
-                            localStorage.removeItem('userData');
-                            localStorage.removeItem('currentUser');
-                            sessionStorage.clear();
-                            window.location.href = './index.php';
-                        }
-                    });
-                }
-            });
-        })();
-
-        // Update user display info when user data is available
-        function updateUserDisplay(userData) {
-            const nombre = userData.nombre || userData.name || 'Usuario';
-            const rol = userData.rol || userData.role || 'Empleado';
-
-            const headerUserName = document.getElementById('headerUserName');
-            const headerUserRole = document.getElementById('headerUserRole');
-            const userNameTopBar = document.getElementById('userNameTopBar');
-
-            if (headerUserName) headerUserName.textContent = nombre;
-            if (headerUserRole) headerUserRole.textContent = rol;
-            if (userNameTopBar) userNameTopBar.textContent = nombre;
-        }
-
-        const originalDisplayUserInfo = window.displayUserInfo;
-        window.displayUserInfo = function (userData) {
-            if (originalDisplayUserInfo) originalDisplayUserInfo(userData);
-            updateUserDisplay(userData);
-        };
-    </script>
-
-    <!-- Claut Navigation JavaScript -->
-    <script>
-        // ========== NAVIGATION JAVASCRIPT FROM DASHBOARD ==========
-        document.addEventListener('DOMContentLoaded', function () {
-            let lastScrollY = window.scrollY;
-            let ticking = false;
-
-            function updateHeaderState() {
-                const header = document.querySelector('.claut-header');
-                const currentScrollY = window.scrollY;
-
-                // Add scrolled class for enhanced styling
-                if (currentScrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-
-                // Keep header always visible and fixed at top
-                header.style.transform = 'translateY(0)';
-                header.style.position = 'fixed';
-                header.style.top = '0';
-
-                lastScrollY = currentScrollY;
-                ticking = false;
-            }
-
-            function onScroll() {
-                if (!ticking) {
-                    requestAnimationFrame(updateHeaderState);
-                    ticking = true;
-                }
-            }
-
-            window.addEventListener('scroll', onScroll, { passive: true });
-
-            // Setup mobile menu toggle
-            function setupMobileMenu() {
-                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-                const headerNav = document.querySelector('.claut-header-nav');
-
-                if (mobileMenuBtn && headerNav) {
-                    mobileMenuBtn.addEventListener('click', function () {
-                        headerNav.classList.toggle('show');
-                    });
-
-                    // Close menu when clicking outside
-                    document.addEventListener('click', function (e) {
-                        if (!mobileMenuBtn.contains(e.target) && !headerNav.contains(e.target)) {
-                            headerNav.classList.remove('show');
-                        }
-                    });
-                }
-            }
-
-            setupMobileMenu();
-        });
-
-        // JavaScript para el menú curvo animado
-        document.addEventListener('DOMContentLoaded', function () {
-            const bottomNavLinks = document.querySelectorAll('.claut-bottom-nav .claut-nav-link');
-            const headerNavLinks = document.querySelectorAll('.claut-header-nav .claut-nav-item');
-            const navCurve = document.querySelector('.claut-nav-curve');
-
-            function setActiveNav(activeLink) {
-                // Remover clase active de todos los enlaces del bottom nav
-                bottomNavLinks.forEach(link => link.classList.remove('active'));
-
-                // Agregar clase active al enlace clickeado
-                activeLink.classList.add('active');
-
-                // Posicionar la curva
-                if (navCurve) {
-                    const linkIndex = Array.from(bottomNavLinks).indexOf(activeLink);
-                    const container = activeLink.closest('.claut-nav-container');
-                    const containerWidth = container.offsetWidth;
-                    const linkWidth = activeLink.offsetWidth;
-                    const leftOffset = (containerWidth / bottomNavLinks.length) * linkIndex + (linkWidth / 2);
-                    navCurve.style.left = leftOffset + 'px';
-                }
-            }
-
-            // Event listeners para bottom nav
-            bottomNavLinks.forEach((link, index) => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    // Solo hacer la animación, no navegar
-                    setActiveNav(link);
-
-                    // Navegar después de un pequeño delay para mostrar la animación
-                    setTimeout(() => {
-                        window.location.href = link.href;
-                    }, 150);
-                });
-
-                // Touch feedback para móviles
-                link.addEventListener('touchstart', function () {
-                    link.style.transform = 'translateY(-12px) scale(0.95)';
-                }, { passive: true });
-
-                link.addEventListener('touchend', function () {
-                    setTimeout(() => {
-                        if (!link.classList.contains('active')) {
-                            link.style.transform = '';
-                        }
-                    }, 150);
-                }, { passive: true });
-            });
-
-            // Event listeners para header nav
-            headerNavLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    // Remover active de todos
-                    headerNavLinks.forEach(item => item.classList.remove('active'));
-
-                    // Agregar active al clickeado
-                    link.classList.add('active');
-                });
-            });
-
-            // Sincronizar navegación entre header y bottom nav
-            function syncNavigation() {
-                const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
-
-                // Remover todas las clases active
-                bottomNavLinks.forEach(link => link.classList.remove('active'));
-                headerNavLinks.forEach(link => link.classList.remove('active'));
-
-                // Determinar cual debe estar activo basado en la página actual
-                let activeBottomLink = null;
-                let activeHeaderLink = null;
-
-                if (currentPage.includes('dashboard')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="inicio"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="dashboard"]');
-                } else if (currentPage.includes('descuentos')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="descuentos"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="descuentos"]');
-                } else if (currentPage.includes('boletines')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="boletines"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="boletines"]');
-                } else if (currentPage.includes('comite')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="comites"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="comites"]');
-                } else if (currentPage.includes('contacto')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="contacto"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="contacto"]');
-                } else if (currentPage.includes('eventos')) {
-                    activeBottomLink = document.querySelector('.claut-bottom-nav .claut-nav-link[data-section="eventos"]');
-                    activeHeaderLink = document.querySelector('.claut-header-nav .claut-nav-item[href*="eventos"]');
-                }
-
-                // Activar los enlaces correspondientes
-                if (activeBottomLink) {
-                    activeBottomLink.classList.add('active');
-                    setActiveNav(activeBottomLink);
-                }
-                if (activeHeaderLink) {
-                    activeHeaderLink.classList.add('active');
-                }
-            }
-
-            // Inicializar navegación sincronizada
-            syncNavigation();
-
-            // Animaciones de entrada solo si GSAP está disponible
-            if (typeof gsap !== 'undefined') {
-                gsap.fromTo('.claut-bottom-nav', {
-                    y: 100,
-                    opacity: 0
-                }, {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "back.out(1.7)",
-                    delay: 0.5
-                });
-
-                gsap.fromTo('.claut-bottom-nav .claut-nav-link i', {
-                    scale: 0,
-                    rotation: -180
-                }, {
-                    scale: 1,
-                    rotation: 0,
-                    duration: 0.6,
-                    ease: "back.out(2.5)",
-                    stagger: 0.1,
-                    delay: 1
-                });
-            }
-        });
-    </script>
-
-    <!-- Sistema de Seguridad de Sesión -->
-    <script src="./js/session-security.js"></script>
-    <script>
-        // Inicializar seguridad de sesión después de que todo esté cargado
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(() => {
-                window.enableSessionSecurity();
-            }, 1000);
-        });
-    </script>
-
-    <!-- Auth Session Script -->
     <script src="./js/auth-session.js"></script>
-    <script src="assets/js/loading-screen.js"></script>
-    <script src="./assets/js/layout/header-navbar.js"></script>
 </body>
 
 </html>

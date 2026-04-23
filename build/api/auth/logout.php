@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../utils/api-response.php';
 /**
  * API para cerrar sesión
  * Endpoint: /api/auth/logout.php
@@ -26,15 +27,7 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 // Función para respuesta JSON limpia
-function jsonResponse($data, $httpCode = 200) {
-    if (ob_get_level()) {
-        ob_clean();
-    }
-    
-    http_response_code($httpCode);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
+
 
 try {
     // Obtener token del header Authorization

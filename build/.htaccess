@@ -14,11 +14,10 @@ ErrorDocument 404 /404.html
 # No interferir con el funcionamiento normal
 
 # ==== PROTECCIÓN DE RUTAS PRIVADAS ====
-# Proteger el dashboard.html para que solo se muestre después de login
-RewriteCond %{REQUEST_URI} ^/dashboard\.html$
-RewriteCond %{QUERY_STRING} !authenticated=true
-RewriteCond %{HTTP_COOKIE} !claut_authenticated=true
-RewriteRule ^dashboard\.html$ pages/sign-in.html?message=Debes%20iniciar%20sesión%20primero [R=302,L]
+# NOTA: La protección de dashboard.html se maneja por auth-session.js + sesiones PHP (CLAUT_SESSION).
+# La regla de htaccess que verificaba la cookie 'claut_authenticated' fue ELIMINADA porque
+# esa cookie nunca se setea en ninguna parte del sistema, causando redirect permanente a login.
+# NO RESTAURAR esta regla sin primero implementar el seteo de la cookie en el login.
 
 # ==== ACCESO DIRECTO A PÁGINAS PÚBLICAS ====
 # Permitir acceso directo a páginas de autenticación

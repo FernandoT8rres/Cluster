@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../utils/api-response.php';
 /**
  * API de Refresh Token
  * 
@@ -25,15 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Función para respuesta JSON limpia
-function jsonResponse($data, $httpCode = 200) {
-    if (ob_get_level()) {
-        ob_clean();
-    }
-    
-    http_response_code($httpCode);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
-}
+
 
 // Verificar método
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

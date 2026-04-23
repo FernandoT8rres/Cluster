@@ -865,31 +865,26 @@
         }
 
         function handleSaveClick(event) {
-            console.log('=== HANDLE SAVE CLICK ===');
-            console.log('Event:', event);
-            console.log('EditingId global:', editingId);
-            console.log('Modal title:', document.getElementById('modalTitle').textContent);
-
             event.preventDefault();
             event.stopPropagation();
 
-            // Verificar que tenemos editingId
-            if (!editingId) {
-                console.error('EditingId está perdido!');
-                // Intentar recuperarlo del campo hidden
+            const isEditMode = document.getElementById('modalTitle').textContent.includes('Editar');
+
+            // Solo intentar recuperar editingId si estamos en modo edición
+            if (isEditMode && !editingId) {
                 const hiddenId = document.getElementById('documentId').value;
                 if (hiddenId) {
                     editingId = parseInt(hiddenId);
                     console.log('EditingId recuperado del campo hidden:', editingId);
+                } else {
+                    console.error('Modo edición pero no se encontró el ID del documento.');
                 }
             }
 
-            // Llamar directamente a saveDocument
             const fakeEvent = {
                 preventDefault: () => {},
                 target: document.getElementById('documentForm')
             };
-
             saveDocument(fakeEvent);
         }
 

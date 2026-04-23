@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once __DIR__ . '/../assets/conexion/config.php';
+require_once __DIR__ . '/../config/database.php';
 
 // Función para respuesta JSON
 function sendJsonResponse($data, $success = true) {

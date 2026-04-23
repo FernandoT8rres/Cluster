@@ -18,26 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Usar configuración de base de datos remota únicamente
 require_once '../config/database.php';
 
-/**
- * Función para responder en JSON
- */
-function responderJSON($success, $data = null, $message = '', $extra = []) {
-    http_response_code($success ? 200 : 400);
-    $response = [
-        'success' => $success,
-        'message' => $message,
-        'data' => $data,
-        'timestamp' => date('c')
-    ];
-
-    // Agregar datos extra si existen
-    foreach ($extra as $key => $value) {
-        $response[$key] = $value;
-    }
-
-    echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit();
-}
+require_once dirname(__DIR__) . '/utils/api-response.php';
 
 /**
  * Obtener empresas con filtros opcionales
@@ -330,7 +311,7 @@ try {
     $db = Database::getInstance();
     $conn = $db->getConnection();
 } catch (Exception $e) {
-    responderJSON(false, null, 'Error de conexión a la base de datos');
+    ApiResponse::error('Error de conexión a la base de datos', 500);
 }
 
 // Obtener método y acción
@@ -344,15 +325,15 @@ switch ($metodo) {
             $empresa = obtenerEmpresaPorId($conn, $_GET['id']);
 
             if ($empresa) {
-                responderJSON(true, $empresa, 'Empresa obtenida correctamente');
+                ApiResponse::success($empresa, 'Empresa obtenida correctamente');
             } else {
-                responderJSON(false, null, 'Empresa no encontrada');
+                ApiResponse::error('Empresa no encontrada', 404);
             }
 
         } elseif ($accion === 'stats') {
             // Obtener estadísticas
             $stats = obtenerEstadisticas($conn);
-            responderJSON(true, $stats, 'Estadísticas obtenidas correctamente');
+            ApiResponse::success($stats, 'Estadísticas obtenidas correctamente');
 
         } elseif ($accion === 'destacadas') {
             // Obtener solo empresas destacadas activas
@@ -372,7 +353,7 @@ switch ($metodo) {
             $totalStmt = $conn->query($totalQuery);
             $total = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-            responderJSON(true, $empresas, 'Empresas destacadas obtenidas correctamente', ['total' => $total]);
+            ApiResponse::success($empresas, 'Empresas destacadas obtenidas correctamente', 200, ['total' => $total]);
 
         } else {
             // Obtener lista de empresas con filtros
@@ -420,7 +401,7 @@ switch ($metodo) {
             $totalStmt = $conn->query($totalQuery);
             $total = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-            responderJSON(true, $empresas, 'Empresas obtenidas correctamente', ['total' => $total]);
+            ApiResponse::success($empresas, 'Empresas obtenidas correctamente', 200, ['total' => $total]);
         }
         break;
 
@@ -428,20 +409,20 @@ switch ($metodo) {
         $datos = json_decode(file_get_contents('php://input'), true);
 
         if (!$datos) {
-            responderJSON(false, null, 'Datos inválidos');
+            ApiResponse::error('Datos inválidos');
         }
 
         // Validación básica
         if (empty($datos['nombre_empresa'])) {
-            responderJSON(false, null, 'El nombre de la empresa es requerido');
+            ApiResponse::error('El nombre de la empresa es requerido');
         }
 
         $empresa = crearEmpresa($conn, $datos);
 
         if ($empresa) {
-            responderJSON(true, $empresa, 'Empresa creada correctamente');
+            ApiResponse::success($empresa, 'Empresa creada correctamente');
         } else {
-            responderJSON(false, null, 'Error al crear la empresa');
+            ApiResponse::error('Error al crear la empresa');
         }
         break;
 
@@ -449,7 +430,7 @@ switch ($metodo) {
         $datos = json_decode(file_get_contents('php://input'), true);
 
         if (!$datos || !isset($datos['id'])) {
-            responderJSON(false, null, 'Datos inválidos o ID no proporcionado');
+            ApiResponse::error('Datos inválidos o ID no proporcionado');
         }
 
         $id = $datos['id'];
@@ -458,9 +439,9 @@ switch ($metodo) {
         $empresa = actualizarEmpresa($conn, $id, $datos);
 
         if ($empresa) {
-            responderJSON(true, $empresa, 'Empresa actualizada correctamente');
+            ApiResponse::success($empresa, 'Empresa actualizada correctamente');
         } else {
-            responderJSON(false, null, 'Error al actualizar la empresa');
+            ApiResponse::error('Error al actualizar la empresa');
         }
         break;
 
@@ -468,18 +449,18 @@ switch ($metodo) {
         $id = $_GET['id'] ?? null;
 
         if (!$id) {
-            responderJSON(false, null, 'ID no proporcionado');
+            ApiResponse::error('ID no proporcionado');
         }
 
         if (eliminarEmpresa($conn, $id)) {
-            responderJSON(true, null, 'Empresa eliminada correctamente');
+            ApiResponse::success(null, 'Empresa eliminada correctamente');
         } else {
-            responderJSON(false, null, 'Error al eliminar la empresa');
+            ApiResponse::error('Error al eliminar la empresa');
         }
         break;
 
     default:
         http_response_code(405);
-        responderJSON(false, null, 'Método no permitido');
+        ApiResponse::error('Método no permitido', 405);
 }
 ?>

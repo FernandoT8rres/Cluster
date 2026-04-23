@@ -4,7 +4,7 @@
  * Solo para debugging y acceso de emergencia
  */
 
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 // No usar middleware automático
 define('ADMIN_MIDDLEWARE_SKIP_AUTO', true);

@@ -81,10 +81,12 @@ try {
     $empresaAdmin = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$empresaAdmin) {
-        http_response_code(404);
+        // Return a clean message for the frontend to handle gracefully
         echo json_encode([
-            'error' => 'No tienes una empresa asignada para administrar',
-            'user_id_checked' => $user_id
+            'success' => false,
+            'error' => 'Sin empresa asignada',
+            'message' => 'Tu usuario aún no tiene una empresa vinculada para administrar.',
+            'user_id' => $user_id
         ]);
         exit();
     }
@@ -123,7 +125,11 @@ try {
             $allowed_fields = [
                 'nombre_empresa', 'nombre', 'sector', 'descripcion', 'logo_url', 'email', 'telefono',
                 'sitio_web', 'direccion', 'contacto_nombre', 'contacto_persona', 'contacto_telefono', 'contacto_email',
-                'descuento_porcentaje', 'beneficios', 'condiciones', 'fecha_convenio'
+                'descuento_porcentaje', 'beneficios', 'condiciones', 'fecha_convenio',
+                'entidad_federativa', 'municipio', 'certificaciones', 'exporta', 
+                'redes_fb', 'redes_x', 'redes_linkedin', 'redes_instagram',
+                'contacto_movil', 'contacto_cargo', 'categoria', 'keywords', 'codigo_cupon',
+                'autoriza_directorio'
             ];
 
             $payload = [];

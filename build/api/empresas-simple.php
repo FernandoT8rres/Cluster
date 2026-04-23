@@ -42,8 +42,8 @@ try {
 // Definir acceso
 define('CLAUT_ACCESS', true);
 
-// Incluir configuración
-require_once '../includes/config.php';
+// Incluir configuración de base de datos
+require_once __DIR__ . '/../config/database.php';
 
 try {
     $action = $_POST['action'] ?? $_GET['action'] ?? 'listar';
@@ -80,11 +80,35 @@ try {
 }
 
 /**
- * Listar todas las empresas activas
+ * Listar empresas — administradores ven TODAS, otros solo ven activas.
+ * FIX (2026-04-13): Se eliminó WHERE e.activo = 1 que bloqueaba
+ * la visibilidad de registros en el panel administrativo.
  */
 function listarEmpresas($db) {
     try {
+        // Verificar si el usuario es administrador para aplicar o no el filtro
+        // Iniciar sesión segura usando la configuración centralizada del sistema
+        if (!defined('CLAUT_ACCESS')) define('CLAUT_ACCESS', true);
+        require_once dirname(__DIR__) . '/config/session-config.php';
+        SessionConfig::init();
+        // Detección omnidireccional de rol (cubre todas las variantes del sistema)
+        $rolUsuario = strtolower(
+            $_SESSION['user_rol'] ?? 
+            $_SESSION['usuario_rol'] ?? 
+            $_SESSION['rol'] ?? 
+            $_SESSION['user_role'] ?? 
+            $_SESSION['usuario_tipo'] ?? 
+            ''
+        );
+        $esAdmin = in_array($rolUsuario, ['admin', 'administrador'], true);
+
+        // Construir cláusula WHERE: admins ven todo, otros solo activos Y autorizados (incluyendo legados NULL)
+        $whereClause = $esAdmin ? '' : 'WHERE e.activo = 1 AND (e.autoriza_directorio = 1 OR e.autoriza_directorio IS NULL)';
+
         // Query para obtener empresas con todos los campos necesarios
+        // FIX (2026-04-13): El campo 'direccion' se omite para no-admins por privacidad
+        $direccionSelect = $esAdmin ? 'e.direccion,' : "'' AS direccion,";
+
         $sql = "SELECT 
                     e.id,
                     COALESCE(e.nombre, e.nombre_empresa) as nombre,
@@ -94,7 +118,7 @@ function listarEmpresas($db) {
                     e.sitio_web,
                     e.telefono,
                     e.email,
-                    e.direccion,
+                    $direccionSelect
                     COALESCE(e.categoria, e.sector) as sector,
                     e.estado,
                     e.descuento,
@@ -113,11 +137,32 @@ function listarEmpresas($db) {
                     e.created_at,
                     e.updated_at,
                     e.admin_usuario_id,
-                    CONCAT(u.nombre, ' ', u.apellidos) AS admin_nombre
+                    CONCAT(u.nombre, ' ', u.apellidos) AS admin_nombre,
+                    e.municipio,
+                    e.entidad_federativa,
+                    e.certificaciones,
+                    e.exporta,
+                    e.redes_fb,
+                    e.redes_x,
+                    e.redes_linkedin,
+                    e.redes_instagram,
+                    e.usuario_registro_nombre,
+                    e.usuario_registro_apellido,
+                    e.departamento,
+                    e.cargo,
+                    e.logo_archivo,
+                    e.convenio_descripcion,
+                    e.vigencia_inicio,
+                    e.vigencia_fin,
+                    e.contacto_movil,
+                    e.autoriza_directorio
                 FROM empresas_convenio e
                 LEFT JOIN usuarios_perfil u ON e.admin_usuario_id = u.id
-                WHERE e.activo = 1 
+                {$whereClause}
                 ORDER BY e.destacado DESC, COALESCE(e.nombre, e.nombre_empresa) ASC";
+        
+        error_log("DEBUG ELITE: WHERE clause = '$whereClause'");
+        error_log("DEBUG ELITE: SQL Query = " . substr($sql, 0, 200) . "...");
         
         $empresas = $db->select($sql);
         
@@ -150,7 +195,26 @@ function listarEmpresas($db) {
                 'activo' => (bool)$empresa['activo'],
                 'destacado' => (bool)$empresa['destacado'],
                 'fecha_inicio_convenio' => $empresa['fecha_inicio_convenio'],
-                'fecha_fin_convenio' => $empresa['fecha_fin_convenio']
+                'fecha_fin_convenio' => $empresa['fecha_fin_convenio'],
+                'municipio' => $empresa['municipio'] ?: '',
+                'entidad_federativa' => $empresa['entidad_federativa'] ?: '',
+                'certificaciones' => $empresa['certificaciones'] ?: '',
+                'exporta' => (bool)($empresa['exporta'] ?? false),
+                'redes_fb' => $empresa['redes_fb'] ?: '',
+                'redes_x' => $empresa['redes_x'] ?: '',
+                'redes_linkedin' => $empresa['redes_linkedin'] ?: '',
+                'redes_instagram' => $empresa['redes_instagram'] ?: '',
+                'autoriza_directorio' => ($empresa['autoriza_directorio'] === null || $empresa['autoriza_directorio'] == 1),
+                'usuario_registro_nombre' => $empresa['usuario_registro_nombre'] ?: '',
+                'usuario_registro_apellido' => $empresa['usuario_registro_apellido'] ?: '',
+                'departamento' => $empresa['departamento'] ?: '',
+                'cargo' => $empresa['cargo'] ?: '',
+                'logo_archivo' => $empresa['logo_archivo'] ?: '',
+                // Convenios Clúster
+                'convenio_descripcion' => $empresa['convenio_descripcion'] ?: '',
+                'vigencia_inicio' => $empresa['vigencia_inicio'] ?: '',
+                'vigencia_fin' => $empresa['vigencia_fin'] ?: '',
+                'contacto_movil' => $empresa['contacto_movil'] ?: ''
             ];
         }, $empresas);
         
@@ -214,7 +278,24 @@ function obtenerEmpresa($db) {
                     e.fecha_inicio_convenio,
                     e.fecha_fin_convenio,
                     e.admin_usuario_id,
-                    CONCAT(u.nombre, ' ', u.apellidos) AS admin_nombre
+                    CONCAT(u.nombre, ' ', u.apellidos) AS admin_nombre,
+                    e.municipio,
+                    e.certificaciones,
+                    e.exporta,
+                    e.redes_fb,
+                    e.redes_x,
+                    e.redes_linkedin,
+                    e.redes_instagram,
+                    e.usuario_registro_nombre,
+                    e.usuario_registro_apellido,
+                    e.departamento,
+                    e.cargo,
+                    e.logo_archivo,
+                    e.convenio_descripcion,
+                    e.vigencia_inicio,
+                    e.vigencia_fin,
+                    e.contacto_movil,
+                    e.autoriza_directorio
                 FROM empresas_convenio e
                 LEFT JOIN usuarios_perfil u ON e.admin_usuario_id = u.id
                 WHERE e.id = ? AND e.activo = 1";
@@ -249,7 +330,25 @@ function obtenerEmpresa($db) {
             'destacado' => (bool)$empresa['destacado'],
             'estado' => $empresa['estado'] ?: 'activa',
             'fecha_convenio' => $empresa['fecha_convenio'] ?: '',
-            'condiciones' => $empresa['condiciones'] ?: ''
+            'condiciones' => $empresa['condiciones'] ?: '',
+            'municipio' => $empresa['municipio'] ?: '',
+            'certificaciones' => $empresa['certificaciones'] ?: '',
+            'exporta' => (bool)($empresa['exporta'] ?? false),
+            'redes_fb' => $empresa['redes_fb'] ?: '',
+            'redes_x' => $empresa['redes_x'] ?: '',
+            'redes_linkedin' => $empresa['redes_linkedin'] ?: '',
+            'redes_instagram' => $empresa['redes_instagram'] ?: '',
+            'usuario_registro_nombre' => $empresa['usuario_registro_nombre'] ?: '',
+            'usuario_registro_apellido' => $empresa['usuario_registro_apellido'] ?: '',
+            // NUEVOS CAMPOS DEL DIRECTORIO AVANZADO
+            'departamento' => $empresa['departamento'] ?: '',
+            'cargo' => $empresa['cargo'] ?: '',
+            'logo_archivo' => $empresa['logo_archivo'] ?: '',
+            'convenio_descripcion' => $empresa['convenio_descripcion'] ?: '',
+            'vigencia_inicio' => $empresa['vigencia_inicio'] ?: '',
+            'vigencia_fin' => $empresa['vigencia_fin'] ?: '',
+            'contacto_movil' => $empresa['contacto_movil'] ?: '',
+            'autoriza_directorio' => (bool)($empresa['autoriza_directorio'] ?? false)
         ];
         
         sendResponse(true, 'Empresa encontrada', $empresaFormateada);
@@ -285,6 +384,28 @@ function crearEmpresa($db) {
         $contacto_email = trim($_POST['contacto_email'] ?? '');
         $logo_url = trim($_POST['logo_url'] ?? '');
         $admin_usuario_id = !empty($_POST['admin_usuario_id']) ? intval($_POST['admin_usuario_id']) : null;
+        $municipio = trim($_POST['municipio'] ?? '');
+        $entidad_federativa = trim($_POST['entidad_federativa'] ?? '');
+        $certificaciones = trim($_POST['certificaciones'] ?? '');
+        $exporta = isset($_POST['exporta']) ? (int)(bool)$_POST['exporta'] : 0;
+        $redes_fb = trim($_POST['redes_fb'] ?? '');
+        $redes_x = trim($_POST['redes_x'] ?? '');
+        $redes_linkedin = trim($_POST['redes_linkedin'] ?? '');
+        $redes_instagram = trim($_POST['redes_instagram'] ?? '');
+        $usuario_registro_nombre = trim($_POST['usuario_registro_nombre'] ?? '');
+        $usuario_registro_apellido = trim($_POST['usuario_registro_apellido'] ?? '');
+        $departamento = trim($_POST['departamento'] ?? '');
+        $cargo = trim($_POST['cargo'] ?? '');
+        $logo_archivo = trim($_POST['logo_archivo'] ?? '');
+        $autoriza_directorio = isset($_POST['autoriza_directorio']) ? (int)(bool)$_POST['autoriza_directorio'] : 0;
+        // Convenios Clúster
+        $convenio_descripcion = trim($_POST['convenio_descripcion'] ?? '');
+        $vigencia_inicio_raw = trim($_POST['vigencia_inicio'] ?? '');
+        $vigencia_inicio = ($vigencia_inicio_raw !== '' && strtotime($vigencia_inicio_raw)) ? $vigencia_inicio_raw : null;
+        $vigencia_fin_raw = trim($_POST['vigencia_fin'] ?? '');
+        $vigencia_fin = ($vigencia_fin_raw !== '' && strtotime($vigencia_fin_raw)) ? $vigencia_fin_raw : null;
+        $contacto_movil = trim($_POST['contacto_movil'] ?? '');
+        $contacto_cargo = trim($_POST['contacto_cargo'] ?? '');
 
         // Validar campos requeridos
         if (empty($nombre)) {
@@ -295,15 +416,24 @@ function crearEmpresa($db) {
         $sql = "INSERT INTO empresas_convenio (
                     nombre, sector, estado, email, telefono, sitio_web, direccion,
                     descripcion, descuento_porcentaje, fecha_convenio, beneficios,
-                    condiciones, contacto_nombre, contacto_telefono, contacto_email,
-                    logo_url, admin_usuario_id, activo, fecha_registro
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())";
+                    condiciones, contacto_nombre, contacto_cargo, contacto_telefono, contacto_email,
+                    logo_url, admin_usuario_id, entidad_federativa, municipio, certificaciones, exporta,
+                    redes_fb, redes_x, redes_linkedin, redes_instagram,
+                    autoriza_directorio,
+                    usuario_registro_nombre, usuario_registro_apellido, departamento, cargo, logo_archivo,
+                    convenio_descripcion, vigencia_inicio, vigencia_fin, contacto_movil,
+                    activo, fecha_registro
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())";
         
         $params = [
             $nombre, $sector, $estado, $email, $telefono, $sitio_web, $direccion,
             $descripcion, $descuento_porcentaje, $fecha_convenio, $beneficios,
-            $condiciones, $contacto_nombre, $contacto_telefono, $contacto_email,
-            $logo_url, $admin_usuario_id
+            $condiciones, $contacto_nombre, $contacto_cargo, $contacto_telefono, $contacto_email,
+            $logo_url, $admin_usuario_id, $entidad_federativa, $municipio, $certificaciones, $exporta,
+            $redes_fb, $redes_x, $redes_linkedin, $redes_instagram,
+            $autoriza_directorio,
+            $usuario_registro_nombre, $usuario_registro_apellido, $departamento, $cargo, $logo_archivo,
+            $convenio_descripcion, $vigencia_inicio, $vigencia_fin, $contacto_movil
         ];
         
         $empresaId = $db->insert($sql, $params);
@@ -373,6 +503,28 @@ function actualizarEmpresa($db) {
         $contacto_email = trim($_POST['contacto_email'] ?? '');
         $logo_url = trim($_POST['logo_url'] ?? '');
         $admin_usuario_id = !empty($_POST['admin_usuario_id']) ? intval($_POST['admin_usuario_id']) : null;
+        $municipio = trim($_POST['municipio'] ?? '');
+        $entidad_federativa = trim($_POST['entidad_federativa'] ?? '');
+        $certificaciones = trim($_POST['certificaciones'] ?? '');
+        $exporta = isset($_POST['exporta']) ? (int)(bool)$_POST['exporta'] : 0;
+        $redes_fb = trim($_POST['redes_fb'] ?? '');
+        $redes_x = trim($_POST['redes_x'] ?? '');
+        $redes_linkedin = trim($_POST['redes_linkedin'] ?? '');
+        $redes_instagram = trim($_POST['redes_instagram'] ?? '');
+        $usuario_registro_nombre = trim($_POST['usuario_registro_nombre'] ?? '');
+        $usuario_registro_apellido = trim($_POST['usuario_registro_apellido'] ?? '');
+        $departamento = trim($_POST['departamento'] ?? '');
+        $cargo = trim($_POST['cargo'] ?? '');
+        $logo_archivo = trim($_POST['logo_archivo'] ?? '');
+        // Convenios Clúster
+        $convenio_descripcion = trim($_POST['convenio_descripcion'] ?? '');
+        $vigencia_inicio_raw = trim($_POST['vigencia_inicio'] ?? '');
+        $vigencia_inicio = ($vigencia_inicio_raw !== '' && strtotime($vigencia_inicio_raw)) ? $vigencia_inicio_raw : null;
+        $vigencia_fin_raw = trim($_POST['vigencia_fin'] ?? '');
+        $vigencia_fin = ($vigencia_fin_raw !== '' && strtotime($vigencia_fin_raw)) ? $vigencia_fin_raw : null;
+        $contacto_movil = trim($_POST['contacto_movil'] ?? '');
+        $contacto_cargo = trim($_POST['contacto_cargo'] ?? '');
+        $autoriza_directorio = isset($_POST['autoriza_directorio']) ? (int)(bool)$_POST['autoriza_directorio'] : 0;
 
         // Validar que la empresa existe
         $empresaExistente = $db->selectOne("SELECT id FROM empresas_convenio WHERE id = ?", [$id]);
@@ -395,18 +547,42 @@ function actualizarEmpresa($db) {
                     beneficios = ?,
                     condiciones = ?,
                     contacto_nombre = ?,
+                    contacto_cargo = ?,
                     contacto_telefono = ?,
                     contacto_email = ?,
                     logo_url = ?,
                     admin_usuario_id = ?,
+                    entidad_federativa = ?,
+                    municipio = ?,
+                    certificaciones = ?,
+                    exporta = ?,
+                    redes_fb = ?,
+                    redes_x = ?,
+                    redes_linkedin = ?,
+                    redes_instagram = ?,
+                    autoriza_directorio = ?,
+                    usuario_registro_nombre = ?,
+                    usuario_registro_apellido = ?,
+                    departamento = ?,
+                    cargo = ?,
+                    logo_archivo = ?,
+                    convenio_descripcion = ?,
+                    vigencia_inicio = ?,
+                    vigencia_fin = ?,
+                    contacto_movil = ?,
                     updated_at = NOW()
                 WHERE id = ?";
         
         $params = [
             $nombre, $sector, $estado, $email, $telefono, $sitio_web, $direccion,
             $descripcion, $descuento_porcentaje, $fecha_convenio, $beneficios,
-            $condiciones, $contacto_nombre, $contacto_telefono, $contacto_email,
-            $logo_url, $admin_usuario_id, $id
+            $condiciones, $contacto_nombre, $contacto_cargo, $contacto_telefono, $contacto_email,
+            $logo_url, $admin_usuario_id, $entidad_federativa, $municipio, $certificaciones, $exporta,
+            $redes_fb, $redes_x, $redes_linkedin, $redes_instagram,
+            $autoriza_directorio,
+            $usuario_registro_nombre, $usuario_registro_apellido, $departamento, $cargo, $logo_archivo,
+            $convenio_descripcion, $vigencia_inicio, $vigencia_fin, $contacto_movil,
+            $id
         ];
         
         $rowsAffected = $db->update($sql, $params);
@@ -442,13 +618,13 @@ function eliminarEmpresa($db) {
             sendResponse(false, 'Empresa no encontrada', null, 404);
         }
 
-        $rowsAffected = $db->update(
-            "UPDATE empresas_convenio SET activo = 0, estado = 'inactiva', updated_at = NOW() WHERE id = ?",
+        $rowsAffected = $db->delete(
+            "DELETE FROM empresas_convenio WHERE id = ?",
             [$id]
         );
 
         if ($rowsAffected !== false) {
-            sendResponse(true, 'Empresa eliminada correctamente', ['id' => $id]);
+            sendResponse(true, 'Empresa eliminada físicamente de la base de datos', ['id' => $id]);
         } else {
             sendResponse(false, 'Error al eliminar la empresa', null, 500);
         }

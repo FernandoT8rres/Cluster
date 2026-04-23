@@ -20,7 +20,9 @@
       "Bash(Bash(head *))",
       "Bash(grep *)",
       "Bash(head *)",
-      "Bash(tail *)"
+      "Bash(tail *)",
+      "Bash(Bash(find *))",
+      "Bash(Bash(sort *))"
     ]
   }
 }

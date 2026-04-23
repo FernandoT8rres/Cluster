@@ -330,72 +330,64 @@ try {
         case 'POST':
             // Verificar si es una actualización (PUT disfrazado)
             if (isset($_POST['_method']) && $_POST['_method'] === 'PUT') {
-                // Es una actualización, redirigir al código PUT
                 goto handle_put;
             }
 
-            // ============================================
-            // VALIDACIÓN CON API VALIDATOR
-            // ============================================
-            require_once dirname(__DIR__) . '/middleware/api-validator.php';
-            
-            $validation = ApiValidator::validateAndSanitize($_POST, [
-                'titulo' => 'required|string|min:3|max:255',
-                'descripcion' => 'string|max:1000',
-                'categoria' => 'string|max:100',
-                'visibilidad' => 'string|in:publico,privado,restringido',
-                'subido_por' => 'int|min:1'
-            ]);
-            
-            if (!$validation['valid']) {
-                ApiValidator::errorResponse($validation['errors']);
+            // Validación directa — sin ApiValidator para evitar falsos 400
+            // y asegurar que el campo 'message' siempre esté en la respuesta de error
+            $titulo      = clean($_POST['titulo']      ?? '');
+            $descripcion = clean($_POST['descripcion'] ?? '');
+            $categoria   = clean($_POST['categoria']   ?? 'general');
+            $visibilidad = clean($_POST['visibilidad'] ?? 'publico');
+            $subido_por  = isset($_POST['subido_por']) ? intval($_POST['subido_por']) : null;
+
+            if (empty($titulo)) {
+                sendJsonResponse('El título es requerido', false);
             }
-            
-            $titulo = $validation['data']['titulo'];
-            $descripcion = $validation['data']['descripcion'] ?? '';
-            $categoria = $validation['data']['categoria'] ?? 'general';
-            $visibilidad = $validation['data']['visibilidad'] ?? 'publico';
-            $subido_por = $validation['data']['subido_por'] ?? null;
-            // ============================================
+
+            $validVisibilidades = ['publico', 'privado', 'restringido'];
+            if (!in_array($visibilidad, $validVisibilidades)) {
+                sendJsonResponse('Visibilidad inválida. Use: publico, privado o restringido', false);
+            }
 
             // Procesar archivo subido
             if (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK) {
-                sendJsonResponse('Archivo es requerido', false);
+                $uploadErrors = [
+                    UPLOAD_ERR_NO_FILE  => 'El archivo es requerido',
+                    UPLOAD_ERR_INI_SIZE => 'El archivo supera el límite del servidor',
+                    UPLOAD_ERR_FORM_SIZE=> 'El archivo supera el límite del formulario',
+                    UPLOAD_ERR_PARTIAL  => 'El archivo se subió de forma incompleta',
+                ];
+                $errCode = $_FILES['archivo']['error'] ?? UPLOAD_ERR_NO_FILE;
+                sendJsonResponse($uploadErrors[$errCode] ?? 'Error al recibir el archivo', false);
             }
 
             try {
                 $fileData = processFileUpload($_FILES['archivo']);
 
-                $sql = "INSERT INTO documentos (titulo, descripcion, archivo_nombre, archivo_ruta, tipo_archivo, tamaño_archivo, categoria, visibilidad, subido_por) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $sql  = "INSERT INTO documentos (titulo, descripcion, archivo_nombre, archivo_ruta, tipo_archivo, tamaño_archivo, categoria, visibilidad, subido_por) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
 
                 if ($stmt->execute([
-                    $titulo,
-                    $descripcion,
-                    $fileData['archivo_nombre'],
-                    $fileData['archivo_ruta'],
-                    $fileData['tipo_archivo'],
-                    $fileData['tamaño_archivo'],
-                    $categoria,
-                    $visibilidad,
-                    $subido_por
+                    $titulo, $descripcion,
+                    $fileData['archivo_nombre'], $fileData['archivo_ruta'],
+                    $fileData['tipo_archivo'],   $fileData['tamaño_archivo'],
+                    $categoria, $visibilidad, $subido_por
                 ])) {
-                    $id = $pdo->lastInsertId();
-
-                    // Obtener el documento recién creado
+                    $newId   = $pdo->lastInsertId();
                     $getStmt = $pdo->prepare("SELECT * FROM documentos WHERE id = ?");
-                    $getStmt->execute([$id]);
+                    $getStmt->execute([$newId]);
                     $nuevoDocumento = $getStmt->fetch();
                     $nuevoDocumento['tamaño_formateado'] = formatFileSize($nuevoDocumento['tamaño_archivo']);
 
                     sendJsonResponse([
                         'message' => 'Documento subido exitosamente',
-                        'data' => $nuevoDocumento
+                        'id'      => $newId,
+                        'data'    => $nuevoDocumento
                     ]);
                 } else {
                     sendJsonResponse('Error al guardar el documento en la base de datos', false);
                 }
-
             } catch (Exception $e) {
                 sendJsonResponse('Error al procesar el archivo: ' . $e->getMessage(), false);
             }

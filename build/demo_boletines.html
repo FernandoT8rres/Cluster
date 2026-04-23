@@ -898,7 +898,9 @@
                     document.getElementById('boletienesBorradores').textContent = borradores;
                     document.getElementById('totalVisualizaciones').textContent = totalVisualizaciones;
 
-                    document.getElementById('stats-info').textContent = `${total} boletines cargados`;
+                    // stats-info es opcional (puede no existir en el layout actual)
+                    const statsInfo = document.getElementById('stats-info');
+                    if (statsInfo) statsInfo.textContent = `${total} boletines cargados`;
                 }
             } catch (error) {
                 console.error('Error updating statistics:', error);
@@ -925,6 +927,7 @@
             formData.append('contenido', document.getElementById('contenido').value);
             formData.append('estado', document.getElementById('estado').value);
             
+            // Siempre enviamos el ID cuando estamos editando (POST unificado)
             if (isEditing) {
                 formData.append('id', bulletinId);
             }
@@ -935,28 +938,24 @@
             }
             
             try {
-                const method = isEditing ? 'PUT' : 'POST';
+                // Siempre POST — el backend detecta create vs update por la presencia del campo 'id'
                 const response = await fetch('./api/boletines_simple.php', {
-                    method: method,
+                    method: 'POST',
                     body: formData
                 });
                 
-                // Verificar primero el tipo de contenido
                 const contentType = response.headers.get('content-type');
                 console.log('Response Content-Type:', contentType);
                 console.log('Response Status:', response.status);
                 
-                // Obtener el texto de respuesta primero
                 const responseText = await response.text();
                 console.log('Response Text:', responseText);
                 
-                // Intentar parsear como JSON
                 let result;
                 try {
                     result = JSON.parse(responseText);
                 } catch (parseError) {
                     console.error('Error parsing JSON:', parseError);
-                    // Si no es JSON, mostrar el error
                     resultDiv.innerHTML = `
                         <div class="bg-red-50 border border-red-200 rounded-lg p-4">
                             <p class="text-red-800 font-semibold">❌ Error del servidor</p>
@@ -977,14 +976,11 @@
                             <p class="text-green-600 text-sm mt-1">ID: ${result.id || bulletinId}</p>
                         </div>
                     `;
-
-                    // Cerrar modal después de éxito
                     setTimeout(() => {
                         closeModal();
                         loadBulletins();
                         updateStatistics();
                     }, 1500);
-                    
                 } else {
                     resultDiv.innerHTML = `
                         <div class="bg-red-50 border border-red-200 rounded-lg p-4">

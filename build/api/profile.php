@@ -8,7 +8,7 @@ SessionConfig::init();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-header('Content-Type: application/json');
+require_once dirname(__DIR__) . '/utils/api-response.php';
 header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -638,16 +638,28 @@ try {
     $profileAPI = new RealDatabaseProfileAPI();
     $result = $profileAPI->handleRequest();
     
-    http_response_code($result['success'] ? 200 : ($result['error_code'] ?? 400));
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    if (isset($result['success']) && $result['success']) {
+        $extra = isset($result['source']) ? ['source' => $result['source']] : [];
+        ApiResponse::success(
+            $result['data'] ?? null, 
+            $result['message'] ?? 'Operación exitosa', 
+            200, 
+            $extra
+        );
+    } else {
+        $extra = [];
+        if (isset($result['validation_errors'])) $extra['validation_errors'] = $result['validation_errors'];
+        if (isset($result['requires_login'])) $extra['requires_login'] = $result['requires_login'];
+        
+        ApiResponse::error(
+            $result['message'] ?? 'Se produjo un error', 
+            $result['error_code'] ?? 400, 
+            $extra
+        );
+    }
     
 } catch (Exception $e) {
     error_log("Real DB Profile API Fatal Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error interno del servidor',
-        'error' => $e->getMessage()
-    ], JSON_UNESCAPED_UNICODE);
+    ApiResponse::error('Error interno del servidor', 500, ['error' => $e->getMessage()]);
 }
 ?>

@@ -63,7 +63,8 @@ function initMasterCalendar() {
         // API Events Source
         events: async function(info, successCallback, failureCallback) {
             try {
-                const response = await fetch('./api/eventos.php?action=listar');
+                // Agregar timestamp para evitar cache del navegador
+                const response = await fetch(`./api/eventos.php?action=listar&t=${Date.now()}`);
                 const data = await response.json();
                 if (data.success) {
                     allEventos = data.eventos;
@@ -102,10 +103,25 @@ function initMasterCalendar() {
         // Interaction: Resize Update
         eventResize: async function(info) {
             await updateEventDates(info.event);
+        },
+
+        // Update Title on Navigation
+        datesSet: function(info) {
+            const titleEl = document.getElementById('calendarTitle');
+            if (titleEl) {
+                // Formatear título (ej: Abril 2026)
+                const viewTitle = info.view.title;
+                titleEl.textContent = viewTitle.charAt(0).toUpperCase() + viewTitle.slice(1);
+            }
         }
     });
 
     masterCalendar.render();
+
+    // Navigation Controls
+    document.getElementById('prevBtn').onclick = () => masterCalendar.prev();
+    document.getElementById('nextBtn').onclick = () => masterCalendar.next();
+    document.getElementById('todayBtn').onclick = () => masterCalendar.today();
 
     // View Switching
     document.getElementById('viewWeek').onclick = () => {
@@ -149,16 +165,7 @@ async function updateEventDates(event) {
         const response = await fetch('./api/eventos.php?action=editar', { method: 'POST', body: formData });
         const result = await response.json();
         if (result.success) {
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Calendario Actualizado',
-                showConfirmButton: false,
-                timer: 2000,
-                background: '#18181b',
-                color: '#fff'
-            });
+            showNotification('Calendario actualizado', 'success');
         }
     } catch (error) {
         console.error('Error auto-updating event:', error);
@@ -195,42 +202,95 @@ window.editEvent = function(id) {
     delBtn.onclick = () => deleteEvent(event.id);
 };
 
+let isSubmitting = false;
+
 function setupQuickEventForm() {
     const form = document.getElementById('quickEventForm');
     if (!form) return;
 
     form.onsubmit = async (e) => {
         e.preventDefault();
+        
+        if (isSubmitting) return;
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnContent = submitBtn ? submitBtn.innerHTML : '';
         const formData = new FormData(form);
         const id = formData.get('id');
-        const action = id ? 'editar' : 'crear';
+        const isEditing = id && id.trim() !== '';
+        const action = isEditing ? 'editar' : 'crear';
 
         try {
-            const response = await fetch(`./api/eventos.php?action=${action}`, { method: 'POST', body: formData });
+            isSubmitting = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...`;
+            }
+
+            // Feedback inmediato
+            showNotification(isEditing ? 'Actualizando evento...' : 'Creando post-it...', 'info');
+
+            const response = await fetch(`./api/eventos.php?action=${action}`, { 
+                method: 'POST', 
+                body: formData 
+            });
+            
             const result = await response.json();
+            
             if (result.success) {
+                showNotification(isEditing ? 'Evento actualizado' : '¡Evento creado con éxito!', 'success');
+                
+                // Cierre de modal
                 closeQuickEventModal();
+                
+                // Refrescar todos los eventos desde el servidor (sincronización única)
                 masterCalendar.refetchEvents();
-                Swal.fire({ title: 'Éxito', text: 'Evento guardado correctamente', icon: 'success', background: '#1e293b', color: '#fff' });
+            } else {
+                throw new Error(result.message || 'Error al guardar el evento');
             }
         } catch (error) {
             console.error('Error saving event:', error);
+            showNotification('Error: ' + error.message, 'error');
+        } finally {
+            isSubmitting = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnContent;
+            }
         }
     };
 }
 
 async function deleteEvent(id) {
+    if (isSubmitting) return;
     if (!confirm('¿Eliminar este evento permanentemente?')) return;
 
     try {
-        const response = await fetch(`./api/eventos.php?action=eliminar&id=${id}`, { method: 'DELETE' });
+        isSubmitting = true;
+        showNotification('Eliminando post-it...', 'warning');
+        
+        const response = await fetch(`./api/eventos.php?action=eliminar&id=${id}`);
         const result = await response.json();
+        
         if (result.success) {
+            showNotification('Post-it eliminado', 'info');
+            
+            // Eliminar visualmente de inmediato
+            const eventObj = masterCalendar.getEventById(id) || masterCalendar.getEventById(String(id));
+            if (eventObj) {
+                eventObj.remove();
+            }
+            
             closeQuickEventModal();
+            // Refrescar fuente de datos por seguridad
             masterCalendar.refetchEvents();
-            Swal.fire({ title: 'Eliminado', text: 'El post-it ha sido removido del calendario.', icon: 'info', background: '#1e293b', color: '#fff' });
+        } else {
+            throw new Error(result.message || 'Error al eliminar');
         }
     } catch (error) {
         console.error('Error deleting event:', error);
+        showNotification('Error al eliminar: ' + error.message, 'error');
+    } finally {
+        isSubmitting = false;
     }
 }

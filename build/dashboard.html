@@ -50,7 +50,7 @@
       transform: none !important;
       transition: none !important;
       will-change: auto !important;
-      max-width: 80rem !important;
+      max-width: 95% !important;
       margin-left: auto !important;
       margin-right: auto !important;
       padding-left: 1.5rem !important;
@@ -108,7 +108,7 @@
       padding-left: 1.5rem !important;
       padding-right: 1.5rem !important;
       width: auto !important;
-      max-width: 80rem !important;
+      max-width: 95% !important;
     }
 
     @media (min-width: 1024px) {
@@ -4396,6 +4396,318 @@
     }
 
     /* END PREVIEW CALENDAR OVERRIDES */
+
+    /* ============================================================
+       RESPONSIVE MASTER — dashboard.html
+       Cubre: header, navbar, hero, social icons, expanding cards,
+       banners slider, calendario, modales, contenedor principal
+    ============================================================ */
+
+    /* --- Utilidades generales --- */
+    img { max-width: 100%; height: auto; }
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* --- MAIN: eliminar padding lateral fijo --- */
+    main.claut-main {
+      width: 100% !important;
+      max-width: 100vw !important;
+      padding-left: clamp(0.75rem, 3vw, 3rem) !important;
+      padding-right: clamp(0.75rem, 3vw, 3rem) !important;
+      padding-top: var(--header-height) !important;
+      padding-bottom: 2rem !important;
+      margin-left: 0 !important;
+      overflow-x: hidden !important;
+    }
+
+    /* --- Contenedor de contenido principal --- */
+    .content-gradient-container {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    /* --- Header: ajustes por tamaño --- */
+    @media (max-width: 480px) {
+      .claut-header {
+        padding: 0 0.75rem !important;
+        height: 56px !important;
+      }
+      --header-height: 56px;
+      .claut-header-logo img { width: 26px; height: 26px; }
+      .claut-header-logo { font-size: 1rem; }
+      main.claut-main { padding-top: 56px !important; }
+    }
+
+    @media (min-width: 481px) and (max-width: 767px) {
+      .claut-header { padding: 0 1rem !important; }
+    }
+
+    /* --- Mobile menu button visible en pequeño --- */
+    @media (max-width: 767px) {
+      .claut-mobile-menu-btn { display: flex !important; }
+    }
+
+    /* --- Porsche navbar interna: responsiva --- */
+    @media (max-width: 767px) {
+      .porsche-navbar {
+        padding: 10px 12px !important;
+        margin: 8px 0 16px 0 !important;
+        border-radius: 14px !important;
+      }
+      .porsche-navbar .flex-wrap-inherit {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .porsche-navbar .flex.items-center.mt-2 {
+        width: 100% !important;
+        margin-top: 0.25rem !important;
+      }
+      .porsche-breadcrumb { margin-right: 0 !important; }
+      .porsche-welcome { font-size: 1rem !important; }
+      #welcomeMessage { margin-bottom: 0.25rem !important; }
+    }
+
+    /* --- Hero Section --- */
+    .claut-hero {
+      padding: 2rem 1rem !important;
+    }
+
+    @media (max-width: 767px) {
+      .claut-hero {
+        min-height: unset !important;
+        margin: 1rem 0 2rem 0 !important;
+        padding: 1.5rem 0.75rem !important;
+      }
+      .claut-hero h1.claut-title-hero {
+        margin-top: 0 !important;
+        margin-bottom: 1rem !important;
+      }
+      .claut-hero-logo-container { margin-top: 0.75rem !important; margin-bottom: 0.75rem !important; }
+    }
+
+    /* --- Social icons: apilados en móvil, 3D efecto simplificado --- */
+    @media (max-width: 640px) {
+      .social-media-container {
+        gap: 10px !important;
+        padding: 20px 0 !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+      }
+      .icon-box { margin: 6px !important; }
+      .icon-box a {
+        padding: 14px !important;
+        box-shadow: -10px 10px 6px rgba(0,0,0,0.3) !important;
+      }
+    }
+
+    /* --- Sección Showcase Banners --- */
+    .max-w-7xl.mx-auto.px-6.lg\:px-8 {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    @media (max-width: 767px) {
+      /* Título de la sección showcase */
+      .max-w-7xl h2.text-4xl { font-size: 1.6rem !important; }
+      .max-w-7xl h2.md\:text-5xl { font-size: 1.6rem !important; }
+    }
+
+    /* --- Expanding Cards container: altura dinámica --- */
+    .glass-card.h-\[700px\],
+    .glass-card.lg\:h-\[750px\] {
+      height: auto !important;
+      min-height: 350px !important;
+    }
+
+    @media (min-width: 768px) {
+      .glass-card.h-\[700px\] { height: 600px !important; }
+    }
+    @media (min-width: 1024px) {
+      .glass-card.h-\[700px\] { height: 700px !important; }
+    }
+
+    /* --- Calendario: ancho 100% y text pequeño en móvil --- */
+    .flex.flex-wrap.mt-12.-mx-3 {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+
+    @media (max-width: 767px) {
+      #dashboard-preview-calendar { font-size: 0.75rem !important; }
+      #dashboard-preview-calendar .fc-toolbar {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        align-items: flex-start !important;
+      }
+      #dashboard-preview-calendar .fc-toolbar-title { font-size: 1rem !important; }
+      #dashboard-preview-calendar .fc-button { padding: 0.25rem 0.5rem !important; font-size: 0.75rem !important; }
+    }
+
+    /* --- Modales: full-width en móvil --- */
+    @media (max-width: 640px) {
+      #messageModal > div,
+      #messageDetailModal > div {
+        max-width: 96vw !important;
+        margin: 0.5rem auto !important;
+        width: 96vw !important;
+        border-radius: 1rem !important;
+      }
+      .image-preview-modal img {
+        max-width: 95vw !important;
+        max-height: 80vh !important;
+      }
+    }
+
+    /* --- Auth required message: stack en móvil --- */
+    @media (max-width: 640px) {
+      #authRequiredMessage .flex.items-center {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 1rem !important;
+      }
+      #authRequiredMessage .flex-1.ml-6 { margin-left: 0 !important; }
+      #authRequiredMessage .flex-shrink-0.ml-6 { margin-left: 0 !important; }
+    }
+
+    /* --- Banner slider: altura adaptable ya definida arriba; botones centrados en móvil --- */
+    @media (max-width: 480px) {
+      #bannersSlider { border-radius: 0.5rem !important; }
+      .banner-text-title { font-size: 1rem !important; }
+      .banner-text-description { font-size: 0.75rem !important; }
+    }
+
+    /* --- Grids de estadísticas: 1 columna en móvil muy pequeño --- */
+    @media (max-width: 400px) {
+      .stats-cards-reveal {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* --- Overflow horizontal nunca visible --- */
+    body, main.claut-main, .main-content-wrapper, .content-gradient-container {
+      overflow-x: hidden !important;
+    }
+  </style>
+
+  <!-- ============================================================
+       RESPONSIVE PATCH 2 — Expanding cards, modales, navbar
+  ============================================================ -->
+  <style>
+    /* --- Expanding cards: min-height adaptable --- */
+    .expanding-card {
+      min-height: clamp(200px, 50vw, 600px) !important;
+    }
+
+    .expanding-options {
+      min-height: clamp(200px, 50vw, 520px) !important;
+    }
+
+    @media (max-width: 640px) {
+      .expanding-card {
+        min-height: 220px !important;
+        border-radius: 12px !important;
+      }
+      .expanding-options {
+        min-height: 200px !important;
+      }
+      /* Salida de texto dentro de las expanding cards */
+      .card-info h3 { font-size: 0.9rem !important; }
+      .card-info p  { font-size: 0.75rem !important; }
+      .card-label   { font-size: 0.7rem !important; padding: 4px 8px !important; }
+    }
+
+    /* --- Glass card container (showcases): altura 100% automática en móvil --- */
+    @media (max-width: 640px) {
+      .glass-card.shadow-2xl {
+        height: auto !important;
+        min-height: 280px !important;
+      }
+      .expanding-options.px-6.pb-6 {
+        padding: 0.5rem !important;
+      }
+      #expandingCardsContainer {
+        gap: 4px !important;
+        margin: 8px 4px !important;
+      }
+    }
+
+    /* --- Modal de mensajes: alto adaptable --- */
+    #messageContainer {
+      min-height: min(500px, 75vh) !important;
+      height: min(60vh, 600px) !important;
+    }
+
+    @media (max-width: 640px) {
+      #messageContainer {
+        height: 75vh !important;
+        min-height: unset !important;
+      }
+      /* Header del modal más compacto */
+      #messageContainer .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+      #messageContainer .pb-6 { padding-bottom: 0.75rem !important; }
+      #messageContainer .space-x-5 { gap: 0.75rem !important; }
+      #messageContainer .w-16.h-16 { width: 2.5rem !important; height: 2.5rem !important; }
+      #messageContainer h3.text-2xl { font-size: 1.1rem !important; }
+      #messageContainer .flex-1.overflow-y-auto.px-8 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+    }
+
+    /* --- Porsche navbar: márgenes laterales proporcionales en pantallas intermedias --- */
+    @media (min-width: 1025px) and (max-width: 1280px) {
+      .porsche-navbar[navbar-main],
+      nav[navbar-main][navbar-scroll="false"] {
+        margin-left: 2rem !important;
+        margin-right: 2rem !important;
+        width: calc(100% - 4rem) !important;
+        max-width: calc(100% - 4rem) !important;
+      }
+    }
+
+    /* --- Porsche navbar: sin márgenes laterales en móvil --- */
+    @media (max-width: 1024px) {
+      .porsche-navbar[navbar-main],
+      nav[navbar-main][navbar-scroll="false"] {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 1rem !important;
+      }
+    }
+
+    /* --- Hero section: sin margin excesivo en móvil --- */
+    @media (max-width: 640px) {
+      section.claut-hero {
+        margin: 0.5rem 0 1.5rem 0 !important;
+        min-height: unset !important;
+        padding: 1rem 0.5rem !important;
+      }
+    }
+
+    /* --- Sección calendario: sin negativo margin en móvil --- */
+    @media (max-width: 640px) {
+      .flex.flex-wrap.mt-12.\-mx-3 {
+        margin-top: 1rem !important;
+        padding: 0 0.5rem !important;
+      }
+    }
+
+    /* --- Títulos hero en pantallas medias --- */
+    @media (min-width: 641px) and (max-width: 900px) {
+      h2.text-4xl { font-size: 2rem !important; }
+      h2.md\:text-5xl { font-size: 2.25rem !important; }
+    }
+
+    /* --- Evitar que body tenga scroll horizontal --- */
+    html, body {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+    }
   </style>
 </head>
 
@@ -4655,7 +4967,7 @@
   </section>
 
   <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
-    style="margin-top: var(--header-height); margin-left: 0; padding: var(--space-4) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
+    style="overflow: hidden; z-index: 1; position: relative;">
     <div class="main-content-wrapper relative z-10">
       <!-- Navbar (Sub-header Glassmorphism) -->
       <nav
@@ -4700,7 +5012,7 @@
               </li>
               <!-- Botón Panel de Administración (solo para admins) -->
               <li class="flex items-center pl-4 hidden" id="adminPanelButton">
-                <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                <a href="./admin-panel.html?login=success"
                   class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
                   title="Panel de Administración">
                   <i class="fas fa-cogs mr-2"></i>
@@ -4716,7 +5028,7 @@
 
       <!-- Main content con spacing Apple -->
       <div class="w-full apple-space-responsive content-gradient-container"
-        style="max-width: 100%; margin: 0 auto; padding: 0 var(--space-8); position: relative;">
+        style="max-width: 100%; margin: 0 auto; position: relative;">
         <!-- Unified gradient background for seamless transitions -->
         <div class="unified-gradient-background"></div>
 
@@ -4816,7 +5128,9 @@
             </div>
             <h2
               class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight tracking-tighter uppercase drop-shadow-md">
-              Centro de <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">INFORMACIÓN, EVENTOS Y PROMOCIONES</span>
+              Centro de <span
+                class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">INFORMACIÓN, EVENTOS Y
+                PROMOCIONES</span>
             </h2>
             <div class="max-w-4xl mx-auto">
               <p class="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed mb-4">
@@ -4827,8 +5141,7 @@
           </div>
 
           <!-- Expanding Cards Banner Showcase -->
-          <div
-            class="glass-card shadow-2xl h-[700px] lg:h-[750px] relative overflow-hidden rounded-3xl border-0"
+          <div class="glass-card shadow-2xl h-[700px] lg:h-[750px] relative overflow-hidden rounded-3xl border-0"
             style="transform: none !important; will-change: auto !important;">
 
             <!-- Expanding Cards Container with Enhanced Scroll Effects -->
@@ -4880,345 +5193,6 @@
         </div>
       </div>
 
-      <!-- Script de carrusel usando lógica de sign-in.html -->
-      <script>
-        // Sistema de Carrusel de Banners (copiado de sign-in.html)
-        let currentSlide = 0;
-        let banners = [];
-        let carouselInterval = null;
-
-        async function cargarBannerCarrusel() {
-          try {
-            console.log('Iniciando carga de banners...');
-            // Agregar timestamp para evitar caché
-            const timestamp = Date.now();
-            const response = await fetch(`./api/banners.php?action=active&t=${timestamp}`, {
-              cache: 'no-cache',
-              headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-              }
-            });
-
-            // Verificar si la respuesta es OK
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            // Obtener el texto primero para verificar si hay warnings
-            const responseText = await response.text();
-            console.log('Respuesta raw del servidor:', responseText);
-
-            // Limpiar warnings de PHP si existen (empiezan con <br />)
-            let cleanedResponse = responseText;
-            if (responseText.includes('<br />')) {
-              // Encontrar donde empieza el JSON (buscar el primer {)
-              const jsonStart = responseText.indexOf('{');
-              if (jsonStart !== -1) {
-                cleanedResponse = responseText.substring(jsonStart);
-              }
-            }
-
-            // Parsear el JSON limpio
-            const result = JSON.parse(cleanedResponse);
-            console.log('Datos parseados:', result);
-
-            if (result.success && result.data && result.data.length > 0) {
-              // Usar banners de la base de datos
-              banners = result.data;
-              console.log(`✅ Cargados ${banners.length} banners de la base de datos:`, banners);
-              inicializarCarruselDashboard();
-              // Ocultar loading cuando hay banners
-              const sliderLoading = document.getElementById('sliderLoading');
-              if (sliderLoading) {
-                sliderLoading.style.display = 'none';
-              }
-            } else {
-              console.warn('❌ No hay banners activos en la base de datos');
-              console.log('Respuesta completa:', result);
-              // En lugar de mostrar mensaje, usar banners de demostración
-              usarBannersDemo();
-            }
-          } catch (error) {
-            console.error('❌ Error al cargar banners:', error);
-            console.error('Error completo:', error.message);
-            // En caso de error, usar banners de demostración
-            usarBannersDemo();
-          }
-        }
-
-        function usarBannersDemo() {
-          console.log('🎨 Usando banners de demostración...');
-          banners = [
-            {
-              titulo: 'Bienvenido a Clúster Intranet',
-              descripcion: 'Tu plataforma de gestión empresarial',
-              imagen_url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
-            },
-            {
-              titulo: 'Nuevas Funcionalidades',
-              descripcion: 'Descubre las últimas características de la plataforma',
-              imagen_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
-            },
-            {
-              titulo: 'Empresas Destacadas',
-              descripcion: 'Explora las empresas que forman parte de nuestro clúster',
-              imagen_url: 'https://images.unsplash.com/photo-1556745757-8d76bdb6984b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
-            }
-          ];
-
-          inicializarCarruselDashboard();
-          document.getElementById('sliderLoading').style.display = 'none';
-        }
-
-        function inicializarCarruselDashboard() {
-          const slidesContainer = document.getElementById('slidesContainer');
-          const sliderLoading = document.getElementById('sliderLoading');
-
-          if (!slidesContainer) {
-            console.error('❌ Container slidesContainer no encontrado');
-            return;
-          }
-
-          console.log('Inicializando carrusel con banners:', banners);
-
-          // Ocultar loading
-          if (sliderLoading) {
-            sliderLoading.style.display = 'none';
-          }
-
-          // Crear slides usando la estructura del dashboard
-          console.log('🖼️ Creando slides con banners:', banners);
-
-          // Limpiar completamente el contenedor
-          slidesContainer.innerHTML = '';
-
-          if (banners.length === 0) {
-            console.warn('⚠️ No hay banners para mostrar');
-            mostrarMensajeSinBanners();
-            return;
-          }
-
-          banners.forEach((banner, index) => {
-            const imagenUrl = banner.imagen_url || banner.imagen || '';
-            console.log(`🎨 Banner ${index + 1}:`, {
-              titulo: banner.titulo,
-              descripcion: banner.descripcion,
-              imagen_url: imagenUrl,
-              index: index
-            });
-
-            // Crear elemento directamente con JavaScript
-            const slideElement = document.createElement('div');
-            slideElement.className = `absolute inset-0 transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
-            slideElement.setAttribute('data-slide-index', index);
-
-            // Aplicar estilos directamente
-            slideElement.style.cssText = `
-                  background-image: url('${imagenUrl}');
-                  background-size: cover;
-                  background-position: center;
-                  background-repeat: no-repeat;
-                  width: 100%;
-                  height: 100%;
-                  border-radius: 1rem;
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-              `;
-
-            slideElement.innerHTML = `
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-2xl"></div>
-                  <div class="absolute bottom-8 left-8 text-white z-10" style="z-index: 20; max-width: 80%;">
-                      <h3 class="text-2xl font-bold mb-2 drop-shadow-lg text-white">
-                          ${banner.titulo || 'Banner ' + (index + 1)}
-                      </h3>
-                      <p class="text-lg opacity-90 drop-shadow-md text-white">
-                          ${banner.descripcion || ''}
-                      </p>
-                  </div>
-              `;
-
-            slidesContainer.appendChild(slideElement);
-            console.log(`✅ Slide ${index + 1} creado y agregado al DOM`);
-
-            // Test de carga de imagen
-            const img = new Image();
-            img.onload = () => {
-              console.log(`🖼️ Imagen ${index + 1} cargada correctamente: ${imagenUrl}`);
-            };
-            img.onerror = () => {
-              console.error(`❌ Error cargando imagen ${index + 1}: ${imagenUrl}`);
-            };
-            img.src = imagenUrl;
-          });
-
-          console.log(`🏁 Total slides creados: ${slidesContainer.children.length}`);
-
-          // Crear indicadores (dots)
-          crearIndicadores();
-
-          // Iniciar autoplay si hay más de un banner
-          if (banners.length > 1) {
-            console.log('Iniciando autoplay para', banners.length, 'banners');
-            iniciarAutoplay();
-          } else {
-            console.log('Solo hay un banner, no se activa autoplay');
-          }
-        }
-
-        function crearIndicadores() {
-          const indicatorsContainer = document.getElementById('sliderIndicators');
-          if (!indicatorsContainer) return;
-
-          indicatorsContainer.innerHTML = '';
-
-          banners.forEach((_, index) => {
-            const dot = document.createElement('button');
-            dot.className = `slider-dot w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-white w-8' : 'bg-white/50'
-              }`;
-            dot.setAttribute('data-index', index);
-            dot.addEventListener('click', () => cambiarSlide(index));
-            indicatorsContainer.appendChild(dot);
-          });
-        }
-
-        function mostrarMensajeSinBanners() {
-          const slidesContainer = document.getElementById('slidesContainer');
-          const loadingContainer = document.getElementById('sliderLoading');
-
-          // Ocultar el loading spinner
-          if (loadingContainer) {
-            loadingContainer.style.display = 'none';
-          }
-
-          // Mostrar mensaje informativo sin imagen de fondo
-          slidesContainer.innerHTML = `
-              <div class="absolute inset-0 flex items-center justify-center rounded-2xl"
-                   style="background: linear-gradient(135deg, #7b1a20 0%, #a01e23 100%);">
-                  <div class="text-center p-8">
-                      <i class="fas fa-image text-white text-5xl mb-4 opacity-50"></i>
-                      <h3 class="text-2xl font-bold text-white mb-2">
-                          Sin banners disponibles
-                      </h3>
-                      <p class="text-white text-sm opacity-80">
-                          Los banners del carrusel se cargarán cuando estén configurados en el sistema
-                      </p>
-                  </div>
-              </div>
-          `;
-        }
-
-        function cambiarSlide(index) {
-          if (index === currentSlide) return;
-
-          // Cambiar slide activo
-          const slides = document.querySelectorAll('#slidesContainer > div');
-          if (slides.length === 0) return;
-
-          slides[currentSlide].classList.remove('opacity-100');
-          slides[currentSlide].classList.add('opacity-0');
-
-          currentSlide = index;
-
-          slides[currentSlide].classList.remove('opacity-0');
-          slides[currentSlide].classList.add('opacity-100');
-
-          // Actualizar indicadores
-          actualizarIndicadores();
-
-          // Reiniciar autoplay
-          if (carouselInterval) {
-            clearInterval(carouselInterval);
-            iniciarAutoplay();
-          }
-        }
-
-        function actualizarIndicadores() {
-          const dots = document.querySelectorAll('.slider-dot');
-          dots.forEach((dot, index) => {
-            if (index === currentSlide) {
-              dot.classList.remove('bg-white/50', 'w-2');
-              dot.classList.add('bg-white', 'w-8');
-            } else {
-              dot.classList.remove('bg-white', 'w-8');
-              dot.classList.add('bg-white/50', 'w-2');
-            }
-          });
-        }
-
-        function siguienteSlide() {
-          const nextIndex = (currentSlide + 1) % banners.length;
-          console.log(`Cambiando de slide ${currentSlide} a ${nextIndex}`);
-          cambiarSlide(nextIndex);
-        }
-
-        function iniciarAutoplay() {
-          // Limpiar intervalo anterior si existe
-          if (carouselInterval) {
-            clearInterval(carouselInterval);
-          }
-
-          if (banners.length > 1) {
-            console.log('Autoplay activado: cambio cada 5 segundos');
-            carouselInterval = setInterval(siguienteSlide, 5000); // Cambiar cada 5 segundos
-          }
-        }
-
-        function detenerAutoplay() {
-          if (carouselInterval) {
-            clearInterval(carouselInterval);
-            carouselInterval = null;
-          }
-        }
-
-        // Pausar autoplay cuando el usuario interactúa
-        document.getElementById('bannersSlider')?.addEventListener('mouseenter', detenerAutoplay);
-        document.getElementById('bannersSlider')?.addEventListener('mouseleave', iniciarAutoplay);
-
-        // Configurar botones de navegación
-        function configurarBotonesNavegacion() {
-          const btnNext = document.getElementById('sliderBtnNext');
-          const btnPrev = document.getElementById('sliderBtnPrev');
-
-          if (btnNext) {
-            btnNext.addEventListener('click', () => {
-              const nextIndex = (currentSlide + 1) % banners.length;
-              cambiarSlide(nextIndex);
-            });
-          }
-
-          if (btnPrev) {
-            btnPrev.addEventListener('click', () => {
-              const prevIndex = (currentSlide - 1 + banners.length) % banners.length;
-              cambiarSlide(prevIndex);
-            });
-          }
-
-          console.log('✅ Botones de navegación configurados');
-        }
-
-        // Cargar banners cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function () {
-          setTimeout(() => {
-            cargarBannerCarrusel();
-            configurarBotonesNavegacion();
-          }, 1000);
-        });
-
-        // También cargar después de que se cargue completamente
-        window.addEventListener('load', function () {
-          setTimeout(() => {
-            cargarBannerCarrusel();
-            configurarBotonesNavegacion();
-          }, 2000);
-        });
-
-        // Función global para debug
-        window.loadBannersForcefully = cargarBannerCarrusel;
-      </script>
 
       <!-- CALENDARIO PREVIEW (SOLO LECTURA) -->
       <div class="flex flex-wrap mt-12 -mx-3 max-w-7xl mx-auto px-6 lg:px-8 max-w-full">
@@ -5226,8 +5200,14 @@
           <div
             class="relative flex flex-col min-w-0 break-words glass-card border-0 border-solid shadow-xl rounded-2xl bg-clip-border overflow-hidden p-6">
             <div class="flex justify-between items-center mb-6">
-              <div>
+              <div class="flex items-center gap-4">
                 <h2 class="text-2xl font-black text-white tracking-tighter uppercase leading-none">Agenda</h2>
+                <div class="flex items-center gap-2 bg-white/[0.03] px-3 py-1 rounded-xl border border-white/5 ml-4">
+                  <button id="dashPrevBtn" class="p-2 text-slate-400 hover:text-white transition-all"><i class="fas fa-chevron-left text-xs"></i></button>
+                  <button id="dashTodayBtn" class="px-2 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 hover:text-white transition-all">Hoy</button>
+                  <button id="dashNextBtn" class="p-2 text-slate-400 hover:text-white transition-all"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div id="dashCalendarTitle" class="text-sm font-bold text-white/70 ml-2 min-w-[120px]"></div>
               </div>
               <div
                 class="flex items-center gap-4 bg-white/[0.03] px-6 py-2 rounded-2xl border border-white/5 backdrop-blur-md">
@@ -5241,12 +5221,27 @@
         </div>
       </div>
 
+      <!-- Footer leyenda Lumia AI Solutions -->
+      <style>
+        @keyframes lumiaPulse {
+          0% { text-shadow: 0 0 4px rgba(199,37,43,0.2); }
+          50% { text-shadow: 0 0 10px rgba(199,37,43,0.6); }
+          100% { text-shadow: 0 0 4px rgba(199,37,43,0.2); }
+        }
+        .lumia-glow {
+          font-weight: 800;
+          animation: lumiaPulse 2.5s infinite;
+        }
+      </style>
+      <div style="text-align: center; padding: 30px 0 20px 0; font-size: 0.75rem; opacity: 0.5; width: 100%; letter-spacing: 0.5px;">
+        <a href="https://lumiaaisolutions.com" target="_blank" class="lumia-glow" style="color: inherit; text-decoration: none; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">
+          Desarrollado por Lumia AI Solutions
+        </a>
+      </div>
       <!-- end cards -->
     </div> <!-- end unified-gradient-container -->
     </div> <!-- end main-content-wrapper -->
   </main>
-
-
   </div>
   <!-- end cards -->
   </div> <!-- end unified-gradient-container -->
@@ -5410,287 +5405,53 @@
     window.smartUnlock = smartUnlock;
     window.loadTemporaryUserData = loadTemporaryUserData;
 
-    // DETECCIÓN DE SESIÓN Y USUARIO LOGGEADO
-    function detectUserSession() {
-      console.log('🔍 Iniciando detección de sesión...');
-
-      // Verificar múltiples fuentes de datos de sesión
-      const sessionSources = [
-        localStorage.getItem('userData'),
-        localStorage.getItem('currentUser'),
-        sessionStorage.getItem('userSession'),
-        localStorage.getItem('userInfo'),
-        sessionStorage.getItem('loginData')
-      ];
-
-      // Buscar datos válidos en alguna fuente
-      let userData = null;
-      for (const source of sessionSources) {
-        if (source) {
-          try {
-            userData = JSON.parse(source);
-            if (userData && (userData.nombre || userData.name || userData.email)) {
-              console.log('👤 Usuario detectado desde storage:', userData);
-              break;
-            }
-          } catch (e) {
-            // Si no es JSON, podría ser un string simple
-            if (source.length > 0) {
-              userData = { nombre: source };
-              console.log('👤 Usuario detectado como string:', source);
-              break;
-            }
-          }
-        }
-      }
-
-      // Si no hay datos en storage, verificar si hay sesión PHP activa
-      if (!userData) {
-        checkPHPSession();
-      } else {
-        displayUserInfo(userData);
-      }
-    }
-
-    async function checkPHPSession() {
-      try {
-        console.log('🔍 Verificando sesión PHP...');
-
-        // Probar múltiples endpoints para verificar sesión
-        const sessionEndpoints = [
-          './assets/conexion/check-session.php',
-          './api/auth/session.php?action=check',
-          './login/check-session.php'
-        ];
-
-        let sessionFound = false;
-        let userData = null;
-
-        for (const endpoint of sessionEndpoints) {
-          try {
-            console.log(`📡 Probando endpoint: ${endpoint}`);
-            const response = await fetch(endpoint, {
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            });
-
-            if (response.ok) {
-              const data = await response.json();
-              if (data.success && data.user) {
-                console.log('✅ Sesión PHP activa:', data.user);
-                userData = data.user;
-                sessionFound = true;
-                break;
-              }
-            }
-          } catch (e) {
-            console.log(`❌ Error en ${endpoint}: ${e.message}`);
-            continue;
-          }
-        }
-
-        if (sessionFound && userData) {
-          displayUserInfo(userData);
-          // Guardar en localStorage para próximas visitas
-          localStorage.setItem('userData', JSON.stringify(userData));
-        } else {
-          console.log('❌ No hay sesión PHP activa');
-          checkRecentLogin(); // Verificar si hay login reciente
-        }
-      } catch (error) {
-        console.log('⚠️ Error verificando sesión PHP:', error);
-        checkRecentLogin();
-      }
-    }
-
-    function checkRecentLogin() {
-      // Verificar si hay un login reciente (viene desde sign-in.html)
-      const recentLogin = sessionStorage.getItem('recentLogin');
-      const urlParams = new URLSearchParams(window.location.search);
-      const loginSuccess = urlParams.get('login') === 'success';
-
-      if (recentLogin || loginSuccess) {
-        console.log('🎉 Login reciente detectado');
-
-        // Intentar obtener datos reales del usuario desde sessionStorage
-        let userData = null;
-        try {
-          const sessionData = sessionStorage.getItem('userSession');
-          const localData = localStorage.getItem('userData');
-          userData = sessionData ? JSON.parse(sessionData) : (localData ? JSON.parse(localData) : null);
-          console.log('📖 Datos de usuario recuperados:', userData);
-        } catch (error) {
-          console.log('⚠️ Error recuperando datos de usuario:', error);
-        }
-
-        // Si no hay datos guardados, usar datos por defecto
-        if (!userData) {
-          userData = {
-            nombre: 'Usuario',
-            apellido: 'Loggeado',
-            email: 'usuario@ejemplo.com',
-            nombre_empresa: 'CLAUT Metropolitano'
-          };
-          console.log('📋 Usando datos por defecto');
-        }
-
-        displayUserInfo(userData);
-
-        // Limpiar flag
-        sessionStorage.removeItem('recentLogin');
-
-        // Limpiar URL si tiene parámetro login
-        if (loginSuccess) {
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
-      } else if (document.cookie.includes('PHPSESSID')) {
-        console.log('🍪 Cookie PHP encontrada, asumiendo usuario loggeado');
-        displayUserInfo({ nombre: 'Usuario Loggeado', nombre_empresa: 'CLAUT Metropolitano' });
-      } else {
-        showLoginPrompt();
-      }
-    }
+    // CORE JS MODULE
+    // Se ha extraído la lógica de sesión a dist/claut-core.min.js
+    // El import del módulo está al final del body
 
     function displayUserInfo(userData) {
-      console.log('📊 Mostrando información del usuario:', userData);
-
-      // Extraer datos del usuario
+      console.log('Mostrando información del usuario (Core Integrado):', userData);
       const nombre = userData.nombre || userData.name || userData.email || 'Usuario';
       const apellido = userData.apellido || userData.lastname || '';
       const nombreCompleto = apellido ? `${nombre} ${apellido}` : nombre;
       const empresa = userData.nombre_empresa || userData.empresa || 'Sin empresa';
-      const email = userData.email || '';
-      const rol = userData.rol || userData.role || '';
+      const rol = userData.rol || userData.role || 'user';
 
-      // Actualizar elementos de la interfaz
-      updateWelcomeMessage(nombreCompleto);
-      updateUserInfo(nombreCompleto, empresa, email);
-      showAuthenticatedElements();
-
-      // Mostrar botón de admin panel si el usuario es administrador
-      checkAdminAccess(rol, userData);
-
-      console.log('✅ Interfaz actualizada para usuario autenticado');
-    }
-
-    function updateWelcomeMessage(nombre) {
       const welcomeText = document.getElementById('welcomeText');
-      if (welcomeText) {
-        welcomeText.textContent = `Bienvenido ${nombre}`;
-      }
-    }
+      if (welcomeText) welcomeText.textContent = `Bienvenido ${nombreCompleto}`;
 
-    function updateUserInfo(nombre, empresa, email) {
       const userNameElement = document.getElementById('userName');
       const userRoleElement = document.getElementById('userRole');
       const userInfoDiv = document.getElementById('userInfo');
 
-      if (userNameElement) userNameElement.textContent = nombre;
+      if (userNameElement) userNameElement.textContent = nombreCompleto;
       if (userRoleElement) userRoleElement.textContent = empresa;
       if (userInfoDiv) {
         userInfoDiv.classList.remove('hidden');
         userInfoDiv.classList.add('flex');
       }
-    }
 
-    function showAuthenticatedElements() {
-      // Ocultar elementos de login
+      // Ocultar login, mostrar user items
       const loginMenuItem = document.getElementById('loginMenuItem');
       const loginNavItem = document.getElementById('loginNavItem');
-
       if (loginMenuItem) loginMenuItem.style.display = 'none';
       if (loginNavItem) loginNavItem.style.display = 'none';
 
-      // Mostrar elementos de usuario autenticado
       const userMenuDropdown = document.getElementById('userMenuDropdown');
       const logoutMenuItem = document.getElementById('logoutMenuItem');
-
       if (userMenuDropdown) userMenuDropdown.classList.remove('hidden');
       if (logoutMenuItem) logoutMenuItem.classList.remove('hidden');
 
-      // Inicializar el centro de mensajes
-      initializeMessageCenter();
-    }
-
-    function checkAdminAccess(rol, userData) {
-      console.log('🔐 Verificando acceso de administrador:', { rol, userData });
-
-      // Detectar si el usuario es administrador
-      const isAdmin = (
-        rol === 'admin' ||
-        rol === 'administrator' ||
-        rol === 'administrador' ||
-        userData.is_admin === true ||
-        userData.admin === true
-      );
-
-      console.log('🔐 Usuario es admin:', isAdmin);
-
-      const adminButton = document.getElementById('adminPanelButton');
-      if (adminButton) {
-        if (isAdmin) {
-          adminButton.classList.remove('hidden');
-          console.log('✅ Botón de admin panel mostrado');
-        } else {
-          adminButton.classList.add('hidden');
-          console.log('🔒 Botón de admin panel oculto - usuario no es admin');
-        }
-      } else {
-        console.warn('⚠️ Elemento adminPanelButton no encontrado');
-      }
-    }
-
-    function showLoginPrompt() {
-      console.log('👋 Mostrando elementos de login');
-
-      // Restaurar mensaje original
-      const welcomeText = document.getElementById('welcomeText');
-      if (welcomeText) {
-        welcomeText.textContent = 'Bienvenido a Clúster Intranet';
+      if (typeof initializeMessageCenter === 'function') {
+        initializeMessageCenter();
       }
 
-      // Mostrar elementos de login
-      const loginMenuItem = document.getElementById('loginMenuItem');
-      const loginNavItem = document.getElementById('loginNavItem');
-
-      if (loginMenuItem) loginMenuItem.style.display = 'flex';
-      if (loginNavItem) loginNavItem.style.display = 'block';
-
-      // Ocultar elementos de usuario autenticado
-      const userMenuDropdown = document.getElementById('userMenuDropdown');
-      const logoutMenuItem = document.getElementById('logoutMenuItem');
-      const userInfoDiv = document.getElementById('userInfo');
-      const adminButton = document.getElementById('adminPanelButton');
-
-      if (userMenuDropdown) userMenuDropdown.classList.add('hidden');
-      if (logoutMenuItem) logoutMenuItem.classList.add('hidden');
-      if (userInfoDiv) userInfoDiv.classList.add('hidden');
-      if (adminButton) adminButton.classList.add('hidden'); // Ocultar botón de admin
+      // checkAdminAccess local to dashboard
+      checkAdminAccess(rol, userData);
     }
 
-    // Función para testing manual del botón de admin
-    window.testAdminButton = function (forceShow = false) {
-      const adminButton = document.getElementById('adminPanelButton');
-      if (adminButton) {
-        if (forceShow) {
-          adminButton.classList.remove('hidden');
-          console.log('🧪 Botón de admin panel forzado a mostrar (testing)');
-        } else {
-          adminButton.classList.add('hidden');
-          console.log('🧪 Botón de admin panel ocultado (testing)');
-        }
-      }
-    };
-
-    // Funciones globales
-    window.detectUserSession = detectUserSession;
     window.displayUserInfo = displayUserInfo;
-    window.showLoginPrompt = showLoginPrompt;
 
-    // Ejecutar detección de sesión al cargar
-    setTimeout(detectUserSession, 300);
 
     // Integración con sistema de seguridad
     function enhanceSessionSecurity() {
@@ -5778,10 +5539,10 @@
   <!-- <script src="./js/debug-herramientas.js"></script> -->
 
   <script src="./js/auth-session.js"></script>
-  <script src="./js/force-login-links.js"></script>
-  <script src="./js/test-login-links.js"></script>
-  <script src="./js/index.js"></script>
-  <script src="./js/auth-fix.js"></script>
+  <!-- force-login-links.js eliminado Fase 4 -->
+  <!-- test-login-links.js eliminado Fase 4 -->
+  <script src="./js/index.js" type="module"></script>
+  <!-- auth-fix.js eliminado Fase 4 -->
   <!-- <script src="./js/dashboard-simple.js"></script> -->
   <!-- <script src="./js/empresas-analisis.js"></script> -->
   <!-- <script src="./js/dashboard-chart-fix.js"></script> -->
@@ -6719,7 +6480,7 @@
               `}
             </td>
             <td class="p-3 text-center align-middle bg-transparent border-b whitespace-nowrap dark:border-white/40">
-              <a href="https://intranet.clautmetropolitano.mx/build/empresas-convenio.html"
+              <a href="./empresas-convenio.html"
                  class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
                 <i class="fas fa-building mr-1"></i>Ver Empresas
               </a>
@@ -8870,20 +8631,21 @@
       /* RESPONSIVE LARGE SCREENS (min-width: 1441px) */
       @media (min-width: 1441px) {
 
-        /* Contenedor centrado para pantallas muy grandes */
+        /* Contenedor fluido para pantallas muy grandes */
         .claut-main {
-          max-width: 1400px !important;
-          margin: 0 auto !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
           margin-top: var(--header-height) !important;
         }
 
-        /* Navbar centrado */
+        /* Navbar fluido */
         .porsche-navbar[navbar-main],
         nav[navbar-main][navbar-scroll="false"] {
-          margin-left: 140px !important;
-          margin-right: 140px !important;
-          width: calc(100% - 280px) !important;
-          max-width: calc(100% - 280px) !important;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
         }
       }
     }
@@ -9881,7 +9643,7 @@
     /* Extra Large Desktop (1400px+) */
     @media (min-width: 1400px) {
       .max-w-7xl {
-        max-width: 1400px;
+        max-width: 95% !important;
       }
 
       /* Header section */
@@ -10502,18 +10264,6 @@
       </div>
     </div>
   </div>
-  <footer class="pt-4" style="background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(1px);">
-    <div class="w-full px-6 mx-auto">
-      <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
-        <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
-          <div class="text-sm leading-normal text-center text-slate-500 lg:text-left">
-            © 2025, Todos Los Derechos Reservados <i class=""></i>
-            <a href="" class="font-semibold text-slate-700 dark:text-white" target="_blank">Clúster</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
   <!-- Modal para Preview de Imágenes -->
   <div id="imagePreviewModal" class="image-preview-modal">
     <button class="image-preview-close" onclick="closeImagePreview()">
@@ -11018,9 +10768,14 @@
         }
 
         try {
-          // Cargar mensajes regulares
-          const response = await fetch('./api/notificaciones.php?action=list');
-          const data = await response.json();
+          // Cargar mensajes regulares usando el Wrapper API JS (si existe) o fallback
+          let data;
+          if (window.ClautAPI) {
+            data = await window.ClautAPI.get('/notificaciones.php?action=list');
+          } else {
+            const response = await fetch('./api/notificaciones.php?action=list', { credentials: 'include' });
+            data = await response.json();
+          }
 
           let allMessages = [];
 
@@ -11038,10 +10793,14 @@
               const url = `./api/comites.php?action=obtener_mensajes&email=${encodeURIComponent(userData.email)}`;
               console.log('🌐 URL del API:', url);
 
-              const comitesResponse = await fetch(url);
-              console.log('📡 Response status:', comitesResponse.status);
-
-              const comitesData = await comitesResponse.json();
+              let comitesData;
+              if (window.ClautAPI) {
+                comitesData = await window.ClautAPI.get(`/comites.php?action=obtener_mensajes&email=${encodeURIComponent(userData.email)}`);
+              } else {
+                const comitesResponse = await fetch(url, { credentials: 'include' });
+                console.log('📡 Response status:', comitesResponse.status);
+                comitesData = await comitesResponse.json();
+              }
               console.log('📋 Datos del API:', comitesData);
 
               if (comitesData.success && comitesData.mensajes) {
@@ -11428,11 +11187,13 @@
         this.unreadCount = this.messages.filter(m => !m.leido).length;
         const badge = document.getElementById('messageCount');
 
-        if (this.unreadCount > 0) {
-          badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
-          badge.classList.remove('hidden');
-        } else {
-          badge.classList.add('hidden');
+        if (badge) {
+          if (this.unreadCount > 0) {
+            badge.textContent = this.unreadCount > 99 ? '99+' : this.unreadCount;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
         }
       }
 
@@ -11485,14 +11246,19 @@
 
       async markAsRead(messageId) {
         try {
-          const response = await fetch('./api/notificaciones.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'mark_read', id: messageId })
-          });
-
-          const data = await response.json();
-          if (data.success) {
+          let response;
+          if (window.ClautAPI) {
+            response = await window.ClautAPI.post('/notificaciones.php', { action: 'mark_read', id: messageId });
+          } else {
+            response = await fetch('./api/notificaciones.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ action: 'mark_read', id: messageId })
+            }).then(r => r.json());
+          }
+          const data = response;
+          if (data && data.success) {
             // Actualizar mensaje localmente
             const message = this.messages.find(m => m.id === messageId);
             if (message) {
@@ -11508,17 +11274,22 @@
 
       async markComiteAsRead(messageId, comiteMessageId) {
         try {
-          const response = await fetch('./api/comites.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'marcar_mensaje_leido',
-              mensaje_id: comiteMessageId
-            })
-          });
-
-          const data = await response.json();
-          if (data.success) {
+          let response;
+          if (window.ClautAPI) {
+            response = await window.ClautAPI.post('/comites.php', { action: 'marcar_mensaje_leido', mensaje_id: comiteMessageId });
+          } else {
+            response = await fetch('./api/comites.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({
+                action: 'marcar_mensaje_leido',
+                mensaje_id: comiteMessageId
+              })
+            }).then(r => r.json());
+          }
+          const data = response;
+          if (data && data.success) {
             // Actualizar mensaje localmente
             const message = this.messages.find(m => m.id === messageId);
             if (message) {
@@ -11534,17 +11305,22 @@
 
       async markUsuarioAsRead(messageId, usuarioMessageId) {
         try {
-          const response = await fetch('./api/usuarios_mensajes.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'marcar_mensaje_leido',
-              mensaje_id: usuarioMessageId
-            })
-          });
-
-          const data = await response.json();
-          if (data.success) {
+          let response;
+          if (window.ClautAPI) {
+            response = await window.ClautAPI.post('/usuarios_mensajes.php', { action: 'marcar_mensaje_leido', mensaje_id: usuarioMessageId });
+          } else {
+            response = await fetch('./api/usuarios_mensajes.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({
+                action: 'marcar_mensaje_leido',
+                mensaje_id: usuarioMessageId
+              })
+            }).then(r => r.json());
+          }
+          const data = response;
+          if (data && data.success) {
             // Actualizar mensaje localmente
             const message = this.messages.find(m => m.id === messageId);
             if (message) {
@@ -11578,14 +11354,19 @@
 
       async markAllAsRead() {
         try {
-          const response = await fetch('./api/notificaciones.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'mark_all_read' })
-          });
-
-          const data = await response.json();
-          if (data.success) {
+          let response;
+          if (window.ClautAPI) {
+            response = await window.ClautAPI.post('/notificaciones.php', { action: 'mark_all_read' });
+          } else {
+            response = await fetch('./api/notificaciones.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ action: 'mark_all_read' })
+            }).then(r => r.json());
+          }
+          const data = response;
+          if (data && data.success) {
             this.messages.forEach(m => m.leido = true);
             this.updateUnreadCount();
             this.renderMessages();
@@ -12520,7 +12301,7 @@
       const headerUserMenuBtn = document.getElementById('headerUserMenuBtn');
       if (headerUserMenuBtn) {
         headerUserMenuBtn.addEventListener('click', () => {
-          window.location.href = 'https://intranet.clautmetropolitano.mx/build/profile.html';
+          window.location.href = './profile.html';
         });
       }
     }
@@ -12567,7 +12348,7 @@
                 // Fallback: logout manual
                 sessionStorage.clear();
                 localStorage.clear();
-                window.location.href = 'https://intranet.clautmetropolitano.mx/build/';
+                window.location.href = './';
               }
               mobileDropdown.style.display = 'none';
             });
@@ -13905,6 +13686,7 @@
         const timestamp = Date.now();
         const response = await fetch(`./api/banners.php?action=active&t=${timestamp}`, {
           cache: 'no-cache',
+          credentials: 'include',
           headers: {
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache'
@@ -14198,19 +13980,14 @@
   </script>
 
   <!-- Sistema de Seguridad de Sesión -->
-  <script src="./js/session-security.js"></script>
-  <script>
-    // Inicializar sistema de seguridad con timeout de 5 minutos
+  <!-- DESHABILITADO: session-security.js causaba conflicto con auth-session.js generando redirect al login -->
+  <!-- Solo auth-session.js maneja la validación de sesión (igual que admin-panel.html y profile.html) -->
+  <!-- <script src="./js/session-security.js"></script> -->
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Configurar seguridad de sesión
       window.enableSessionSecurity();
-
-      console.log('🔒 Sistema de seguridad de sesión activado:');
-      console.log('   - Timeout de inactividad: 5 minutos');
-      console.log('   - Verificación de sesión: cada 30 segundos');
-      console.log('   - Detección de actividad: mouse, teclado, scroll, touch');
     });
-  </script>
+  </script> -->
 
   <!-- FORCE FULL WIDTH LAYOUT - MODIFICADO PARA RESPETAR max-w-7xl -->
   <script>
@@ -14247,6 +14024,7 @@
         document.head.appendChild(style);
 
         // JavaScript que RESPETA nuestro diseño centrado
+        /*
         if (window.innerWidth >= 1025) {
           // SOLO aplicar a elementos que NO tengan max-w-7xl como padre
           const elements = document.querySelectorAll('.main-content-wrapper:not(.max-w-7xl):not(.max-w-7xl *), .content-gradient-container:not(.max-w-7xl):not(.max-w-7xl *)');
@@ -14272,8 +14050,8 @@
 
           console.log('🎯 Selective layout applied - respecting max-w-7xl containers');
         }
-
-        console.log('✅ Layout applied without breaking centered design');
+        */
+        console.log('✅ Layout css adjustments applied');
       }, 1000);
     });
 
@@ -14835,8 +14613,8 @@
         },
         eventDidMount: function (info) {
           const type = info.event.extendedProps.tipo || 'Evento';
-          let color = '#475569'; /* Slate más brillante para eventos Otros */
-          let bgOpacity = '80'; /* 50% opacity para mejor visibilidad en fondos oscuros */
+          let color = '#475569';
+          let bgOpacity = '80';
 
           switch (type) {
             case 'Asamblea': color = '#C7252B'; bgOpacity = '40'; break;
@@ -14845,13 +14623,19 @@
             case 'Comunicado': color = '#F59E0B'; bgOpacity = '40'; break;
           }
 
-          /* Si es gris (default), damos más opacidad o usamos un tono sólido con transparencia segura */
           info.el.style.backgroundColor = `${color}${bgOpacity}`;
           info.el.style.borderLeft = `3px solid ${color}`;
         },
+        datesSet: function(info) {
+          const titleEl = document.getElementById('dashCalendarTitle');
+          if (titleEl) {
+            const viewTitle = info.view.title;
+            titleEl.textContent = viewTitle.charAt(0).toUpperCase() + viewTitle.slice(1);
+          }
+        },
         events: async function (info, successCallback, failureCallback) {
           try {
-            const response = await fetch('./api/eventos.php?action=listar');
+            const response = await fetch(`./api/eventos.php?action=listar&t=${Date.now()}`);
             const data = await response.json();
             if (data.success) {
               const events = data.eventos.map(e => ({
@@ -14871,6 +14655,11 @@
       });
 
       previewCalendar.render();
+
+      // Navigation Controls
+      document.getElementById('dashPrevBtn').onclick = () => previewCalendar.prev();
+      document.getElementById('dashNextBtn').onclick = () => previewCalendar.next();
+      document.getElementById('dashTodayBtn').onclick = () => previewCalendar.today();
     });
   </script>
 

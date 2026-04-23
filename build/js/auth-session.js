@@ -301,7 +301,7 @@ class AuthSessionManager {
         this.hideElements(['loginNavItem', 'signupNavItem', 'loginMenuItem', 'authRequiredMessage', 'restrictedOverlay']);
 
         // Mostrar elementos de usuario autenticado
-        this.showElements(['logoutMenuItem', 'userMenuDropdown']);
+        this.showElements(['logoutMenuItem', 'userMenuDropdown', 'userInfo']);
 
         // Desbloquear contenido principal
         this.unlockContent();
@@ -414,12 +414,19 @@ class AuthSessionManager {
         }
 
         if (userRoleElement) {
+            const role = (user.rol || '').toLowerCase();
             const rolesMap = {
                 'admin': 'Administrador',
+                'administrador': 'Administrador',
                 'empresa': 'Empresa',
                 'empleado': 'Empleado'
             };
-            userRoleElement.textContent = rolesMap[user.rol] || 'Usuario';
+            userRoleElement.textContent = rolesMap[role] || user.rol || 'Usuario';
+            
+            // Si el rol es admin, añadir un color distintivo
+            if (role === 'admin' || role === 'administrador') {
+                userRoleElement.classList.add('text-red-500', 'font-bold');
+            }
         }
 
         if (userAvatarElement && user.avatar_url) {
@@ -441,6 +448,22 @@ class AuthSessionManager {
         if (welcomeMessage) {
             const nombreUsuario = user.nombre ? user.nombre.split(' ')[0] : 'Usuario';
             welcomeMessage.innerHTML = `<h6 class="mb-0 font-bold text-white capitalize">Bienvenido, ${nombreUsuario}</h6>`;
+        }
+
+        // ====== LÓGICA DE MOSTRAR BOTÓN DE ADMINISTRADOR ======
+        const adminPanelButton = document.getElementById('adminPanelButton');
+        if (adminPanelButton) {
+            const userRole = (user.rol || '').toLowerCase();
+            const isAdmin = userRole === 'admin' || userRole === 'administrador';
+            
+            if (isAdmin) {
+                adminPanelButton.classList.remove('hidden');
+                adminPanelButton.style.setProperty('display', 'flex', 'important');
+                // console.log('🔓 Botón de Administrador habilitado para el rol:', user.rol);
+            } else {
+                adminPanelButton.classList.add('hidden');
+                adminPanelButton.style.setProperty('display', 'none', 'important');
+            }
         }
 
         // console.log('👤 Información de usuario cargada:', user.nombre || user.email);

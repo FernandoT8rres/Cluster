@@ -113,6 +113,7 @@ try {
             $stmt = $conn->prepare("
                 SELECT c.id, c.nombre, c.descripcion, c.objetivo, c.fecha_creacion, c.estado, c.coordinador_id,
                        c.periodicidad, c.miembros_activos, c.organizacion, c.imagen,
+                       c.tipo_registro, c.link_registro,
                        CASE WHEN c.imagen IS NOT NULL THEN 1 ELSE 0 END as tiene_imagen,
                        u.nombre as coordinador_nombre,
                        COUNT(cr.id) as total_registros,
@@ -123,7 +124,8 @@ try {
                 LEFT JOIN comite_registros cr ON c.id = cr.comite_id
                 WHERE c.estado = 'activo'
                 GROUP BY c.id, c.nombre, c.descripcion, c.objetivo, c.fecha_creacion, c.estado, c.coordinador_id,
-                         c.periodicidad, c.miembros_activos, c.organizacion, c.imagen
+                         c.periodicidad, c.miembros_activos, c.organizacion, c.imagen, c.tipo_registro, c.link_registro,
+                         u.nombre
                 ORDER BY c.fecha_creacion DESC
             ");
             $stmt->execute();
@@ -380,6 +382,8 @@ try {
             $organizacion = $_POST['organizacion'] ?? null;
             $coordinador_id = (!empty($_POST['coordinador_id']) && $_POST['coordinador_id'] !== '') ? intval($_POST['coordinador_id']) : null;
             $estado = $_POST['estado'] ?? 'activo';
+            $tipo_registro = $_POST['tipo_registro'] ?? 'formulario';
+            $link_registro = $_POST['link_registro'] ?? null;
 
             // Procesar imagen subida o URL
             $imagen = null;
@@ -422,11 +426,11 @@ try {
 
             try {
                 $stmt = $conn->prepare("
-                    INSERT INTO comites (nombre, descripcion, objetivo, imagen, periodicidad, miembros_activos, organizacion, coordinador_id, estado, fecha_creacion)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+                    INSERT INTO comites (nombre, descripcion, objetivo, imagen, periodicidad, miembros_activos, organizacion, coordinador_id, estado, tipo_registro, link_registro, fecha_creacion)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
                 ");
 
-                $result = $stmt->execute([$nombre, $descripcion, $objetivo, $imagen, $periodicidad, $miembros_activos, $organizacion, $coordinador_id, $estado]);
+                $result = $stmt->execute([$nombre, $descripcion, $objetivo, $imagen, $periodicidad, $miembros_activos, $organizacion, $coordinador_id, $estado, $tipo_registro, $link_registro]);
 
                 if ($result) {
                     echo json_encode([
@@ -461,6 +465,8 @@ try {
             $organizacion = $_POST['organizacion'] ?? null;
             $coordinador_id = $_POST['coordinador_id'] ?? null;
             $estado = $_POST['estado'] ?? 'activo';
+            $tipo_registro = $_POST['tipo_registro'] ?? 'formulario';
+            $link_registro = $_POST['link_registro'] ?? null;
 
             // Procesar imagen subida (solo si se sube una nueva)
             $imagen = null;
@@ -492,18 +498,18 @@ try {
                     // Actualizar con nueva imagen
                     $stmt = $conn->prepare("
                         UPDATE comites
-                        SET nombre = ?, descripcion = ?, objetivo = ?, imagen = ?, periodicidad = ?, miembros_activos = ?, organizacion = ?, coordinador_id = ?, estado = ?
+                        SET nombre = ?, descripcion = ?, objetivo = ?, imagen = ?, periodicidad = ?, miembros_activos = ?, organizacion = ?, coordinador_id = ?, estado = ?, tipo_registro = ?, link_registro = ?
                         WHERE id = ?
                     ");
-                    $result = $stmt->execute([$nombre, $descripcion, $objetivo, $imagen, $periodicidad, $miembros_activos, $organizacion, $coordinador_id, $estado, $comite_id]);
+                    $result = $stmt->execute([$nombre, $descripcion, $objetivo, $imagen, $periodicidad, $miembros_activos, $organizacion, $coordinador_id, $estado, $tipo_registro, $link_registro, $comite_id]);
                 } else {
                     // Actualizar sin cambiar imagen
                     $stmt = $conn->prepare("
                         UPDATE comites
-                        SET nombre = ?, descripcion = ?, objetivo = ?, periodicidad = ?, miembros_activos = ?, organizacion = ?, coordinador_id = ?, estado = ?
+                        SET nombre = ?, descripcion = ?, objetivo = ?, periodicidad = ?, miembros_activos = ?, organizacion = ?, coordinador_id = ?, estado = ?, tipo_registro = ?, link_registro = ?
                         WHERE id = ?
                     ");
-                    $result = $stmt->execute([$nombre, $descripcion, $objetivo, $periodicidad, $miembros_activos, $organizacion, $coordinador_id, $estado, $comite_id]);
+                    $result = $stmt->execute([$nombre, $descripcion, $objetivo, $periodicidad, $miembros_activos, $organizacion, $coordinador_id, $estado, $tipo_registro, $link_registro, $comite_id]);
                 }
 
                 if ($result) {

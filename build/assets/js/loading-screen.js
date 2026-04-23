@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var LOGO_URL = 'https://intranet.clautmetropolitano.mx/build/assets/img/apple-icon.png';
+  var LOGO_URL = './assets/img/apple-icon.png';
   var MIN_SHOW = 900;
   var NAV_SHOW = 500;
 

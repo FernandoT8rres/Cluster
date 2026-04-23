@@ -40,22 +40,7 @@ try {
 // Usar configuración de base de datos remota únicamente
 require_once '../config/database.php';
 
-// Función para respuesta JSON
-function sendJsonResponse($data, $success = true) {
-    $response = [
-        'success' => $success,
-        'timestamp' => date('Y-m-d H:i:s')
-    ];
-    
-    if ($success) {
-        $response = array_merge($response, $data);
-    } else {
-        $response['message'] = $data;
-    }
-    
-    echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    exit;
-}
+require_once dirname(__DIR__) . '/utils/api-response.php';
 
 // Función para sanitizar input
 function clean($input) {
@@ -103,7 +88,7 @@ try {
                 $boletin = $stmt->fetch();
                 
                 if (!$boletin) {
-                    sendJsonResponse('Boletín no encontrado', false);
+                    ApiResponse::error('Boletín no encontrado');
                 }
                 
                 // Incrementar visualizaciones
@@ -111,7 +96,7 @@ try {
                 $updateStmt->execute([$id]);
                 $boletin['visualizaciones'] = intval($boletin['visualizaciones']) + 1;
                 
-                sendJsonResponse(['data' => $boletin]);
+                ApiResponse::success($boletin);
                 
             } else {
                 // Obtener todos los boletines
@@ -155,10 +140,7 @@ try {
                     $boletin['visualizaciones'] = intval($boletin['visualizaciones'] ?? 0);
                 }
                 
-                sendJsonResponse([
-                    'data' => $boletines,
-                    'total' => count($boletines)
-                ]);
+                ApiResponse::success($boletines, ['total' => count($boletines)]);
             }
             break;
             
@@ -171,7 +153,7 @@ try {
             $archivo_adjunto = clean($_POST['archivo_adjunto'] ?? null);
             
             if (empty($titulo) || empty($contenido)) {
-                sendJsonResponse('Título y contenido son requeridos', false);
+                ApiResponse::error('Título y contenido son requeridos');
             }
             
             // Si el estado es publicado pero no hay fecha de publicación, usar ahora
@@ -190,25 +172,22 @@ try {
                 $getStmt->execute([$id]);
                 $nuevoBoletin = $getStmt->fetch();
                 
-                sendJsonResponse([
-                    'message' => 'Boletín creado exitosamente',
-                    'data' => $nuevoBoletin
-                ]);
+                ApiResponse::success($nuevoBoletin, ['message' => 'Boletín creado exitosamente']);
             } else {
-                sendJsonResponse('Error al crear el boletín', false);
+                ApiResponse::error('Error al crear el boletín');
             }
             break;
             
         default:
-            sendJsonResponse('Método no permitido: ' . $method, false);
+            ApiResponse::error('Método no permitido: ' . $method);
     }
     
 } catch (PDOException $e) {
     error_log("Error en boletines API (PDO): " . $e->getMessage());
-    sendJsonResponse('Error de base de datos: ' . $e->getMessage(), false);
+    ApiResponse::error('Error de base de datos: ' . $e->getMessage());
     
 } catch (Exception $e) {
     error_log("Error general en boletines API: " . $e->getMessage());
-    sendJsonResponse('Error del servidor: ' . $e->getMessage(), false);
+    ApiResponse::error('Error del servidor: ' . $e->getMessage());
 }
 ?>

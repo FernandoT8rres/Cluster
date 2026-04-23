@@ -3,7 +3,7 @@
  * Verificar Usuario Admin - Script de Diagnóstico
  */
 
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 echo "<h1>🔍 Verificación de Usuario Administrador</h1>";
 echo "<style>body{font-family:Arial;margin:40px;} .success{color:green;} .error{color:red;} .info{color:blue;}</style>";

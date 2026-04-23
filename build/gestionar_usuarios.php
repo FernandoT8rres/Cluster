@@ -638,6 +638,76 @@ try {
             transform: scale(1.05);
             background: rgba(255, 255, 255, 0.1) !important;
         }
+
+        /* ============================================================
+           RESPONSIVE MASTER & PREMIUM DARK UI
+        ============================================================ */
+        body { background-color: #0f1115 !important; color: #f1f5f9 !important; }
+        .glass-card {
+            background: rgba(20, 20, 22, 0.65) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+        .header-gradient-premium {
+            background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.1) 0%, rgba(15, 15, 15, 0.85) 60%),
+                        linear-gradient(180deg, rgba(20, 20, 22, 0.95) 0%, rgba(10, 10, 15, 0.98) 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+        }
+        
+        /* Stats Cards Update */
+        .bg-white.rounded-lg.shadow.p-4, .bg-white.rounded-lg.shadow.p-6, .content-container {
+            background: rgba(25, 25, 28, 0.6) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            color: #f1f5f9 !important;
+        }
+        .text-gray-800 { color: #f8f9fa !important; font-weight: 700 !important; }
+        .text-gray-500, .text-gray-600 { color: #9ca3af !important; }
+        
+        /* Table Styles */
+        .users-table th { 
+            background-color: rgba(0, 0, 0, 0.35) !important; 
+            color: #f8f9fa !important; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; 
+            font-weight: 600 !important;
+        }
+        .users-table td { 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; 
+            color: #cbd5e1 !important; 
+        }
+        .users-table tr:hover { background-color: rgba(255, 255, 255, 0.04) !important; }
+        
+        /* Action Buttons Premium */
+        .btn-primary, .btn-success, .btn.bg-green-600 {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        .btn-primary:focus, .btn-success:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+        /* Responsive Fixes */
+        .main-content {
+            padding-left: clamp(0.75rem, 3vw, 3rem) !important;
+            padding-right: clamp(0.75rem, 3vw, 3rem) !important;
+            overflow-x: hidden !important;
+        }
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+        }
+        @media (max-width: 767px) {
+            .container { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+        }
     </style>
 </head>
 <body>
@@ -781,36 +851,43 @@ try {
     </aside>
 
     <div class="main-content">
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg" style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
-        <div class="container mx-auto px-4 py-6">
+    <!-- Header - Premium Redesign -->
+    <header class="header-gradient-premium text-white shadow-lg sticky top-0 z-40">
+        <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
-                    <button class="hamburger-btn bg-white/10 hover:bg-white/20 p-3 rounded-lg mr-4"
+                    <button class="hamburger-btn bg-white/5 hover:bg-white/10 p-3 rounded-xl mr-5 backdrop-blur-md border border-white/10"
                             sidenav-trigger
                             id="hamburgerBtn"
                             aria-label="Abrir menú">
-                        <i class="fas fa-bars text-white"></i>
+                        <i class="fas fa-bars text-white/90"></i>
                     </button>
                     <div>
-                        <h1 class="text-3xl font-bold">
-                            <i class="fas fa-users mr-3"></i>Gestión de Usuarios
+                        <h1 class="text-2xl font-extrabold tracking-tight flex items-center">
+                            <span class="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent mr-3">
+                                <i class="fas fa-users-cog"></i>
+                            </span>
+                            Gestión de Usuarios
                         </h1>
-                        <p class="text-red-200 mt-1">Panel de Administración de Usuarios del Sistema</p>
+                        <div class="flex items-center mt-1">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse mr-2"></span>
+                            <p class="text-gray-400 text-xs font-medium uppercase tracking-widest">Panel Administrativo Premium</p>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button onclick="location.href='dashboard.html'" class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
-                        <i class="fas fa-home mr-2"></i>Dashboard
+                <div class="flex items-center space-x-3">
+                    <button onclick="location.href='dashboard.html'" class="group px-5 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-xl transition-all duration-300 border border-white/10 flex items-center backdrop-blur-md">
+                        <i class="fas fa-th-large mr-2 text-red-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm font-semibold">Dashboard</span>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Estadísticas -->
-    <div class="container mx-auto px-4 py-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="container mx-auto px-6 py-8">
+        <!-- Stats Cards Redesign -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <?php
             $stats = [
                 'total' => count($usuarios),
@@ -819,40 +896,75 @@ try {
                 'administradores' => count(array_filter($usuarios, fn($u) => $u['rol'] === 'admin'))
             ];
             ?>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
+            <!-- Total Card -->
+            <div class="glass-card p-5 relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-colors"></div>
+                <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm">Total Usuarios</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $stats['total']; ?></p>
+                        <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Total Usuarios</p>
+                        <h3 class="text-3xl font-black text-white"><?php echo $stats['total']; ?></h3>
                     </div>
-                    <i class="fas fa-users text-3xl" style="color: #C7252B;"></i>
+                    <div class="w-12 h-12 rounded-2xl bg-red-600/10 flex items-center justify-center border border-red-600/20">
+                        <i class="fas fa-users text-red-500"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-[10px] font-bold text-gray-500 uppercase">
+                    <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 100%</span>
+                    Base de datos activa
                 </div>
             </div>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
+
+            <!-- Activos Card -->
+            <div class="glass-card p-5 relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-600/5 rounded-full blur-3xl group-hover:bg-green-600/10 transition-colors"></div>
+                <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm">Usuarios Activos</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $stats['activos']; ?></p>
+                        <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Usuarios Activos</p>
+                        <h3 class="text-3xl font-black text-white"><?php echo $stats['activos']; ?></h3>
                     </div>
-                    <i class="fas fa-user-check text-3xl text-green-500"></i>
+                    <div class="w-12 h-12 rounded-2xl bg-green-600/10 flex items-center justify-center border border-green-600/20">
+                        <i class="fas fa-user-check text-green-500"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-[10px] font-bold text-gray-500 uppercase">
+                    <span class="text-green-500 mr-1"><i class="fas fa-check-circle"></i> Verificados</span>
+                    En el sistema
                 </div>
             </div>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
+
+            <!-- Inactivos Card -->
+            <div class="glass-card p-5 relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-600/5 rounded-full blur-3xl group-hover:bg-orange-600/10 transition-colors"></div>
+                <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm">Inactivos</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $stats['inactivos']; ?></p>
+                        <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Inactivos / Pendientes</p>
+                        <h3 class="text-3xl font-black text-white"><?php echo $stats['inactivos']; ?></h3>
                     </div>
-                    <i class="fas fa-user-times text-3xl text-red-500"></i>
+                    <div class="w-12 h-12 rounded-2xl bg-orange-600/10 flex items-center justify-center border border-orange-600/20">
+                        <i class="fas fa-user-clock text-orange-500"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-[10px] font-bold text-gray-500 uppercase">
+                    <span class="text-orange-500 mr-1"><i class="fas fa-exclamation-triangle"></i> Revisión</span>
+                    Pendiente de acción
                 </div>
             </div>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
+
+            <!-- Admins Card -->
+            <div class="glass-card p-5 relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-600/5 rounded-full blur-3xl group-hover:bg-purple-600/10 transition-colors"></div>
+                <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm">Administradores</p>
-                        <p class="text-2xl font-bold text-gray-800"><?php echo $stats['administradores']; ?></p>
+                        <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Administradores</p>
+                        <h3 class="text-3xl font-black text-white"><?php echo $stats['administradores']; ?></h3>
                     </div>
-                    <i class="fas fa-user-shield text-3xl text-purple-500"></i>
+                    <div class="w-12 h-12 rounded-2xl bg-purple-600/10 flex items-center justify-center border border-purple-600/20">
+                        <i class="fas fa-shield-alt text-purple-500"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-[10px] font-bold text-gray-500 uppercase">
+                    <span class="text-purple-500 mr-1"><i class="fas fa-crown"></i> Privilegiados</span>
+                    Acceso total
                 </div>
             </div>
         </div>
@@ -883,57 +995,79 @@ try {
             </button>
         </div>
 
-        <!-- Sección de Notificaciones de Cambios de Perfil -->
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-gray-800">
-                    <i class="fas fa-clipboard-list mr-3" style="color: #C7252B;"></i>Solicitudes de Cambios de Perfil
-                </h2>
-                <button onclick="loadProfileNotifications()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
-                    <i class="fas fa-sync-alt mr-2"></i>Actualizar
+        <!-- Premium Section: Notifications -->
+        <div class="glass-card mb-10 overflow-hidden">
+            <div class="px-6 py-5 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-xl bg-red-600/10 flex items-center justify-center mr-4 border border-red-600/20">
+                        <i class="fas fa-bell text-red-500"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-white tracking-tight">Solicitudes de Cambios de Perfil</h2>
+                        <p class="text-gray-500 text-xs">Revisiones pendientes de datos de usuario</p>
+                    </div>
+                </div>
+                <button onclick="loadProfileNotifications()" class="flex items-center space-x-2 px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-bold rounded-lg border border-white/10 transition-all">
+                    <i class="fas fa-sync-alt animate-hover"></i>
+                    <span>Actualizar</span>
                 </button>
             </div>
-            <div id="profileNotificationsContainer">
-                <div class="text-center py-10 text-gray-600">
-                    <div class="text-2xl mb-2">⏳</div>
-                    <p>Cargando notificaciones...</p>
+            <div id="profileNotificationsContainer" class="p-0">
+                <div class="flex flex-col items-center justify-center py-16 text-gray-500">
+                    <i class="fas fa-circle-notch fa-spin text-3xl mb-4 text-red-500/50"></i>
+                    <p class="text-sm font-medium tracking-wide">Sincronizando notificaciones...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Barra de herramientas -->
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">
-                    <i class="fas fa-table mr-3" style="color: #C7252B;"></i>Lista de Usuarios
-                </h2>
-                <div class="flex items-center space-x-4">
-                    <input type="text" id="searchBox" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Buscar por nombre, email o rol..." onkeyup="filterUsers()" style="--tw-ring-color: #C7252B;">
+        <!-- Premium Section: User List -->
+        <div class="glass-card">
+            <!-- Toolbar Redesign -->
+            <div class="px-6 py-6 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center mr-4 border border-white/5 shadow-2xl">
+                        <i class="fas fa-users-viewfinder text-red-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black text-white tracking-tighter">Directorio de Usuarios</h2>
+                        <p class="text-gray-500 text-xs font-medium tracking-wide uppercase">Gestión de Accesos y Roles</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative group">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-red-500 transition-colors"></i>
+                        <input type="text" id="searchBox" 
+                               class="w-full sm:w-80 pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all placeholder:text-gray-600" 
+                               placeholder="Filtrar por nombre, email o rol..." 
+                               onkeyup="filterUsers()">
+                    </div>
+                    <button onclick="location.href='pages/sign-up.html'" class="px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-xl shadow-lg shadow-red-900/40 border border-white/10 transition-all flex items-center justify-center whitespace-nowrap">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        <span>Nuevo Usuario</span>
+                    </button>
                 </div>
             </div>
         
-            <!-- Tabla de usuarios -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full border-collapse" id="usersTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Rol</th>
-                    <th>Empresa</th>
-                    <th>Cargo</th>
-                    <th>Estado</th>
-                    <th>Registro</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
+            <!-- Modern Table Implementation -->
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left whitespace-nowrap" id="usersTable">
+                    <thead>
+                        <tr class="bg-white/[0.03] text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/5">
+                            <th class="px-6 py-4">ID</th>
+                            <th class="px-6 py-4">Usuario</th>
+                            <th class="px-6 py-4">Información</th>
+                            <th class="px-6 py-4 text-center">Rol / Cargo</th>
+                            <th class="px-6 py-4 text-center">Estado</th>
+                            <th class="px-6 py-4 text-right">Aciones Rápidas</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
                 <?php if (empty($usuarios)): ?>
-                    <tr>
-                        <td colspan="10" style="text-align: center; padding: 40px; color: #666;">
-                            No hay usuarios registrados.
+                    <tr class="border-b border-white/5">
+                        <td colspan="6" class="px-6 py-12 text-center">
+                            <i class="fas fa-users-slash text-4xl text-white/10 mb-4 block"></i>
+                            <span class="text-gray-500 font-medium tracking-wide">No se encontraron usuarios en la base de datos.</span>
                         </td>
                     </tr>
                 <?php else: ?>
@@ -967,12 +1101,14 @@ try {
                             </td>
                             <td><?php echo htmlspecialchars($usuario['nombre_empresa'] ?? 'N/A'); ?></td>
                             <td><?php echo htmlspecialchars($usuario['cargo'] ?? 'N/A'); ?></td>
-                            <td>
-                                <span class="status-badge <?php echo $estado_class; ?>">
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10 glass-card">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
                                     <?php echo ucfirst($estado_real); ?>
                                 </span>
                             </td>
-                            <td>
+                            <td class="px-6 py-4 text-gray-500 text-[10px]">
+                                <i class="fas fa-calendar-check mr-2"></i>
                                 <?php 
                                 if ($usuario['fecha_registro'] && $usuario['fecha_registro'] != '0000-00-00 00:00:00') {
                                     echo date('d/m/Y', strtotime($usuario['fecha_registro'])); 
@@ -982,10 +1118,9 @@ try {
                                 ?>
                             </td>
                             <td>
-                                <div class="actions">
-                                    <!-- Botón Editar -->
-                                    <button type="button" class="btn btn-primary" onclick="abrirModalEditar(<?php echo htmlspecialchars(json_encode($usuario)); ?>)">
-                                        ✏️ Editar
+                                <div class="actions flex space-x-2">
+                                    <button type="button" class="btn-primary-premium p-2 rounded-lg" onclick="abrirModalEditar(<?php echo htmlspecialchars(json_encode($usuario)); ?>)">
+                                        <i class="fas fa-edit"></i>
                                     </button>
 
                                     <!-- Botón Restricciones -->
@@ -1192,66 +1327,75 @@ try {
 
             if (notificaciones.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">✅</div>
-                        <p>No hay solicitudes de cambio pendientes</p>
+                    <div class="text-center py-12">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/10 mb-4 border border-green-500/20">
+                            <i class="fas fa-check text-3xl text-green-500"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-lg">Sin solicitudes pendientes</h4>
+                        <p class="text-gray-400 text-sm mt-1">El sistema está actualizado. No hay cambios de perfil por revisar.</p>
                     </div>
                 `;
                 return;
             }
 
             let html = `
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left whitespace-nowrap">
                         <thead>
-                            <tr style="background-color: #f8f9fa;">
-                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Usuario</th>
-                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Campo</th>
-                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Valor Anterior</th>
-                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Valor Nuevo</th>
-                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Fecha</th>
-                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Acciones</th>
+                            <tr class="border-b border-white/5 bg-white/5">
+                                <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Usuario</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Campo</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Cambio Propuesto</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-white/5">
             `;
 
             notificaciones.forEach(notif => {
                 const fieldName = getFieldDisplayName(notif.campo_modificado);
                 const fecha = new Date(notif.fecha_solicitud).toLocaleDateString('es-ES', {
-                    year: 'numeric', month: 'short', day: 'numeric',
+                    month: 'short', day: 'numeric',
                     hour: '2-digit', minute: '2-digit'
                 });
 
                 html += `
-                    <tr style="border-bottom: 1px solid #dee2e6;">
-                        <td style="padding: 12px;">
-                            <div style="font-weight: 600; color: #333;">${notif.nombre} ${notif.apellidos || ''}</div>
-                            <div style="font-size: 0.85rem; color: #666;">${notif.email}</div>
+                    <tr class="hover:bg-white/[0.02] transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white font-bold mr-3 border border-white/10 shadow-lg">
+                                    ${notif.nombre.charAt(0)}
+                                </div>
+                                <div>
+                                    <div class="text-white font-bold text-sm">${notif.nombre} ${notif.apellidos || ''}</div>
+                                    <div class="text-gray-500 text-xs">${notif.email}</div>
+                                </div>
+                            </div>
                         </td>
-                        <td style="padding: 12px;">
-                            <span style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: 500;">
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
                                 ${fieldName}
                             </span>
+                            <div class="text-[10px] text-gray-500 mt-1 font-bold">Solicitado: ${fecha}</div>
                         </td>
-                        <td style="padding: 12px; max-width: 150px; word-wrap: break-word; color: #666;">
-                            ${notif.valor_anterior || '<em style="color: #999;">Vacío</em>'}
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xs text-gray-500 italic line-through max-w-[100px] truncate">${notif.valor_anterior || 'Vacío'}</span>
+                                <i class="fas fa-arrow-right text-[10px] text-red-500"></i>
+                                <span class="text-sm text-white font-bold max-w-[150px] truncate">${notif.valor_nuevo || 'Vacío'}</span>
+                            </div>
                         </td>
-                        <td style="padding: 12px; max-width: 150px; word-wrap: break-word; font-weight: 600; color: #333;">
-                            ${notif.valor_nuevo || '<em style="color: #999;">Vacío</em>'}
-                        </td>
-                        <td style="padding: 12px; font-size: 0.9rem; color: #666;">
-                            ${fecha}
-                        </td>
-                        <td style="padding: 12px;">
-                            <div style="display: flex; gap: 5px;">
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end space-x-2">
                                 <button onclick="approveProfileChange(${notif.id})"
-                                        style="background: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
-                                    ✓ Aprobar
+                                        class="p-2.5 bg-green-500/10 hover:bg-green-500/20 text-green-500 rounded-lg transition-all border border-green-500/20 group"
+                                        title="Aprobar Cambio">
+                                    <i class="fas fa-check group-hover:scale-110"></i>
                                 </button>
                                 <button onclick="rejectProfileChange(${notif.id})"
-                                        style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
-                                    ✗ Rechazar
+                                        class="p-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-all border border-red-500/20 group"
+                                        title="Rechazar Cambio">
+                                    <i class="fas fa-times group-hover:scale-110"></i>
                                 </button>
                             </div>
                         </td>

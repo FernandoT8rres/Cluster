@@ -340,6 +340,24 @@
                     </p>
                 </div>
             </div>
+            
+            <!-- Footer leyenda Lumia AI Solutions -->
+            <style>
+              @keyframes lumiaPulseLight {
+                0% { text-shadow: 0 0 4px rgba(199,37,43,0.1); }
+                50% { text-shadow: 0 0 8px rgba(199,37,43,0.5); }
+                100% { text-shadow: 0 0 4px rgba(199,37,43,0.1); }
+              }
+              .lumia-glow-light {
+                font-weight: 800;
+                animation: lumiaPulseLight 2.5s infinite;
+              }
+            </style>
+            <div style="position: fixed; bottom: 1.5rem; left: 0; right: 0; text-align: center; font-size: 0.7rem; opacity: 0.7; letter-spacing: 0.5px; z-index: 50; pointer-events: none;">
+                <a href="https://lumiaaisolutions.com" target="_blank" class="lumia-glow-light" style="color: #475569; text-decoration: none; transition: all 0.3s ease; pointer-events: auto;" onmouseover="this.style.color='#C7252B'" onmouseout="this.style.color='#475569'">
+                    Desarrollado por Lumia AI Solutions
+                </a>
+            </div>
         </div>
 
         <!-- Right Panel (Banner Carrusel) -->

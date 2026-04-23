@@ -9,7 +9,7 @@
 error_reporting(0);
 ini_set('display_errors', 0);
 
-header('Content-Type: application/json');
+require_once __DIR__ . '/../utils/api-response.php';
 header('Access-Control-Allow-Origin: https://intranet.clautmetropolitano.mx');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -28,9 +28,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Check authentication
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['error' => 'No autenticado']);
-    exit();
+        ApiResponse::error('No autenticado', 401);
 }
 
 $user_id = intval($_SESSION['user_id']);
@@ -74,8 +72,7 @@ try {
             $stmt->execute($params);
             $mensajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            echo json_encode([
-                'success' => true,
+            ApiResponse::success([
                 'mensajes' => $mensajes,
                 'pagination' => [
                     'page' => $page,
@@ -91,9 +88,7 @@ try {
             $data = json_decode(file_get_contents('php://input'), true);
             
             if (!$data || !isset($data['titulo']) || !isset($data['contenido'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Datos inválidos']);
-                exit();
+                ApiResponse::error('Datos inválidos', 400);
             }
             
             $stmt = $conn->prepare("
@@ -114,14 +109,9 @@ try {
             ]);
             
             if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Mensaje creado exitosamente',
-                    'mensaje_id' => $conn->lastInsertId()
-                ]);
+                ApiResponse::success(['mensaje_id' => $conn->lastInsertId()], 'Mensaje creado correctamente');
             } else {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error al crear el mensaje']);
+                ApiResponse::error('Error al crear el mensaje', 500);
             }
             break;
             
@@ -130,9 +120,7 @@ try {
             $data = json_decode(file_get_contents('php://input'), true);
             
             if (!$data || !isset($data['id'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'ID de mensaje requerido']);
-                exit();
+                ApiResponse::error('ID de mensaje requerido', 400);
             }
             
             $mensaje_id = intval($data['id']);
@@ -143,22 +131,16 @@ try {
             $stmt->execute([$mensaje_id, $user_id]);
             
             if (!$stmt->fetch()) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Mensaje no encontrado']);
-                exit();
+                ApiResponse::error('Mensaje no encontrado', 404);
             }
             
             $stmt = $conn->prepare("UPDATE mensajes_usuario SET leido = ? WHERE id = ?");
             $result = $stmt->execute([$leido, $mensaje_id]);
             
             if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Mensaje actualizado exitosamente'
-                ]);
+                ApiResponse::success(null, 'Mensaje actualizado correctamente');
             } else {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error al actualizar el mensaje']);
+                ApiResponse::error('Error al actualizar el mensaje', 500);
             }
             break;
             
@@ -167,9 +149,7 @@ try {
             $mensaje_id = intval($_GET['id'] ?? 0);
             
             if (!$mensaje_id) {
-                http_response_code(400);
-                echo json_encode(['error' => 'ID de mensaje requerido']);
-                exit();
+                ApiResponse::error('ID de mensaje requerido', 400);
             }
             
             // Verify ownership
@@ -177,35 +157,23 @@ try {
             $stmt->execute([$mensaje_id, $user_id]);
             
             if (!$stmt->fetch()) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Mensaje no encontrado']);
-                exit();
+                ApiResponse::error('Mensaje no encontrado', 404);
             }
             
             $stmt = $conn->prepare("DELETE FROM mensajes_usuario WHERE id = ?");
             $result = $stmt->execute([$mensaje_id]);
             
             if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Mensaje eliminado exitosamente'
-                ]);
+                ApiResponse::success(null, 'Mensaje eliminado correctamente');
             } else {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error al eliminar el mensaje']);
+                ApiResponse::error('Error al eliminar el mensaje', 500);
             }
             break;
             
         default:
-            http_response_code(405);
-            echo json_encode(['error' => 'Método no permitido']);
-            break;
+            ApiResponse::error('Método no permitido', 405);
     }
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'error' => 'Error del servidor',
-        'message' => $e->getMessage()
-    ]);
+    ApiResponse::error('Error del servidor', 500, ['error_info' => $e->getMessage()]);
 }

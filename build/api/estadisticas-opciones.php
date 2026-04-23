@@ -10,7 +10,7 @@ header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');
 
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 // Función para respuesta JSON
 function sendJsonResponse($data, $success = true) {

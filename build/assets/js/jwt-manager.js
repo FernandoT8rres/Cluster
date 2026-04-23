@@ -148,7 +148,7 @@ class JWTManager {
         console.log('🔄 Renovando access token...');
 
         try {
-            const response = await fetch('/build/api/auth/refresh-token.php', {
+            const response = await fetch('/api/auth/refresh-token.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -248,7 +248,7 @@ class JWTManager {
         try {
             // Enviar token al servidor para blacklist
             if (token) {
-                await fetch('/build/api/auth/login-compatible.php?action=logout', {
+                await fetch('/api/auth/login-compatible.php?action=logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

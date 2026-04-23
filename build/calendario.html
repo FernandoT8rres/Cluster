@@ -216,10 +216,16 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <div class="flex bg-white/5 rounded-xl p-1 border border-white/10 mr-4">
+                <div class="flex bg-white/5 rounded-xl p-1 border border-white/10 mr-4 items-center">
+                    <button id="prevBtn" class="p-2 text-slate-400 hover:text-white transition-all"><i class="fas fa-chevron-left"></i></button>
+                    <button id="todayBtn" class="px-3 py-2 text-[10px] font-black uppercase tracking-wider text-slate-400 hover:text-white transition-all">Hoy</button>
+                    <button id="nextBtn" class="p-2 text-slate-400 hover:text-white transition-all"><i class="fas fa-chevron-right"></i></button>
+                    <div class="h-4 w-[1px] bg-white/10 mx-2"></div>
                     <button id="viewWeek" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all bg-red-600 text-white">Semanal</button>
                     <button id="viewMonth" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all text-slate-400 hover:text-white">Mensual</button>
                 </div>
+
+                <div id="calendarTitle" class="text-sm font-bold text-white/80 mr-4 min-w-[150px] text-center"></div>
 
                 <button onclick="openQuickEventModal()" class="porsche-btn">
                     <i class="fas fa-plus"></i> Nuevo Post-it
@@ -286,7 +292,62 @@
         </div>
     </div>
 
-    <!-- Master Scripts -->
+    <!-- Notifications System -->
+    <div id="notifications" class="fixed top-6 right-6 z-[10001] space-y-3 pointer-events-none"></div>
+
+    <script>
+        // Global Notification System for Calendar
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notifications');
+            if (!container) return;
+
+            const id = Date.now();
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            const colors = {
+                success: 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400',
+                error: 'border-red-500/50 bg-red-500/10 text-red-400',
+                warning: 'border-orange-500/50 bg-orange-500/10 text-orange-400',
+                info: 'border-blue-500/50 bg-blue-500/10 text-blue-400'
+            };
+
+            const notification = document.createElement('div');
+            notification.id = `notif-${id}`;
+            notification.className = `glass-panel p-4 mb-3 border-l-4 flex items-center space-x-3 min-w-[320px] shadow-2xl transition-all duration-300 transform translate-x-full ${colors[type] || colors.info}`;
+            notification.style.pointerEvents = 'auto';
+            
+            notification.innerHTML = `
+                <i class="fas ${icons[type] || icons.info} text-xl"></i>
+                <div class="flex-1">
+                    <p class="text-[9px] font-bold uppercase tracking-[0.2em] opacity-60 mb-1">Sistema</p>
+                    <p class="text-xs font-bold text-white/90 leading-tight">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-white/20 hover:text-white transition-colors p-1">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            `;
+
+            container.appendChild(notification);
+
+            // Animar entrada instantánea
+            requestAnimationFrame(() => {
+                notification.classList.remove('translate-x-full');
+            });
+
+            // Auto remover
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.classList.add('translate-x-full', 'opacity-0');
+                    setTimeout(() => notification.remove(), 500);
+                }
+            }, 4000);
+        }
+    </script>
     <script src="./js/auth-session.js"></script>
     <script src="./js/admin-calendar-master.js"></script>
 </body>

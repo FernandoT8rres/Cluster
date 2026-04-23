@@ -1,5 +1,5 @@
 <?php
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 // Verificar que el usuario esté logueado y sea admin
 if (!verificarSesion()) {

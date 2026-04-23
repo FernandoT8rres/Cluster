@@ -4,7 +4,7 @@
  * Se llama via AJAX después del login
  */
 
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 require_once 'middleware/auth-admin.php';
 
 header('Content-Type: application/json');

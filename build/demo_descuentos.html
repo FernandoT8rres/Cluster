@@ -780,7 +780,8 @@
                         class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
                         Cancelar
                     </button>
-                    <button type="submit" form="descuentoForm" id="saveButton"
+                    <button type="button" id="saveButton"
+                        onclick="saveDescuento(event)"
                         class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition"
                         style="background: #C7252B;">
                         Guardar
@@ -857,7 +858,9 @@
 
         // Configurar event listeners
         function setupEventListeners() {
-            document.getElementById('descuentoForm').addEventListener('submit', saveDescuento);
+            // NOTA: NO agregamos listener 'submit' al form porque el botón Guardar
+            // ya llama saveDescuento() directamente con onclick. Agregar ambos
+            // causaría doble envío y registros duplicados en la BD.
             document.getElementById('searchInput').addEventListener('input', handleSearch);
             document.getElementById('filterEstado').addEventListener('change', handleFilter);
             document.getElementById('filterEmpresa').addEventListener('change', handleFilter);
@@ -1024,7 +1027,10 @@
 
                     empresas = empresasArray.map(empresa => ({
                         id: empresa.id,
-                        nombre_empresa: empresa.nombre_empresa || empresa.nombre,
+                        // Preservar AMBOS campos: la BD puede usar 'nombre' o 'nombre_empresa'
+                        // El forEach usa: empresa.nombre || empresa.nombre_empresa
+                        nombre:          empresa.nombre          || empresa.nombre_empresa || '',
+                        nombre_empresa:  empresa.nombre_empresa  || empresa.nombre         || '',
                         descripcion: empresa.descripcion || '',
                         categoria: empresa.categoria || '',
                         sector: empresa.sector || '',

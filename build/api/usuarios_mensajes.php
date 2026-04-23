@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../utils/api-response.php';
 /**
  * API de Mensajería para Usuarios
  * Basada en la lógica de comites.php para mantener consistencia
@@ -15,22 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config/database.php';
 
-function responderJSON($success, $data = null, $message = '', $debug = null) {
-    http_response_code($success ? 200 : 400);
-    $response = [
-        'success' => $success,
-        'data' => $data,
-        'message' => $message,
-        'timestamp' => date('c')
-    ];
 
-    if ($debug && isset($_GET['debug']) && $_GET['debug'] === '1') {
-        $response['debug'] = $debug;
-    }
-
-    echo json_encode($response, JSON_PRETTY_PRINT);
-    exit();
-}
 
 // Función para subir archivos de mensajería (reutilizada de comites.php)
 function subirArchivoMensaje($archivo, $tipo) {
@@ -116,10 +102,10 @@ try {
                 $stmt->execute();
                 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                responderJSON(true, $usuarios, 'Usuarios obtenidos correctamente');
+                ApiResponse::success($usuarios, ['message' => 'Usuarios obtenidos correctamente']);
             } catch (Exception $e) {
                 error_log("Error obteniendo usuarios: " . $e->getMessage());
-                responderJSON(false, null, 'Error al obtener usuarios');
+                ApiResponse::error('Error al obtener usuarios');
             }
             break;
 
@@ -130,7 +116,7 @@ try {
             $asunto = trim($_POST['asunto'] ?? '');
 
             if (!$destinatario || !$asunto) {
-                responderJSON(false, null, 'Destinatario y asunto son requeridos');
+                ApiResponse::error('Destinatario y asunto son requeridos');
             }
 
             try {
@@ -160,7 +146,7 @@ try {
                 }
 
                 if (empty($destinatarios)) {
-                    responderJSON(false, null, 'No se encontraron destinatarios válidos');
+                    ApiResponse::error('No se encontraron destinatarios válidos');
                 }
 
                 // Preparar contenido del mensaje según tipo
@@ -178,7 +164,7 @@ try {
                         $link_descripcion = trim($_POST['link_descripcion'] ?? '');
 
                         if (!$link_url) {
-                            responderJSON(false, null, 'URL del enlace es requerida');
+                            ApiResponse::error('URL del enlace es requerida');
                         }
 
                         $contenido_mensaje = json_encode([
@@ -194,14 +180,14 @@ try {
                         if (isset($_FILES['imagen_archivo']) && $_FILES['imagen_archivo']['error'] === UPLOAD_ERR_OK) {
                             $archivo_adjunto = subirArchivoMensaje($_FILES['imagen_archivo'], 'imagenes');
                             if (!$archivo_adjunto['success']) {
-                                responderJSON(false, null, 'Error al subir imagen: ' . $archivo_adjunto['message']);
+                                ApiResponse::error('Error al subir imagen: ' . $archivo_adjunto['message']);
                             }
                             $contenido_mensaje = json_encode([
                                 'archivo' => $archivo_adjunto['ruta'],
                                 'descripcion' => $imagen_descripcion
                             ]);
                         } else {
-                            responderJSON(false, null, 'Imagen es requerida');
+                            ApiResponse::error('Imagen es requerida');
                         }
                         break;
 
@@ -211,7 +197,7 @@ try {
                         if (isset($_FILES['documento_archivo']) && $_FILES['documento_archivo']['error'] === UPLOAD_ERR_OK) {
                             $archivo_adjunto = subirArchivoMensaje($_FILES['documento_archivo'], 'documentos');
                             if (!$archivo_adjunto['success']) {
-                                responderJSON(false, null, 'Error al subir documento: ' . $archivo_adjunto['message']);
+                                ApiResponse::error('Error al subir documento: ' . $archivo_adjunto['message']);
                             }
                             $contenido_mensaje = json_encode([
                                 'archivo' => $archivo_adjunto['ruta'],
@@ -219,13 +205,13 @@ try {
                                 'descripcion' => $documento_descripcion
                             ]);
                         } else {
-                            responderJSON(false, null, 'Documento es requerido');
+                            ApiResponse::error('Documento es requerido');
                         }
                         break;
                 }
 
                 if (empty($contenido_mensaje)) {
-                    responderJSON(false, null, 'Contenido del mensaje es requerido');
+                    ApiResponse::error('Contenido del mensaje es requerido');
                 }
 
                 // Crear tabla de mensajes de usuarios si no existe
@@ -337,14 +323,14 @@ try {
                 ];
 
                 if ($emails_enviados > 0) {
-                    responderJSON(true, $resultado, "Mensaje enviado correctamente a $emails_enviados destinatario(s)");
+                    ApiResponse::success($resultado, ['message' => "Mensaje enviado correctamente a $emails_enviados destinatario(s)"]);
                 } else {
-                    responderJSON(false, $resultado, 'Error al enviar el mensaje');
+                    ApiResponse::error('Error al enviar el mensaje');
                 }
 
             } catch (Exception $e) {
                 error_log("Error enviando mensaje de usuarios: " . $e->getMessage());
-                responderJSON(false, null, 'Error interno al procesar el mensaje');
+                ApiResponse::error('Error interno al procesar el mensaje');
             }
             break;
 
@@ -353,7 +339,7 @@ try {
             $email = $_GET['email'] ?? null;
 
             if (!$email) {
-                responderJSON(false, null, 'Email requerido');
+                ApiResponse::error('Email requerido');
             }
 
             try {
@@ -377,11 +363,11 @@ try {
                 $stmt->execute([$email]);
                 $mensajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                responderJSON(true, ['mensajes' => $mensajes], 'Mensajes obtenidos correctamente');
+                ApiResponse::success(['mensajes' => $mensajes], ['message' => 'Mensajes obtenidos correctamente']);
 
             } catch (Exception $e) {
                 error_log("Error obteniendo mensajes para usuario: " . $e->getMessage());
-                responderJSON(false, null, 'Error al obtener mensajes');
+                ApiResponse::error('Error al obtener mensajes');
             }
             break;
 
@@ -391,7 +377,7 @@ try {
             $email = $_POST['email'] ?? null;
 
             if (!$mensaje_id) {
-                responderJSON(false, null, 'ID de mensaje requerido');
+                ApiResponse::error('ID de mensaje requerido');
             }
 
             try {
@@ -403,11 +389,11 @@ try {
 
                 $stmt->execute([$mensaje_id, $email, $email]);
 
-                responderJSON(true, null, 'Mensaje marcado como leído');
+                ApiResponse::success(null, ['message' => 'Mensaje marcado como leído']);
 
             } catch (Exception $e) {
                 error_log("Error marcando mensaje como leído: " . $e->getMessage());
-                responderJSON(false, null, 'Error al marcar mensaje como leído');
+                ApiResponse::error('Error al marcar mensaje como leído');
             }
             break;
 
@@ -427,20 +413,20 @@ try {
                 $stmt->execute();
                 $stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                responderJSON(true, $stats, 'Estadísticas obtenidas correctamente');
+                ApiResponse::success($stats, ['message' => 'Estadísticas obtenidas correctamente']);
 
             } catch (Exception $e) {
                 error_log("Error obteniendo estadísticas: " . $e->getMessage());
-                responderJSON(false, null, 'Error al obtener estadísticas');
+                ApiResponse::error('Error al obtener estadísticas');
             }
             break;
 
         default:
-            responderJSON(false, null, 'Acción no válida');
+            ApiResponse::error('Acción no válida');
     }
 
 } catch (Exception $e) {
     error_log("Error en usuarios_mensajes API: " . $e->getMessage());
-    responderJSON(false, null, 'Error interno del servidor');
+    ApiResponse::error('Error interno del servidor');
 }
 ?>

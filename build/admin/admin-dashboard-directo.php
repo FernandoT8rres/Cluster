@@ -1,6 +1,6 @@
 <?php
 // Panel de administración sin middleware (acceso directo)
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 iniciarSesion();
 

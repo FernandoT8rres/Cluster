@@ -86,9 +86,8 @@ try {
                 $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$resultado || !$resultado['imagen']) {
-                    http_response_code(404);
-                    header('Content-Type: text/plain');
-                    echo 'Imagen no encontrada';
+                    $defaultImage = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80";
+                    header('Location: ' . $defaultImage);
                     exit;
                 }
 
@@ -133,9 +132,9 @@ try {
                 exit;
             }
 
-            http_response_code(404);
-            header('Content-Type: text/plain');
-            echo 'Imagen no encontrada';
+            // Si el archivo no existe o hubo error, servir una imagen por defecto para evitar 404s en consola
+            $defaultImage = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80";
+            header('Location: ' . $defaultImage);
             exit;
 
         case 'listar':
@@ -722,7 +721,26 @@ try {
                 
                 if ($result) {
                     $nuevoEventoId = $conn->lastInsertId();
+                    
+                    // Preparamos la respuesta
+                    $responseData = [
+                        'success' => true,
+                        'message' => 'Evento creado exitosamente',
+                        'evento_id' => $nuevoEventoId
+                    ];
 
+                    // Responder al cliente
+                    echo json_encode($responseData);
+                    
+                    // Forzar el envío del buffer si es posible
+                    if (ob_get_level() > 0) ob_end_flush();
+                    flush();
+                    
+                    if (function_exists('fastcgi_finish_request')) {
+                        fastcgi_finish_request();
+                    }
+
+                    // A partir de aquí, el script sigue corriendo pero el cliente ya recibió el JSON
                     // ── Hook de correo: Nuevo Evento (best-effort) ──────────
                     try {
                         require_once __DIR__ . '/../utils/NotificationMailer.php';
@@ -745,11 +763,7 @@ try {
                     }
                     // ─────────────────────────────────────────────────────────
 
-                    echo json_encode([
-                        'success' => true,
-                        'message' => 'Evento creado exitosamente',
-                        'evento_id' => $nuevoEventoId
-                    ]);
+                    exit;
 
                 } else {
                     echo json_encode([

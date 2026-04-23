@@ -5,7 +5,7 @@
 
 // Detectar rutas automáticamente
 $basePath = dirname(dirname(__DIR__));
-$configPath = $basePath . '/assets/conexion/config.php';
+$configPath = $basePath . '/config/database.php';
 $jwtPath = $basePath . '/api/auth/jwt_helper.php';
 
 // Verificar que los archivos existan antes de incluirlos

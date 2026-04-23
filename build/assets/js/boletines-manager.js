@@ -50,7 +50,7 @@ class BoletinesManager {
     }
 
     renderizarBoletines() {
-        const container = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3');
+        const container = document.getElementById('boletines-grid');
         
         if (!container) {
             console.error('Contenedor de boletines no encontrado');
@@ -166,6 +166,10 @@ class BoletinesManager {
                 const extension = archivo.split('.').pop().toLowerCase();
                 
                 // Crear objeto de archivo para mantener compatibilidad
+                // Intentamos detectar si el archivo está en la carpeta específica de boletines
+                const isBoletinSubfolder = archivo.startsWith('boletin_');
+                const baseUrl = isBoletinSubfolder ? './uploads/boletines/' : './uploads/';
+
                 this.currentBoletin.archivos = [{
                     id: this.currentBoletin.id,
                     nombre_original: archivo,
@@ -174,8 +178,8 @@ class BoletinesManager {
                     es_pdf: extension === 'pdf',
                     es_imagen: ['jpg', 'jpeg', 'png', 'gif'].includes(extension),
                     tamaño_formateado: 'N/A',
-                    url_vista: `./uploads/${archivo}`,
-                    url_descarga: `./uploads/${archivo}`
+                    url_vista: `${baseUrl}${archivo}`,
+                    url_descarga: `${baseUrl}${archivo}`
                 }];
                 
                 console.log('Archivo adjunto encontrado:', this.currentBoletin.archivos);
@@ -239,11 +243,15 @@ class BoletinesManager {
         }
         
         // Mostrar modal con animación
-        modal.classList.remove('opacity-0', 'invisible');
-        modal.querySelector('.bg-white').classList.remove('scale-95');
-        modal.querySelector('.bg-white').classList.add('scale-100');
-        
-        document.body.style.overflow = 'hidden';
+        if (modal) {
+            modal.classList.remove('opacity-0', 'invisible');
+            const modalContent = modal.querySelector('.bg-white') || modal.querySelector('.bg-gray-900') || modal.querySelector('div > div');
+            if (modalContent) {
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }
+            document.body.style.overflow = 'hidden';
+        }
     }
 
     actualizarInfoDocumento(boletin) {
@@ -482,9 +490,14 @@ class BoletinesManager {
         const viewer = document.getElementById('documentFrame');
         const placeholder = document.getElementById('documentPlaceholder');
         
-        modal.classList.add('opacity-0', 'invisible');
-        modal.querySelector('.bg-white').classList.add('scale-95');
-        modal.querySelector('.bg-white').classList.remove('scale-100');
+        if (modal) {
+            modal.classList.add('opacity-0', 'invisible');
+            const modalContent = modal.querySelector('.bg-white') || modal.querySelector('.bg-gray-900') || modal.querySelector('div > div');
+            if (modalContent) {
+                modalContent.classList.add('scale-95');
+                modalContent.classList.remove('scale-100');
+            }
+        }
         
         // Reset iframe
         if (viewer) {
@@ -500,6 +513,9 @@ class BoletinesManager {
         if (archivosContainer) {
             archivosContainer.remove();
         }
+        
+        // Limpiar estado de ruta en ventana global (opcional)
+        window.currentBulletinPath = '';
         
         document.body.style.overflow = 'auto';
         this.currentBoletin = null;

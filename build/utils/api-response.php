@@ -15,13 +15,19 @@ class ApiResponse {
      * @param string $message Mensaje opcional
      * @param int $code Código HTTP (default 200)
      */
-    public static function success($data = null, $message = 'Operación exitosa', $code = 200) {
-        self::send([
+    public static function success($data = null, $message = 'Operación exitosa', $code = 200, $extra = []) {
+        $response = [
             'success' => true,
             'message' => $message,
             'data'    => $data,
             'timestamp' => date('c')
-        ], $code);
+        ];
+        
+        if (!empty($extra)) {
+            $response = array_merge($response, $extra);
+        }
+        
+        self::send($response, $code);
     }
     
     /**
@@ -60,6 +66,12 @@ class ApiResponse {
         // El header de CORS ya lo maneja .htaccess o el middleware dedicado,
         // pero aquí reforzamos la protección si fuera necesario en el futuro.
         
+        // Cerrar escritura de sesión con seguridad antes de emitir respuesta JSON
+        // Esto es un fix crítico para Hostinger LiteSpeed y evita redirections continuas al login
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_write_close();
+        }
+
         echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         exit;
     }

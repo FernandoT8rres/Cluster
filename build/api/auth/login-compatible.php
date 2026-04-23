@@ -24,31 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../../config/database.php';
-
-/**
- * Función para responder en JSON
- * SECURITY: NO incluir session_id ni $_SESSION en respuestas — vulnerabilidad de exposición de datos
- */
-function responderJSON($success, $data = null, $message = '', $extra = []) {
-    $response = [
-        'success'   => $success,
-        'message'   => $message,
-        'data'      => $data,
-        'timestamp' => date('c'),
-        // ELIMINADO: 'session_id' => session_id()       — expone ID de sesión al cliente
-        // ELIMINADO: 'debug_session' => $_SESSION       — exponía TODA la sesión en cada response
-    ];
-    
-    foreach ($extra as $key => $value) {
-        $response[$key] = $value;
-    }
-    
-    // Asegurar que la sesión se escriba antes de enviar respuesta
-    session_write_close();
-    
-    echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    exit();
-}
+require_once __DIR__ . '/../../utils/api-response.php';
 
 /**
  * Verificar usuario por credenciales - Compatible con cualquier estructura
@@ -174,9 +150,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 // Verificar si hay una sesión activa
                 $user = obtenerUsuarioSesion();
                 if ($user) {
-                    responderJSON(true, $user, 'Usuario autenticado');
+                    ApiResponse::success($user, ['message' => 'Usuario autenticado']);
                 } else {
-                    responderJSON(false, null, 'No hay sesión activa');
+                    ApiResponse::error('No hay sesión activa');
                 }
                 break;
                 
@@ -184,14 +160,14 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 // Obtener datos del usuario actual
                 $user = obtenerUsuarioSesion();
                 if ($user) {
-                    responderJSON(true, $user, 'Datos de usuario obtenidos');
+                    ApiResponse::success($user, ['message' => 'Datos de usuario obtenidos']);
                 } else {
-                    responderJSON(false, null, 'Usuario no autenticado');
+                    ApiResponse::error('Usuario no autenticado');
                 }
                 break;
                 
             default:
-                responderJSON(false, null, 'Acción no válida');
+                ApiResponse::error('Acción no válida');
         }
         break;
         
@@ -201,7 +177,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         switch ($action) {
             case 'login':
                 if (!isset($input['email']) || !isset($input['password'])) {
-                    responderJSON(false, null, 'Email y contraseña requeridos');
+                    ApiResponse::error('Email y contraseña requeridos');
                 }
                 
                 $user = verificarCredenciales($input['email'], $input['password']);
@@ -209,7 +185,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 if ($user) {
                     // Verificar si hay error de aprobación
                     if (isset($user['error']) && $user['error'] === 'account_not_approved') {
-                        responderJSON(false, null, $user['message'], ['error_type' => 'account_not_approved']);
+                        ApiResponse::error($user['message'], 403, ['error_type' => 'account_not_approved']);
                     } else {
                         // Usuario aprobado - iniciar sesión
                         iniciarSesion($user);
@@ -276,10 +252,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                             $extraData['expires_in'] = 900; // 15 minutos
                         }
                         
-                        responderJSON(true, $responseData, 'Login exitoso', $extraData);
+                        ApiResponse::success($responseData, array_merge(['message' => 'Login exitoso'], $extraData));
                     }
                 } else {
-                    responderJSON(false, null, 'Credenciales incorrectas');
+                    ApiResponse::error('Credenciales incorrectas');
                 }
                 break;
                 
@@ -330,16 +306,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 
                 // Responder con información de revocación
                 $extraData = $tokenRevoked ? ['token_revoked' => true] : [];
-                responderJSON(true, null, 'Logout exitoso', $extraData);
+                ApiResponse::success(null, array_merge(['message' => 'Logout exitoso'], $extraData));
                 break;
                 
             default:
-                responderJSON(false, null, 'Acción no válida');
+                ApiResponse::error('Acción no válida');
         }
         break;
         
     default:
         http_response_code(405);
-        responderJSON(false, null, 'Método no permitido');
+        ApiResponse::error('Método no permitido');
 }
 ?>

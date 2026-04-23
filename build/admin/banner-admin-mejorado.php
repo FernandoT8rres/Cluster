@@ -831,8 +831,8 @@ try {
                                     // Verificar si el archivo existe físicamente
                                     $rutaFisica = __DIR__ . '/../' . $imagenUrl;
                                     if (file_exists($rutaFisica)) {
-                                        // Para el navegador, usar ruta absoluta incluyendo /build/
-                                        $imagenUrl = '/build/' . $imagenUrl;
+                                        // Para el navegador, usar ruta absoluta desde la raíz de Hostinger
+                                        $imagenUrl = '/' . ltrim($imagenUrl, '/');
                                     } else {
                                         // Usar imagen por defecto si no existe
                                         $imagenUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBlbmNvbnRyYWRhPC90ZXh0Pjwvc3ZnPg==';
@@ -1047,7 +1047,7 @@ try {
             if (banner.imagen_url) {
                 let imageUrl = banner.imagen_url;
                 if (!imageUrl.startsWith('http')) {
-                    imageUrl = '/build/' + imageUrl;
+                    imageUrl = '/' + imageUrl.replace(/^\//, '');
                 }
                 document.getElementById('imagePreview').style.backgroundImage = 'url(' + imageUrl + ')';
                 document.getElementById('previewContainer').classList.remove('hidden');

@@ -28,9 +28,9 @@ class Database {
         $this->config = [
             'host'     => EnvLoader::get('DB_HOST', '127.0.0.1'),
             'port'     => EnvLoader::get('DB_PORT', 3306),
-            'username' => EnvLoader::get('DB_USER', 'u695712029_claut_fer'),
-            'password' => EnvLoader::get('DB_PASS', 'CLAUT@admin_fernando!7'),
-            'database' => EnvLoader::get('DB_NAME', 'u695712029_claut_intranet')
+            'username' => EnvLoader::get('DB_USER', ''),
+            'password' => EnvLoader::get('DB_PASS', ''),
+            'database' => EnvLoader::get('DB_NAME', '')
         ];
     }
     
@@ -66,13 +66,75 @@ class Database {
     public function isUsingRemoteDB() { return true; }
     public function isUsingSQLite() { return false; }
     
-    public function getEnvironmentInfo() {
-        return [
-            'using_remote' => true,
-            'using_sqlite' => false,
-            'server_name'  => $_SERVER['SERVER_NAME'] ?? 'unknown',
-            'http_host'    => $_SERVER['HTTP_HOST'] ?? 'unknown'
-        ];
+    /**
+     * Métodos de utilidad unificados (Senior Helpers)
+     * Estos métodos permiten al sistema actuar sobre cualquier API con una sintaxis limpia.
+     */
+    public function select($sql, $params = []) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("❌ Error en SELECT: " . $e->getMessage());
+            throw new Exception("Error al realizar la consulta.");
+        }
+    }
+    
+    public function selectOne($sql, $params = []) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetch();
+        } catch (PDOException $e) {
+            error_log("❌ Error en SELECT_ONE: " . $e->getMessage());
+            throw new Exception("Error al obtener el registro.");
+        }
+    }
+    
+    public function insert($sql, $params = []) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            if ($stmt->execute($params)) {
+                return $this->connection->lastInsertId();
+            }
+            return false;
+        } catch (PDOException $e) {
+            error_log("❌ Error en INSERT: " . $e->getMessage());
+            throw new Exception("Error al insertar el registro.");
+        }
+    }
+    
+    public function update($sql, $params = []) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            error_log("❌ Error en UPDATE: " . $e->getMessage());
+            throw new Exception("Error al actualizar el registro.");
+        }
+    }
+    
+    public function delete($sql, $params = []) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            error_log("❌ Error en DELETE: " . $e->getMessage());
+            throw new Exception("Error al eliminar el registro.");
+        }
+    }
+
+    public function execute($sql, $params = []) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            return $stmt->execute($params);
+        } catch (PDOException $e) {
+            error_log("❌ Error en EXECUTE: " . $e->getMessage());
+            throw new Exception("Error al ejecutar la operación.");
+        }
     }
 }
 ?>

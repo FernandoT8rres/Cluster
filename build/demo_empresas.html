@@ -8,296 +8,161 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .modal-backdrop {
-            backdrop-filter: blur(5px);
-        }
-
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-            }
-
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        .company-logo {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-        }
-
-        /* Porsche-inspired Design System */
+        /* Porsche Elite Global Styles */
         :root {
-            /* Primary Colors - Inspired by Porsche */
-            --porsche-black: #1a1a1a;
-            --porsche-charcoal: #2d2d2d;
-            --porsche-silver: #8a8a8a;
-            --porsche-white: #ffffff;
-            --porsche-light-gray: #f5f5f5;
-            --porsche-accent: #c9302c;
-            /* Typography */
-            --porsche-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --porsche-radius-lg: 12px;
+            --porsche-red: #C7252B;
+            --porsche-dark: #0f0f0f;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-light: rgba(255, 255, 255, 0.15);
+            --glass-hover: rgba(255, 255, 255, 0.07);
         }
 
-        /* === RESPONSIVE SIDEBAR FUNCTIONALITY === */
+        body {
+            background-color: var(--porsche-dark) !important;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(199, 37, 43, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(199, 37, 43, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #e5e7eb;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
 
-        /* Porsche-inspired Sidebar */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: var(--glass-border-light);
+            background: var(--glass-hover);
+            transform: translateY(-2px);
+        }
+
+        input, select, textarea {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: white !important;
+            border-radius: 12px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--porsche-red) !important;
+            box-shadow: 0 0 0 2px rgba(199, 37, 43, 0.2) !important;
+            outline: none !important;
+        }
+
+        /* Sidebar Styles */
         .porsche-sidebar {
-            background: linear-gradient(180deg, var(--porsche-black) 0%, var(--porsche-charcoal) 100%) !important;
-            border-radius: var(--porsche-radius-lg) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
-            height: calc(100vh - 2rem) !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            font-family: var(--porsche-font) !important;
-        }
-
-        .porsche-sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .porsche-sidebar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .porsche-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-        }
-
-        .porsche-sidebar .porsche-logo {
-            color: var(--porsche-white) !important;
-            font-weight: 700 !important;
-            font-size: 1.5rem !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border) !important;
+            z-index: 1000;
         }
 
         .porsche-nav-item {
-            color: rgba(255, 255, 255, 0.8) !important;
             border-radius: 12px !important;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            font-weight: 500 !important;
-        }
-
-        .porsche-nav-item:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
-            color: var(--porsche-white) !important;
-            transform: translateX(4px) !important;
+            margin: 4px 16px !important;
+            transition: all 0.3s ease !important;
         }
 
         .porsche-nav-item.active {
-            background: rgba(199, 37, 43, 0.2) !important;
-            color: var(--porsche-white) !important;
-            border-left: 3px solid #C7252B !important;
+            background: linear-gradient(90deg, rgba(199, 37, 43, 0.1) 0%, transparent 100%) !important;
+            border-left: 3px solid var(--porsche-red) !important;
+            color: white !important;
         }
 
-        /* Sidebar Overlay */
-        .sidenav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .porsche-nav-item:hover {
+            background: var(--glass-hover) !important;
+        }
+
+        /* Table Styles */
+        .porsche-table {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 998;
-            backdrop-filter: blur(4px);
+            border-collapse: separate;
+            border-spacing: 0 8px;
         }
 
-        .sidenav-overlay.show {
-            opacity: 1;
-            visibility: visible;
-            z-index: 998;
-        }
-
-        /* Close button styling */
-        #sidebarCloseBtn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+        .porsche-table tr {
+            background: rgba(255, 255, 255, 0.02);
             transition: all 0.3s ease;
         }
 
-        #sidebarCloseBtn:hover {
+        .porsche-table tr:hover {
+            background: var(--glass-hover);
+        }
+
+        .porsche-table td, .porsche-table th {
+            padding: 1rem 1.5rem;
+        }
+
+        .porsche-table tr td:first-child { border-radius: 12px 0 0 12px; }
+        .porsche-table tr td:last-child { border-radius: 0 12px 12px 0; }
+
+        .company-logo {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 4px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        ::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Review Frame Style */
+        .review-frame {
+            border: 1px solid rgba(199, 37, 43, 0.3);
+            background: rgba(199, 37, 43, 0.02);
         }
 
-        /* Sidebar always retractable - All screens */
+        .diff-added { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
+        .diff-removed { background: rgba(239, 44, 44, 0.1); color: #f87171; }
+
+        /* Responsive Sidebar Fixes */
         .porsche-sidebar {
-            transform: translateX(-100%) !important;
-            z-index: 999 !important;
-            margin: 0 !important;
-            top: 0 !important;
-            left: 0 !important;
-            border-radius: 0 !important;
-            width: 280px !important;
-            max-width: 280px !important;
-            height: 100vh !important;
-            position: fixed !important;
-            display: block !important;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .porsche-sidebar.sidenav-show {
-            transform: translateX(0) !important;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        
+        /* Mobile and Tablet: Hidden by default, shown via sidenav-show */
+        @media (max-width: 1279px) {
+            .porsche-sidebar { transform: translateX(-100%); }
+            .porsche-sidebar.sidenav-show { transform: translateX(0); }
+            .main-content { margin-left: 0; }
         }
-
-        /* Main content always without sidebar margin */
-        .main-content {
-            margin-left: 0 !important;
-            width: 100% !important;
-        }
-
-        .container {
-            margin-left: 0 !important;
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }
-
-        /* Desktop adjustments */
+        
+        /* Desktop: Shown by default, properly pushes main content */
         @media (min-width: 1280px) {
-            .container {
-                padding-left: 2rem !important;
-                padding-right: 2rem !important;
+            .porsche-sidebar { transform: translateX(0); }
+            /* If admin wants to close it on desktop, hide via class */
+            .porsche-sidebar.sidenav-hidden { transform: translateX(-100%); }
+            
+            .main-content { 
+                margin-left: 256px; /* max-w-64 = 16rem = 256px */
+                transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
+            .main-content.expanded { margin-left: 0; }
         }
 
-        /* Force sidebar behavior on all screens - Override any conflicting styles */
-        .porsche-sidebar.sidebar-enhanced {
-            transform: translateX(-100%) !important;
-        }
-
-        .porsche-sidebar.sidebar-enhanced.sidenav-show {
-            transform: translateX(0) !important;
-        }
-
-        /* Override any Tailwind classes that might interfere */
-        aside.porsche-sidebar {
-            left: 0 !important;
-            margin-left: 0 !important;
-        }
-
-        /* Ensure hamburger button works on all screens */
+        /* Adjust close button visibility if needed */
         @media (min-width: 1280px) {
-            [sidenav-trigger] {
-                display: block !important;
-                visibility: visible !important;
-            }
-        }
-
-        /* Enhanced sidebar behavior for desktop */
-        @media (min-width: 1280px) {
-            .sidebar-enhanced {
-                transform: translateX(0) !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
-        }
-
-        /* Responsive grid adjustments */
-        @media (max-width: 768px) {
-            header .flex {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-            }
-
-            header .flex.items-center.space-x-4 {
-                margin-top: 1rem !important;
-                align-self: flex-end !important;
-            }
-
-            .grid {
-                grid-template-columns: 1fr !important;
-            }
-
-            .overflow-x-auto table {
-                font-size: 0.75rem !important;
-            }
-
-            .overflow-x-auto th,
-            .overflow-x-auto td {
-                padding: 0.5rem !important;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .porsche-sidebar {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-
-            header .container {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-            }
-
-            .flex.flex-wrap {
-                flex-direction: column !important;
-                gap: 1rem !important;
-            }
-
-            .flex.items-center.space-x-4 {
-                flex-direction: column !important;
-                align-items: stretch !important;
-                space-x: 0 !important;
-                gap: 0.5rem !important;
-            }
-
-            .flex.items-center.space-x-4>* {
-                margin: 0 !important;
-            }
-
-            .grid-cols-1 {
-                grid-template-columns: 1fr !important;
-            }
-        }
-
-        /* Ensure proper z-index hierarchy */
-        .porsche-sidebar {
-            z-index: 999 !important;
-        }
-
-        .sidenav-overlay {
-            z-index: 998 !important;
-        }
-
-        header {
-            z-index: 997 !important;
-        }
-
-        .main-content {
-            z-index: 1 !important;
-        }
-
-        /* Hamburger button styling */
-        .hamburger-btn {
-            transition: all 0.3s ease;
-        }
-
-        .hamburger-btn:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
-        }
-
-        /* Responsive table improvements */
-        @media (max-width: 768px) {
-            .overflow-x-auto {
-                overflow-x: auto;
-            }
-
-            table {
-                min-width: 800px;
-            }
+            #sidebarCloseBtn { display: block !important; }
         }
     </style>
 </head>
@@ -347,11 +212,11 @@
                 <!-- admin panel -->
                 <li class="mt-2 w-full">
                     <a class="porsche-nav-item py-2.5 text-sm ease-nav-brand my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg"
-                        href="admin-panel.html?login=success">
+                        href="./admin-panel.html?login=success">
                         <div class="shadow-md mr-3 flex h-8 w-8 items-center justify-center rounded-lg bg-white">
-                            <i class="fas fa-tachometer-alt text-green-500"></i>
+                            <i class="fas fa-tachometer-alt text-red-600"></i>
                         </div>
-                        <span class="ml-1 duration-300 opacity-100">Panel Administrador</span>
+                        <span class="ml-1 duration-300 opacity-100 font-bold">Admin Panel Elite</span>
                     </a>
                 </li>
 
@@ -469,141 +334,157 @@
 
     </aside>
 
-    <!-- Header -->
-    <header class="main-content bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg"
-        style="background: linear-gradient(135deg, #C7252B 0%, #A01E24 100%);">
-        <div class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center">
-                    <!-- Hamburger Menu Button for All Screens -->
-                    <button
-                        class="mr-3 p-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white/20 rounded-md hamburger-btn"
-                        id="hamburgerBtn" sidenav-trigger aria-label="Abrir menú de navegación">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
+    <!-- Header Elite -->
+    <header class="main-content relative overflow-hidden mb-8">
+        <div class="absolute inset-0 bg-gradient-to-r from-red-900/20 to-transparent"></div>
+        <div class="container mx-auto px-6 py-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="flex items-center gap-4">
+                    <button class="p-3 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer" 
+                            id="hamburgerBtn" sidenav-trigger>
+                        <i class="fas fa-bars text-xl text-white"></i>
                     </button>
                     <div>
-                        <h1 class="text-3xl font-bold">🏢 Administrador de Empresas</h1>
-                        <p class="text-red-200 mt-1">CRUD Completo - Gestión de Convenios</p>
+                        <h1 class="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+                            <span class="p-2 bg-red-600 rounded-lg"><i class="fas fa-building text-white"></i></span>
+                            Gestión de Empresas
+                        </h1>
+                        <p class="text-gray-400 mt-1 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Panel de Control Administrativo
+                        </p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span id="userInfo" class="text-sm"></span>
+                <div class="flex items-center gap-4">
+                    <div id="userInfoPlaceholder"></div>
                     <button onclick="location.href='empresas-convenio.html'"
-                        class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition">
-                        <i class="fas fa-arrow-left mr-2"></i>Volver a Empresas
+                        class="px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 text-sm font-medium">
+                        <i class="fas fa-arrow-left text-red-500"></i> Directorio Público
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Estadísticas -->
-    <div class="main-content container mx-auto px-4 py-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">Total Empresas</p>
-                        <p class="text-2xl font-bold text-gray-800" id="totalEmpresas">0</p>
+    <!-- Estadísticas Elite -->
+    <div class="main-content container mx-auto px-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-blue-500/10 rounded-xl"><i class="fas fa-building text-blue-500 text-xl"></i></div>
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total</span>
+                </div>
+                <p class="text-3xl font-extrabold text-white" id="totalEmpresas">0</p>
+                <p class="text-xs text-gray-500 mt-2">Empresas registradas</p>
+            </div>
+            <div class="glass-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-green-500/10 rounded-xl"><i class="fas fa-check-circle text-green-500 text-xl"></i></div>
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Activas</span>
+                </div>
+                <p class="text-3xl font-extrabold text-white" id="empresasActivas">0</p>
+                <p class="text-xs text-gray-500 mt-2">En operación actual</p>
+            </div>
+            <div class="glass-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-yellow-500/10 rounded-xl"><i class="fas fa-star text-yellow-500 text-xl"></i></div>
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Destacadas</span>
+                </div>
+                <p class="text-3xl font-extrabold text-white" id="destacadasEmpresas">0</p>
+                <p class="text-xs text-gray-500 mt-2">Membresía premium</p>
+            </div>
+            <div class="glass-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-purple-500/10 rounded-xl"><i class="fas fa-percentage text-purple-500 text-xl"></i></div>
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Convenios</span>
+                </div>
+                <p class="text-3xl font-extrabold text-white" id="descuentosEmpresas">0</p>
+                <p class="text-xs text-gray-500 mt-2">Con beneficios activos</p>
+            </div>
+        </div> <!-- fin del grid de stats -->
+
+        <!-- Solicitudes Pendientes Elite (Siempre visible) -->
+        <div id="solicitudesSection" class="glass-card p-6 mb-8 border-l-4 border-l-yellow-500 overflow-hidden relative mt-8">
+            <div class="absolute top-0 right-0 p-8 opacity-5">
+                <i class="fas fa-bell text-9xl"></i>
+            </div>
+            <div class="flex items-center justify-between mb-6 relative z-10">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-envelope-open-text text-yellow-500 text-xl"></i>
                     </div>
-                    <i class="fas fa-building text-3xl text-red-500" style="color: #C7252B;"></i>
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Solicitudes de Cambio</h2>
+                        <p class="text-gray-400 text-sm">Revisiones pendientes de socios</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="solicitudesBadge" class="px-3 py-1 bg-yellow-500 text-black text-xs font-bold rounded-full">0</span>
+                    <button onclick="if(window.adminEmpresas) window.adminEmpresas.cargarSolicitudes()" 
+                            class="p-2 hover:bg-white/10 rounded-lg transition-all text-gray-400" title="Recargar solicitudes">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                 </div>
             </div>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">Activas</p>
-                        <p class="text-2xl font-bold text-green-600" id="empresasActivas">0</p>
-                    </div>
-                    <i class="fas fa-check-circle text-3xl text-green-500"></i>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">Destacadas</p>
-                        <p class="text-2xl font-bold text-yellow-600" id="destacadasEmpresas">0</p>
-                    </div>
-                    <i class="fas fa-star text-3xl text-yellow-500"></i>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 text-sm">Con Descuentos</p>
-                        <p class="text-2xl font-bold text-purple-600" id="descuentosEmpresas">0</p>
-                    </div>
-                    <i class="fas fa-percentage text-3xl text-purple-500"></i>
+            <div id="solicitudesContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10">
+                <!-- Placeholder inicial -->
+                <div id="solicitudesPlaceholder" class="col-span-2 text-center py-8 text-gray-500">
+                    <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                    <p class="text-sm">Cargando solicitudes pendientes...</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Solicitudes Pendientes -->
-        <div id="solicitudesSection" class="bg-white rounded-lg shadow p-4 mb-6 hidden">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
-                    <i class="fas fa-bell text-yellow-500 mr-2"></i>
-                    Solicitudes Pendientes
-                    <span id="solicitudesBadge"
-                        class="ml-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">0</span>
-                </h2>
-                <button onclick="if(window.adminEmpresas) window.adminEmpresas.cargarSolicitudes()"
-                    class="text-gray-600 hover:text-gray-800">
-                    <i class="fas fa-sync-alt"></i>
+        <!-- Controles Elite — Layout en 2 Filas para evitar encimamiento -->
+        <div class="glass-card p-6 mb-8">
+            <!-- Fila 1: Botones de Acción -->
+            <div class="flex flex-wrap items-center gap-3 mb-5 pb-5 border-b border-white/10">
+                <button id="btnAgregarEmpresa" class="px-6 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-bold flex items-center gap-2 shadow-lg shadow-red-900/20">
+                    <i class="fas fa-plus"></i> Crear Nueva Empresa
                 </button>
+                <button onclick="if(window.adminEmpresas) window.adminEmpresas.cargarEmpresas()"
+                    class="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-sync-alt text-blue-500"></i> Actualizar
+                </button>
+                <button id="btnExportar"
+                        class="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-file-export text-green-500"></i> Exportar JSON
+                </button>
+                <div class="ml-auto flex items-center gap-2">
+                    <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Total:</span>
+                    <span id="totalEnTabla" class="text-sm font-bold text-white bg-white/10 px-3 py-1 rounded-full">0</span>
+                </div>
             </div>
-            <div id="solicitudesContainer">
-                <!-- Solicitudes will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Controles -->
-
-        <div class="bg-white rounded-lg shadow p-4 mb-6">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center space-x-4">
-                    <button id="btnAgregarEmpresa" class="text-white px-4 py-2 rounded-lg hover:opacity-90 transition"
-                        style="background: #C7252B;">
-                        <i class="fas fa-plus mr-2"></i>Crear Empresa
-                    </button>
-                    <button onclick="if(window.adminEmpresas) window.adminEmpresas.cargarEmpresas()"
-                        class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
-                    </button>
+            <!-- Fila 2: Búsqueda y Filtros -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar empresa..."
+                        class="w-full pl-11 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition-all">
                 </div>
 
-                <div class="flex items-center space-x-4">
-                    <input type="text" id="searchInput" placeholder="Buscar empresas..."
-                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                <select id="filterCategoria" class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white cursor-pointer focus:outline-none focus:border-red-500 transition-all">
+                    <option value="">Todos los sectores</option>
+                    <option value="Automotriz">Automotriz</option>
+                    <option value="Tecnología">Tecnología</option>
+                    <option value="Logística">Logística</option>
+                    <option value="Manufactura">Manufactura</option>
+                    <option value="Servicios">Servicios</option>
+                </select>
 
-                    <select id="filterCategoria"
-                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                        <option value="">Todas las categorías</option>
-                        <option value="Automotriz">Automotriz</option>
-                        <option value="Tecnología">Tecnología</option>
-                        <option value="Logística">Logística</option>
-                        <option value="Manufactura">Manufactura</option>
-                        <option value="Servicios">Servicios</option>
-                    </select>
+                <select id="filtroEstado" class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white cursor-pointer focus:outline-none focus:border-red-500 transition-all">
+                    <option value="">Todos los estados</option>
+                    <option value="activa">✅ Activa</option>
+                    <option value="inactiva">❌ Inactiva</option>
+                    <option value="pendiente">🟠 Pendiente</option>
+                </select>
 
-                    <select id="filtroEstado"
-                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                        <option value="">Todos los estados</option>
-                        <option value="activa">Activa</option>
-                        <option value="inactiva">Inactiva</option>
-                        <option value="pendiente">Pendiente</option>
-                    </select>
-
-                    <select id="filterDestacado"
-                        class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
-                        <option value="">Todos</option>
-                        <option value="1">Destacado</option>
-                        <option value="0">No destacado</option>
-                    </select>
-                </div>
+                <select id="filterDestacado" class="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white cursor-pointer focus:outline-none focus:border-red-500 transition-all">
+                    <option value="">Toda visibilidad</option>
+                    <option value="1">⭐ Destacadas</option>
+                    <option value="0">Normales</option>
+                </select>
             </div>
         </div>
 
@@ -611,240 +492,338 @@
 
 
 
-        <!-- Tabla de Empresas -->
-        <div class="bg-white rounded-lg shadow overflow-hidden">
+        <!-- Tabla de Empresas Elite -->
+        <div class="glass-card overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
+                <table class="porsche-table min-w-full">
+                    <thead class="text-xs uppercase tracking-wider text-gray-500 border-b border-white/5 bg-white/2">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Empresa</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Categoría</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Contacto</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Descuento</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Estado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Usuario Asignado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Acciones</th>
+                            <th class="text-left">Empresa</th>
+                            <th class="text-left">Contacto</th>
+                            <th class="text-left">Estado</th>
+                            <th class="text-left">Descuento</th>
+                            <th class="text-left">Usuario Asignado</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="empresasTableBody" class="bg-white divide-y divide-gray-200">
+                    <tbody id="empresasTableBody" class="divide-y divide-white/2">
                         <!-- Las empresas se cargarán aquí -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Loading State -->
-            <div id="loadingState" class="hidden p-8 text-center">
-                <i class="fas fa-spinner fa-spin text-4xl" style="color: #C7252B;"></i>
-                <p class="mt-4 text-gray-600">Cargando empresas...</p>
+            <div id="loadingState" class="hidden p-20 text-center">
+                <div class="inline-block p-4 rounded-full bg-red-500/10 mb-4">
+                    <i class="fas fa-circle-notch fa-spin text-4xl text-red-500"></i>
+                </div>
+                <p class="text-gray-400 font-medium">Sincronizando con el servidor...</p>
             </div>
 
             <!-- Empty State -->
-            <div id="emptyState" class="hidden p-8 text-center">
-                <i class="fas fa-building text-4xl text-gray-400"></i>
-                <p class="mt-4 text-gray-600">No se encontraron empresas</p>
+            <div id="emptyState" class="hidden p-20 text-center">
+                <div class="p-6 bg-white/5 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-3xl text-gray-600"></i>
+                </div>
+                <p class="text-gray-400 font-medium tracking-tight">No se encontraron registros</p>
+                <p class="text-sm text-gray-600 mt-1">Prueba ajustando los filtros de búsqueda</p>
             </div>
         </div>
     </div>
 
-    <!-- Modal compatible con admin-empresas.js -->
-    <div id="modalEmpresa"
-        class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 id="modalTitulo" class="text-lg font-medium text-gray-900">Agregar Empresa</h3>
-                <button id="btnCerrarModal" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
+    <!-- Modal de Empresa Elite -->
+    <div id="modalEmpresa" class="fixed inset-0 z-[1200] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-2xl"></div>
+        <div class="glass-card max-w-5xl w-full max-h-[88vh] flex flex-col relative z-10 border-white/20 shadow-porsche">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5 shrink-0 rounded-t-[1.3rem]">
+                <h3 id="modalTitulo" class="text-xl font-bold text-white flex items-center gap-3">
+                    <i class="fas fa-building text-red-600"></i> Gestión de Empresa
+                </h3>
+                <button id="btnCerrarModal" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
                 </button>
             </div>
-            <div class="p-6">
-                <form id="formEmpresa" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Información Básica -->
-                        <div class="space-y-4">
-                            <h4 class="text-md font-semibold text-gray-900 border-b pb-2">Información Básica</h4>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la Empresa
-                                    *</label>
-                                <input type="text" id="nombre" name="nombre" required
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
+            
+            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar min-h-0 bg-white/2">
+                <form id="formEmpresa" class="space-y-8">
+                    <!-- Sección 1: Datos del Directorio -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-10 w-1 bg-red-600 rounded-full"></div>
+                            <h4 class="text-lg font-bold text-white tracking-tight uppercase">I. Datos del Directorio</h4>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="md:col-span-2 lg:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Nombre de la Empresa</label>
+                                <input type="text" id="nombre" name="nombre" required class="w-full px-4 py-3" placeholder="Ej: Porsche de México">
                             </div>
-
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Sector</label>
-                                <select id="sector" name="sector"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Estado del Registro</label>
+                                <select id="estado" name="estado" class="w-full px-4 py-3">
+                                    <option value="activa">✅ Activa</option>
+                                    <option value="inactiva">❌ Inactiva</option>
+                                    <option value="pendiente">🟠 Pendiente</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Sector Industrial</label>
+                                <select id="sector" name="sector" class="w-full px-4 py-3">
                                     <option value="">Seleccionar sector</option>
+                                    <option value="Automotriz">Automotriz</option>
                                     <option value="Tecnología">Tecnología</option>
                                     <option value="Salud">Salud</option>
-                                    <option value="Educación">Educación</option>
-                                    <option value="Finanzas">Finanzas</option>
-                                    <option value="Comercio">Comercio</option>
-                                    <option value="Servicios">Servicios</option>
+                                    <option value="Logística">Logística</option>
                                     <option value="Manufactura">Manufactura</option>
-                                    <option value="Deportes y Bienestar">Deportes y Bienestar</option>
-                                    <option value="Alimentación">Alimentación</option>
                                     <option value="Otros">Otros</option>
                                 </select>
                             </div>
-
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                                <select id="estado" name="estado"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                                    <option value="activa">Activa</option>
-                                    <option value="inactiva">Inactiva</option>
-                                    <option value="pendiente">Pendiente</option>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Entidad Federativa</label>
+                                <select id="entidad_federativa" name="entidad_federativa" class="w-full px-4 py-3">
+                                    <option value="">Seleccionar estado</option>
+                                    <option value="Ciudad de México">Ciudad de México</option>
+                                    <option value="Estado de México">Estado de México</option>
+                                    <option value="Nuevo León">Nuevo León</option>
+                                    <option value="Jalisco">Jalisco</option>
+                                    <option value="Querétaro">Querétaro</option>
+                                    <option value="Hidalgo">Hidalgo</option>
                                 </select>
                             </div>
-
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Usuario Asignado</label>
-                                <select id="admin_usuario_id" name="admin_usuario_id"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                                    <option value="">Seleccionar Usuario Asignado...</option>
+                                <label class="block text-[10px] font-black text-red-600 uppercase mb-2 tracking-tighter">Socio Responsable (Asignación)</label>
+                                <select id="admin_usuario_id" name="admin_usuario_id" class="w-full px-4 py-3 bg-red-600/5 border border-red-600/20 text-white rounded-xl focus:border-red-600 transition-all font-black text-xs">
+                                    <option value="">Cargando socios...</option>
                                 </select>
-                                <p class="text-xs text-gray-500 mt-1">Este usuario tendrá permisos para auto-gestionar
-                                    la empresa en su perfil.</p>
                             </div>
-
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
-                                <div class="space-y-3">
-                                    <!-- Subir archivo -->
-                                    <div>
-                                        <label class="text-sm font-medium text-gray-600">Subir imagen:</label>
-                                        <input type="file" id="logo_file" name="logo_file" accept="image/*"
-                                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                                    </div>
-                                    <!-- O usar URL -->
-                                    <div>
-                                        <label class="text-sm font-medium text-gray-600">O usar URL:</label>
-                                        <input type="url" id="logo_url" name="logo_url" placeholder="https://ejemplo.com/logo.jpg"
-                                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                                    </div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Municipio</label>
+                                <input type="text" id="municipio" name="municipio" class="w-full px-4 py-3" placeholder="Ej: Tlalnepantla">
+                            </div>
+                            <div class="lg:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Dirección Fiscal / Operativa</label>
+                                <input type="text" id="direccion" name="direccion" class="w-full px-4 py-3" placeholder="Calle, número, colonia...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">¿Exporta?</label>
+                                <select id="exporta" name="exporta" class="w-full px-4 py-3">
+                                    <option value="0">No</option>
+                                    <option value="1">Sí</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2 lg:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Descripción de Productos y Servicios</label>
+                                <textarea id="descripcion" name="descripcion" rows="3" class="w-full px-4 py-3" placeholder="Describe brevemente la actividad de la empresa..."></textarea>
+                            </div>
+                            <div class="lg:col-span-1">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Certificaciones (Opcional)</label>
+                                <textarea id="certificaciones" name="certificaciones" rows="3" class="w-full px-4 py-3" placeholder="Ej: ISO 9001, IATF 16949..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Contacto Digital -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Sitio Web</label>
+                                <div class="relative">
+                                    <i class="fas fa-globe absolute left-4 top-1/2 -translate-y-1/2 text-gray-600"></i>
+                                    <input type="url" id="sitio_web" name="sitio_web" class="w-full pl-11 pr-4 py-3" placeholder="https:// ...">
                                 </div>
-                                <div id="logoPreview" class="mt-2 hidden">
-                                    <img id="logoImg" src="" alt="Preview" class="h-20 w-auto border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Email Corporativo</label>
+                                <div class="relative">
+                                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-600"></i>
+                                    <input type="email" id="email" name="email" class="w-full pl-11 pr-4 py-3" placeholder="info@empresa.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Teléfono General</label>
+                                <div class="relative">
+                                    <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-600"></i>
+                                    <input type="tel" id="telefono" name="telefono" class="w-full pl-11 pr-4 py-3" placeholder="55 ...">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Contacto -->
-                        <div class="space-y-4">
-                            <h4 class="text-md font-semibold text-gray-900 border-b pb-2">Información de Contacto</h4>
-
+                        <!-- Sección Redes Sociales -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 p-4 bg-white/5 rounded-2xl border border-white/5">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Persona de Contacto</label>
-                                <input type="text" id="contacto_persona" name="contacto_persona" placeholder="Nombre del contacto principal"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Facebook</label>
+                                <div class="relative">
+                                    <i class="fab fa-facebook absolute left-4 top-1/2 -translate-y-1/2 text-blue-500"></i>
+                                    <input type="url" id="redes_fb" name="redes_fb" class="w-full pl-11 pr-4 py-2 text-xs" placeholder="URL Facebook">
+                                </div>
                             </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">X (Twitter)</label>
+                                <div class="relative">
+                                    <i class="fab fa-x-twitter absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                    <input type="url" id="redes_x" name="redes_x" class="w-full pl-11 pr-4 py-2 text-xs" placeholder="URL X">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">LinkedIn</label>
+                                <div class="relative">
+                                    <i class="fab fa-linkedin absolute left-4 top-1/2 -translate-y-1/2 text-blue-400"></i>
+                                    <input type="url" id="redes_linkedin" name="redes_linkedin" class="w-full pl-11 pr-4 py-2 text-xs" placeholder="URL LinkedIn">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Instagram</label>
+                                <div class="relative">
+                                    <i class="fab fa-instagram absolute left-4 top-1/2 -translate-y-1/2 text-pink-500"></i>
+                                    <input type="url" id="redes_instagram" name="redes_instagram" class="w-full pl-11 pr-4 py-2 text-xs" placeholder="URL Instagram">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <!-- Sección: Registro de Usuario (Quien inicia el registro) -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-10 w-1 bg-amber-600 rounded-full"></div>
+                            <h4 class="text-lg font-bold text-white tracking-tight uppercase">Información de Registro</h4>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Nombres (Registro)</label>
+                                <input type="text" id="usuario_registro_nombre" name="usuario_registro_nombre" class="w-full px-4 py-3" placeholder="Nombre de quien registra">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Apellidos (Registro)</label>
+                                <input type="text" id="usuario_registro_apellido" name="usuario_registro_apellido" class="w-full px-4 py-3" placeholder="Apellidos">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Departamento</label>
+                                <input type="text" id="departamento" name="departamento" class="w-full px-4 py-3" placeholder="Ej: Recursos Humanos">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Cargo</label>
+                                <input type="text" id="cargo" name="cargo" class="w-full px-4 py-3" placeholder="Ej: Gerente General">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 2: Persona de Contacto -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-10 w-1 bg-blue-600 rounded-full"></div>
+                            <h4 class="text-lg font-bold text-white tracking-tight uppercase">II. Persona de Contacto</h4>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="lg:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Nombre Completo</label>
+                                <input type="text" id="contacto_persona" name="contacto_persona" class="w-full px-4 py-3">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Cargo</label>
+                                <input type="text" id="contacto_cargo" name="contacto_cargo" class="w-full px-4 py-3">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Email Directo</label>
+                                <input type="email" id="contacto_email" name="contacto_email" class="w-full px-4 py-3" placeholder="contacto@empresa.com">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Teléfono Directo</label>
+                                <input type="tel" id="contacto_telefono" name="contacto_telefono" class="w-full px-4 py-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 3: Convenios -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-10 w-1 bg-green-600 rounded-full"></div>
+                            <h4 class="text-lg font-bold text-white tracking-tight uppercase">III. Convenio Clúster</h4>
+                        </div>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Descripción del Beneficio</label>
+                                <textarea id="convenio_descripcion" name="convenio_descripcion" rows="2" class="w-full px-4 py-3"></textarea>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">% Descuento</label>
+                                <input type="number" id="descuento_porcentaje" name="descuento_porcentaje" class="w-full px-4 py-3">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Inicio Vigencia</label>
+                                <input type="date" id="vigencia_inicio" name="vigencia_inicio" class="w-full px-4 py-3">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Fin Vigencia</label>
+                                <input type="date" id="vigencia_fin" name="vigencia_fin" class="w-full px-4 py-3">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">WhatsApp / Móvil Convenio</label>
+                                <input type="tel" id="contacto_movil" name="contacto_movil" class="w-full px-4 py-3" placeholder="WhatsApp">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Términos y Condiciones</label>
+                                <textarea id="condiciones" name="condiciones" rows="2" class="w-full px-4 py-3" placeholder="Restricciones, condiciones de uso..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Identidad Visual -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="h-10 w-1 bg-purple-600 rounded-full"></div>
+                            <h4 class="text-lg font-bold text-white tracking-tight uppercase">IV. Identidad Visual</h4>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                            <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono de
-                                        Contacto</label>
-                                    <input type="tel" id="contacto_telefono" name="contacto_telefono" placeholder="Teléfono principal"
-                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo de
-                                        Contacto</label>
-                                    <input type="email" id="contacto_email" name="contacto_email" placeholder="correo@empresa.com"
-                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Logo (URL o Archivo)</label>
+                                    <input type="text" id="logo_url" name="logo_url" class="w-full px-4 py-3 mb-4" placeholder="URL o ruta de imagen...">
+                                    <div class="p-4 border-2 border-dashed border-white/10 rounded-xl hover:border-red-500/50 transition-all group relative">
+                                        <input type="file" id="logo_file" name="logo_file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                        <div class="text-center">
+                                            <i class="fas fa-cloud-upload-alt text-2xl text-gray-600 mb-2 group-hover:text-red-500 transition-colors"></i>
+                                            <p class="text-sm text-gray-500">Haz clic para subir logo corporativo</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Email General</label>
-                                <input type="email" id="email" name="email" placeholder="info@empresa.com"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono General</label>
-                                <input type="tel" id="telefono" name="telefono" placeholder="Teléfono general"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Sitio Web</label>
-                                <input type="url" id="sitio_web" name="sitio_web" placeholder="https://empresa.com"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                                <textarea id="direccion" name="direccion" rows="3" placeholder="Dirección completa de la empresa"
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
+                            <div id="logoPreview" class="hidden glass-card p-4 flex items-center justify-center min-h-[150px]">
+                                <img id="logoImg" src="" alt="Preview" class="max-h-32 w-auto object-contain">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Descripción -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" rows="4"
-                            placeholder="Descripción detallada de la empresa y sus servicios..."
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
-                    </div>
-
-                    <!-- Beneficios y Descuentos -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">% de Descuento</label>
-                            <input type="number" id="descuento_porcentaje" name="descuento_porcentaje" min="0" max="100" step="0.01"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Convenio</label>
-                            <input type="date" id="fecha_convenio" name="fecha_convenio"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    <!-- Autorización -->
+                    <div class="p-6 bg-red-600/5 border border-red-600/20 rounded-2xl flex items-start gap-4">
+                        <input type="checkbox" id="autoriza_directorio" name="autoriza_directorio" value="1" class="mt-1 w-5 h-5">
+                        <div class="text-sm text-gray-400 leading-relaxed">
+                            <strong class="text-white block mb-1 uppercase tracking-wider text-xs">Autorización de Directorio</strong>
+                            Confirmo que los datos proporcionados son verídicos y autorizo su publicación en el Directorio Comercial de Socios ClautMet.
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Beneficios</label>
-                        <textarea id="beneficios" name="beneficios" rows="3"
-                            placeholder="Describe los beneficios que ofrece esta empresa a los empleados de Clúster..."
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Términos y Condiciones</label>
-                        <textarea id="condiciones" name="condiciones" rows="3"
-                            placeholder="Términos y condiciones para aplicar los beneficios..."
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent"></textarea>
-                    </div>
+                    <input type="hidden" id="empresa_id_hidden">
                 </form>
             </div>
-            <div class="flex items-center justify-end px-6 py-3 bg-gray-50 border-t space-x-3">
-                <button type="button" id="btnCancelar"
-                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                    Cancelar
+            
+            <div class="p-8 border-t border-white/10 bg-white/5 flex justify-end gap-4 shadow-2xl shrink-0 rounded-b-[1.3rem]">
+                <button type="button" id="btnCancelar" class="px-8 py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-all font-medium">
+                    Cerrar
                 </button>
-                <button type="submit" form="formEmpresa" id="btnGuardar"
-                    class="px-4 py-2 text-white rounded-md hover:opacity-90 transition" style="background: #C7252B;">
-                    <i class="fas fa-save mr-2"></i>Guardar
+                <button type="submit" form="formEmpresa" id="btnGuardar" class="px-10 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-bold shadow-lg shadow-red-900/30">
+                    <i class="fas fa-save mr-2"></i> Guardar Cambios
                 </button>
             </div>
         </div>
     </div>
+
 
     <!-- Notifications -->
     <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
-    <script src="./js/admin-empresas.js"></script>
+    <script src="./js/admin-empresas.js?v=1.2"></script>
 
     <script>
         // Funciones de mantenimiento de base de datos
@@ -1067,38 +1046,46 @@
                     e.stopPropagation();
                 }
 
-                const isVisible = sidebar.classList.contains('sidenav-show');
-                console.log('Toggle sidebar - currently visible:', isVisible);
-
-                if (!isVisible) {
-                    // Open sidebar
-                    console.log('Opening sidebar');
-                    sidebar.classList.add('sidenav-show');
-                    sidebar.setAttribute('aria-expanded', 'true');
-                    overlay.classList.add('show');
-                    document.body.style.overflow = 'hidden';
-
-                    // Focus management for accessibility
-                    const firstLink = sidebar.querySelector('.porsche-nav-item');
-                    if (firstLink) {
-                        setTimeout(() => firstLink.focus(), 100);
+                const isMobile = window.innerWidth < 1280;
+                
+                if (isMobile) {
+                    const isVisible = sidebar.classList.contains('sidenav-show');
+                    if (!isVisible) {
+                        sidebar.classList.add('sidenav-show');
+                        sidebar.setAttribute('aria-expanded', 'true');
+                        overlay.classList.add('show');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        closeSidebarInternal();
                     }
                 } else {
-                    // Close sidebar
-                    console.log('Closing sidebar');
-                    closeSidebarInternal();
+                    // Desktop toggle
+                    const isHidden = sidebar.classList.contains('sidenav-hidden');
+                    if (isHidden) {
+                        sidebar.classList.remove('sidenav-hidden');
+                        document.querySelectorAll('.main-content').forEach(el => el.classList.remove('expanded'));
+                    } else {
+                        sidebar.classList.add('sidenav-hidden');
+                        document.querySelectorAll('.main-content').forEach(el => el.classList.add('expanded'));
+                    }
                 }
             }
 
             // Close sidebar function
             function closeSidebarInternal() {
-                console.log('Executing closeSidebarInternal');
-                sidebar.classList.remove('sidenav-show');
-                sidebar.setAttribute('aria-expanded', 'false');
-                overlay.classList.remove('show');
-                document.body.style.overflow = '';
+                const isMobile = window.innerWidth < 1280;
+                
+                if (isMobile) {
+                    sidebar.classList.remove('sidenav-show');
+                    sidebar.setAttribute('aria-expanded', 'false');
+                    overlay.classList.remove('show');
+                    document.body.style.overflow = '';
+                } else {
+                    // On desktop, "closing" means hiding it
+                    sidebar.classList.add('sidenav-hidden');
+                    document.querySelectorAll('.main-content').forEach(el => el.classList.add('expanded'));
+                }
 
-                // Return focus to hamburger button
                 if (hamburgerBtn) {
                     hamburgerBtn.focus();
                 }
@@ -1211,176 +1198,173 @@
         }
     </script>
 
-    <!-- Auth Session Script -->
-    <script src="./js/auth-session.js"></script>
+    <!-- Modal de Detalles de Empresa Elite -->
+    <div id="detallesEmpresaModal" class="fixed inset-0 z-[1200] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Overlay con blur -->
+            <div class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity" aria-hidden="true" onclick="document.getElementById('detallesEmpresaModal').classList.add('hidden')"></div>
 
-    <!-- ============================================================
-         SOLICITUDES DE CAMBIO — JavaScript Logic
-    ============================================================ -->
-    <script>
-        const SOLICITUDES_API = (function () {
-            const h = window.location.hostname;
-            if (h.includes('clautmetropolitano.mx') || h.includes('clustermetropolitano.mx')) {
-                return 'https://intranet.clautmetropolitano.mx/build/api/solicitudes_empresa.php';
-            }
-            return './api/solicitudes_empresa.php';
-        })();
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-        const FIELD_LABELS = {
-            nombre_empresa: 'Nombre Empresa',
-            nombre: 'Nombre',
-            sector: 'Sector',
-            descripcion: 'Descripción',
-            logo_url: 'Logo URL',
-            email: 'Email',
-            telefono: 'Teléfono',
-            sitio_web: 'Sitio Web',
-            direccion: 'Dirección',
-            contacto_nombre: 'Contacto',
-            contacto_persona: 'Contacto Persona',
-            contacto_telefono: 'Tel. Contacto',
-            contacto_email: 'Email Contacto',
-            descuento_porcentaje: 'Descuento %',
-            beneficios: 'Beneficios',
-            condiciones: 'Condiciones',
-            fecha_convenio: 'Fecha Convenio'
-        };
-
-        async function loadSolicitudes() {
-            const container = document.getElementById('solicitudesContainer');
-            const badge = document.getElementById('solicitudesBadge');
-            if (!container) return;
-
-            container.innerHTML = '<div class="flex items-center justify-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando...</div>';
-
-            try {
-                const res = await fetch(SOLICITUDES_API + '?estado=pendiente', { credentials: 'include' });
-                const data = await res.json();
-
-                if (!data.success) throw new Error(data.error || 'Error cargando solicitudes');
-
-                const lista = data.solicitudes || [];
-
-                if (lista.length === 0) {
-                    container.innerHTML = '<div class="flex items-center justify-center py-8 text-gray-400 gap-2"><i class="fas fa-check-circle text-green-400"></i> Sin solicitudes pendientes</div>';
-                    badge.classList.add('hidden');
-                    return;
-                }
-
-                badge.textContent = lista.length + ' pendiente' + (lista.length > 1 ? 's' : '');
-                badge.classList.remove('hidden');
-                renderSolicitudes(lista, container);
-
-            } catch (e) {
-                container.innerHTML = `<div class="p-4 text-red-500 text-sm"><i class="fas fa-exclamation-circle mr-1"></i> Error: ${e.message}</div>`;
-            }
-        }
-
-        function renderSolicitudes(lista, container) {
-            const tipos = { crear: 'Crear empresa', mostrar: 'Asignar empresa', actualizar: 'Cambio de datos' };
-            const tipoColors = { crear: 'blue', mostrar: 'purple', actualizar: 'orange' };
-
-            container.innerHTML = lista.map(s => {
-                const color = tipoColors[s.tipo_solicitud] || 'gray';
-                const tipoLabel = tipos[s.tipo_solicitud] || s.tipo_solicitud;
-                const fecha = s.fecha_solicitud ? new Date(s.fecha_solicitud).toLocaleString('es-MX') : '—';
-                const empresa = s.empresa_nombre_existente || '—';
-                const usuario = (s.usuario_nombre || '') + ' ' + (s.usuario_apellido || '');
-                const email = s.usuario_email || '';
-
-                let cambiosHtml = '';
-                if (s.tipo_solicitud === 'actualizar' && s.datos_empresa) {
-                    const campos = Object.entries(s.datos_empresa)
-                        .filter(([k, v]) => v !== null && v !== '')
-                        .map(([k, v]) => `
-                        <div class="flex gap-2 text-xs py-1 border-b border-gray-50 last:border-0">
-                            <span class="font-medium text-gray-500 w-36 shrink-0">${FIELD_LABELS[k] || k}:</span>
-                            <span class="text-gray-800 break-all">${String(v).substring(0, 120)}${String(v).length > 120 ? '…' : ''}</span>
-                        </div>`).join('');
-                    cambiosHtml = `
-                    <div class="mt-3 bg-gray-50 rounded-lg p-3 max-h-48 overflow-y-auto">
-                        <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Cambios propuestos:</p>
-                        ${campos || '<span class="text-gray-400 text-xs">Sin campos detectados</span>'}
-                    </div>`;
-                }
-
-                return `
-            <div class="p-5" id="solicitud-${s.id}">
-                <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 flex-wrap mb-1">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-${color}-100 text-${color}-700">${tipoLabel}</span>
-                            <span class="font-semibold text-gray-800">${empresa}</span>
-                            <span class="text-gray-400 text-xs">·</span>
-                            <span class="text-gray-600 text-sm">${usuario.trim() || '—'}</span>
-                            <span class="text-gray-400 text-xs">${email}</span>
+            <!-- Contenido del Modal -->
+            <div class="inline-block align-bottom glass-card border border-white/20 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full relative z-10">
+                <div class="p-6">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                        <div class="flex items-center space-x-4">
+                            <div id="detallesLogoContainer" class="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 overflow-hidden">
+                                <img id="detallesLogo" src="" alt="Logo" class="max-w-full max-h-full object-contain">
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white" id="detallesNombreEmpresa">Nombre Empresa</h3>
+                                <div class="flex space-x-2 mt-1" id="detallesBadges">
+                                    <!-- Badges dinámicos -->
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-xs text-gray-400">${fecha}</div>
-                        ${cambiosHtml}
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                        <button onclick="procesarSolicitud(${s.id}, 'aprobar')"
-                            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-medium hover:bg-green-700 transition">
-                            <i class="fas fa-check"></i> Aprobar
+                        <button onclick="document.getElementById('detallesEmpresaModal').classList.add('hidden')" class="text-white/60 hover:text-white transition-colors text-2xl p-2 rounded-lg hover:bg-white/5">
+                            <i class="fas fa-times"></i>
                         </button>
-                        <button onclick="procesarSolicitud(${s.id}, 'rechazar')"
-                            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 text-white text-xs font-medium hover:bg-red-700 transition">
-                            <i class="fas fa-times"></i> Rechazar
+                    </div>
+
+                    <!-- Grid de Información -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-y-auto max-h-[60vh] pr-2">
+                        <!-- Columna Izquierda: Identidad y Contacto -->
+                        <div class="space-y-6">
+                            <section>
+                                <h4 class="text-red-500 font-bold uppercase text-xs tracking-wider mb-3">Identidad Corporativa</h4>
+                                <div class="space-y-3">
+                                    <div class="flex flex-col">
+                                        <span class="text-white/40 text-xs">Descripción</span>
+                                        <p id="detallesDescripcion" class="text-sm text-white/90 italic">Sin descripción.</p>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="flex flex-col">
+                                            <span class="text-white/40 text-xs">Sector</span>
+                                            <span id="detallesSector" class="text-sm font-medium text-white">No definido</span>
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="text-white/40 text-xs">Categoría</span>
+                                            <span id="detallesCategoria" class="text-sm font-medium text-white">No definido</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="text-red-500 font-bold uppercase text-xs tracking-wider mb-3">Contacto Directo</h4>
+                                <div class="space-y-3 bg-white/5 p-4 rounded-xl border border-white/5">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-user-tie text-blue-400 w-5 text-center"></i>
+                                        <div>
+                                            <span class="text-white/40 text-[10px] block uppercase">Responsable</span>
+                                            <span id="detallesContactoNombre" class="text-sm font-medium text-white">No especificado</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-envelope text-red-400 w-5 text-center"></i>
+                                        <span id="detallesEmail" class="text-sm text-white">n/a</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-phone text-green-400 w-5 text-center"></i>
+                                        <span id="detallesTelefono" class="text-sm text-white">n/a</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-globe text-purple-400 w-5 text-center"></i>
+                                        <a id="detallesSitioWeb" href="#" target="_blank" class="text-sm text-blue-400 hover:underline">n/a</a>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Columna Derecha: Convenios y Vigencias -->
+                        <div class="space-y-6">
+                            <section class="bg-gradient-to-br from-white/5 to-white/10 p-5 rounded-2xl border border-white/10">
+                                <h4 class="text-green-400 font-bold uppercase text-xs tracking-wider mb-4 flex items-center">
+                                    <i class="fas fa-handshake mr-2"></i> Detalles de Convenio
+                                </h4>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center bg-black/20 p-3 rounded-xl border border-white/5">
+                                        <span class="text-white/50 text-xs uppercase">Descuento Ofrecido</span>
+                                        <span id="detallesDescuento" class="text-green-400 text-2xl font-black">0%</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-white/50 text-xs mb-1 uppercase tracking-tight">Beneficios Especiales</span>
+                                        <div id="detallesBeneficios" class="text-sm text-white/80 bg-black/20 p-3 rounded-lg border border-white/5 min-h-[80px]"></div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="flex flex-col p-2 bg-white/5 rounded-lg border border-white/5">
+                                            <span class="text-white/50 text-[10px] uppercase">Vigencia Inicio</span>
+                                            <span id="detallesVigenciaInicio" class="text-sm font-bold text-blue-300">--</span>
+                                        </div>
+                                        <div class="flex flex-col p-2 bg-white/5 rounded-lg border border-white/5">
+                                            <span class="text-white/50 text-[10px] uppercase">Vigencia Fin</span>
+                                            <span id="detallesVigenciaFin" class="text-sm font-bold text-red-400">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="text-white/60 font-medium text-xs mb-3 uppercase tracking-widest">Localización</h4>
+                                <div class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                    <div class="flex items-start space-x-2">
+                                        <i class="fas fa-map-marker-alt text-red-500 mt-1"></i>
+                                        <span id="detallesDireccion" class="text-xs text-white/70 italic leading-relaxed">No disponible.</span>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <!-- Footer / Acciones -->
+                    <div class="mt-8 flex justify-end space-x-4 border-t border-white/10 pt-6">
+                        <button onclick="document.getElementById('detallesEmpresaModal').classList.add('hidden')" class="px-6 py-2.5 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-all font-medium">
+                            Cerrar
                         </button>
                     </div>
                 </div>
-            </div>`;
-            }).join('');
-        }
+            </div>
+        </div>
+    </div>
 
-        async function procesarSolicitud(id, accion) {
-            let notas = null;
+    <!-- Auth Session Script -->
+    <script src="./js/auth-session.js"></script>
 
-            if (accion === 'rechazar') {
-                notas = prompt('Motivo de rechazo (opcional):');
-                if (notas === null) return; // cancelled
-            }
-
-            if (accion === 'aprobar' && !confirm('¿Aprobar esta solicitud? Los cambios se aplicarán inmediatamente en la base de datos.')) return;
-
-            const row = document.getElementById('solicitud-' + id);
-            if (row) row.style.opacity = '0.5';
-
-            try {
-                const res = await fetch(SOLICITUDES_API, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ id, accion, notas })
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    const msg = document.createElement('div');
-                    msg.className = 'fixed top-4 right-4 z-50 px-5 py-3 rounded-lg text-white text-sm shadow-lg ' +
-                        (accion === 'aprobar' ? 'bg-green-600' : 'bg-red-600');
-                    msg.innerHTML = `<i class="fas fa-${accion === 'aprobar' ? 'check' : 'times'}-circle mr-2"></i>${data.message || 'Procesado'}`;
-                    document.body.appendChild(msg);
-                    setTimeout(() => msg.remove(), 4000);
-
-                    // Reload the solicitudes list
-                    loadSolicitudes();
-                } else {
-                    alert('Error: ' + (data.error || 'Error desconocido'));
-                    if (row) row.style.opacity = '1';
-                }
-            } catch (e) {
-                alert('Error de conexión: ' + e.message);
-                if (row) row.style.opacity = '1';
-            }
-        }
-
-        // Auto-load when page is ready
-        document.addEventListener('DOMContentLoaded', function () {
-            // Small delay to let the main admin script init first
-            setTimeout(loadSolicitudes, 800);
-        });
-    </script>
+    <!-- Review Frame Modal (Para Aprobación Granular) -->
+    <div id="modalReview" class="fixed inset-0 z-[1100] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+        <div class="glass-card max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col relative z-10 border-white/20">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+                <div>
+                    <h3 class="text-xl font-bold text-white flex items-center gap-3">
+                        <i class="fas fa-clipboard-check text-yellow-500"></i>
+                        Revisión de Cambios Propuestos
+                    </h3>
+                    <p class="text-sm text-gray-400 mt-1" id="reviewSubtitulo">Compara y elige qué datos actualizar</p>
+                </div>
+                <button onclick="document.getElementById('modalReview').classList.add('hidden')" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6" id="reviewContainer">
+                <!-- UI de comparación generada por JS -->
+            </div>
+            <div class="p-6 border-t border-white/10 bg-white/5 flex justify-between items-center">
+                <div class="text-sm text-gray-400">
+                    <i class="fas fa-info-circle mr-2"></i> Solo los campos marcados serán actualizados en la base de datos.
+                </div>
+                <div class="flex gap-4">
+                    <button id="btnRechazarTodo" class="px-6 py-2.5 rounded-xl border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-all font-medium">
+                        Rechazar Todo
+                    </button>
+                    <button id="btnAprobarSeleccion" class="px-8 py-2.5 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all font-bold shadow-lg shadow-green-900/20">
+                        Aplicar Cambios Seleccionados
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
   <script src="assets/js/loading-screen.js"></script>
 </body>

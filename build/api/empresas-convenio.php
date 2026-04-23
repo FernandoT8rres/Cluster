@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 define('CLAUT_ACCESS', true);
 
 // Incluir configuración y funciones
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 try {
     $method = $_SERVER['REQUEST_METHOD'];

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../utils/api-response.php';
 /**
  * API de Banners Mejorada con Soporte para Subida de Archivos Locales
  * Incluye manejo de imágenes locales y mejor gestión de errores
@@ -23,22 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once '../config/database.php';
 
-function responderJSON($success, $data = null, $message = '', $debug = null) {
-    http_response_code($success ? 200 : 400);
-    $response = [
-        'success' => $success,
-        'data' => $data,
-        'message' => $message,
-        'timestamp' => date('c')
-    ];
-    
-    if ($debug && isset($_GET['debug']) && $_GET['debug'] === '1') {
-        $response['debug'] = $debug;
-    }
-    
-    echo json_encode($response, JSON_PRETTY_PRINT);
-    exit();
-}
+
 
 function crearDirectorioSiNoExiste($directorio) {
     if (!file_exists($directorio)) {
@@ -92,8 +78,8 @@ function obtenerBannersActivos($conn) {
             if (!filter_var($banner['imagen_url'], FILTER_VALIDATE_URL)) {
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
-                // Usar ruta correcta con /build/
-                $banner['imagen_url'] = $protocol . '://' . $host . '/build/' . ltrim($banner['imagen_url'], '/');
+                // Ruta local — construir URL absoluta sin /build/ (Hostinger sirve desde la raíz)
+                $banner['imagen_url'] = $protocol . '://' . $host . '/' . ltrim($banner['imagen_url'], '/');
             }
             
             // Formatear fechas
@@ -135,8 +121,8 @@ function obtenerTodosBanners($conn) {
             if (!filter_var($banner['imagen_url'], FILTER_VALIDATE_URL)) {
                 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
                 $host = $_SERVER['HTTP_HOST'];
-                // Usar ruta correcta con /build/
-                $banner['imagen_url'] = $protocol . '://' . $host . '/build/' . ltrim($banner['imagen_url'], '/');
+                // Ruta local — construir URL absoluta sin /build/ (Hostinger sirve desde la raíz)
+                $banner['imagen_url'] = $protocol . '://' . $host . '/' . ltrim($banner['imagen_url'], '/');
             }
         }
         
@@ -269,16 +255,16 @@ switch ($metodo) {
                 // IMPORTANTE: NO devolver banners de prueba, solo los de la BD
                 if (empty($banners)) {
                     // Si no hay banners en la BD, devolver array vacío
-                    responderJSON(true, [], 'No hay banners activos en la base de datos', $debug_info);
+                    ApiResponse::success([], array_merge(['message' => 'No hay banners activos en la base de datos'], $debug_info));
                 }
                 
-                responderJSON(true, $banners, 'Banners activos obtenidos correctamente', $debug_info);
+                ApiResponse::success($banners, array_merge(['message' => 'Banners activos obtenidos correctamente'], $debug_info));
                 break;
                 
             case 'all':
                 // Obtener todos los banners para administración
                 $banners = obtenerTodosBanners($conn);
-                responderJSON(true, $banners, 'Todos los banners obtenidos correctamente', $debug_info);
+                ApiResponse::success($banners, array_merge(['message' => 'Todos los banners obtenidos correctamente'], $debug_info));
                 break;
                 
             case 'test':
@@ -319,7 +305,7 @@ switch ($metodo) {
         $nuevoBanner = crearBanner($conn, $datos);
         
         if ($nuevoBanner) {
-            responderJSON(true, $nuevoBanner, 'Banner creado correctamente', $debug_info);
+            ApiResponse::success($nuevoBanner, array_merge(['message' => 'Banner creado correctamente'], $debug_info));
         } else {
             responderJSON(false, null, 'Error al crear el banner', $debug_info);
         }
@@ -335,7 +321,7 @@ switch ($metodo) {
         unset($input['id']);
         
         if (actualizarBanner($conn, $id, $input)) {
-            responderJSON(true, null, 'Banner actualizado correctamente', $debug_info);
+            ApiResponse::success(null, array_merge(['message' => 'Banner actualizado correctamente'], $debug_info));
         } else {
             responderJSON(false, null, 'Error al actualizar el banner', $debug_info);
         }
@@ -350,7 +336,7 @@ switch ($metodo) {
         }
         
         if (eliminarBanner($conn, $id)) {
-            responderJSON(true, null, 'Banner eliminado correctamente', $debug_info);
+            ApiResponse::success(null, array_merge(['message' => 'Banner eliminado correctamente'], $debug_info));
         } else {
             responderJSON(false, null, 'Error al eliminar el banner', $debug_info);
         }

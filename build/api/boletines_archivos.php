@@ -8,24 +8,8 @@ header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');
 
-// Utilizar configuración centralizada
 require_once __DIR__ . '/../config/database.php';
-
-function sendJsonResponse($data, $success = true) {
-    $response = [
-        'success' => $success,
-        'timestamp' => date('Y-m-d H:i:s')
-    ];
-    
-    if ($success) {
-        $response = array_merge($response, $data);
-    } else {
-        $response['message'] = $data;
-    }
-    
-    echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    exit;
-}
+require_once __DIR__ . '/../utils/api-response.php';
 
 try {
     $pdo = Database::getInstance()->getConnection();
@@ -33,7 +17,7 @@ try {
     $boletin_id = isset($_GET['boletin_id']) ? intval($_GET['boletin_id']) : null;
     
     if (!$boletin_id) {
-        sendJsonResponse('ID del boletín es requerido', false);
+        ApiResponse::error('ID del boletín es requerido');
     }
     
     // Obtener información del archivo adjunto del boletín
@@ -42,7 +26,7 @@ try {
     $boletin = $stmt->fetch();
     
     if (!$boletin) {
-        sendJsonResponse('Boletín no encontrado', false);
+        ApiResponse::error('Boletín no encontrado');
     }
     
     $archivos = [];
@@ -128,16 +112,15 @@ try {
         ];
     }
     
-    sendJsonResponse([
-        'data' => $archivos,
+    ApiResponse::success($archivos, [
         'total' => count($archivos)
     ]);
     
 } catch (PDOException $e) {
     error_log("Error en archivos API: " . $e->getMessage());
-    sendJsonResponse('Error de base de datos: ' . $e->getMessage(), false);
+    ApiResponse::error('Error de base de datos: ' . $e->getMessage());
 } catch (Exception $e) {
     error_log("Error general: " . $e->getMessage());
-    sendJsonResponse('Error del servidor: ' . $e->getMessage(), false);
+    ApiResponse::error('Error del servidor: ' . $e->getMessage());
 }
 ?>

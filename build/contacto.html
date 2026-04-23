@@ -49,6 +49,49 @@
 </head>
 <link rel="stylesheet" href="./assets/css/layout/header-navbar.css" />
 <style>
+  /* Fix para alineación de header */
+  .claut-header {
+    padding: 0 40px !important;
+    position: fixed !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    z-index: 1000 !important;
+  }
+
+  @media (min-width: 1025px) {
+    .claut-header-nav {
+      position: absolute !important;
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: none !important;
+      margin: 0 !important;
+      width: auto !important;
+    }
+  }
+
+  .claut-header-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    min-width: 120px !important;
+  }
+
+  .claut-header-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .claut-nav-item {
+    padding: 6px 12px !important;
+    white-space: nowrap;
+  }
+
   /* Estilos responsivos de la barra y contenido */
   @media (min-width: 1025px) {
     .claut-main-responsive {
@@ -229,6 +272,174 @@
     font-size: 0.9rem;
     color: #94a3b8;
   }
+
+  /* ============================================================
+     RESPONSIVE MASTER — contacto.html
+  ============================================================ */
+  html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* --- Main: eliminar padding fijo lateral --- */
+  main.claut-main {
+    padding-left: clamp(0.75rem, 3vw, 3rem) !important;
+    padding-right: clamp(0.75rem, 3vw, 3rem) !important;
+    padding-bottom: 2rem !important;
+    overflow-x: hidden !important;
+  }
+
+  /* --- Header: responsive --- */
+  @media (max-width: 640px) {
+    .claut-header { padding: 0 0.75rem !important; }
+  }
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .claut-header { padding: 0 1rem !important; }
+  }
+
+  /* --- Mobile menu button --- */
+  .claut-mobile-menu-btn { display: none !important; }
+  @media (max-width: 767px) {
+    .claut-mobile-menu-btn { display: flex !important; }
+  }
+
+  /* --- Título hero responsive --- */
+  @media (max-width: 767px) {
+    .nosotros-title { font-size: 1.75rem !important; }
+    .nosotros-subtitle { font-size: 0.95rem !important; }
+    .nosotros-header { margin-bottom: 2rem !important; }
+    .nosotros-section { padding: 1rem 0 !important; }
+  }
+
+  /* --- Cards grid: minmax adaptable --- */
+  @media (max-width: 640px) {
+    .cards-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1.25rem !important;
+    }
+  }
+  @media (min-width: 641px) and (max-width: 900px) {
+    .cards-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 1.5rem !important;
+    }
+  }
+
+  /* --- Leader card: altura adaptable en móvil --- */
+  @media (max-width: 640px) {
+    .leader-card {
+      height: 320px !important;
+    }
+    .leader-name    { font-size: 1.25rem !important; }
+    .leader-position { font-size: 0.85rem !important; }
+    .leader-description { font-size: 0.85rem !important; margin-bottom: 1rem !important; }
+    .action-button  { padding: 0.6rem 1.25rem !important; font-size: 0.85rem !important; }
+    .footer-name    { font-size: 1.1rem !important; }
+  }
+
+  /* --- Sub-navbar breadcrumb: apilar en móvil --- */
+  @media (max-width: 767px) {
+    .porsche-navbar .flex.items-center.justify-between {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.25rem !important;
+    }
+    .porsche-breadcrumb { margin-right: 0 !important; }
+  }
+
+  /* ============================================================
+     MENÚ CURVO ANIMADO — CSS completo
+  ============================================================ */
+  .claut-bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 95% !important;
+    max-width: 600px !important;
+    height: 70px !important;
+    background: var(--claut-bg-surface, #252a32) !important;
+    border-radius: 35px 35px 0 0 !important;
+    border: 1px solid rgba(15,23,42,0.12) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.4) !important;
+    z-index: 9999 !important;
+    overflow: hidden !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: none;
+  }
+  .claut-bottom-nav::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+    background: linear-gradient(180deg, #252a32 0%, #2d333b 100%);
+    opacity: 0.8; z-index: -1;
+  }
+  .claut-nav-container {
+    position: relative !important; width: 100% !important; height: 100% !important;
+    display: flex !important; align-items: center !important;
+    justify-content: space-evenly !important; padding: 0 8px !important;
+    box-sizing: border-box !important; overflow-x: auto !important;
+    scrollbar-width: none !important; -ms-overflow-style: none !important;
+  }
+  .claut-nav-container::-webkit-scrollbar { display: none !important; }
+  .claut-nav-link {
+    position: relative !important; display: flex !important;
+    flex-direction: column !important; align-items: center !important;
+    justify-content: center !important; width: 48px !important;
+    height: 48px !important; text-decoration: none !important;
+    color: #94a3b8 !important;
+    transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55) !important;
+    border-radius: 50% !important; z-index: 2 !important;
+    flex: 0 0 auto !important; margin: 0 2px !important;
+  }
+  .claut-nav-link i { font-size: 18px; transition: all 0.3s ease; }
+  .claut-nav-link span {
+    font-size: 9px; margin-top: 1px; opacity: 0;
+    transform: translateY(10px); transition: all 0.3s ease; font-weight: 500;
+  }
+  .claut-nav-link.active { color: #C7252B !important; transform: translateY(-10px); }
+  .claut-nav-link.active::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%); width: 50px; height: 50px;
+    background: #C7252B; border-radius: 50%; z-index: -1;
+    opacity: 0.2; animation: nav-pulse 2s infinite;
+  }
+  .claut-nav-link.active span { opacity: 1; transform: translateY(0); color: #C7252B; }
+  .claut-nav-link:hover { color: #C7252B !important; transform: translateY(-5px) scale(1.1); }
+  .claut-nav-link:hover span { opacity: 1; transform: translateY(0); }
+  .claut-nav-curve {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%; pointer-events: none; z-index: 1;
+  }
+  .claut-nav-curve::before {
+    content: ''; position: absolute; top: 0;
+    left: var(--curve-position, 20%); width: 60px; height: 60px;
+    background: #C7252B; border-radius: 50% 50% 0 0;
+    transform: translateX(-50%) translateY(-30px);
+    transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    opacity: 0.1; box-shadow: 0 -5px 15px rgba(199,37,43,0.3);
+  }
+  @keyframes nav-pulse {
+    0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+    50%  { transform: translate(-50%,-50%) scale(1.2); opacity: 0.1; }
+    100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.2; }
+  }
+  @media (max-width: 1024px) {
+    .claut-bottom-nav { display: flex !important; }
+    .claut-header-nav { display: none !important; }
+    .claut-main, main { padding-bottom: 90px !important; }
+  }
+  @media (min-width: 1025px) {
+    .claut-bottom-nav { display: none !important; }
+    .claut-header-nav { display: flex !important; }
+  }
+  @media (max-width: 768px) {
+    .claut-bottom-nav { width: 95%; height: 65px; }
+    .claut-nav-link   { width: 55px; height: 55px; }
+    .claut-nav-link i { font-size: 20px; }
+  }
 </style>
 </head>
 
@@ -284,25 +495,14 @@
       </a>
     </nav>
 
-    <!-- Actions area -->
+    <!-- Actions area con botón hamburger para móvil -->
     <div class="claut-header-actions">
-
-      <!-- Botón mensajes -->
-      <button class="claut-header-btn" id="headerMessagesBtn" title="Centro de Mensajes">
-        <i class="fas fa-envelope"></i>
-        <span id="headerMessageCount"
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+      <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta"
+        style="display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
+        <i class="fas fa-user-circle" style="font-size:1.1rem;"></i>
       </button>
-
-      <!-- Menú usuario -->
-      <div class="relative">
-        <button class="claut-header-btn" id="headerUserMenuBtn" title="Mi cuenta">
-          <i class="fas fa-user-circle text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Botón toggle menú móvil -->
-      <button class="claut-header-btn claut-mobile-menu-btn hidden" id="mobileMenuBtn" title="Menú">
+      <button class="claut-header-btn claut-mobile-menu-btn" id="mobileMenuBtn" title="Menú"
+        style="display:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:transparent;border:none;color:rgba(255,255,255,0.7);cursor:pointer;">
         <i class="fas fa-bars"></i>
       </button>
     </div>
@@ -352,7 +552,7 @@
   </nav>
 
   <main class="claut-main relative transition-all duration-200 ease-in-out main-scroll-container"
-    style="margin-top: var(--header-height); margin-left: 0; padding: var(--space-2) var(--space-12) 0 var(--space-12); overflow: hidden; z-index: 1; position: relative;">
+    style="margin-top: var(--header-height); margin-left: 0; overflow: hidden; z-index: 1; position: relative;">
     <!-- Contenido principal con restricción de autenticación -->
     <div id="mainContent" class="main-content-wrapper relative z-10">
       <!-- Navbar (Sub-header Glassmorphism) como en dashboard.html -->
@@ -398,7 +598,7 @@
               </li>
               <!-- Botón Panel de Administración (solo para admins) -->
               <li class="flex items-center pl-4 hidden" id="adminPanelButton">
-                <a href="https://intranet.clautmetropolitano.mx/build/admin-panel.html?login=success"
+                <a href="./admin-panel.html?login=success"
                   class="block px-3 py-2 text-sm font-semibold text-white transition-all ease-nav-brand hover:opacity-75 hover:bg-gray-800 hover:bg-opacity-20 rounded-lg"
                   title="Panel de Administración">
                   <i class="fas fa-cogs mr-2"></i>
@@ -530,37 +730,7 @@
         </div>
       </section>
 
-      <footer class="pt-4">
-        <div class="w-full px-6 mx-auto">
-          <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
-            <div class="w-full max-w-full px-3 mt-0 mb-6 shrink-0 lg:mb-0 lg:w-1/2 lg:flex-none">
-              <div class="text-sm leading-normal text-center text-slate-500 lg:text-left">
-                ©
-                <script>
-                  document.write(new Date().getFullYear() + ",");
-                </script>
-                Todos Los Derechos Reservados <i class=""></i>
-                <a href="" class="font-semibold text-slate-700 dark:text-white" target="_blank">Clúster</a>
-              </div>
-            </div>
-            <div class="w-full max-w-full px-3 mt-0 shrink-0 lg:w-1/2 lg:flex-none">
-              <ul class="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
-                <li class="nav-item">
-                  <a href=""
-                    class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500"
-                    target="_blank">Clúster Metropolitano</a>
-                </li>
-                <li class="nav-item">
-                  <a href=""
-                    class="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-in-out text-slate-500"
-                    target="_blank">Nosotros</a>
-                </li>
-
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
     <!-- end cards -->
     </div>
@@ -666,7 +836,7 @@
 
       checkPHP: async function () {
         try {
-          const response = await fetch('./assets/conexion/check-session.php', { credentials: 'include' });
+          const response = await fetch('./api/auth/validate-session.php', { credentials: 'include' });
           if (response.ok) {
             const data = await response.json();
             if (data.success && data.user) {
@@ -724,7 +894,7 @@
       setupAnimations: function () {
         if (typeof gsap !== 'undefined') {
           gsap.from('.claut-header-nav .claut-nav-item', {
-            y: -20, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power2.out"
+            y: -20, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power2.out", clearProps: "all"
           });
           gsap.from('.claut-bottom-nav', {
             y: 50, opacity: 0, duration: 0.5, ease: "power2.out", delay: 0.3

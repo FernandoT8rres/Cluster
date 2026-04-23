@@ -5,7 +5,7 @@
 define('ADMIN_MIDDLEWARE_SKIP_AUTO', true);
 
 require_once 'middleware/auth-admin.php';
-require_once '../assets/conexion/config.php';
+require_once '../config/database.php';
 
 // Verificar autenticación de admin usando el middleware
 $adminUser = requiereAdmin();

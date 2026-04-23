@@ -164,98 +164,140 @@ try {
             break;
             
         case 'POST':
-            // Crear nuevo boletín
-            $titulo = clean($_POST['titulo'] ?? '');
+            // Crear o Actualizar boletín (se unifica en POST para soportar FormData + $_FILES)
+            $id        = intval($_POST['id'] ?? 0); // > 0 = edición, 0 = creación
+            $titulo    = clean($_POST['titulo'] ?? '');
             $contenido = clean($_POST['contenido'] ?? '');
-            $estado = clean($_POST['estado'] ?? 'borrador');
+            $estado    = clean($_POST['estado'] ?? 'borrador');
             $fecha_publicacion = $_POST['fecha_publicacion'] ?? null;
-            $archivo_adjunto = clean($_POST['archivo_adjunto'] ?? null);
-            
+
             if (empty($titulo) || empty($contenido)) {
                 sendJsonResponse('Título y contenido son requeridos', false);
             }
-            
-            // Si el estado es publicado pero no hay fecha de publicación, usar ahora
+
+            // Procesar archivo adjunto si viene en el request
+            $archivo_adjunto = null;
+
+            // Modo edición: conservar el archivo existente si no se sube uno nuevo
+            if ($id > 0) {
+                $existStmt = $pdo->prepare("SELECT archivo_adjunto FROM boletines WHERE id = ?");
+                $existStmt->execute([$id]);
+                $existingRow = $existStmt->fetch();
+                $archivo_adjunto = $existingRow['archivo_adjunto'] ?? null;
+            }
+
+            if (isset($_FILES['archivo']) && $_FILES['archivo']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = dirname(__DIR__) . '/uploads/boletines/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0775, true);
+                }
+
+                $originalName = basename($_FILES['archivo']['name']);
+                $ext          = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+                $allowedExts  = ['pdf','doc','docx','xls','xlsx','ppt','pptx','txt','jpg','jpeg','png','gif','mp4','mp3','csv'];
+
+                if (!in_array($ext, $allowedExts)) {
+                    sendJsonResponse('Tipo de archivo no permitido', false);
+                }
+
+                $newFilename  = 'boletin_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+                $destination  = $uploadDir . $newFilename;
+
+                if (move_uploaded_file($_FILES['archivo']['tmp_name'], $destination)) {
+                    $archivo_adjunto = $newFilename;
+                } else {
+                    sendJsonResponse('Error al guardar el archivo adjunto', false);
+                }
+            }
+
             if ($estado === 'publicado' && empty($fecha_publicacion)) {
                 $fecha_publicacion = date('Y-m-d H:i:s');
             }
-            
-            $sql = "INSERT INTO boletines (titulo, contenido, estado, fecha_publicacion, archivo_adjunto) VALUES (?, ?, ?, ?, ?)";
-            $stmt = $pdo->prepare($sql);
-            
-            if ($stmt->execute([$titulo, $contenido, $estado, $fecha_publicacion, $archivo_adjunto])) {
-                $id = $pdo->lastInsertId();
-                
-                // Obtener el boletín recién creado
-                $getStmt = $pdo->prepare("SELECT * FROM boletines WHERE id = ?");
-                $getStmt->execute([$id]);
-                $nuevoBoletin = $getStmt->fetch();
-                
-                sendJsonResponse([
-                    'message' => 'Boletín creado exitosamente',
-                    'data' => $nuevoBoletin
-                ]);
+
+            if ($id > 0) {
+                // === ACTUALIZAR ===
+                if (!$existingRow) {
+                    sendJsonResponse('Boletín no encontrado', false);
+                }
+
+                $sql  = "UPDATE boletines SET titulo = ?, contenido = ?, estado = ?, fecha_publicacion = ?, archivo_adjunto = ? WHERE id = ?";
+                $stmt = $pdo->prepare($sql);
+
+                if ($stmt->execute([$titulo, $contenido, $estado, $fecha_publicacion, $archivo_adjunto, $id])) {
+                    $getStmt = $pdo->prepare("SELECT * FROM boletines WHERE id = ?");
+                    $getStmt->execute([$id]);
+                    $boletinActualizado = $getStmt->fetch();
+
+                    sendJsonResponse([
+                        'message' => 'Boletín actualizado exitosamente',
+                        'id'      => $id,
+                        'data'    => $boletinActualizado
+                    ]);
+                } else {
+                    sendJsonResponse('Error al actualizar el boletín', false);
+                }
             } else {
-                sendJsonResponse('Error al crear el boletín', false);
+                // === CREAR ===
+                $sql  = "INSERT INTO boletines (titulo, contenido, estado, fecha_publicacion, archivo_adjunto) VALUES (?, ?, ?, ?, ?)";
+                $stmt = $pdo->prepare($sql);
+
+                if ($stmt->execute([$titulo, $contenido, $estado, $fecha_publicacion, $archivo_adjunto])) {
+                    $newId   = $pdo->lastInsertId();
+                    $getStmt = $pdo->prepare("SELECT * FROM boletines WHERE id = ?");
+                    $getStmt->execute([$newId]);
+                    $nuevoBoletin = $getStmt->fetch();
+
+                    sendJsonResponse([
+                        'message' => 'Boletín creado exitosamente',
+                        'id'      => $newId,
+                        'data'    => $nuevoBoletin
+                    ]);
+                } else {
+                    sendJsonResponse('Error al crear el boletín', false);
+                }
             }
             break;
-            
+
         case 'PUT':
-            // Actualizar boletín
-            parse_str(file_get_contents("php://input"), $_PUT);
-            
-            $id = intval($_PUT['id'] ?? 0);
-            $titulo = clean($_PUT['titulo'] ?? '');
-            $contenido = clean($_PUT['contenido'] ?? '');
-            $estado = clean($_PUT['estado'] ?? 'borrador');
-            $fecha_publicacion = $_PUT['fecha_publicacion'] ?? null;
-            $archivo_adjunto = clean($_PUT['archivo_adjunto'] ?? null);
-            
-            if ($id <= 0) {
-                sendJsonResponse('ID inválido', false);
-            }
-            
-            if (empty($titulo) || empty($contenido)) {
-                sendJsonResponse('Título y contenido son requeridos', false);
-            }
-            
-            // Si el estado cambia a publicado y no hay fecha de publicación, usar ahora
-            if ($estado === 'publicado' && empty($fecha_publicacion)) {
-                $fecha_publicacion = date('Y-m-d H:i:s');
-            }
-            
-            $sql = "UPDATE boletines SET titulo = ?, contenido = ?, estado = ?, fecha_publicacion = ?, archivo_adjunto = ? WHERE id = ?";
-            $stmt = $pdo->prepare($sql);
-            
-            if ($stmt->execute([$titulo, $contenido, $estado, $fecha_publicacion, $archivo_adjunto, $id])) {
-                // Obtener el boletín actualizado
-                $getStmt = $pdo->prepare("SELECT * FROM boletines WHERE id = ?");
-                $getStmt->execute([$id]);
-                $boletinActualizado = $getStmt->fetch();
-                
-                sendJsonResponse([
-                    'message' => 'Boletín actualizado exitosamente',
-                    'data' => $boletinActualizado
-                ]);
-            } else {
-                sendJsonResponse('Error al actualizar el boletín', false);
-            }
+            // PUT ya no se usa desde el frontend; redirigir a POST para compatibilidad
+            sendJsonResponse('Use POST con el campo id para actualizar boletines', false);
             break;
             
         case 'DELETE':
-            // Eliminar boletín
-            $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-            
+            // Eliminar boletín — acepta ID via GET o via JSON body
+            $id = 0;
+            if (isset($_GET['id'])) {
+                $id = intval($_GET['id']);
+            } else {
+                $bodyRaw = file_get_contents('php://input');
+                $bodyData = json_decode($bodyRaw, true);
+                if (isset($bodyData['id'])) {
+                    $id = intval($bodyData['id']);
+                }
+            }
+
             if ($id <= 0) {
                 sendJsonResponse('ID inválido', false);
             }
-            
+
+            // Obtener nombre de archivo antes de eliminar
+            $fileStmt = $pdo->prepare("SELECT archivo_adjunto FROM boletines WHERE id = ?");
+            $fileStmt->execute([$id]);
+            $fileRow = $fileStmt->fetch();
+
             $stmt = $pdo->prepare("DELETE FROM boletines WHERE id = ?");
-            
+
             if ($stmt->execute([$id])) {
+                // Eliminar archivo físico si existe
+                if (!empty($fileRow['archivo_adjunto'])) {
+                    $filePath = dirname(__DIR__) . '/uploads/boletines/' . $fileRow['archivo_adjunto'];
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
                 sendJsonResponse([
                     'message' => 'Boletín eliminado exitosamente',
-                    'id' => $id
+                    'id'      => $id
                 ]);
             } else {
                 sendJsonResponse('Error al eliminar el boletín', false);

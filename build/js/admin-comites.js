@@ -12,7 +12,7 @@ class AdminComitesManager {
         if (window.location.hostname === 'intranet.clautmetropolitano.mx' ||
             window.location.hostname === 'clautmetropolitano.mx') {
             // Servidor de producción - usar URL absoluta
-            this.apiUrl = 'https://intranet.clautmetropolitano.mx/build/api/comites.php';
+            this.apiUrl = 'https://intranet.clautmetropolitano.mx/api/comites.php';
         } else {
             // Desarrollo local - usar ruta relativa
             this.apiUrl = './api/comites.php';
@@ -46,7 +46,7 @@ class AdminComitesManager {
             // Fallback a URL absoluta
             if (!this.apiUrl.startsWith('http')) {
                 // console.log('🔄 [API CHECK] Intentando URL absoluta como fallback...');
-                this.apiUrl = 'https://intranet.clústermetropolitano.mx/build/api/comites.php';
+                this.apiUrl = 'https://intranet.clautmetropolitano.mx/api/comites.php';
                 // console.log('🔄 [API CHECK] Nueva URL:', this.apiUrl);
             }
         }
@@ -218,18 +218,21 @@ class AdminComitesManager {
 
         // Actualizar título del formulario si existe
         const formTitle = document.querySelector('#comiteForm h3, .form-title');
+        const accordionTitle = document.getElementById('formTitleAccordion');
+        
         if (formTitle) {
-            const icon = formTitle.querySelector('i');
             if (this.comiteEditando) {
-                formTitle.innerHTML = `
-                    <i class="fas fa-edit mr-2 text-blue-600"></i>
-                    Editar Comité
-                `;
+                formTitle.innerHTML = `<i class="fas fa-edit mr-2 text-blue-600"></i>Editar Comité`;
             } else {
-                formTitle.innerHTML = `
-                    <i class="fas fa-plus-circle mr-2 text-green-600"></i>
-                    Crear/Editar Comité
-                `;
+                formTitle.innerHTML = `<i class="fas fa-plus-circle mr-2 text-green-600"></i>Crear/Editar Comité`;
+            }
+        }
+
+        if (accordionTitle) {
+            if (this.comiteEditando) {
+                accordionTitle.innerHTML = '<i class="fas fa-edit mr-2 text-blue-500"></i> Editando Comité';
+            } else {
+                accordionTitle.innerHTML = '<i class="fas fa-plus-circle mr-2 text-green-500"></i> Editor de Comité';
             }
         }
     }
@@ -282,11 +285,7 @@ class AdminComitesManager {
         const emptyEl = document.getElementById('emptyState');
         const loadingEl = document.getElementById('loadingComites');
 
-        // console.log('🎨 [RENDER] Elementos DOM:', {
-            listEl: !!listEl,
-            emptyEl: !!emptyEl,
-            loadingEl: !!loadingEl
-        });
+        // console.log('🎨 [RENDER] Elementos DOM comprobados');
 
         if (loadingEl) loadingEl.classList.add('hidden');
 
@@ -367,7 +366,8 @@ class AdminComitesManager {
     }
 
     editComite(id) {
-        const comite = this.comites.find(c => c.id === id);
+        // Bugfix: c.id en JS/JSON puede venir como string ("4") y 'id' como int (4). Reemplazamos === por == .
+        const comite = this.comites.find(c => c.id == id);
         if (!comite) return;
 
         this.comiteEditando = comite;
@@ -380,16 +380,50 @@ class AdminComitesManager {
         document.getElementById('miembros_activos').value = comite.miembros_activos || '0';
         document.getElementById('organizacion').value = comite.organizacion || '';
         document.getElementById('estado').value = comite.estado || 'activo';
+        
+        // Manejar el nuevo radio y link_registro
+        if (comite.tipo_registro === 'link') {
+            const radioLink = document.getElementById('tipo_registro_link');
+            if (radioLink) radioLink.checked = true;
+        } else {
+            const radioForm = document.getElementById('tipo_registro_formulario');
+            if (radioForm) radioForm.checked = true;
+        }
+        
+        const linkRegistroElem = document.getElementById('link_registro');
+        if (linkRegistroElem) {
+            linkRegistroElem.value = comite.link_registro || '';
+        }
+        
+        // Mostrar / Ocultar el link input
+        if (typeof window.toggleLinkInput === 'function') {
+            window.toggleLinkInput();
+        }
 
-        // Actualizar botón
+        // Actualizar botón y títulos
         const submitBtn = document.getElementById('submitBtn');
         const submitText = document.getElementById('submitText');
+        const accordionTitle = document.getElementById('formTitleAccordion');
+
         if (submitBtn && submitText) {
             submitText.textContent = 'Actualizar Comité';
         }
+        if (accordionTitle) {
+            accordionTitle.innerHTML = '<i class="fas fa-edit mr-2 text-blue-500"></i> Editando Comité';
+        }
+
+        // AUTO-EXPANDIR EL ACORDEÓN SI ESTÁ CERRADO
+        const acordeonFormulario = document.getElementById('acordeonFormulario');
+        if (acordeonFormulario) {
+            acordeonFormulario.open = true;
+        }
 
         // Scroll al formulario
-        document.getElementById('comiteForm').scrollIntoView({ behavior: 'smooth' });
+        if (acordeonFormulario) {
+            acordeonFormulario.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            document.getElementById('comiteForm').scrollIntoView({ behavior: 'smooth' });
+        }
     }
 
     async deleteComite(id) {
@@ -492,7 +526,7 @@ class AdminComitesManager {
 
             // Recopilar datos del formulario
             const campos = ['nombre', 'descripcion', 'objetivo', 'periodicidad',
-                           'miembros_activos', 'organizacion', 'estado'];
+                           'miembros_activos', 'organizacion', 'estado', 'link_registro'];
 
             campos.forEach(campo => {
                 const elemento = document.getElementById(campo);
@@ -502,6 +536,12 @@ class AdminComitesManager {
                     // console.log(`🔧 [DEBUG] ${campo}:`, valor);
                 }
             });
+
+            // Recuperar tipo de registro explícitamente desde radio buttons
+            const tipoRegistroSeleccionado = document.querySelector('input[name="tipo_registro"]:checked');
+            if (tipoRegistroSeleccionado) {
+                formData.append('tipo_registro', tipoRegistroSeleccionado.value);
+            }
 
             // Agregar imagen - priorizar archivo sobre URL
             if (tieneArchivo && imagenFile.files[0]) {
@@ -619,6 +659,14 @@ class AdminComitesManager {
     resetForm() {
         // Usar la función mejorada de limpiarFormulario
         this.limpiarFormulario();
+
+        // Disparar reseteo visual de enlace
+        const radioForm = document.getElementById('tipo_registro_formulario');
+        if (radioForm) radioForm.checked = true;
+        
+        if (typeof window.toggleLinkInput === 'function') {
+            window.toggleLinkInput();
+        }
 
         // Restaurar texto del botón
         const submitText = document.getElementById('submitText');

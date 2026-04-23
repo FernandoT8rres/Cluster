@@ -1,6 +1,6 @@
 /**
- * Administrador completo de empresas - demo_empresas.html
- * CRUD completo con visualización, creación, edición y exportación
+ * Administrador Elite de Empresas - demo_empresas.html
+ * Gestión integral con Aprobación Granular y Diseño Glassmorphism
  */
 
 class AdminEmpresasManager {
@@ -11,634 +11,655 @@ class AdminEmpresasManager {
         this.empresaEditando = null;
         this.enviandoFormulario = false;
 
-        if (window.location.hostname === 'intranet.clústermetropolitano.mx' ||
-            window.location.hostname === 'clústermetropolitano.mx') {
-            this.apiUrl = 'https://intranet.clústermetropolitano.mx/build/api/empresas-simple.php';
-            this.solicitudesApiUrl = 'https://intranet.clústermetropolitano.mx/build/api/solicitudes_empresa.php';
-        } else {
-            this.apiUrl = './api/empresas-simple.php';
-            this.solicitudesApiUrl = './api/solicitudes_empresa.php';
-        }
+        const isProd = window.location.hostname.includes('clautmetropolitano.mx') || 
+                       window.location.hostname.includes('clustermetropolitano.mx');
+        
+        this.apiUrl = './api/empresas-simple.php';
+        this.solicitudesApiUrl = './api/solicitudes_empresa.php';
+        this.apiUsuariosUrl = './api/admin/users.php';
 
-        this.apiUsuariosUrl = this.apiUrl.replace('/empresas-simple.php', '/admin/users.php');
         this.init();
     }
 
-    init() {
+    async init() {
+        console.log('🚀 Inicializando AdminEmpresasManager Elite...');
         this.setupEventListeners();
-        this.cargarEmpresas();
-        this.cargarUsuarios();
-        this.cargarSolicitudes();
+        await Promise.all([
+            this.cargarEmpresas(),
+            this.cargarUsuarios(),
+            this.cargarSolicitudes()
+        ]);
 
-        // Refresco automático cada 30 segundos para mantener datos actualizados
-        setInterval(() => {
-            this.refrescarSilencioso();
-            this.cargarSolicitudes(); // También refrescar solicitudes
-        }, 30000);
+        // Refresco automático de solicitudes cada 45s
+        setInterval(() => this.cargarSolicitudes(true), 45000);
     }
 
     setupEventListeners() {
-        // Botón agregar empresa
+        // Botones de acción principal
         const btnAgregar = document.getElementById('btnAgregarEmpresa');
-        if (btnAgregar) {
-            btnAgregar.addEventListener('click', () => this.abrirModalCrear());
+        if (btnAgregar) btnAgregar.addEventListener('click', () => this.abrirModalCrear());
+
+        const btnCerrar = document.getElementById('btnCerrarModal');
+        if (btnCerrar) btnCerrar.addEventListener('click', () => this.cerrarModal());
+
+        const btnCancelar = document.getElementById('btnCancelar');
+        if (btnCancelar) btnCancelar.addEventListener('click', () => this.cerrarModal());
+
+        const form = document.getElementById('formEmpresa');
+        if (form) {
+            form.addEventListener('submit', (e) => this.guardarEmpresa(e));
+            console.log('✅ Evento submit vinculado al formulario');
         }
 
-        // Configurar eventos del modal una sola vez
-        this.configurarEventosModal();
-
-        // Búsqueda
-        const busquedaInput = document.getElementById('searchInput');
-        if (busquedaInput) {
-            busquedaInput.addEventListener('input', (e) => this.filtrarEmpresas(e.target.value));
+        // Búsqueda y Filtros
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                this.filtrarEmpresas(term);
+            });
         }
 
-        // Filtros
-        const filtroEstado = document.getElementById('filtroEstado');
-        if (filtroEstado) {
-            filtroEstado.addEventListener('change', () => this.aplicarFiltros());
-        }
+        ['filterCategoria', 'filtroEstado', 'filterDestacado'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', () => this.aplicarFiltros());
+        });
 
         // Exportar
         const btnExportar = document.getElementById('btnExportar');
-        if (btnExportar) {
-            btnExportar.addEventListener('click', () => this.exportarEmpresas());
+        if (btnExportar) btnExportar.addEventListener('click', () => this.exportarEmpresas());
+
+        // Logo Upload Preview
+        const logoUrlInput = document.getElementById('logo_url');
+        if (logoUrlInput) {
+            logoUrlInput.addEventListener('input', (e) => this.actualizarPreviewLogo(e.target.value));
+        }
+
+        const logoFileInput = document.getElementById('logo_file');
+        if (logoFileInput) {
+            logoFileInput.addEventListener('change', (e) => this.manejarArchivoLogo(e));
         }
     }
 
     async cargarEmpresas() {
+        const loading = document.getElementById('loadingState');
+        const list = document.getElementById('empresasTableBody');
+        
+        if (loading) loading.classList.remove('hidden');
+        if (list) list.classList.add('opacity-50');
+
         try {
-            const url = `${this.apiUrl}?action=listar&t=${Date.now()}`;
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const responseText = await response.text();
-            const data = JSON.parse(responseText);
+            const res = await fetch(`${this.apiUrl}?action=listar&t=${Date.now()}`);
+            const data = await res.json();
 
             if (data.success) {
                 this.empresas = data.data.empresas || [];
                 this.renderizarTablaAdmin();
                 this.actualizarEstadisticas();
-            } else {
-                throw new Error(data.message || 'Error en respuesta de API');
             }
         } catch (error) {
             console.error('Error cargando empresas:', error);
-            this.mostrarError(`Error cargando empresas: ${error.message}`);
-
-            // Mostrar información de debug en la tabla
-            const tbody = document.getElementById('empresasTableBody');
-            if (tbody) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="px-6 py-12 text-center">
-                            <div class="text-red-600">
-                                <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                                <h3 class="text-lg font-semibold mb-2">Error al cargar empresas</h3>
-                                <p class="text-sm text-gray-600 mb-4">${error.message}</p>
-                                <button onclick="adminEmpresas.cargarEmpresas()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                    Reintentar
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
+            this.mostrarNotificacion('Error al conectar con la base de datos', 'error');
+        } finally {
+            if (loading) loading.classList.add('hidden');
+            if (list) list.classList.remove('opacity-50');
         }
     }
 
     async cargarUsuarios() {
         try {
-            const response = await fetch(this.apiUsuariosUrl);
-            const data = await response.json();
+            const res = await fetch(this.apiUsuariosUrl);
+            const data = await res.json();
             if (data.success) {
                 this.usuarios = data.data || [];
-                // Llenar el select
-                const selectUsuario = document.getElementById('admin_usuario_id');
-                if (selectUsuario) {
-                    selectUsuario.innerHTML = '<option value="">Seleccionar Usuario Asignado...</option>';
-                    this.usuarios.forEach(user => {
-                        selectUsuario.innerHTML += `<option value="${user.id}">${user.nombre} ${user.apellidos || ''} (${user.email})</option>`;
-                    });
-                }
+                this.poblarSelectorUsuarios();
             }
-        } catch (error) {
-            console.error('❌ [ADMIN] Error cargando usuarios:', error);
-        }
+        } catch (e) { console.warn('Usuarios no disponibles para asignación'); }
     }
 
-    renderizarTablaAdmin(empresasList = null) {
+    poblarSelectorUsuarios() {
+        const select = document.getElementById('admin_usuario_id');
+        if (!select) return;
+
+        // Limpiar opciones anteriores pero mantener la primera ("Seleccionar socio...")
+        select.innerHTML = '<option value="">Seleccionar socio responsable...</option>';
+
+        // Ordenar usuarios alfabéticamente por nombre
+        const usuariosOrdenados = [...this.usuarios].sort((a, b) => 
+            (a.nombre || '').localeCompare(b.nombre || '')
+        );
+
+        usuariosOrdenados.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            const empresaLabel = user.nombre_empresa ? ` [${user.nombre_empresa}]` : '';
+            option.textContent = `${user.nombre} ${user.apellidos || ''} (${user.email})${empresaLabel}`;
+            select.appendChild(option);
+        });
+
+        console.log(`✅ Selector de usuarios poblado con ${this.usuarios.length} registros`);
+    }
+
+    renderizarTablaAdmin(lista = null) {
         const tbody = document.getElementById('empresasTableBody');
-        if (!tbody) {
-            console.error('❌ [ADMIN] No se encontró elemento empresasTableBody');
+        const empty = document.getElementById('emptyState');
+        if (!tbody) return;
+
+        const items = lista || this.empresas;
+        
+        if (items.length === 0) {
+            tbody.innerHTML = '';
+            if (empty) empty.classList.remove('hidden');
             return;
         }
 
-        const empresas = empresasList || this.empresas || [];
+        if (empty) empty.classList.add('hidden');
 
-        if (empresas.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                        <i class="fas fa-building text-4xl mb-4 text-gray-300"></i>
-                        <p class="text-lg font-medium">No hay empresas registradas</p>
-                        <p class="text-sm">Comienza agregando una nueva empresa</p>
+        // Actualizar contador en la barra de controles
+        const totalEnTabla = document.getElementById('totalEnTabla');
+        if (totalEnTabla) totalEnTabla.textContent = items.length;
+
+        tbody.innerHTML = items.map(emp => {
+            const logo = this.sanitizarLogo(emp.logo_url, emp.nombre);
+            // Badge semántico por estado: verde activa, naranja pendiente, rojo inactiva
+            const estadoNorm = (emp.estado || 'inactiva').toLowerCase();
+            let statusClass, estadoLabel;
+            if (estadoNorm === 'activa') {
+                statusClass = 'bg-green-500/15 text-green-400 border border-green-500/20';
+                estadoLabel = '✅ Activa';
+            } else if (estadoNorm === 'pendiente') {
+                statusClass = 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20';
+                estadoLabel = '🟠 Pendiente';
+            } else {
+                statusClass = 'bg-red-500/15 text-red-400 border border-red-500/20';
+                estadoLabel = '❌ Inactiva';
+            }
+            const userBadge = emp.admin_nombre ? `<div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-red-600/20 flex items-center justify-center text-[10px] font-bold text-red-500">${emp.admin_nombre.charAt(0)}</div><span class="text-xs text-gray-300 font-medium">${emp.admin_nombre}</span></div>` : '<span class="text-gray-600 text-xs italic">Sin asignar</span>';
+
+            return `
+                <tr class="group border-b border-white/2 hover:bg-white/[0.02] transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <img src="${logo}" class="company-logo" onerror="this.src='${this.generarLogoDefault(emp.nombre)}'">
+                                ${emp.destacado ? '<div class="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full border-2 border-black"></div>' : ''}
+                            </div>
+                            <div>
+                                <div class="font-bold text-white tracking-tight">${emp.nombre}</div>
+                                <div class="text-[11px] font-medium text-gray-500 uppercase tracking-widest mt-0.5">${emp.sector || 'GENERAL'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col gap-1">
+                            <div class="text-sm text-gray-300 flex items-center gap-2"><i class="fas fa-envelope text-[10px] text-gray-600"></i> ${emp.email || '—'}</div>
+                            <div class="text-[11px] text-gray-500 flex items-center gap-2"><i class="fas fa-phone text-[10px] text-gray-600"></i> ${emp.telefono || '—'}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${statusClass}">
+                            ${estadoLabel}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="text-sm font-black text-red-500">${emp.descuento_porcentaje ? emp.descuento_porcentaje + '%' : '—'}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        ${userBadge}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="window.adminEmpresas.mostrarDetallesEmpresa(${emp.id})" class="p-2 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500 hover:text-white transition-all" title="Ver Detalles">
+                                <i class="fas fa-eye text-sm"></i>
+                            </button>
+                            <button onclick="window.adminEmpresas.editarEmpresa(${emp.id})" class="p-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all" title="Editar">
+                                <i class="fas fa-edit text-sm"></i>
+                            </button>
+                            <button onclick="window.adminEmpresas.eliminarEmpresa(${emp.id})" class="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all" title="Eliminar">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `;
+        }).join('');
+    }
+
+    sanitizarLogo(url, nombre) {
+        if (!url) return this.generarLogoDefault(nombre);
+        // Si es ruta relativa sin el punto, añadirlo o asegurar uploads/
+        if (url.startsWith('uploads/')) return `./${url}`;
+        if (url.startsWith('./uploads/')) return url;
+        return url;
+    }
+
+    generarLogoDefault(nombre) {
+        // Usar UI Avatars como fallback más premium que placeholder de imágenes externas
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=1a1a1a&color=C7252B&bold=true&length=2&size=128&font-size=0.4`;
+    }
+
+    // ============================================
+    // SOLICITUDES Y NOTIFICACIONES
+    // ============================================
+
+    async cargarSolicitudes(silencioso = false) {
+        try {
+            const url = `${this.solicitudesApiUrl}?estado=pendiente&t=${Date.now()}`;
+            console.log('📡 Fetching solicitudes desde:', url);
+
+            const res = await fetch(url, {
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            console.log('📡 Status:', res.status, res.statusText);
+            const rawText = await res.text();
+            console.log('📡 Respuesta cruda:', rawText.substring(0, 500));
+
+            let jsonData;
+            try { jsonData = JSON.parse(rawText); }
+            catch(e) { console.error('❌ JSON inválido:', e); return; }
+
+            if (jsonData.success) {
+                // ApiResponse::success() pone el payload dentro de "data"
+                this.solicitudes = (jsonData.data && jsonData.data.solicitudes) 
+                                 ? jsonData.data.solicitudes 
+                                 : (jsonData.solicitudes || []);
+                this.renderizarSolicitudes();
+                console.log(`✅ ${this.solicitudes.length} solicitudes pendientes`);
+            } else {
+                console.warn('⚠️ API error:', jsonData.error || jsonData.message, '| user_rol implícito | user_id:', jsonData.user_id);
+                // Mostrar estado de error en el panel
+                const container = document.getElementById('solicitudesContainer');
+                if (container) {
+                    container.innerHTML = `<div class="col-span-2 text-center py-8 text-red-400">
+                        <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                        <p class="text-sm font-medium">Error al cargar: ${data.error || data.message || 'Sin acceso'}</p>
+                        <p class="text-xs text-gray-500 mt-1">Revisa la consola para más detalles</p>
+                    </div>`;
+                }
+            }
+        } catch (e) {
+            if (!silencioso) console.warn('❌ Carga de solicitudes falló:', e.message);
+        }
+    }
+
+
+    renderizarSolicitudes() {
+        const section = document.getElementById('solicitudesSection');
+        const container = document.getElementById('solicitudesContainer');
+        const badge = document.getElementById('solicitudesBadge');
+        if (!container) return;
+
+        // Actualizar badge
+        if (badge) badge.textContent = this.solicitudes.length;
+
+        if (this.solicitudes.length === 0) {
+            // Estado vacío — panel siempre visible pero con mensaje informativo
+            container.innerHTML = `
+                <div class="col-span-2 text-center py-10">
+                    <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-300 font-semibold">Sin solicitudes pendientes</p>
+                    <p class="text-gray-500 text-sm mt-1">Todas las solicitudes han sido procesadas</p>
+                </div>
+            `;
+            if (badge) badge.classList.replace('bg-yellow-500', 'bg-green-500');
             return;
         }
 
+        if (badge) badge.classList.replace('bg-green-500', 'bg-yellow-500');
+
+
+        container.innerHTML = this.solicitudes.map(sol => {
+            const icon = sol.tipo_solicitud === 'crear' ? 'fa-plus-circle' : 'fa-edit';
+            const accent = sol.tipo_solicitud === 'crear' ? 'blue' : 'yellow';
+
+            return `
+                <div class="glass-card p-5 border-l-4 border-l-${accent}-500/50 hover:bg-white/[0.04] transition-all">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-${accent}-500/10 flex items-center justify-center text-${accent}-500">
+                                <i class="fas ${icon} text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white tracking-tight">${sol.tipo_solicitud === 'crear' ? 'Nueva Empresa' : 'Actualización de Datos'}</h4>
+                                <p class="text-xs text-gray-500 mt-0.5">Por: <span class="text-gray-300 font-medium">${sol.usuario_nombre || 'Socio'}</span> · ${this.formatearFecha(sol.fecha_solicitud)}</p>
+                                ${sol.empresa_nombre_existente ? `<p class="text-sm font-bold text-red-500 mt-2">${sol.empresa_nombre_existente}</p>` : ''}
+                            </div>
+                        </div>
+                        <button onclick="window.adminEmpresas.abrirRevision(${sol.id})" 
+                                class="px-5 py-2 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all font-bold text-xs uppercase tracking-widest">
+                            Revisar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ============================================
+    // APROBACIÓN GRANULAR (REVISIÓN)
+    // ============================================
+
+    async abrirRevision(id) {
+        const sol = this.solicitudes.find(s => s.id == id);
+        if (!sol) return;
+
+        const modal = document.getElementById('modalReview');
+        const container = document.getElementById('reviewContainer');
+        if (!modal || !container) return;
+
+        container.innerHTML = '<div class="flex items-center justify-center py-20"><i class="fas fa-spinner fa-spin text-3xl text-red-500"></i></div>';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
         try {
-            tbody.innerHTML = empresas.map(empresa => {
-                // Normalizar la URL del logo removiendo el prefijo ./
-                // Cache-busting solo para uploads locales (no afecta URLs externas)
-                let logoUrl = empresa.logo_url ? empresa.logo_url.replace(/^\.\//, '') : this.generarLogoDefault(empresa.nombre);
-                if (logoUrl && logoUrl.startsWith('uploads/')) {
-                    logoUrl += (logoUrl.includes('?') ? '&' : '?') + 't=' + (empresa.updated_at ? new Date(empresa.updated_at).getTime() : Date.now());
-                }
+            // Obtener datos actuales de la empresa si es actualización
+            let actual = {};
+            if (sol.tipo_solicitud === 'actualizar' && sol.empresa_id) {
+                const res = await fetch(`${this.apiUrl}?action=obtener&id=${sol.empresa_id}`);
+                const data = await res.json();
+                if (data.success) actual = data.data;
+            }
+
+            const camposNuevos = typeof sol.datos_empresa === 'string' ? JSON.parse(sol.datos_empresa) : sol.datos_empresa;
+            
+            // Render Comparación
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="glass-card p-4 bg-white/5 border-white/10">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Empresa Destino</label>
+                        <div class="text-lg font-bold text-white">${sol.empresa_nombre_existente || 'NUEVA EMPRESA'}</div>
+                    </div>
+                    <div class="glass-card p-4 bg-red-600/5 border-red-600/10">
+                        <label class="block text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1">Modificado Por</label>
+                        <div class="text-lg font-bold text-gray-300">${sol.usuario_nombre}</div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="grid grid-cols-12 gap-4 px-4 py-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                        <div class="col-span-1">¿Approve?</div>
+                        <div class="col-span-3">Campo</div>
+                        <div class="col-span-4">Valor Actual</div>
+                        <div class="col-span-4">Valor Propuesto</div>
+                    </div>
+                    ${this.generarFilasDiff(camposNuevos, actual)}
+                </div>
+            `;
+
+            // Configurar botones de acción en revisión
+            document.getElementById('btnAprobarSeleccion').onclick = () => this.procesarRevision(sol.id, 'aprobar');
+            document.getElementById('btnRechazarTodo').onclick = () => this.procesarRevision(sol.id, 'rechazar');
+
+        } catch (e) {
+            container.innerHTML = `<div class="p-10 text-center text-red-500">Error cargando detalles: ${e.message}</div>`;
+        }
+    }
+
+    generarFilasDiff(nuevos, actuales) {
+        const campoLabels = {
+            'nombre_empresa': '🏢 Nombre de la Empresa',
+            'nombre': '🏢 Nombre Comercial',
+            'sector': '🔧 Sector Industrial',
+            'sitio_web': '🌐 Sitio Web',
+            'descripcion': '📝 Descripción',
+            'direccion': '📍 Dirección',
+            'entidad_federativa': '🗺️ Estado/Entidad',
+            'municipio': '🏘️ Municipio',
+            'exporta': '🚢 ¿Exporta?',
+            'certificaciones': '📜 Certificaciones',
+            'email': '📧 Email General',
+            'telefono': '📞 Teléfono General',
+            'contacto_persona': '👤 Persona Contacto',
+            'contacto_nombre': '👤 Nombre de Contacto',
+            'contacto_cargo': '💼 Cargo',
+            'contacto_email': '✉️ Email Contacto',
+            'contacto_movil': '📱 WhatsApp/Móvil',
+            'contacto_telefono': '📞 Teléfono Directo',
+            'beneficios': '🎁 Beneficios Socios',
+            'convenio_descripcion': '🎁 Descripción Convenio',
+            'descuento_porcentaje': '🏷️ % Descuento',
+            'codigo_cupon': '🎟️ Código Cupón',
+            'fecha_convenio': '📅 Inicio Vigencia',
+            'redes_fb': '🔵 Facebook',
+            'redes_linkedin': '🔵 LinkedIn',
+            'redes_instagram': '🟣 Instagram',
+            'logo_url': '🖼️ URL Logo'
+        };
+
+        const skip = ['updated_at', 'created_at', 'id', 'user_id', 'usuario_id'];
+        return Object.entries(nuevos)
+            .filter(([k]) => !skip.includes(k) && nuevos[k] !== null && nuevos[k] !== '')
+            .map(([k, v]) => {
+                const label = campoLabels[k] || k.replace(/_/g, ' ').toUpperCase();
+                const actualVal = actuales[k] || '<span class="text-gray-600 italic">No definido</span>';
+                const hasChanged = String(actualVal) !== String(v);
 
                 return `
-            <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
-                        <img src="${logoUrl}" 
-                             alt="${empresa.nombre}"
-                             class="company-logo mr-3"
-                             onerror="this.src='${this.generarLogoDefault(empresa.nombre)}'">
-                        <div>
-                            <div class="text-sm font-medium text-gray-900">${empresa.nombre}</div>
-                            <div class="text-sm text-gray-500">${empresa.sector || 'Sin sector'}</div>
+                    <div class="grid grid-cols-12 gap-4 px-4 py-3 rounded-xl hover:bg-white/[0.03] transition-all items-center ${hasChanged ? 'border border-red-500/10' : ''}">
+                        <div class="col-span-1 flex justify-center">
+                            <input type="checkbox" name="field-approve" value="${k}" checked 
+                                   class="w-5 h-5 accent-red-600 cursor-pointer">
+                        </div>
+                        <div class="col-span-3">
+                            <span class="text-xs font-bold text-gray-300 shadow-sm">${label}</span>
+                        </div>
+                        <div class="col-span-4 text-xs text-gray-500 truncate bg-black/10 p-1 rounded">
+                            ${actualVal}
+                        </div>
+                        <div class="col-span-4 text-xs font-medium ${hasChanged ? 'text-green-400' : 'text-gray-400'} p-1">
+                            ${v}
                         </div>
                     </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">${empresa.email || 'No especificado'}</div>
-                    <div class="text-sm text-gray-500">${empresa.telefono || 'No especificado'}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs rounded-full ${empresa.estado === 'activa'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }">
-                        ${empresa.estado === 'activa' ? 'Activa' : 'Inactiva'}
-                    </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${empresa.descuento_porcentaje ? empresa.descuento_porcentaje + '%' : 'Sin descuento'}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    ${empresa.sitio_web ?
-                        `<a href="${empresa.sitio_web}" target="_blank" class="text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>` :
-                        '<span class="text-gray-400">No especificado</span>'
-                    }
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    ${this.formatearFecha(empresa.fecha_registro)}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-indigo-600">${empresa.admin_nombre || '<span class="text-gray-400 font-normal">Sin asignar</span>'}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div class="flex space-x-2">
-                        <button onclick="adminEmpresas.previsualizarEmpresa(${empresa.id})" 
-                                class="text-indigo-600 hover:text-indigo-900" title="Vista Previa">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button onclick="adminEmpresas.editarEmpresa(${empresa.id})" 
-                                class="text-blue-600 hover:text-blue-900" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button onclick="adminEmpresas.eliminarEmpresa(${empresa.id})" 
-                                class="text-red-600 hover:text-red-900" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-                    `;
+                `;
             }).join('');
-        } catch (error) {
-            console.error('❌ [ADMIN] Error renderizando tabla:', error);
-            tbody.innerHTML = `
-                    < tr >
-                    <td colspan="7" class="px-6 py-12 text-center text-red-500">
-                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                        <p class="text-lg font-semibold">Error renderizando datos</p>
-                        <p class="text-sm">${error.message}</p>
-                    </td>
-                </tr >
-                    `;
-        }
     }
 
-    crearModalesAdmin() {
-        // El modal ya existe en el HTML, solo configurar eventos
-        const btnCerrar = document.getElementById('btnCerrarModal');
-        const btnCancelar = document.getElementById('btnCancelar');
-        const formEmpresa = document.getElementById('formEmpresa');
+    async procesarRevision(id, accion) {
+        if (!confirm(`¿Estás seguro de ${accion === 'aprobar' ? 'aplicar estos cambios' : 'rechazar la solicitud'}?`)) return;
 
-        // Remover event listeners existentes para evitar duplicación
-        if (btnCerrar) {
-            btnCerrar.replaceWith(btnCerrar.cloneNode(true));
-            document.getElementById('btnCerrarModal').addEventListener('click', () => this.cerrarModal());
-        }
-        if (btnCancelar) {
-            btnCancelar.replaceWith(btnCancelar.cloneNode(true));
-            document.getElementById('btnCancelar').addEventListener('click', () => this.cerrarModal());
-        }
-        if (formEmpresa) {
-            formEmpresa.replaceWith(formEmpresa.cloneNode(true));
-            document.getElementById('formEmpresa').addEventListener('submit', (e) => this.guardarEmpresa(e));
-        }
+        const approvedFields = Array.from(document.querySelectorAll('input[name="field-approve"]:checked')).map(cb => cb.value);
+        
+        try {
+            const res = await fetch(this.solicitudesApiUrl, {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: id,
+                    accion: accion,
+                    approved_fields: approvedFields,
+                    notas: accion === 'rechazar' ? prompt('Motivo del rechazo:') : 'Aprobado vía Panel Admin Elite'
+                })
+            });
 
-        // Preview de logo
-        document.getElementById('logo_url').addEventListener('input', (e) => this.actualizarPreviewLogo(e.target.value));
-        document.getElementById('logo_file').addEventListener('change', (e) => this.manejarArchivoLogo(e));
-
-        // Modal de vista previa (simple para administrador)
-        if (!document.getElementById('modalVistaPrevia')) {
-            const modalPrevia = document.createElement('div');
-            modalPrevia.id = 'modalVistaPrevia';
-            modalPrevia.className = 'fixed inset-0 z-50 hidden items-center justify-center modal-backdrop bg-black bg-opacity-50';
-            modalPrevia.innerHTML = `
-                    < div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" >
-                    <div class="flex items-center justify-between p-6 border-b">
-                        <h3 id="previaEmpresaNombre" class="text-lg font-medium text-gray-900"></h3>
-                        <button id="btnCerrarPrevia" class="text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    <div id="previaContenido" class="p-6">
-                        <!-- Contenido dinámico -->
-                    </div>
-                </div >
-                    `;
-            document.body.appendChild(modalPrevia);
-            document.getElementById('btnCerrarPrevia').addEventListener('click', () => this.cerrarModalPrevia());
-        }
+            const data = await res.json();
+            if (data.success) {
+                this.mostrarNotificacion(data.message || 'Procesado correctamente', 'success');
+                document.getElementById('modalReview').classList.add('hidden');
+                this.cargarSolicitudes();
+                this.cargarEmpresas();
+            } else { throw new Error(data.error); }
+        } catch (e) { this.mostrarNotificacion('Error: ' + e.message, 'error'); }
     }
 
-    configurarEventosModal() {
-        // Configurar eventos del modal una sola vez para evitar duplicaciones
-        const btnCerrar = document.getElementById('btnCerrarModal');
-        const btnCancelar = document.getElementById('btnCancelar');
-        const formEmpresa = document.getElementById('formEmpresa');
-
-        if (btnCerrar && !btnCerrar.dataset.configured) {
-            btnCerrar.addEventListener('click', () => this.cerrarModal());
-            btnCerrar.dataset.configured = 'true';
-        }
-
-        if (btnCancelar && !btnCancelar.dataset.configured) {
-            btnCancelar.addEventListener('click', () => this.cerrarModal());
-            btnCancelar.dataset.configured = 'true';
-        }
-
-        if (formEmpresa && !formEmpresa.dataset.configured) {
-            formEmpresa.addEventListener('submit', (e) => this.guardarEmpresa(e));
-            formEmpresa.dataset.configured = 'true';
-        }
-
-        // Preview de logo
-        const logoUrl = document.getElementById('logo_url');
-        const logoFile = document.getElementById('logo_file');
-
-        if (logoUrl && !logoUrl.dataset.configured) {
-            logoUrl.addEventListener('input', (e) => this.actualizarPreviewLogo(e.target.value));
-            logoUrl.dataset.configured = 'true';
-        }
-
-        if (logoFile && !logoFile.dataset.configured) {
-            logoFile.addEventListener('change', (e) => this.manejarArchivoLogo(e));
-            logoFile.dataset.configured = 'true';
-        }
-
-    }
+    // ============================================
+    // MODAL Y FORMULARIO
+    // ============================================
 
     abrirModalCrear() {
         this.empresaEditando = null;
-
-        const hiddenIdField = document.getElementById('empresa_id_hidden');
-        if (hiddenIdField) hiddenIdField.value = '';
-
-        document.getElementById('modalTitulo').textContent = 'Agregar Nueva Empresa';
-        document.getElementById('btnGuardar').textContent = 'Crear Empresa';
-        this.limpiarFormulario();
+        const form = document.getElementById('formEmpresa');
+        if (form) form.reset();
+        document.getElementById('empresa_id_hidden').value = '';
+        document.getElementById('modalTitulo').innerHTML = '<i class="fas fa-plus-circle text-red-600"></i> Nueva Empresa';
+        this.ocultarPreviewLogo();
         this.mostrarModal();
     }
 
     editarEmpresa(id) {
-        const empresa = this.empresas.find(e => e.id == id);
-        if (!empresa) return;
-
-        this.empresaEditando = empresa;
-
-        let hiddenIdField = document.getElementById('empresa_id_hidden');
-        if (!hiddenIdField) {
-            hiddenIdField = document.createElement('input');
-            hiddenIdField.type = 'hidden';
-            hiddenIdField.id = 'empresa_id_hidden';
-            hiddenIdField.name = 'empresa_id_hidden';
-            document.getElementById('formEmpresa').appendChild(hiddenIdField);
-        }
-        hiddenIdField.value = empresa.id;
-
-        document.getElementById('modalTitulo').textContent = 'Editar Empresa';
-        document.getElementById('btnGuardar').textContent = 'Actualizar';
-
-        this.llenarFormulario(empresa);
+        const emp = this.empresas.find(e => e.id == id);
+        if (!emp) return;
+        this.empresaEditando = emp;
+        this.llenarFormulario(emp);
+        document.getElementById('modalTitulo').innerHTML = '<i class="fas fa-edit text-red-600"></i> Editar Empresa';
         this.mostrarModal();
     }
 
-    llenarFormulario(empresa) {
-        document.getElementById('nombre').value = empresa.nombre || '';
-        document.getElementById('sector').value = empresa.sector || '';
-        document.getElementById('estado').value = empresa.estado || 'activa';
-        document.getElementById('logo_url').value = empresa.logo_url || '';
-        document.getElementById('email').value = empresa.email || '';
-        document.getElementById('telefono').value = empresa.telefono || '';
-        document.getElementById('sitio_web').value = empresa.sitio_web || '';
-        document.getElementById('direccion').value = empresa.direccion || '';
-        document.getElementById('descripcion').value = empresa.descripcion || '';
-        document.getElementById('descuento_porcentaje').value = empresa.descuento_porcentaje || '';
-        document.getElementById('fecha_convenio').value = empresa.fecha_convenio || '';
-        document.getElementById('beneficios').value = empresa.beneficios || '';
-        document.getElementById('condiciones').value = empresa.condiciones || '';
-        document.getElementById('contacto_persona').value = empresa.contacto_nombre || empresa.contacto_persona || '';
-        document.getElementById('contacto_telefono').value = empresa.contacto_telefono || '';
-        document.getElementById('contacto_email').value = empresa.contacto_email || '';
+    mostrarDetallesEmpresa(id) {
+        const emp = this.empresas.find(e => e.id == id);
+        if (!emp) return;
 
-        const adminUsuarioSelect = document.getElementById('admin_usuario_id');
-        if (adminUsuarioSelect) {
-            adminUsuarioSelect.value = empresa.admin_usuario_id || '';
-        }
+        const modal = document.getElementById('detallesEmpresaModal');
+        if (!modal) return;
 
-        if (empresa.logo_url) {
-            this.actualizarPreviewLogo(empresa.logo_url);
-        }
-    }
-
-    limpiarFormulario() {
-        document.getElementById('formEmpresa').reset();
-        document.getElementById('logoPreview').classList.add('hidden');
-        document.getElementById('logo_file').value = '';
-        const adminUsuarioSelect = document.getElementById('admin_usuario_id');
-        if (adminUsuarioSelect) adminUsuarioSelect.value = '';
-    }
-
-    manejarArchivoLogo(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Validar que sea imagen
-        if (!file.type.startsWith('image/')) {
-            alert('Por favor selecciona un archivo de imagen válido');
-            event.target.value = '';
-            return;
-        }
-
-        // Validar tamaño (5MB max)
-        const maxSize = 5 * 1024 * 1024;
-        if (file.size > maxSize) {
-            alert('La imagen es muy grande. El tamaño máximo es 5MB');
-            event.target.value = '';
-            return;
-        }
-
-        // Crear preview del archivo
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            this.mostrarPreviewLogo(e.target.result);
-        };
-        reader.readAsDataURL(file);
-
-        // Limpiar URL cuando se selecciona archivo
-        document.getElementById('logo_url').value = '';
-    }
-
-    actualizarPreviewLogo(url) {
-        if (url && url.trim()) {
-            this.mostrarPreviewLogo(url);
+        // Poblar Header
+        document.getElementById('detallesNombreEmpresa').textContent = emp.nombre;
+        document.getElementById('detallesLogo').src = this.sanitizarLogo(emp.logo_url, emp.nombre);
+        
+        // Badges de estado
+        const badgeContainer = document.getElementById('detallesBadges');
+        const estadoNorm = (emp.estado || 'inactiva').toLowerCase();
+        let statusHtml = '';
+        if (estadoNorm === 'activa') {
+            statusHtml = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-green-500/20 text-green-400 border border-green-500/20 uppercase font-black">Activa</span>';
+        } else if (estadoNorm === 'pendiente') {
+            statusHtml = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-yellow-500/20 text-yellow-400 border border-yellow-500/20 uppercase font-black">Pendiente de Revisión</span>';
         } else {
-            this.ocultarPreviewLogo();
+            statusHtml = '<span class="px-2 py-0.5 rounded-full text-[10px] bg-red-500/20 text-red-400 border border-red-500/20 uppercase font-black">Inactiva</span>';
         }
-    }
+        if (emp.destacado == 1) statusHtml += '<span class="px-2 py-0.5 rounded-full text-[10px] bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 uppercase font-black"><i class="fas fa-star mr-1"></i>Destacada</span>';
+        badgeContainer.innerHTML = statusHtml;
 
-    mostrarPreviewLogo(src) {
-        const preview = document.getElementById('logoPreview');
-        const img = document.getElementById('logoImg');
-
-        img.src = src;
-        img.onload = () => preview.classList.remove('hidden');
-        img.onerror = () => {
-            preview.classList.add('hidden');
-            if (src.startsWith('http')) {
-                alert('No se pudo cargar la imagen desde esa URL');
-            }
-        };
-    }
-
-    ocultarPreviewLogo() {
-        const preview = document.getElementById('logoPreview');
-        preview.classList.add('hidden');
-    }
-
-    async guardarEmpresa(e) {
-        e.preventDefault();
-
-        if (this.enviandoFormulario) return;
-
-        // Validación frontend de campos obligatorios
-        const nombre = document.getElementById('nombre').value.trim();
-        if (!nombre) {
-            this.mostrarError('El nombre de la empresa es obligatorio');
-            document.getElementById('nombre').focus();
-            return;
-        }
-
-        this.enviandoFormulario = true;
-
-        const btnGuardar = document.getElementById('btnGuardar');
-        const textoOriginal = btnGuardar.textContent;
-        btnGuardar.textContent = 'Guardando...';
-        btnGuardar.disabled = true;
-
-        try {
-            let logoUrl = document.getElementById('logo_url').value.trim();
-
-            // Subir imagen si se seleccionó archivo
-            const logoFile = document.getElementById('logo_file').files[0];
-            if (logoFile) {
-                logoUrl = await this.subirImagen(logoFile);
-            }
-
-            const formData = new FormData();
-
-            // Recuperar empresaEditando desde campo oculto si se perdió
-            if (!this.empresaEditando) {
-                const hiddenIdField = document.getElementById('empresa_id_hidden');
-                if (hiddenIdField && hiddenIdField.value) {
-                    const empresaId = parseInt(hiddenIdField.value);
-                    this.empresaEditando = this.empresas.find(e => e.id === empresaId);
-                }
-            }
-
-            const action = this.empresaEditando ? 'actualizar' : 'crear';
-            formData.append('action', action);
-
-            if (this.empresaEditando) {
-                formData.append('id', this.empresaEditando.id);
-            }
-
-            // Recopilar TODOS los campos (incluyendo vacíos para permitir borrado en edición)
-            const campos = ['nombre', 'sector', 'estado', 'email', 'telefono',
-                'sitio_web', 'direccion', 'descripcion', 'descuento_porcentaje',
-                'fecha_convenio', 'beneficios', 'condiciones', 'contacto_persona',
-                'contacto_telefono', 'contacto_email', 'admin_usuario_id'];
-
-            campos.forEach(campo => {
-                const elemento = document.getElementById(campo);
-                if (elemento) {
-                    formData.append(campo, elemento.value.trim());
-                }
-            });
-
-            if (logoUrl) {
-                formData.append('logo_url', logoUrl);
-            }
-
-            const response = await fetch(this.apiUrl, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const responseText = await response.text();
-            let data;
-            try {
-                data = JSON.parse(responseText);
-            } catch {
-                throw new Error('Respuesta del servidor no es JSON válido');
-            }
-
-            if (data.success) {
-                this.mostrarExito(this.empresaEditando ? 'Empresa actualizada exitosamente' : 'Empresa creada exitosamente');
-                this.cerrarModal();
-                await this.cargarEmpresas();
-            } else {
-                throw new Error(data.message || 'Error guardando empresa');
-            }
-        } catch (error) {
-            console.error('Error en guardarEmpresa:', error);
-            this.mostrarError('Error: ' + error.message);
-        } finally {
-            btnGuardar.textContent = textoOriginal;
-            btnGuardar.disabled = false;
-            this.enviandoFormulario = false;
-        }
-    }
-
-    async subirImagen(file) {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const response = await fetch('./api/upload-image.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            return data.data.url;
+        // Info General
+        document.getElementById('detallesDescripcion').textContent = emp.descripcion || 'Sin descripción corporativa.';
+        document.getElementById('detallesSector').textContent = emp.sector || 'N/A';
+        document.getElementById('detallesCategoria').textContent = emp.categoria || 'N/A';
+        
+        // Contacto
+        document.getElementById('detallesContactoNombre').textContent = emp.contacto_nombre || emp.contacto_persona || 'No especificado';
+        document.getElementById('detallesEmail').textContent = emp.email || '—';
+        document.getElementById('detallesTelefono').textContent = emp.telefono || '—';
+        
+        const sw = document.getElementById('detallesSitioWeb');
+        if (emp.sitio_web) {
+            sw.textContent = emp.sitio_web;
+            sw.href = emp.sitio_web.startsWith('http') ? emp.sitio_web : `https://${emp.sitio_web}`;
+            sw.classList.remove('hidden');
         } else {
-            throw new Error(data.message || 'Error subiendo imagen');
+            sw.textContent = 'Sin sitio web';
+            sw.classList.add('hidden');
         }
-    }
 
-    async eliminarEmpresa(id) {
-        const empresa = this.empresas.find(e => e.id == id);
-        if (!empresa) return;
+        // Convenio
+        document.getElementById('detallesDescuento').textContent = emp.descuento_porcentaje ? `${emp.descuento_porcentaje}%` : '0%';
+        document.getElementById('detallesBeneficios').innerHTML = emp.beneficios || emp.convenio_descripcion || '<p class="text-gray-500 italic">No se han definido beneficios o convenios específicos.</p>';
+        document.getElementById('detallesVigenciaInicio').textContent = this.formatearFecha(emp.vigencia_inicio || emp.fecha_convenio);
+        document.getElementById('detallesVigenciaFin').textContent = this.formatearFecha(emp.vigencia_fin);
 
-        if (!confirm(`¿Estás seguro de eliminar "${empresa.nombre}" ?\n\nEsta acción no se puede deshacer.`)) return;
+        // Ubicación
+        document.getElementById('detallesDireccion').textContent = emp.direccion || 'Dirección no registrada.';
 
-        try {
-            const formData = new FormData();
-            formData.append('action', 'eliminar');
-            formData.append('id', id);
-
-            const response = await fetch(this.apiUrl, {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                this.mostrarExito('Empresa eliminada exitosamente');
-                await this.cargarEmpresas(); // Refresco automático
-                this.actualizarEstadisticas(); // Actualizar estadísticas
-            } else {
-                throw new Error(data.message || 'Error eliminando empresa');
-            }
-        } catch (error) {
-            console.error('❌ Error eliminando:', error);
-            this.mostrarError('Error eliminando empresa: ' + error.message);
-        }
-    }
-
-    previsualizarEmpresa(id) {
-        const empresa = this.empresas.find(e => e.id == id);
-        if (!empresa) return;
-
-        document.getElementById('previaEmpresaNombre').textContent = empresa.nombre;
-        document.getElementById('previaContenido').innerHTML = this.generarVistaPrevia(empresa);
-
-        const modal = document.getElementById('modalVistaPrevia');
+        // Mostrar Modal
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
 
-    generarVistaPrevia(empresa) {
-        return `
-                    < !--Como se verá en empresas - convenio.html-- >
-            <div class="text-center mb-6">
-                <img src="${empresa.logo_url || this.generarLogoDefault(empresa.nombre)}" 
-                     alt="${empresa.nombre}"
-                     class="mx-auto h-32 w-auto object-contain rounded-lg shadow-md border">
-            </div>
-            <div class="space-y-4">
-                <h3 class="text-xl font-bold text-center">${empresa.nombre}</h3>
-                ${empresa.descripcion ? `
-                    <p class="text-gray-600 text-center leading-relaxed">${empresa.descripcion}</p>
-                ` : ''}
-                <div class="flex justify-center space-x-4 pt-4">
-                    ${empresa.sitio_web ? `
-                        <a href="${empresa.sitio_web}" target="_blank" 
-                           class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-external-link-alt mr-2"></i>Visitar Sitio Web
-                        </a>
-                    ` : ''}
-                </div>
-            </div>
-                `;
+    llenarFormulario(emp) {
+        const form = document.getElementById('formEmpresa');
+        if (!form) return;
+        
+        document.getElementById('empresa_id_hidden').value = emp.id;
+        
+        // Mapeo dinámico de campos
+        Object.keys(emp).forEach(key => {
+            const input = document.getElementById(key);
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = (emp[key] == 1 || emp[key] === true);
+                } else if (input.tagName === 'SELECT' && (key === 'exporta' || key === 'autoriza_directorio')) {
+                    // Mapeo especial para booleanos en cajas select
+                    input.value = (emp[key] == 1 || emp[key] === true) ? "1" : "0";
+                } else {
+                    input.value = emp[key] || '';
+                }
+            }
+        });
+
+        if (emp.logo_url) this.actualizarPreviewLogo(emp.logo_url);
+        
+        // Asegurar que el select de usuario se actualice específicamente si no se mapeó automáticamente
+        const userSelect = document.getElementById('admin_usuario_id');
+        if (userSelect && emp.admin_usuario_id) {
+            userSelect.value = emp.admin_usuario_id;
+        }
     }
+
+    async guardarEmpresa(e) {
+        e.preventDefault();
+        if (this.enviandoFormulario) return;
+
+        const btn = document.getElementById('btnGuardar');
+        const originalText = btn.innerHTML;
+        this.enviandoFormulario = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        btn.disabled = true;
+
+        try {
+            const formData = new FormData(document.getElementById('formEmpresa'));
+            const action = this.empresaEditando ? 'actualizar' : 'crear';
+            formData.append('action', action);
+            if(this.empresaEditando) formData.append('id', this.empresaEditando.id);
+            
+            // Handle logo file if any
+            const logoFile = document.getElementById('logo_file').files[0];
+            if (logoFile) {
+                const uploadRes = await this.subirImagen(logoFile);
+                formData.set('logo_url', uploadRes);
+            }
+
+            const res = await fetch(this.apiUrl, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                this.mostrarNotificacion('¡Excelentes noticias! La empresa se guardó correctamente.', 'success');
+                this.cerrarModal();
+                this.cargarEmpresas();
+            } else { throw new Error(data.message); }
+
+        } catch (e) {
+            this.mostrarNotificacion('Vaya, algo salió mal: ' + e.message, 'error');
+        } finally {
+            this.enviandoFormulario = false;
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    async eliminarEmpresa(id) {
+        if (!confirm('¿Estás seguro de eliminar esta empresa? Esta acción es irreversible.')) return;
+        try {
+            const fd = new FormData();
+            fd.append('action', 'eliminar');
+            fd.append('id', id);
+            const res = await fetch(this.apiUrl, { method: 'POST', body: fd });
+            const data = await res.json();
+            if (data.success) {
+                this.mostrarNotificacion('Empresa eliminada con éxito', 'success');
+                this.cargarEmpresas();
+            }
+        } catch (e) { this.mostrarNotificacion('Error eliminando empresa', 'error'); }
+    }
+
+    // ============================================
+    // UTILS
+    // ============================================
 
     mostrarModal() {
         const modal = document.getElementById('modalEmpresa');
@@ -650,81 +671,138 @@ class AdminEmpresasManager {
     cerrarModal() {
         const modal = document.getElementById('modalEmpresa');
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
         document.body.style.overflow = 'auto';
-    }
-
-    cerrarModalPrevia() {
-        const modal = document.getElementById('modalVistaPrevia');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-
-    generarLogoDefault(nombre) {
-        return `https://via.placeholder.com/200x120/6366f1/ffffff?text=${encodeURIComponent(nombre)}`;
-    }
-
-    formatearFecha(fecha) {
-        if (!fecha) return 'N/A';
-        return new Date(fecha).toLocaleDateString('es-ES');
-    }
-
-    async refrescarSilencioso() {
-        try {
-            const url = `${this.apiUrl}?action=listar&t=${Date.now()}`;
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache'
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    const nuevasEmpresas = data.data.empresas || [];
-                    const hashAntes = JSON.stringify(this.empresas.map(e => ({ id: e.id, logo_url: e.logo_url, nombre: e.nombre })));
-                    const hashDespues = JSON.stringify(nuevasEmpresas.map(e => ({ id: e.id, logo_url: e.logo_url, nombre: e.nombre })));
-
-                    this.empresas = nuevasEmpresas;
-
-                    if (hashAntes !== hashDespues) {
-                        this.renderizarTablaAdmin();
-                        this.actualizarEstadisticas();
-                    }
-                }
-            }
-        } catch (error) {
-            // Refresco silencioso - no mostrar errores al usuario
-            // console.log('🔄 Refresco automático falló (silencioso):', error.message);
-        }
+        this.empresaEditando = null;
     }
 
     actualizarEstadisticas() {
-        const total = this.empresas.length;
-        const activas = this.empresas.filter(e => e.estado === 'activa').length;
-        const destacadas = this.empresas.filter(e => e.destacado === true || e.destacado == 1).length;
-        const conDescuento = this.empresas.filter(e => parseFloat(e.descuento_porcentaje) > 0).length;
+        const stats = {
+            total: this.empresas.length,
+            activas: this.empresas.filter(e => (e.estado || '').toLowerCase() === 'activa').length,
+            destacadas: this.empresas.filter(e => e.destacado == 1).length,
+            descuentos: this.empresas.filter(e => parseFloat(e.descuento_porcentaje) > 0).length
+        };
 
+        // Actualizar tarjetas de estadísticas del header
+        Object.entries(stats).forEach(([k, v]) => {
+            const el = document.getElementById(`${k}Empresas`);
+            if (el) {
+                const currentVal = parseInt(el.textContent) || 0;
+                this.animarNumero(el, currentVal, v);
+            }
+        });
+
+        // Actualizar también totalEmpresas y badge en barra de controles
         const totalEl = document.getElementById('totalEmpresas');
-        const activasEl = document.getElementById('empresasActivas');
-        const destacadasEl = document.getElementById('destacadasEmpresas');
-        const descuentosEl = document.getElementById('descuentosEmpresas');
-
-        if (totalEl) totalEl.textContent = total;
-        if (activasEl) activasEl.textContent = activas;
-        if (destacadasEl) destacadasEl.textContent = destacadas;
-        if (descuentosEl) descuentosEl.textContent = conDescuento;
+        if (totalEl) {
+            const currentVal = parseInt(totalEl.textContent) || 0;
+            this.animarNumero(totalEl, currentVal, stats.total);
+        }
+        const totalEnTabla = document.getElementById('totalEnTabla');
+        if (totalEnTabla) totalEnTabla.textContent = stats.total;
     }
 
-    filtrarEmpresas(termino) {
-        // Implementar filtro de búsqueda
-        const empresasFiltradas = this.empresas.filter(empresa =>
-            empresa.nombre.toLowerCase().includes(termino.toLowerCase()) ||
-            (empresa.sector && empresa.sector.toLowerCase().includes(termino.toLowerCase()))
+    animarNumero(el, inicio, fin) {
+        let actual = inicio;
+        const duracion = 1000;
+        const pasos = 30;
+        const incremento = (fin - inicio) / pasos;
+        const intervalo = duracion / pasos;
+
+        const timer = setInterval(() => {
+            actual += incremento;
+            if ((incremento > 0 && actual >= fin) || (incremento < 0 && actual <= fin)) {
+                el.textContent = fin;
+                clearInterval(timer);
+            } else {
+                el.textContent = Math.round(actual);
+            }
+        }, intervalo);
+    }
+
+    mostrarNotificacion(msg, tipo = 'info') {
+        const container = document.getElementById('notificacionesContainer') || this.crearContenedorNotif();
+        const div = document.createElement('div');
+        const icon = tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        const color = tipo === 'success' ? 'bg-green-500' : 'bg-red-500';
+
+        div.className = `flex items-center gap-3 p-4 rounded-2xl text-white shadow-2xl transition-all translate-x-10 opacity-0 ${color}`;
+        div.innerHTML = `<i class="fas ${icon} text-lg"></i><span class="text-sm font-bold">${msg}</span>`;
+        
+        container.appendChild(div);
+        setTimeout(() => {
+            div.classList.remove('translate-x-10', 'opacity-0');
+        }, 10);
+
+        setTimeout(() => {
+            div.classList.add('translate-x-10', 'opacity-0');
+            setTimeout(() => div.remove(), 500);
+        }, 5000);
+    }
+
+    crearContenedorNotif() {
+        const c = document.createElement('div');
+        c.id = 'notificacionesContainer';
+        c.className = 'fixed top-6 right-6 z-[2000] flex flex-col gap-3 max-w-sm pointer-events-none';
+        document.body.appendChild(c);
+        return c;
+    }
+
+    formatearFecha(f) {
+        if (!f) return '—';
+        return new Date(f).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    async subirImagen(file) {
+        const fd = new FormData();
+        fd.append('image', file);
+        const res = await fetch('./api/upload-image.php', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.success) return data.data.url;
+        throw new Error(data.message || 'Error subiendo archivo');
+    }
+
+    manejarArchivoLogo(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => this.actualizarPreviewLogo(ev.target.result);
+        reader.readAsDataURL(file);
+    }
+
+    actualizarPreviewLogo(src) {
+        const p = document.getElementById('logoPreview');
+        const img = document.getElementById('logoImg');
+        if (!p || !img) return;
+        img.src = src;
+        p.classList.remove('hidden');
+    }
+
+    ocultarPreviewLogo() {
+        const p = document.getElementById('logoPreview');
+        if(p) p.classList.add('hidden');
+    }
+
+    filtrarEmpresas(term) {
+        const results = this.empresas.filter(e => 
+            e.nombre.toLowerCase().includes(term) || 
+            (e.sector && e.sector.toLowerCase().includes(term))
         );
-        this.renderizarTablaAdmin(empresasFiltradas);
+        this.renderizarTablaAdmin(results);
+    }
+
+    aplicarFiltros() {
+        const ctg = document.getElementById('filterCategoria').value;
+        const est = document.getElementById('filtroEstado').value;
+        const dst = document.getElementById('filterDestacado').value;
+
+        const results = this.empresas.filter(e => {
+            const mcProp = !ctg || e.sector === ctg;
+            const meProp = !est || e.estado === est;
+            const mdProp = !dst || e.destacado == dst;
+            return mcProp && meProp && mdProp;
+        });
+        this.renderizarTablaAdmin(results);
     }
 
     exportarEmpresas() {
@@ -834,201 +912,73 @@ class AdminEmpresasManager {
     }
 
     // ============================================
-    // Company Requests Management
+    // UTILS
     // ============================================
 
-    async cargarSolicitudes() {
-        try {
-            const url = `${this.solicitudesApiUrl}?estado=pendiente&t=${Date.now()}`;
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Cache-Control': 'no-cache'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            if (data.success) {
-                this.solicitudes = data.solicitudes || [];
-                this.renderizarSolicitudes();
-            } else {
-                throw new Error(data.error || 'Error en respuesta de API');
-            }
-        } catch (error) {
-            // Silencioso: no bloquear UI si no hay solicitudes
-            console.warn('Solicitudes no disponibles:', error.message);
-        }
+    formatearFecha(fechaStr) {
+        if (!fechaStr) return '—';
+        const fecha = new Date(fechaStr);
+        return fecha.toLocaleDateString('es-MX', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     }
 
-    renderizarSolicitudes() {
-        const section = document.getElementById('solicitudesSection');
-        const container = document.getElementById('solicitudesContainer');
-        const badge = document.getElementById('solicitudesBadge');
+    mostrarNotificacion(mensaje, tipo = 'info', duracion = 5000) {
+        const contenedor = document.getElementById('notifications');
+        if (!contenedor) return;
 
-        if (!section || !container || !badge) {
-            console.warn('⚠️ [SOLICITUDES] Elementos de UI no encontrados');
-            return;
-        }
+        const notificacion = document.createElement('div');
+        notificacion.className = `notification max-w-sm p-4 rounded-xl shadow-2xl border border-white/10 backdrop-blur-xl transform translate-x-full transition-all duration-300 depth-3 mb-3 ${this.obtenerClasesNotificacion(tipo)}`;
 
-        const solicitudesPendientes = this.solicitudes.filter(s => s.estado === 'pendiente');
-
-        // Update badge
-        badge.textContent = solicitudesPendientes.length;
-
-        // Show/hide section
-        if (solicitudesPendientes.length === 0) {
-            section.classList.add('hidden');
-            return;
-        }
-
-        section.classList.remove('hidden');
-
-        // Render requests
-        container.innerHTML = solicitudesPendientes.map(sol => this.renderizarSolicitudCard(sol)).join('');
-    }
-
-    renderizarSolicitudCard(sol) {
-        const tipoText = sol.tipo_solicitud === 'crear' ? 'Crear nueva empresa' : 'Mostrar empresa existente';
-        const tipoIcon = sol.tipo_solicitud === 'crear' ? 'fa-plus-circle' : 'fa-eye';
-        const tipoColor = sol.tipo_solicitud === 'crear' ? 'text-green-600' : 'text-blue-600';
-
-        let datosEmpresa = '';
-        if (sol.datos_empresa) {
-            const datos = typeof sol.datos_empresa === 'string'
-                ? JSON.parse(sol.datos_empresa)
-                : sol.datos_empresa;
-
-            datosEmpresa = `
-                <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                    <h4 class="font-semibold text-gray-900 mb-2">Datos de la empresa:</h4>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                        ${datos.nombre ? `<div><strong>Nombre:</strong> ${datos.nombre}</div>` : ''}
-                        ${datos.sector ? `<div><strong>Sector:</strong> ${datos.sector}</div>` : ''}
-                        ${datos.email ? `<div><strong>Email:</strong> ${datos.email}</div>` : ''}
-                        ${datos.telefono ? `<div><strong>Teléfono:</strong> ${datos.telefono}</div>` : ''}
-                        ${datos.descripcion ? `<div class="col-span-2"><strong>Descripción:</strong> ${datos.descripcion}</div>` : ''}
+        notificacion.innerHTML = `
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                        <i class="${this.obtenerIconoNotificacion(tipo)}"></i>
                     </div>
+                    <span class="text-sm font-bold text-white">${mensaje}</span>
                 </div>
-            `;
-        }
-
-        return `
-            <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white hover:shadow-md transition">
-                <div class="flex items-start justify-between mb-3">
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0">
-                            <i class="fas ${tipoIcon} text-2xl ${tipoColor}"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-gray-900">${tipoText}</h3>
-                            <p class="text-sm text-gray-600">
-                                Solicitado por: <strong>${sol.usuario_nombre} ${sol.usuario_apellidos || ''}</strong>
-                            </p>
-                            <p class="text-xs text-gray-500">
-                                <i class="far fa-clock mr-1"></i>${this.formatearFecha(sol.fecha_solicitud)}
-                            </p>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
-                        Pendiente
-                    </span>
-                </div>
-
-                ${datosEmpresa}
-
-                ${sol.empresa_nombre_existente ? `
-                    <div class="bg-blue-50 rounded-lg p-3 mb-4">
-                        <p class="text-sm"><strong>Empresa existente:</strong> ${sol.empresa_nombre_existente}</p>
-                    </div>
-                ` : ''}
-
-                <div class="flex items-center justify-end space-x-3 pt-3 border-t">
-                    <button onclick="adminEmpresas.rechazarSolicitud(${sol.id})" 
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                        <i class="fas fa-times mr-2"></i>Rechazar
-                    </button>
-                    <button onclick="adminEmpresas.aprobarSolicitud(${sol.id})" 
-                            class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition" 
-                            style="background: #C7252B;">
-                        <i class="fas fa-check mr-2"></i>Aprobar
-                    </button>
-                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         `;
+
+        contenedor.appendChild(notificacion);
+
+        // Animar entrada
+        setTimeout(() => notificacion.classList.remove('translate-x-full'), 10);
+
+        // Auto-remover
+        setTimeout(() => {
+            if (notificacion.parentElement) {
+                notificacion.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => notificacion.remove(), 300);
+            }
+        }, duracion);
     }
 
-    async aprobarSolicitud(id) {
-        if (!confirm('¿Estás seguro de que deseas aprobar esta solicitud?')) {
-            return;
-        }
-
-        try {
-            const response = await fetch(this.solicitudesApiUrl, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: id,
-                    accion: 'aprobar'
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                this.mostrarNotificacion('Solicitud aprobada exitosamente', 'success');
-                await this.cargarSolicitudes();
-                await this.cargarEmpresas(); // Reload companies list
-            } else {
-                throw new Error(data.error || 'Error aprobando solicitud');
-            }
-        } catch (error) {
-            console.error('❌ [SOLICITUDES] Error aprobando:', error);
-            this.mostrarNotificacion('Error aprobando solicitud: ' + error.message, 'error');
+    obtenerClasesNotificacion(tipo) {
+        switch (tipo) {
+            case 'success': return 'bg-green-500/20 border-green-500/30';
+            case 'error': return 'bg-red-500/20 border-red-500/30';
+            case 'warning': return 'bg-yellow-500/20 border-yellow-500/30';
+            default: return 'bg-blue-500/20 border-blue-500/30';
         }
     }
 
-    async rechazarSolicitud(id) {
-        const notas = prompt('¿Por qué rechazas esta solicitud? (opcional)');
-        if (notas === null) return; // User cancelled
-
-        try {
-            const response = await fetch(this.solicitudesApiUrl, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: id,
-                    accion: 'rechazar',
-                    notas: notas || 'Sin motivo especificado'
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                this.mostrarNotificacion('Solicitud rechazada', 'success');
-                await this.cargarSolicitudes();
-            } else {
-                throw new Error(data.error || 'Error rechazando solicitud');
-            }
-        } catch (error) {
-            console.error('❌ [SOLICITUDES] Error rechazando:', error);
-            this.mostrarNotificacion('Error rechazando solicitud: ' + error.message, 'error');
+    obtenerIconoNotificacion(tipo) {
+        switch (tipo) {
+            case 'success': return 'fas fa-check-circle text-green-500';
+            case 'error': return 'fas fa-exclamation-circle text-red-500';
+            case 'warning': return 'fas fa-exclamation-triangle text-yellow-500';
+            default: return 'fas fa-info-circle text-blue-500';
         }
     }
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
-    window.adminEmpresas = new AdminEmpresasManager();
-});
+// Nota: La inicialización se maneja en el HTML para asegurar que el DOM esté listo y permite inyección de debug.
